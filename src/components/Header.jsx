@@ -1,0 +1,74 @@
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useState} from 'react';
+import {Dimensions} from 'react-native';
+import {AppLogo} from '../assets/images';
+import {AppFont} from '../assets/FontsFamily';
+import BackButton from './BackButton';
+import ExtraButtons from './ExtraButtons';
+const {width, height} = Dimensions.get('window');
+const Header = ({backButton, extraButton}) => {
+  return (
+    <View style={styles.mainContainer}>
+      <View style={styles.leftContent}>
+        <View style={styles.logoView}>
+          <Image source={AppLogo} />
+          <Text style={styles.logoText}>tat d</Text>
+        </View>
+        <View style={styles.logoBottom}>
+          <Text style={styles.logoBottomText}>trusted & trained driver</Text>
+        </View>
+      </View>
+
+      {/* <BackButton  /> */}
+      {backButton ? <BackButton /> : extraButton ? <ExtraButtons/> : null}
+
+    </View>
+  );
+};
+
+export default Header;
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    backgroundColor: '#fff',
+    display: 'flex',
+    flexDirection: 'row',
+    shadowColor: 'grey',
+    shadowOpacity: 10,
+    shadowRadius: 3,
+    elevation: 5,
+    justifyContent: 'space-between',
+    paddingBottom: 10,
+  },
+  leftContent: {
+    backgroundColor: '#fff',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+  },
+  logoView: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
+    marginTop: 10,
+    marginBottom: -5,
+  },
+  logoText: {
+    color: '#16588e',
+    marginLeft: 7,
+    marginTop: 8,
+    fontSize: 39,
+    fontWeight: '500',
+    fontFamily: AppFont.mainFont,
+  },
+  logoBottom: {
+    justifyContent: 'flex-start',
+    marginLeft: 27,
+  },
+  logoBottomText: {
+    color: '#16588e',
+    fontSize: 10,
+    fontFamily: AppFont.mainFont,
+  },
+});

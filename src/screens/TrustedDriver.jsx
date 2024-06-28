@@ -242,9 +242,6 @@ const TrustedDriver = ({navigation}) => {
             ) : videosContent ? (
               <AccordionTrainingVideo />
             ) : null}
-            {/* {
-              mainToggleContent && videosContent ? 
-            } */}
             <Modal
                     backdropOpacity={0}
                     onBackdropPress={() => setMyBookingAgencyModal(false)}
@@ -271,15 +268,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     marginVertical: 20,
-    // marginBottom: 20
   },
   marqueeView: {
-    // marginTop: '8%',
     paddingLeft: 7,
     paddingRight: 7,
-    // marginTop: 10
-    //   borderColor: 'red',
-    //   borderWidth: 1,
+  
   },
   marqueeText: {
     color: 'black',

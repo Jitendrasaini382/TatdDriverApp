@@ -6,13 +6,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import ToggleButton from '../components/ToggleButton';
 import {OneWayIcon} from '../assets/images';
 import Header from '../components/Header';
 import AllNotificationComponent from '../components/AllNotificationsDetails';
+import AllNoticeBoardDetails from '../components/AllNoticeBoardDetails';
 
 const DriverNotifications = ({navigation}) => {
+  const [currentView, setCurrentView] = useState('NOTIFICATIONS');
+
   return (
     <View
       style={{
@@ -21,21 +24,28 @@ const DriverNotifications = ({navigation}) => {
         flex: 1,
         height: '100%',
         justifyContent: 'space-between',
+        backgroundColor: 'white',
       }}>
       <View style={{}}>
         <Header backButton={true} />
-        {/* <HeaderNotification /> */}
+        {/* <ToggleButton
+          button1Label="NOTIFICATIONS"
+          button2Label="NOTICE BOARD"
+        /> */}
+
         <ToggleButton
           button1Label="NOTIFICATIONS"
           button2Label="NOTICE BOARD"
+          onToggle={label => setCurrentView(label)}
         />
-        {/* {button1Label === "NOTIFICATIONS"? <Eeeeeeeeeeeeeeeeeeeeeeeeeee/> : null} */}
-        {/* <Eeeeeeeeeeeeeeeeeeeeeeeeeee /> */}
-        <AllNotificationComponent/>
 
-
+        {currentView === 'NOTIFICATIONS' ? (
+          <AllNotificationComponent />
+        ) : (
+          <AllNoticeBoardDetails />
+        )}
       </View>
-   
+
       <TouchableOpacity onPress={() => console.warn('Clear All Notification')}>
         <View
           style={{

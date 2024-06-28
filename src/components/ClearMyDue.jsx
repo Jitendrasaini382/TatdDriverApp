@@ -1,40 +1,63 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+} from 'react-native';
+import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
+import ClearMyDuePaymentModal from './modal/ClearMyDuePaymentModal';
 
 const ClearMyDue = () => {
-    const dummyData = [
-        {
-          bookingId: '430664',
-          scheduleDate: '26 Jun, 2024 10:30:00',
-          status: 'Cash With Driver',
-          amount: '-307',
-        },
-        {
-            bookingId: '430664',
-            scheduleDate: '26 Jun, 2024 10:30:00',
-            status: 'Cash With Driver',
-            amount: '-307',
-          },
-          {
-            bookingId: '430664',
-            scheduleDate: '26 Jun, 2024 10:30:00',
-            status: 'Cash With Driver',
-            amount: '-307',
-          },
-      ];
+  const [myDuePaymentModal, setMyDuePaymentModal ] = useState(false);
+  const dummyData = [
+    {
+      bookingId: '430664',
+      scheduleDate: '26 Jun, 2024 10:30:00',
+      status: 'Cash With Driver',
+      amount: '-307',
+    },
+    {
+      bookingId: '430664',
+      scheduleDate: '26 Jun, 2024 10:30:00',
+      status: 'Cash With Driver',
+      amount: '-307',
+    },
+    {
+      bookingId: '430664',
+      scheduleDate: '26 Jun, 2024 10:30:00',
+      status: 'Cash With Driver',
+      amount: '-307',
+    },
+  ];
 
-  const totalAmount = dummyData.reduce((sum, item) => sum + Math.abs(parseInt(item.amount)), 0);
+  const totalAmount = dummyData.reduce(
+    (sum, item) => sum + Math.abs(parseInt(item.amount)),
+    0,
+  );
 
   return (
     <View style={styles.container}>
       <View style={styles.mainView}>
         <Text style={styles.title}>Clear My Due</Text>
       </View>
+      <Modal
+        backdropOpacity={0}
+        onBackdropPress={() => setMyDuePaymentModal(false)}
+        animationIn={'fadeInDown'}
+        animationOut={'fadeOutUp'}
+        isVisible={myDuePaymentModal}>
+          <ClearMyDuePaymentModal  setMyDuePaymentModal={setMyDuePaymentModal} />
+      </Modal>
       <View style={styles.tableContainer}>
         <View style={styles.tableHeader}>
           <Text style={styles.headerText}>Booking Id</Text>
-          <Text style={[styles.headerText, styles.borderLeft]}>Schedule Date</Text>
+          <Text style={[styles.headerText, styles.borderLeft]}>
+            Schedule Date
+          </Text>
           <Text style={[styles.headerText, styles.borderLeft]}>Status</Text>
           <Text style={[styles.headerText, styles.borderLeft]}>Amount</Text>
         </View>
@@ -43,17 +66,30 @@ const ClearMyDue = () => {
             <View key={index} style={styles.tableRow}>
               <View style={styles.bookingIdCell}>
                 <Text style={styles.cellText}>{item.bookingId}</Text>
-                <Icon name="eye" size={18} color="#1e90ff" />
+                <TouchableOpacity
+                  onPress={() => {
+                    setMyDuePaymentModal(true);
+                  }}>
+                  <Icon name="eye" size={18} color="#16588e" />
+                </TouchableOpacity>
               </View>
-              <Text style={[styles.cellText, styles.borderLeft]}>{item.scheduleDate}</Text>
-              <Text style={[styles.cellText, styles.borderLeft]}>{item.status}</Text>
-              <Text style={[styles.cellText, styles.borderLeft]}>{item.amount}</Text>
+              <Text style={[styles.cellText, styles.borderLeft]}>
+                {item.scheduleDate}
+              </Text>
+              <Text style={[styles.cellText, styles.borderLeft]}>
+                {item.status}
+              </Text>
+              <Text style={[styles.cellText, styles.borderLeft]}>
+                {item.amount}
+              </Text>
             </View>
           ))}
         </ScrollView>
       </View>
-      <TouchableOpacity style={styles.payButton}>
-        <Text style={styles.payButtonText}>Pay ₹307</Text>
+      <TouchableOpacity
+        onPress={() => Alert.alert('Loading Payment Page...')}
+        style={styles.payButton}>
+        <Text style={styles.payButtonText}>Pay ₹ 927</Text>
       </TouchableOpacity>
     </View>
   );
@@ -63,7 +99,10 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 10,
     padding: 20,
-    elevation: 5,
+    // elevation: 5,
+    shadowColor: '#ccc',
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
   mainView: {
     alignItems: 'flex-start',
@@ -83,7 +122,7 @@ const styles = StyleSheet.create({
   },
   tableHeader: {
     flexDirection: 'row',
-    backgroundColor: '#1e90ff',
+    backgroundColor: '#16588e',
   },
   headerText: {
     color: 'white',
@@ -98,7 +137,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
   },
   bookingIdCell: {
-    flexDirection: 'row',
+    // flexDirection: 'column',
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
@@ -106,7 +145,7 @@ const styles = StyleSheet.create({
   },
   cellText: {
     flex: 1,
-    color: "black",
+    color: 'black',
     textAlign: 'center',
     padding: 10,
   },
@@ -115,7 +154,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
   },
   payButton: {
-    backgroundColor: '#1e90ff',
+    backgroundColor: '#16588e',
     padding: 10,
     borderRadius: 5,
     alignSelf: 'center',
@@ -128,16 +167,6 @@ const styles = StyleSheet.create({
 });
 
 export default ClearMyDue;
-
-
-
-
-
-
-
-
-
-
 
 // import React from 'react';
 // import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
@@ -184,7 +213,7 @@ export default ClearMyDue;
 //             <View key={index} style={styles.tableRow}>
 //               <View style={styles.bookingIdCell}>
 //                 <Text style={styles.cellText}>{item.bookingId}</Text>
-//                 <Icon name="eye" size={18} color="#1e90ff" />
+//                 <Icon name="eye" size={18} color="#16588e" />
 //               </View>
 //               <Text style={styles.cellText}>{item.scheduleDate}</Text>
 //               <Text style={styles.cellText}>{item.status}</Text>
@@ -224,7 +253,7 @@ export default ClearMyDue;
 //   },
 //   tableHeader: {
 //     flexDirection: 'row',
-//     backgroundColor: '#1e90ff',
+//     backgroundColor: '#16588e',
 //     padding: 10,
 //   },
 //   headerText: {
@@ -251,7 +280,7 @@ export default ClearMyDue;
 //     textAlign: 'center',
 //   },
 //   payButton: {
-//     backgroundColor: '#1e90ff',
+//     backgroundColor: '#16588e',
 //     padding: 10,
 //     borderRadius: 5,
 //     alignSelf: 'center',
@@ -265,16 +294,6 @@ export default ClearMyDue;
 
 // export default ClearMyDue;
 
-
-
-
-
-
-
-
-
-
-
 // // import React from 'react';
 // // import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 // // import Icon from 'react-native-vector-icons/Feather'; // Assuming you're using react-native-vector-icons
@@ -286,7 +305,6 @@ export default ClearMyDue;
 // //     status: 'Cash With Driver',
 // //     amount: '-307',
 // //   };
-  
 
 // //   return (
 // //     <View style={styles.container}>
@@ -303,7 +321,7 @@ export default ClearMyDue;
 // //         <View style={styles.tableRow}>
 // //           <View style={styles.bookingIdCell}>
 // //             <Text style={styles.cellText}>{dummyData.bookingId}</Text>
-// //             <Icon name="eye" size={18} color="#1e90ff" />
+// //             <Icon name="eye" size={18} color="#16588e" />
 // //           </View>
 // //           <Text style={styles.cellText}>{dummyData.scheduleDate}</Text>
 // //           <Text style={styles.cellText}>{dummyData.status}</Text>
@@ -346,9 +364,9 @@ export default ClearMyDue;
 // //   },
 // //   tableHeader: {
 // //     flexDirection: 'row',
-// //     backgroundColor: '#1e90ff',
+// //     backgroundColor: '#16588e',
 // //     padding: 10,
-    
+
 // //   },
 // //   headerText: {
 // //     color: 'white',
@@ -375,7 +393,7 @@ export default ClearMyDue;
 // //     textAlign: 'center',
 // //   },
 // //   payButton: {
-// //     backgroundColor: '#1e90ff',
+// //     backgroundColor: '#16588e',
 // //     padding: 10,
 // //     borderRadius: 5,
 // //     alignSelf: 'center',

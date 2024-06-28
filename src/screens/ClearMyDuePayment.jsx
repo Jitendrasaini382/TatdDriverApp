@@ -19,31 +19,21 @@ const ClearMyDuePayment = () => {
         style={{
           marginTop: 30,
           padding: 10,
+          elevation: 5,
         }}>
-        {/* <View style={styles.mainView}>
-          <View style={{padding: 14, alignItems: 'flex-start'}}>
-            <Text
-              style={{
-                textAlign: 'auto',
-                color: 'black',
-                fontWeight: '700',
-                fontSize: 21,
-                fontFamily: 'Poppins',
-              }}>
-              Clear My Due
-            </Text>
-          </View>
-        </View> */}
-        <ClearMyDue/>
+        <ClearMyDue />
 
-        <View style={{marginTop: 20}}>
-          <YoutubePlayer height={600} autoPlay={false} videoId={'SsG_qwb0zLs'} />
+        <View style={{marginTop: 20, padding: 12}}>
+          <YoutubePlayer
+            height={500}
+            // autoPlay={false}
+            videoId={'SsG_qwb0zLs'}
+          />
         </View>
       </View>
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   mainView: {

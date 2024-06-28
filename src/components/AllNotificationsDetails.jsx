@@ -89,7 +89,6 @@ const NotificationList = ({onNotificationPress}) => {
 const NotificationDetail = ({index}) => {
   return (
     <SafeAreaView style={styles.fullScreenContainer}>
-      <StatusBar barStyle="dark-content" />
       <Header backButton={true} />
       <ScrollView
         style={styles.scrollView}
@@ -111,7 +110,6 @@ const AllNotificationComponent = () => {
   const handleNotificationPress = index => {
     setSelectedNotification(index);
     navigation.navigate('NotificationDetail', {index});
-    // navigation.navigate("AgentLogin");
   };
 
   return <NotificationList onNotificationPress={handleNotificationPress} />;

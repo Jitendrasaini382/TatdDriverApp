@@ -15,6 +15,7 @@ import TicketsDriver from '../screens/TicketsDriver';
 import DutyReportUpdate from '../screens/DutyReportUpdate';
 import DutyReportUpdateProcess from '../screens/DutyReportUpdate/DutyReportUpdateProcess';
 import { NotificationDetailScreen } from '../components/AllNotificationsDetails';
+import { NoticeBoardDetailScreen } from '../components/AllNoticeBoardDetails';
 
 const Stack = createStackNavigator();
 
@@ -52,6 +53,14 @@ const Route = () => {
           component={NotificationDetailScreen}
           options={{ 
             title: 'Notification',
+            headerBackTitle: 'Back'
+          }}
+        />
+        <Stack.Screen 
+          name="NoticeBoardDetail" 
+          component={NoticeBoardDetailScreen}
+          options={{ 
+            title: 'NoticeBoard',
             headerBackTitle: 'Back'
           }}
         />

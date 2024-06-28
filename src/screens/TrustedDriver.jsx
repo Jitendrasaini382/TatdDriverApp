@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -27,11 +27,17 @@ import MyBookingAgencyModal from '../components/modal/MyBookingAgencyModal';
 const {width, height} = Dimensions.get('window');
 
 const TrustedDriver = ({navigation}) => {
+  const [currentView, setCurrentView] = useState('NOTIFICATIONS');
+
   const [toggleButton, setToggleButton] = useState(false);
   const [mainToggleModal, setMainToggleModal] = useState(false);
   const [mainToggleContent, setMainToggleContent] = useState(false);
   const [videosContent, setVideoContent] = useState(false);
   const [myBookingAgencyModal, setMyBookingAgencyModal]= useState(false)
+  
+  // useEffect(()=>{
+  //   setMainToggleModal(true)
+  // },[])
 
   const MainToggleHandle = () => {
     if (!toggleButton) {
@@ -223,7 +229,10 @@ const TrustedDriver = ({navigation}) => {
             </View>
           </View>
           {/* ToGGle Button */}
-          <ToggleButton button1Label="Hindi" button2Label="English" />
+          <ToggleButton
+         button1Label="Hindi" button2Label="English"
+          onToggle={label => setCurrentView(label)}
+        />
 
           {/* main Toggle Content */}
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { AppColors } from '../assets/Colors';
 
 const ToggleButton = ({ button1Label, button2Label, onToggle }) => {
   const [currentState, setCurrentState] = useState(button1Label);
@@ -78,10 +79,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   activeButtonText: {
-    color: 'black',
+    color: AppColors.black,
   },
   inactiveButtonText: {
-    color: 'black',
+    color: AppColors.black,
   },
 });
 
@@ -177,7 +178,7 @@ export default ToggleButton;
 //   buttonText: {
 //     // fontWeight: 'bold',
 //     fontSize: 12,
-//     color: 'black',
+//     color: AppColors.black,
 //     fontWeight : '500',
 //     textAlign: 'center',
 //     // justifyContent : 'space-evenly'
@@ -186,10 +187,10 @@ export default ToggleButton;
 //     padding: 5
 //   },
 //   activeButton_text: {
-//     color: 'black',
+//     color: AppColors.black,
 //   },
 //   inactiveButton_text: {
-//     color: 'black',
+//     color: AppColors.black,
 //   },
 // });
 

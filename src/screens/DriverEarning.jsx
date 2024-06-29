@@ -1,4 +1,57 @@
-import React from 'react';
+// import React, {useState} from 'react';
+// import {
+//   StyleSheet,
+//   Dimensions,
+//   SafeAreaView,
+// } from 'react-native';
+// import Header from '../components/Header';
+// import {AppColors} from '../assets/Colors';
+// import MyDriverEarning from '../components/MyDriverEarnIng';
+
+// const {width: SCREEN_WIDTH} = Dimensions.get('window');
+
+// const DriverEarning = ({}) => {
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <Header backButton={true} />
+//       <MyDriverEarning/>
+//     </SafeAreaView>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: AppColors.white,
+//   },
+// });
+
+// export default DriverEarning;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React, {useState} from 'react';
 import {
   StatusBar,
   StyleSheet,
@@ -7,15 +60,20 @@ import {
   SafeAreaView,
   View,
   FlatList,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Modal from 'react-native-modal';
 import Header from '../components/Header';
+import {AppColors} from '../assets/Colors';
+import DriverEarnIngModal from '../components/modal/DriverEarnIngModal';
 
-const earningData = [
-  {amount: 1313, days: 7},
-  {amount: 1313, days: 7},
-  {amount: 1313, days: 7},
-];
+// const earningData = [
+//   {amount: 1313, days: 7},
+//   {amount: 1313, days: 7},
+//   {amount: 1313, days: 7},
+// ];
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 const tripData = [
@@ -111,7 +169,9 @@ const tripData = [
   },
 ];
 
-const DriverEarning = () => {
+
+const DriverEarning = ({}) => {
+  const [packageDetailsDriverEarning, setPackageDetailsDriverEarning] =  useState(false);
   // const renderEarningItem = ({item}) => (
   //   <View style={{justifyContent: "space-between", alignItems: "center"}}>
   //     <View style={styles.earningItem}>
@@ -124,27 +184,41 @@ const DriverEarning = () => {
   const renderTripItem = ({item}) => (
     <View style={styles.tripItem}>
       <View style={styles.tripHeader}>
-        <Icon name="eye" size={20} color="#000" style={styles.eyeIcon} />
-        <View
-          style={{
-            justifyContent: 'space-evenly',
-            // alignItems: 'flex-end',
-            flexDirection: 'row',
-          }}>
+        <TouchableOpacity
+         onPress={() => setPackageDetailsDriverEarning(true)}
+          >
+          <Icon
+            name="eye"
+            size={20}
+            color={AppColors.mainColor}
+            style={styles.eyeIcon}
+          />
+        </TouchableOpacity>
+        <Modal
+        backdropOpacity={0}
+        onBackdropPress={() => setPackageDetailsDriverEarning(false)}
+        animationIn={'fadeInDown'}
+        animationOut={'fadeOutUp'}
+        isVisible={packageDetailsDriverEarning}>
+        
+
+          <DriverEarnIngModal  setPackageDetailsDriverEarning={setPackageDetailsDriverEarning} />
+      </Modal>
+
+        <View style={styles.contentContainer}>
           <View style={styles.tripInfo}>
             <Text style={styles.tripType}>
               {item.type} - {item.duration} - {item.mode}
             </Text>
             <Text style={styles.tripDate}>
-              {item.date} - {item.settlementType} {item.settlementDate}
+              {item.date} -{' '}
+              <Text style={styles.settlementType}>{item.settlementType}</Text>{' '}
+              {item.settlementDate}
             </Text>
           </View>
-          <View style={{}}>
-            <Text style={styles.tripAmount}>₹{item.amount}</Text>
-          </View>
+          <Text style={styles.tripAmount}>₹{item.amount}</Text>
         </View>
       </View>
-      <View style={styles.separator} />
     </View>
   );
 
@@ -153,104 +227,33 @@ const DriverEarning = () => {
       <Header backButton={true} />
       <View style={styles.earningHeader}>
         <Text style={styles.earningHeaderText}>My tatd Earning ₹215147</Text>
+        <View style={styles.underLineView}></View>
       </View>
 
-      <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-        <View
-          style={{
-            backgroundColor: 'red',
-            display: 'flex',
-            flexDirection: 'column',
-            borderRadius: 10,
-            paddingVertical: 6,
-            paddingHorizontal: 40,
-            textAlign: 'center',
-            justifyContent: 'center',
-            margin: 5,
-          }}>
-          <Text
-            style={{
-              fontWeight: '600',
-              textAlign: 'center',
-              color: 'white',
-              fontSize: 13,
-            }}>
+      {/* headline Content */}
+      <View style={styles.headlineContainer}>
+        <View style={styles.headlineContent}>
+          <Text style={styles.headlineAmount}>
             <Icon name="rupee" /> 0
           </Text>
-          <Text
-            style={{
-              textAlign: 'center',
-              fontWeight: '600',
-              color: 'white',
-              fontSize: 10,
-            }}>
-            7 days
-          </Text>
+          <Text style={styles.headlineDays}>7 days</Text>
         </View>
-        <View
-          style={{
-            backgroundColor: 'red',
-            display: 'flex',
-            flexDirection: 'column',
-            borderRadius: 10,
-            paddingVertical: 6,
-            paddingHorizontal: 40,
-            textAlign: 'center',
-            justifyContent: 'center',
-            margin: 5,
-          }}>
-          <Text
-            style={{
-              fontWeight: '600',
-              textAlign: 'center',
-              color: 'white',
-              fontSize: 13,
-            }}>
-            <Icon name="rupee" /> 0
-          </Text>
-          <Text
-            style={{
-              textAlign: 'center',
-              fontWeight: '600',
-              color: 'white',
-              fontSize: 10,
-            }}>
-            7 days
-          </Text>
-        </View>
-        <View
-          style={{
-            backgroundColor: 'red',
-            display: 'flex',
-            flexDirection: 'column',
-            borderRadius: 10,
-            paddingVertical: 6,
-            paddingHorizontal: 40,
-            textAlign: 'center',
-            margin: 5,
 
-            justifyContent: 'center',
-          }}>
-          <Text
-            style={{
-              fontWeight: '600',
-              textAlign: 'center',
-              color: 'white',
-              fontSize: 13,
-            }}>
+        <View style={styles.headlineContent}>
+          <Text style={styles.headlineAmount}>
             <Icon name="rupee" /> 0
           </Text>
-          <Text
-            style={{
-              textAlign: 'center',
-              fontWeight: '600',
-              color: 'white',
-              fontSize: 10,
-            }}>
-            7 days
+          <Text style={styles.headlineDays}>7 days</Text>
+        </View>
+        <View style={styles.headlineContent}>
+          <Text style={styles.headlineAmount}>
+            <Icon name="rupee" /> 0
           </Text>
+          <Text style={styles.headlineDays}>7 days</Text>
         </View>
       </View>
+
+      {/* all Trip details */}
       <FlatList
         data={tripData}
         renderItem={renderTripItem}
@@ -264,7 +267,7 @@ const DriverEarning = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: AppColors.white,
   },
   earningHeader: {
     alignItems: 'flex-end',
@@ -272,14 +275,48 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 10,
     // borderBottomWidth: 1,
-    // borderBottomColor: '#000',
+    // borderBottomColor: AppColors.black,
   },
+  headlineContainer: {flexDirection: 'row', justifyContent: 'space-evenly'},
+  headlineContent: {
+    backgroundColor: 'red',
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: 10,
+    paddingVertical: 6,
+    paddingHorizontal: 40,
+    textAlign: 'center',
+    justifyContent: 'center',
+    margin: 5,
+  },
+
+  headlineAmount: {
+    fontWeight: '600',
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 13,
+  },
+  headlineDays: {
+    textAlign: 'center',
+    fontWeight: '600',
+    color: 'white',
+    fontSize: 10,
+  },
+
   earningHeaderText: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: 'black',
-    textDecorationLine: 'underline',
+    color: AppColors.black,
   },
+  underLineView: {
+    borderBottomWidth: 1,
+    borderBottomColor: AppColors.black,
+    height: 1,
+    width: 120,
+    marginTop: 5,
+    marginRight: 20,
+  },
+
   earningList: {
     paddingVertical: 10,
   },
@@ -302,45 +339,87 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   tripList: {
-    // flex: 1,
+    flex: 1,
+    marginTop: 50,
   },
   tripItem: {
     paddingHorizontal: 15,
     paddingVertical: 10,
+    // marginTop: 10
+    // borderBottomWidth: 1,
+    // borderBottomColor: AppColors.black,
   },
   tripHeader: {
     flexDirection: 'row',
-    // alignItems: 'center',
+    alignItems: 'center',
   },
   eyeIcon: {
     marginRight: 10,
   },
+  contentContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+  },
   tripInfo: {
-    // flex: 1,
+    flex: 1,
   },
   tripType: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: 'black',
+    // fontWeight: 'bold',
+    paddingBottom: 5,
+    color: '#000',
   },
   tripDate: {
     fontSize: 12,
     color: '#888',
   },
+  settlementType: {
+    fontWeight: 'bold',
+  },
   tripAmount: {
     fontSize: 16,
-    fontWeight: 'bold',
-    marginLeft: 10,
-    color: 'black',
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#ddd',
-    marginTop: 10,
+    // fontWeight: 'bold',
+    color: '#000',
   },
 });
 
 export default DriverEarning;
+
+// <View style={styles.tripItem}>
+//   <View style={styles.tripHeader}>
+//     <Icon
+//       name="eye"
+//       size={20}
+//       color={AppColors.mainColor}
+//       style={styles.eyeIcon}
+//     />
+//     <View
+//       style={{
+//         justifyContent: 'space-evenly',
+//         // alignItems: 'flex-end',
+//         flexDirection: 'row',
+//       }}>
+//       <View style={styles.tripInfo}>
+//         <Text style={styles.tripType}>
+//           {item.type} - {item.duration} - {item.mode}
+//         </Text>
+//         <Text style={styles.tripDate}>
+//           {item.date} -{' '}
+//           <Text style={{fontWeight: 'bold'}}>{item.settlementType}</Text>{' '}
+//           {item.settlementDate}
+//         </Text>
+//       </View>
+//       <View style={{}}>
+//         <Text style={styles.tripAmount}>₹{item.amount}</Text>
+//       </View>
+//     </View>
+//   </View>
+//   <View style={styles.separator} />
+// </View>
 
 //   const renderEarningItem = ({item}) => (
 //     <View style={styles.earningItem}>
@@ -352,7 +431,7 @@ export default DriverEarning;
 //   const renderTripItem = ({item}) => (
 //     <View style={styles.tripItem}>
 //       <View style={styles.tripHeader}>
-//         <Icon name="eye" size={20} color="#000" />
+//         <Icon name="eye" size={20} color=AppColors.black />
 //         <View style={styles.tripInfo}>
 //           <Text style={styles.tripType}>
 //             {item.type} - {item.duration} - {item.mode}
@@ -393,7 +472,7 @@ export default DriverEarning;
 // const styles = StyleSheet.create({
 //   container: {
 //     flex: 1,
-//     backgroundColor: '#fff',
+//     backgroundColor: AppColors.white,
 //   },
 //   earningHeader: {
 //     alignItems: 'flex-end',
@@ -401,12 +480,12 @@ export default DriverEarning;
 //     paddingTop: 20,
 //     paddingBottom: 10,
 //     borderBottomWidth: 1,
-//     borderBottomColor: '#000',
+//     borderBottomColor: AppColors.black,
 //   },
 //   earningHeaderText: {
 //     fontSize: 18,
 //     fontWeight: 'bold',
-//     color: 'black',
+//     color: AppColors.black,
 //   },
 //   earningList: {
 //     paddingVertical: 10,
@@ -502,7 +581,7 @@ export default DriverEarning;
 //           <View style={{position: 'relative'}}>
 //             <Text
 //               style={{
-//                 color: 'black',
+//                 color: AppColors.black,
 //                 fontWeight: '400',
 //                 paddingBottom: 3, // Space between text and underline
 //               }}>
@@ -515,7 +594,7 @@ export default DriverEarning;
 //       left: 0,
 //       right: 0,
 //       height: .5, // Thickness of the underline
-//       backgroundColor: 'black', // Color of the underline
+//       backgroundColor: AppColors.black, // Color of the underline
 //     }}
 //   />
 // </View>

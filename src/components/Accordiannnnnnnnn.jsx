@@ -381,7 +381,7 @@
 
 // //   const getContent = (index) => {
 // //     return (
-// //       <Text style={{color: 'black'}} >
+// //       <Text style={{color: AppColors.black}} >
 // //         {areas[index]}
 // //       </Text>
 // //     );

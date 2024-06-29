@@ -3,11 +3,11 @@ import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import MyBookingModal from './MyBookingModal';
 import Modal from 'react-native-modal';
-import MyComponent from './Eeeeeeeeeeeeeeeeeeeeeeeeeee';
+import { AppColors } from '../assets/Colors';
 
-const ExtraButtons = () => {
-  const [myBookingModal, setMyBookingModal] = useState(false);
-  const [myBookingPage, setMyBookingPage] = useState(false)
+const ExtraButtons = ({setMyBookingModal}) => {
+  // const [myBookingModal, setMyBookingModal] = useState(false);
+  // const [myBookingPage, setMyBookingPage] = useState(false)
 
   const navigation = useNavigation();
   return (
@@ -44,14 +44,14 @@ const ExtraButtons = () => {
           marginRight: 17,
           borderWidth: 1,
           borderRadius: 5,
-          backgroundColor: '#16588e',
+          backgroundColor: AppColors.mainColor,
         }}>
         <TouchableOpacity
         // onPress={() => navigation.navigate('MyComponent')}>
         
         // onPress={() => setMyBookingModal(true)}
         // onPress={() => setMyBookingPage(!myBookingPage)}
-        onPress={() => console.warn('run')}
+        // onPress={() => console.warn('run')}
         
         >
           <Text
@@ -65,17 +65,17 @@ const ExtraButtons = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      {
+      {/* {
         myBookingPage ? <MyComponent setMyBookingPage={setMyBookingPage} /> : null
-      }
-      <Modal
+      } */}
+      {/* <Modal
         backdropOpacity={0}
         onBackdropPress={() => setMyBookingModal(false)}
         animationIn={'fadeInDown'}
         animationOut={'fadeOutUp'}
         isVisible={myBookingModal}>
         <MyBookingModal setMyBookingModal={setMyBookingModal} />
-      </Modal>
+      </Modal> */}
     </View>
     // ======================
 

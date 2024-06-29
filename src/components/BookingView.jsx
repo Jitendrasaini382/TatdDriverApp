@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   connectButton: {
-    backgroundColor: '#ff8b00',
+    backgroundColor: AppColors.orange,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     width: 20,
   },
   connectText: {
-    color: 'black',
+    color: AppColors.black,
     flex: 1,
     paddingLeft: 15,
     textAlign: 'left',
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   notificationText: {
-    color: 'black',
+    color: AppColors.black,
     fontFamily: AppFont.regularFont,
     fontWeight: '500',
     fontSize: 14,
@@ -273,7 +273,7 @@ export default BookingView;
 //       </TouchableOpacity>
 //       <Text
 //         style={{
-//           color: 'black',
+//           color: AppColors.black,
 //           flex: 1,
 //           paddingLeft: 15,
 //           textAlign: 'left',
@@ -295,7 +295,7 @@ export default BookingView;
 //       }}>
 //       <Text
 //         style={{
-//           color: 'black',
+//           color: AppColors.black,
 //           flex: 1,
 //           fontFamily: AppFont.regularFont,
 //           fontWeight: '500',

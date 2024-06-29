@@ -123,11 +123,11 @@ const styles = StyleSheet.create({
   indexText: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: 'black',
+    color: AppColors.black,
   },
   title: {
     fontSize: 14,
-    color: 'black',
+    color: AppColors.black,
     fontWeight:'bold',
     flex: 1,
   },
@@ -206,6 +206,6 @@ const styles = StyleSheet.create({
 //   title: {
 //     fontSize: 10,
 //     fontWeight: 'bold',
-//     color: 'black',
+//     color: AppColors.black,
 //   },
 // });

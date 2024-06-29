@@ -83,7 +83,7 @@ import {
     },
     mainView: {
       // margin: 15,
-      backgroundColor: '#fff',
+      backgroundColor: AppColors.white,
       borderWidth: 1,
       borderRadius: 10,
       borderColor: '#16588e',
@@ -106,7 +106,7 @@ import {
       display: 'flex',
       flexDirection: 'row',
     },
-    headingView: {backgroundColor: '#fff', width: '80%', marginLeft: 0},
+    headingView: {backgroundColor: AppColors.white, width: '80%', marginLeft: 0},
     headingText: {
       color: '#16588e',
       lineHeight: 20,
@@ -162,7 +162,7 @@ import {
     inputText: {
       height: 36,
       fontSize: 14,
-      color: 'black',
+      color: AppColors.black,
       // lineHeight: 20,
       justifyContent: 'center',
       // textAlign: 'auto',
@@ -184,7 +184,7 @@ import {
   
     btnText: {
       fontSize: 14,
-      color: '#fff',
+      color: AppColors.white,
       fontWeight: '400',
       fontFamily: 'Roboto-Regular',
     },

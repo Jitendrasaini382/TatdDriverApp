@@ -1,6 +1,7 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {AppColors} from '../assets/Colors';
 
 const BackButton = () => {
   const navigation = useNavigation();
@@ -29,7 +30,7 @@ const BackButton = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text
             style={{
-              color: 'black',
+              color: AppColors.black,
               margin: 5,
               opacity: 0.8,
             }}>

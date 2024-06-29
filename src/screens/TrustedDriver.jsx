@@ -33,8 +33,8 @@ const TrustedDriver = ({navigation}) => {
   const [mainToggleModal, setMainToggleModal] = useState(false);
   const [mainToggleContent, setMainToggleContent] = useState(false);
   const [videosContent, setVideoContent] = useState(false);
-  const [myBookingAgencyModal, setMyBookingAgencyModal]= useState(false)
-  
+  const [myBookingAgencyModal, setMyBookingAgencyModal] = useState(false);
+
   // useEffect(()=>{
   //   setMainToggleModal(true)
   // },[])
@@ -55,11 +55,14 @@ const TrustedDriver = ({navigation}) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [bookingModal, setBookingModal] = useState(false);
   const [ratingModal, setRatingModal] = useState(false);
-  // const [myBookingModal, setMyBookingModal] = useState(false);
+
+
+  const [myBookingModal, setMyBookingModal] = useState(false);
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: AppColors.white}}>
       <Header extraButton={true} />
+
       <ScrollView>
         <View style={styles.mainContainer}>
           {/* Marquee View */}
@@ -89,7 +92,7 @@ const TrustedDriver = ({navigation}) => {
                     }>
                     <View style={styles.earningView}>
                       <Text style={styles.rupeeIcon}>
-                        <Icon name="rupee" size={7} />0
+                        <Icon name="rupee" size={7} />15115
                       </Text>
                     </View>
                   </TouchableOpacity>
@@ -195,11 +198,26 @@ const TrustedDriver = ({navigation}) => {
             <View style={styles.bottamContent}>
               <TouchableOpacity
                 onPress={() => setVideoContent(true)}
-                style={styles.bottamContent1}>
+                style={[
+                  styles.bottamContent1,
+                  videosContent && {backgroundColor: AppColors.mainColor},
+                ]}>
                 <Text style={styles.absoulteText}>5</Text>
                 <View style={styles.absoulteView}>
-                  <Text style={styles.trainingText}>Training</Text>
-                  <Text style={styles.videosText}>Videos</Text>
+                  <Text
+                    style={[
+                      styles.bottamContent1Text,
+                      videosContent && {color: 'white'},
+                    ]}>
+                    Training
+                  </Text>
+                  <Text
+                    style={[
+                      styles.bottamContent1Text,
+                      videosContent && {color: 'white'},
+                    ]}>
+                    Videos
+                  </Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
@@ -230,9 +248,10 @@ const TrustedDriver = ({navigation}) => {
           </View>
           {/* ToGGle Button */}
           <ToggleButton
-         button1Label="Hindi" button2Label="English"
-          onToggle={label => setCurrentView(label)}
-        />
+            button1Label="Hindi"
+            button2Label="English"
+            onToggle={label => setCurrentView(label)}
+          />
 
           {/* main Toggle Content */}
 
@@ -243,15 +262,17 @@ const TrustedDriver = ({navigation}) => {
               <AccordionTrainingVideo />
             ) : null}
             <Modal
-                    backdropOpacity={0}
-                    onBackdropPress={() => setMyBookingAgencyModal(false)}
-                    animationIn={'fadeInDown'}
-                    animationOut={'fadeOutUp'}
-                    isVisible={myBookingAgencyModal}>
-                    {/* <OtrModal setModalVisible={setModalVisible} /> */}
-                    {/* <PackageDetails setModalVisible={setModalVisible} /> */}
-                    <MyBookingAgencyModal setMyBookingAgencyModal={setMyBookingAgencyModal} />
-                  </Modal>
+              backdropOpacity={0}
+              onBackdropPress={() => setMyBookingAgencyModal(false)}
+              animationIn={'fadeInDown'}
+              animationOut={'fadeOutUp'}
+              isVisible={myBookingAgencyModal}>
+              {/* <OtrModal setModalVisible={setModalVisible} /> */}
+              {/* <PackageDetails setModalVisible={setModalVisible} /> */}
+              <MyBookingAgencyModal
+                setMyBookingAgencyModal={setMyBookingAgencyModal}
+              />
+            </Modal>
           </View>
         </View>
       </ScrollView>
@@ -272,10 +293,9 @@ const styles = StyleSheet.create({
   marqueeView: {
     paddingLeft: 7,
     paddingRight: 7,
-  
   },
   marqueeText: {
-    color: 'black',
+    color: AppColors.black,
     fontSize: 15,
     fontWeight: '400',
     lineHeight: 21,
@@ -285,7 +305,7 @@ const styles = StyleSheet.create({
     margin: 15,
     // flex: 1,
     marginTop: 0,
-    backgroundColor: '#fff',
+    backgroundColor: AppColors.white,
     borderWidth: 1,
     borderRadius: 10,
     borderColor: AppColors.mainColor,
@@ -311,7 +331,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   topLeft: {
-    backgroundColor: '#fff',
+    backgroundColor: AppColors.white,
     height: 70,
     width: 70,
     borderRadius: 50,
@@ -461,7 +481,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   bottamContent1: {
-    backgroundColor: 'grey',
+    backgroundColor: 'white',
     flex: 1,
     borderWidth: 1,
     borderColor: AppColors.mainColor,
@@ -483,22 +503,13 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   absoulteView: {justifyContent: 'center', alignItems: 'center'},
-  trainingText: {
+  bottamContent1Text: {
     color: AppColors.mainColor,
     fontSize: 9,
     fontWeight: '400',
-    // paddingTop: 5,
-    textAlign: 'center',
-    // justifyContent: 'center',
-    // position:'relative'
-  },
-  videosText: {
-    color: AppColors.mainColor,
-    fontSize: 9,
-    fontWeight: '400',
-    // paddingTop: 5,
     textAlign: 'center',
   },
+
   bottamContent2: {
     backgroundColor: 'white',
     paddingBottom: 3,
@@ -520,7 +531,7 @@ const styles = StyleSheet.create({
     paddingBottom: 3,
   },
   bottamContent4: {
-    backgroundColor: 'white',
+    backgroundColor: 'yellow',
     flex: 1,
     borderWidth: 1,
     borderColor: AppColors.mainColor,

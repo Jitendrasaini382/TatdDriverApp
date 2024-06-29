@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { AppColors } from '../assets/Colors';
 
 const RadioButton = ({ label, selected, onSelect }) => {
   return (
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
   radioText: {
     marginLeft: 10,
     fontSize: 16,
-    color: '#000',
+    color: AppColors.black,
     fontFamily: "Roboto-Regular"
 
   },

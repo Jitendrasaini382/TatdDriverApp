@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   card: {
     margin: 15,
-    backgroundColor: '#fff',
+    backgroundColor: AppColors.white,
     borderWidth: 1,
     borderRadius: 10,
     borderColor: AppColors.mainColor,
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   whiteBackground: {
-    backgroundColor: '#fff',
+    backgroundColor: AppColors.white,
     width: '80%',
   },
   headerText: {
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     height: 36,
   },
   textInput: {
-    color: 'black',
+    color: AppColors.black,
     justifyContent: 'center',
     textAlign: 'left',
     height: 36,
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
   },
   verifyButtonText: {
     fontSize: 14,
-    color: '#fff',
+    color: AppColors.white,
     fontWeight: '400',
   },
 });
@@ -273,7 +273,7 @@ export default CheckDriverOtp;
 //           <View
 //             style={{
 //               margin: 15,
-//               backgroundColor: '#fff',
+//               backgroundColor: AppColors.white,
 //               borderWidth: 1,
 //               borderRadius: 10,
 //               borderColor: AppColors.mainColor,
@@ -299,7 +299,7 @@ export default CheckDriverOtp;
 //                 }}>
 //                 <View
 //                   style={{
-//                     backgroundColor: '#fff',
+//                     backgroundColor: AppColors.white,
 //                     width: '80%',
 //                     marginLeft: 0,
 //                   }}>
@@ -427,7 +427,7 @@ export default CheckDriverOtp;
 //                 }}>
 //                 <TextInput
 //                   style={{
-//                     color: 'black',
+//                     color: AppColors.black,
 //                     justifyContent: 'center',
 //                     textAlign: 'left',
 //                     height: 36,
@@ -458,7 +458,7 @@ export default CheckDriverOtp;
 //                 <Text
 //                   style={{
 //                     fontSize: 14,
-//                     color: '#fff',
+//                     color: AppColors.white,
 //                     fontFamily: '',
 //                     fontWeight: '400',
 //                   }}>

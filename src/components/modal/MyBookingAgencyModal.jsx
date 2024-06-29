@@ -23,7 +23,7 @@ const MyBookingAgencyModal = ({setMyBookingAgencyModal, setModalVisible}) => {
             // height:800,
             // flex: 1,
             borderRadius: 20,
-            shadowColor: '#000',
+            shadowColor: AppColors.black,
             shadowOffset: {
               width: 0,
               height: 2,
@@ -81,18 +81,18 @@ const MyBookingAgencyModal = ({setMyBookingAgencyModal, setModalVisible}) => {
                       styles.mainText,
                       {flexDirection: 'column', display: 'flex'},
                     ]}>
-                    <Text style={{color: '#000'}}>
+                    <Text style={{color: AppColors.black}}>
                       After becoming a booking agency:
                     </Text>
-                    <Text style={{color: '#000'}}>
+                    <Text style={{color: AppColors.black}}>
                       1) You will be able to make bookings for your
                       acquaintances.
                     </Text>
-                    <Text style={{color: '#000'}}>
+                    <Text style={{color: AppColors.black}}>
                       2) If a company customer asks you for a booking, you can
                       also make their booking.
                     </Text>
-                    <Text style={{color: '#000'}}>
+                    <Text style={{color: AppColors.black}}>
                       A 10% commission will be given to the booking agency for
                       both types of customers.
                     </Text>
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     // marginBottom: 12,
   },
   whiteBackground: {
-    backgroundColor: '#fff',
+    backgroundColor: AppColors.white,
     width: '80%',
     height: 20,
   },
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
 //     marginBottom: 12,
 //   },
 //   whiteBackground: {
-//     backgroundColor: '#fff',
+//     backgroundColor: AppColors.white,
 //     width: '80%',
 //   },
 //   headerText: {

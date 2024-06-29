@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import {Dimensions} from 'react-native';
+import { AppColors } from '../assets/Colors';
 const {width, height} = Dimensions.get('window');
 
 const RatingModal = ({setRatingModal}) => {
@@ -15,11 +16,23 @@ const RatingModal = ({setRatingModal}) => {
       <View style={styles.mainContainer}>
         <View style={styles.contentContainer}>
           <Text style={styles.topHeading}>Rating </Text>
-          <Text style={styles.middleText}>Dear Mohit DHANAWAT, If your Rating Score is more than 4, then you will</Text>
+          <Text style={styles.topText}>
+            Dear MOHIT DHANAWAT, If your Rating Score is more than 4, then you
+            will:
+          </Text>
+          <Text style={styles.middleText}>
+            1 - See bookings immediately on the panel; otherwise, they will
+            appear late.
+          </Text>
+          <Text style={styles.middleText}>
+            2 - Be notified via SMS when new bookings come in your area.
+          </Text>
+          <Text style={styles.middleText}>
+            3 - If your Rating Score is more than 4 and your Booking Score is
+            more than 70%, you can see and take more than one booking in a day.
+          </Text>
           <Text style={styles.BottamText}>
-            When you are sent to a customer, it is expected that you will reach
-            on time. Your OTR increases when you reach on time, otherwise, it
-            decreases.
+          To increase your Rating, provide customers with a good experience.
           </Text>
           <TouchableOpacity
             style={styles.button}
@@ -37,44 +50,53 @@ export default RatingModal;
 const styles = StyleSheet.create({
   mainContainer: {flex: 1},
   contentContainer: {
-    elevation: 3,
+    elevation: 13,
     padding: 10,
     backgroundColor: 'white',
     borderRadius: 12,
-    paddingLeft: 15,
+    paddingHorizontal: 15,
   },
   topHeading: {
     textAlign: 'center',
     justifyContent: 'center',
     color: '#195788',
-    paddingTop: 5,
+    marginVertical: 15,
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: "600",
+    fontFamily: 'Roboto-Regular',
+  },
+  topText: {
+    marginVertical: 10,
+    textAlign: 'left',
+    // justifyContent: 'flex-start',
+    color: AppColors.silverGrey,
+    fontSize: 18,
+    fontWeight: '400',
   },
   middleText: {
-    marginTop: 5,
+    // marginVertical: 5,
     textAlign: 'left',
-    justifyContent: 'flex-start',
-    color: '#9e9e9e',
+    // justifyContent: 'flex-start',
+    color: AppColors.silverGrey,
     fontSize: 18,
     fontWeight: '400',
   },
   BottamText: {
     textAlign: 'left',
     justifyContent: 'flex-start',
-    color: '#9e9e9e',
+    color: AppColors.silverGrey,
     fontSize: 18,
     fontWeight: '400',
-    marginTop: 5,
+    marginVertical: 15,
     // marginBottom: 15,
   },
   button: {
-    marginTop: 5,
+    marginVertical: 15,
     paddingVertical: 3,
     paddingHorizontal: 10,
     borderRadius: 5,
     backgroundColor: '#195788',
     alignSelf: 'flex-start',
   },
-  buttonText: {color: '#fff'},
+  buttonText: {color: AppColors.white},
 });

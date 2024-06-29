@@ -5,6 +5,7 @@ import {AppLogo} from '../assets/images';
 import {AppFont} from '../assets/FontsFamily';
 import BackButton from './BackButton';
 import ExtraButtons from './ExtraButtons';
+import { AppColors } from '../assets/Colors';
 const {width, height} = Dimensions.get('window');
 const Header = ({backButton, extraButton}) => {
   return (
@@ -30,7 +31,7 @@ export default Header;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: AppColors.white,
     display: 'flex',
     flexDirection: 'row',
     shadowColor: 'grey',
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   leftContent: {
-    backgroundColor: '#fff',
+    backgroundColor: AppColors.white,
     flexDirection: 'column',
     justifyContent: 'flex-start',
   },

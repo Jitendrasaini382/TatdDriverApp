@@ -99,7 +99,7 @@ const AccordionTop = () => {
   };
 
   const getContent = index => {
-    return <Text style={{color: 'black'}}>{areas[index]}</Text>;
+    return <Text style={{color: AppColors.black}}>{areas[index]}</Text>;
   };
 
   return (
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     padding: 10,
 },
   headerText: {
-    color: 'black',
+    color: AppColors.black,
     flex: 1,
   },
   itemContent: {

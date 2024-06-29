@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -7,27 +8,63 @@ import {
   View,
 } from 'react-native';
 import {Dimensions} from 'react-native';
+import {AppColors} from '../assets/Colors';
 const {width, height} = Dimensions.get('window');
 
 const BookingModal = ({setBookingModal}) => {
   return (
     <TouchableWithoutFeedback onPress={() => setBookingModal(false)}>
-      <View style={styles.mainContainer}>
-        <View style={styles.contentContainer}>
-          <Text style={styles.topHeading}>Booking</Text>
-          <Text style={styles.middleText}>OTR stands for On Time Reach.</Text>
-          <Text style={styles.BottamText}>
-            When you are sent to a customer, it is expected that you will reach
-            on time. Your OTR increases when you reach on time, otherwise, it
-            decreases.
-          </Text>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => setBookingModal(false)}>
-            <Text style={styles.buttonText}>close</Text>
-          </TouchableOpacity>
+      <ScrollView>
+        <View style={styles.mainContainer}>
+          <View style={styles.contentContainer}>
+            <Text style={styles.topHeading}>
+              If your Booking Score is more than 70%, then:
+            </Text>
+            <Text style={{color: AppColors.silverGrey, fontSize: 18}}>
+              1 - Local bookings will be immediately visible on the panel;
+              otherwise, they will appear late.
+            </Text>
+            <Text style={{color: AppColors.silverGrey, fontSize: 18}}>
+              2 - If you have completed 5 out of the last 10 bookings locally,
+              then outstation bookings will be visible on your panel.
+            </Text>
+            <Text style={{color: AppColors.silverGrey, fontSize: 18}}>
+              3 - And if your Rating Score is more than 4, then you can take
+              more than one booking in a day.
+            </Text>
+            <Text
+              style={{
+                color: AppColors.mainColor,
+                fontSize: 20,
+                alignSelf: 'center',
+                marginVertical: 20,
+              }}>
+              Booking Score Clarity
+            </Text>
+            <Text style={{color: AppColors.silverGrey, fontSize: 18}}>
+              Dear MOHIT DHANAWAT, customers book drivers only when they
+              urgently need them. It is our responsibility to ensure that we
+              reach the customer on time and fulfill their trust. Customer
+              cancellations occur in 10% to 20% of cases. Additionally,
+              cancellations often happen when the customer does not answer the
+              call promptly or when the customer is disrespectful. Please inform
+              the customer as soon as you pick up the booking - "My name is Anil
+              Rawat, and I am speaking as your driver from TatD. I will reach
+              you on time." If the customer does not answer, press the 'Customer
+              Not Answering' button, which sends a message to the customer from
+              the company to answer the driver's call. In most cases, customers
+              answer the call, reducing cancellations. It is common for drivers
+              with fewer cancellations to get more work. Have a great day!
+              www.tatd.in
+            </Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setBookingModal(false)}>
+              <Text style={styles.buttonText}>close</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </TouchableWithoutFeedback>
   );
 };
@@ -40,43 +77,44 @@ const styles = StyleSheet.create({
     elevation: 3,
     padding: 10,
     backgroundColor: 'white',
-    borderRadius: 12,
+    // borderRadius: 12,
     paddingLeft: 15,
   },
   topHeading: {
-    textAlign: 'center',
+    // textAlign: '',
     justifyContent: 'center',
-    color: '#195788',
-    paddingTop: 5,
+    color: AppColors.silverGrey,
+    paddingVertical: 10,
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: '400',
   },
   middleText: {
     marginTop: 5,
     textAlign: 'left',
     justifyContent: 'flex-start',
-    color: '#9e9e9e',
+    color: AppColors.silverGrey,
     fontSize: 18,
     fontWeight: '400',
   },
   BottamText: {
     textAlign: 'left',
     justifyContent: 'flex-start',
-    color: '#9e9e9e',
+    color: AppColors.silverGrey,
     fontSize: 18,
     fontWeight: '400',
     marginTop: 5,
     // marginBottom: 15,
   },
   button: {
-    marginTop: 5,
+    marginBottom: 5,
+    marginTop: 30,
     paddingVertical: 3,
     paddingHorizontal: 10,
     borderRadius: 5,
     backgroundColor: '#195788',
     alignSelf: 'flex-start',
   },
-  buttonText: {color: '#fff'},
+  buttonText: {color: AppColors.white},
 });
 
 // import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';

@@ -14,8 +14,8 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal}) => {
     <ScrollView>
       <View
         style={{
-          //   flex: 1,
-          backgroundColor: '#fff',
+            flex: 1,
+          backgroundColor: AppColors.white,
           borderWidth: 2,
           borderRadius: 10,
           borderColor: AppColors.mainColor,
@@ -32,7 +32,7 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal}) => {
           }}>
           <Text
             style={{
-              color: 'black',
+              color: AppColors.black,
               fontSize: 17,
               fontWeight: 'bold',
               fontFamily: 'Roboto-Regular',
@@ -44,7 +44,7 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal}) => {
         style={{backgroundColor: AppColors.mainColor, borderRadius: 5}}>
             <Text
               style={{
-                color: '#fff',
+                color: AppColors.white,
                 paddingHorizontal: 7,
                 fontSize: 17,
                 paddingVertical: 3,
@@ -65,7 +65,7 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal}) => {
             }}>
             <Text
               style={{
-                color: 'black',
+                color: AppColors.black,
                 marginBottom: 10,
                 fontFamily: 'Roboto-Regular',
                 fontSize: 13,
@@ -74,7 +74,7 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal}) => {
             </Text>
             <Text
               style={{
-                color: 'black',
+                color: AppColors.black,
                 marginBottom: 10,
                 fontFamily: 'Roboto-Regular',
                 fontSize: 13,
@@ -90,46 +90,21 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal}) => {
             }}>
             <Text
               style={{
-                color: 'black',
+                color: AppColors.black,
                 marginBottom: 10,
                 fontFamily: 'Roboto-Regular',
                 fontSize: 13,
               }}>
-              Trip Type:
+              Package:
             </Text>
             <Text
               style={{
-                color: 'black',
+                color: AppColors.black,
                 marginBottom: 10,
                 fontFamily: 'Roboto-Regular',
                 fontSize: 13,
               }}>
-              Round Trip
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginBottom: 10,
-            }}>
-            <Text
-              style={{
-                color: 'black',
-                marginBottom: 10,
-                fontFamily: 'Roboto-Regular',
-                fontSize: 13,
-              }}>
-              Trip Type:
-            </Text>
-            <Text
-              style={{
-                color: 'black',
-                marginBottom: 10,
-                fontFamily: 'Roboto-Regular',
-                fontSize: 13,
-              }}>
-              Round Trip
+              10 Hours
             </Text>
           </View>
           <View
@@ -140,21 +115,21 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal}) => {
             }}>
             <Text
               style={{
-                color: 'black',
+                color: AppColors.black,
                 marginBottom: 10,
                 fontFamily: 'Roboto-Regular',
                 fontSize: 13,
               }}>
-              Trip Type:
+             Package Price : Cash
             </Text>
             <Text
               style={{
-                color: 'black',
+                color: AppColors.black,
                 marginBottom: 10,
                 fontFamily: 'Roboto-Regular',
                 fontSize: 13,
               }}>
-              Round Trip
+             Rs 1292
             </Text>
           </View>
           <View
@@ -165,21 +140,47 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal}) => {
             }}>
             <Text
               style={{
-                color: 'black',
+                color: AppColors.black,
                 marginBottom: 10,
                 fontFamily: 'Roboto-Regular',
                 fontSize: 13,
               }}>
-              Trip Type:
+              GST : 5%
+              </Text>
+            <Text
+              style={{
+                color: AppColors.black,
+                marginBottom: 10,
+                fontFamily: 'Roboto-Regular',
+                fontSize: 13,
+              }}>
+              Rs 61
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginBottom: 10,
+            }}>
+            <Text
+              style={{
+                color: AppColors.black,
+                marginBottom: 10,
+                fontFamily: 'Roboto-Regular',
+                fontSize: 13,
+              }}>
+             Commission : 20%
+
             </Text>
             <Text
               style={{
-                color: 'black',
+                color: AppColors.black,
                 marginBottom: 10,
                 fontFamily: 'Roboto-Regular',
                 fontSize: 13,
               }}>
-              Round Trip
+              Rs 246
             </Text>
           </View>
           <View style={{borderBottomWidth: 0.5, borderStyle: 'dashed'}}></View>
@@ -192,21 +193,21 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal}) => {
             }}>
             <Text
               style={{
-                color: 'black',
+                color: AppColors.black,
                 marginBottom: 10,
                 fontFamily: 'Roboto-Regular',
                 fontSize: 13,
               }}>
-              Trip Type:
+              Net Earning:
             </Text>
             <Text
               style={{
-                color: 'black',
+                color: AppColors.black,
                 marginBottom: 10,
                 fontFamily: 'Roboto-Regular',
                 fontSize: 13,
               }}>
-              Round Trip
+              Rs 985
             </Text>
           </View>
           <View style={{borderBottomWidth: 0.5, borderStyle: 'dashed'}}></View>
@@ -226,12 +227,12 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal}) => {
                   width: 4,
                   height: 4,
                   borderRadius: 2,
-                  backgroundColor: 'black',
+                  backgroundColor: AppColors.black,
                 }}
               />
               <Text
                 style={{
-                  color: 'black',
+                  color: AppColors.black,
                   marginLeft: 10,
                   fontFamily: 'Roboto-Regular',
                   fontWeight: 'bold',
@@ -261,12 +262,12 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal}) => {
                   width: 4,
                   height: 4,
                   borderRadius: 2,
-                  backgroundColor: 'black',
+                  backgroundColor: AppColors.black,
                 }}
               />
               <Text
                 style={{
-                  color: 'black',
+                  color: AppColors.black,
                   marginLeft: 10,
                   fontFamily: 'Roboto-Regular',
                   fontWeight: 'bold',
@@ -291,7 +292,6 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal}) => {
   );
 };
 
-export default ClearMyDuePaymentModal;
 
 const styles = StyleSheet.create({
   container: {
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: 'black',
+    backgroundColor: AppColors.black,
     marginTop: 7,
   },
   textContainer: {
@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   text: {
-    color: 'black',
+    color: AppColors.mainColor,
     fontFamily: 'Roboto-Regular',
     fontWeight: 'bold',
   },
@@ -329,3 +329,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+  export default ClearMyDuePaymentModal;

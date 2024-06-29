@@ -2,6 +2,8 @@ export const AppColors ={
     mainColor :'#16588e',
     borderColor : "rgb(217,217,217)",
     greyColor : "#B7B7B7",
-    white : "#ffffff",
-    black : "#000000"
+    white : "#fff",
+    black : "#000" ,
+    silverGrey : "#9E9E9E",
+    orange : "#ff8b00"
 }

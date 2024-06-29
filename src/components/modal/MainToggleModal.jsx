@@ -37,7 +37,7 @@ const MainToggleModal = ({setMainToggleModal}) => {
               </View>
             </View>
             <View style={{padding: 5}}>
-              <Text style={{color: 'black', fontSize: 15}}>
+              <Text style={{color: AppColors.black, fontSize: 15}}>
                 Are you available for any booking in the entire{' '}
                 <Text style={{color: AppColors.mainColor,fontWeight: '500' }}> South Delhi </Text>
                  area in the next
@@ -47,7 +47,7 @@ const MainToggleModal = ({setMainToggleModal}) => {
               </Text>
             </View>
             <View style={{padding: 5}}>
-              <Text style={{color: 'black', fontSize: 15}}>
+              <Text style={{color: AppColors.black, fontSize: 15}}>
                 Please do not provide incorrect information to avoid wasting
                 both your and our time.
               </Text>
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
   mainView: {
     // margin: 15,
-    backgroundColor: '#fff',
+    backgroundColor: AppColors.white,
     borderRadius: 8,
     borderColor: '#16588e',
     width: '100%',
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     flexDirection: 'row',
   },
-  headingView: {backgroundColor: '#fff', width: '80%', marginLeft: 0},
+  headingView: {backgroundColor: AppColors.white, width: '80%', marginLeft: 0},
   headingText: {
     color: AppColors.mainColor,
     fontSize: 15,
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   inputText: {
     height: 36,
     fontSize: 14,
-    color: 'black',
+    color: AppColors.black,
     // lineHeight: 20,
     justifyContent: 'center',
     // textAlign: 'auto',
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
 
   btnText: {
     fontSize: 14,
-    color: '#fff',
+    color: AppColors.white,
     fontWeight: '400',
     fontFamily: 'Roboto-Regular',
   },

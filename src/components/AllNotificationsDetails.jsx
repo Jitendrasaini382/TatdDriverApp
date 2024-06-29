@@ -12,6 +12,7 @@ import {
 import {OpenEnvelop} from '../assets/images';
 import {useNavigation} from '@react-navigation/native';
 import Header from './Header';
+import { AppColors } from '../assets/Colors';
 
 const notificationData = [
   'Dear MOHIT DHANAWAT, आप 207 मिनट लेट पहुंचे है। इसका दुष्प्र...',
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
   detailText: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
-    color: 'black',
+    color: AppColors.black,
     marginBottom: 10,
   },
 
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
   indexText: {
     fontSize: 15,
     fontFamily: 'Roboto-Regular',
-    color: 'black',
+    color: AppColors.black,
   },
   fullScreenContainer: {
     flex: 1,
@@ -186,7 +187,7 @@ const styles = StyleSheet.create({
   detailText: {
     fontSize: 20,
     fontFamily: 'Roboto-Regular',
-    color: 'black',
+    color: AppColors.black,
     textAlign: 'center',
     padding: 20,
   },

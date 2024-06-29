@@ -1,17 +1,3 @@
-// import { StyleSheet, Text, View } from 'react-native'
-// import React from 'react'
-
-// const PackageDetails = () => {
-//   return (
-//     <View>
-//       <Text>PackageDetails</Text>
-//     </View>
-//   )
-// }
-
-// export default PackageDetails
-
-// const styles = StyleSheet.create({})
 
 import React from 'react';
 import {
@@ -46,12 +32,12 @@ const PackageDetails = ({setModalVisible}) => {
             marginBottom: 5,
           }}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={{fontWeight: '600', fontSize: 15, color: 'black'}}>
+            <Text style={{fontWeight: '600', fontSize: 15, color: AppColors.black}}>
               Package Details
             </Text>
             <TouchableOpacity
             onPress={() => setModalVisible(false)}
-              style={{backgroundColor: AppColors.mainColor, borderRadius: 5}}>
+            style={{backgroundColor: AppColors.mainColor, borderRadius: 5}}>
               <Text
                 style={{
                   fontWeight: '500',
@@ -66,30 +52,30 @@ const PackageDetails = ({setModalVisible}) => {
             </TouchableOpacity>
           </View>
           <View style={{paddingTop: 50}}>
-            <Text style={{color: 'black', fontFamily: 'Nirmala'}}>
+            <Text style={{color: AppColors.black, fontFamily: 'Nirmala'}}>
               Salary - Rs 20000
             </Text>
-            <Text style={{color: 'black', fontFamily: 'Nirmala'}}>
+            <Text style={{color: AppColors.black, fontFamily: 'Nirmala'}}>
               Working Days - 26
             </Text>
-            <Text style={{color: 'black', fontFamily: 'Nirmala'}}>
+            <Text style={{color: AppColors.black, fontFamily: 'Nirmala'}}>
               Working Hours - 12
             </Text>
-            <Text style={{color: 'black', fontFamily: 'Nirmala'}}>
+            <Text style={{color: AppColors.black, fontFamily: 'Nirmala'}}>
               Overtime - 60 Rs Per Hour
             </Text>
             <Text
-              style={{color: 'black', fontFamily: 'Nirmala', marginTop: 20}}>
+              style={{color: AppColors.black, fontFamily: 'Nirmala', marginTop: 20}}>
               Trial 2 hours - 0 Rs का है।
             </Text>
             <Text style={{color: AppColors.mainColor}}>
-              <Icon name="circle" color={'black'} size={5} /> ध्यान रहे - हमे
+              <Icon name="circle" color={AppColors.black} size={5} /> ध्यान रहे - हमे
               कस्टमर की परेशानी कम करनी है उसे बढ़ाना नहीं। Accept करने के बाद,
               कस्टमर के पास नहीं पहुँचने पर, आपकी ID हमेशा के लिए या फिर 21 दिन
               के लिए बंद हो जाएगी।
             </Text>
-            <Text style={{color: 'black', fontFamily: 'Nirmala'}}>
-              <Icon name="circle" color={'black'} size={5} /> Return to TAT D -
+            <Text style={{color: AppColors.black, fontFamily: 'Nirmala'}}>
+              <Icon name="circle" color={AppColors.black} size={5} /> Return to TAT D -
               Rs. 0
             </Text>
           </View>
@@ -97,7 +83,7 @@ const PackageDetails = ({setModalVisible}) => {
         <View style={{marginTop: 15, alignSelf: 'center', marginBottom: 10}}>
           <TouchableOpacity
           onPress={() => setModalVisible(false)}
-            style={{paddingl: 18, backgroundColor: AppColors.mainColor}}>
+          style={{paddingl: 18, backgroundColor: AppColors.mainColor}}>
             <Text
               style={{
                 paddingHorizontal: 40,
@@ -145,7 +131,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     marginBottom: 10,
-    color: 'black',
+    color: AppColors.black,
   },
   closeButtonBottom: {
     backgroundColor: '#007bff',
@@ -160,3 +146,18 @@ const styles = StyleSheet.create({
 });
 
 export default PackageDetails;
+
+// import { StyleSheet, Text, View } from 'react-native'
+// import React from 'react'
+
+// const PackageDetails = () => {
+//   return (
+//     <View>
+//       <Text>PackageDetails</Text>
+//     </View>
+//   )
+// }
+
+// export default PackageDetails
+
+// const styles = StyleSheet.create({})

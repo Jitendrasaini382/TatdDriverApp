@@ -16,7 +16,7 @@ const DutyReportUpdate = () => {
             <Text
               style={{
                 textAlign: 'auto',
-                color: 'black',
+                color: AppColors.black,
                 fontWeight: '700',
                 fontSize: 21,
                 fontFamily: 'Poppins',

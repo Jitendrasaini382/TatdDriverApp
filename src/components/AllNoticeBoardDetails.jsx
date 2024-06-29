@@ -94,7 +94,7 @@ const NoticeBoardList = ({onNoticeBoardPress}) => {
             </Text>
           </View>
           <View>
-            <Text style={{color: "black"}} >06 Jun 2024 </Text>
+            <Text style={{color: AppColors.black}} >06 Jun 2024 </Text>
           </View>
         </TouchableOpacity>
       ))}
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   detailText: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
-    color: 'black',
+    color: AppColors.black,
     marginBottom: 10,
   },
 
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   indexText: {
     fontSize: 15,
     fontFamily: 'Roboto-Regular',
-    color: 'black',
+    color: AppColors.black,
   },
   fullScreenContainer: {
     flex: 1,
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   detailText: {
     fontSize: 20,
     fontFamily: 'Roboto-Regular',
-    color: 'black',
+    color: AppColors.black,
     textAlign: 'center',
     padding: 20,
   },

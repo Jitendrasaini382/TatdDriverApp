@@ -10,6 +10,7 @@ import {
 import Header from '../../components/Header';
 import {Address} from '../../assets/images';
 import RadioButtonMyBooking from '../../components/RadioButtonGroup';
+import { AppColors } from '../../assets/Colors';
 
 const DutyReportUpdateProcess = () => {
   return (
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   interviewTimeText: {
-    color: 'black',
+    color: AppColors.black,
     fontWeight: 'bold',
   },
   bookingSection: {
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   bookingNoText: {
-    color: 'black',
+    color: AppColors.black,
   },
   packageDetailsButton: {
     padding: 10,
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   packageDetailsText: {
-    color: 'black',
+    color: AppColors.black,
   },
   middleSection: {
     elevation: 1,
@@ -133,10 +134,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   nameText: {
-    color: 'black',
+    color: AppColors.black,
   },
   typeText: {
-    color: 'black',
+    color: AppColors.black,
   },
   addressCallContainer: {
     flexDirection: 'row',
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
     width: 30,
   },
   addressText: {
-    color: 'black',
+    color: AppColors.black,
     flexWrap: 'wrap',
   },
   callingGif: {
@@ -191,7 +192,7 @@ export default DutyReportUpdateProcess;
 //         {/* top */}
 
 //         <View style={{marginBottom: 20, alignItems: 'center'}}>
-//           <Text style={{color: 'black', fontWeight: 'bold'}}>
+//           <Text style={{color: AppColors.black, fontWeight: 'bold'}}>
 //             Interview Time- 10:00 AM, 26 Jun,2024
 //           </Text>
 //         </View>
@@ -203,7 +204,7 @@ export default DutyReportUpdateProcess;
 //             alignItems: 'center',
 //           }}>
 //           <View>
-//             <Text style={{color: 'black'}}>Booking No : #431062</Text>
+//             <Text style={{color: AppColors.black}}>Booking No : #431062</Text>
 //           </View>
 //           <TouchableOpacity
 //             style={{
@@ -212,7 +213,7 @@ export default DutyReportUpdateProcess;
 //               backgroundColor: 'white',
 //               elevation: 10,
 //             }}>
-//             <Text style={{color: 'black'}}>Package Details</Text>
+//             <Text style={{color: AppColors.black}}>Package Details</Text>
 //           </TouchableOpacity>
 //         </View>
 //         {/* middle */}
@@ -225,8 +226,8 @@ export default DutyReportUpdateProcess;
 //             padding: 15,
 //           }}>
 //           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-//             <Text style={{color: 'black'}}>Sagar Saxena</Text>
-//             <Text style={{color: 'black'}}>Permanent</Text>
+//             <Text style={{color: AppColors.black}}>Sagar Saxena</Text>
+//             <Text style={{color: AppColors.black}}>Permanent</Text>
 //           </View>
 //           <View
 //             style={{
@@ -245,7 +246,7 @@ export default DutyReportUpdateProcess;
 //                 resizeMode="contain"
 //                 style={{height: 30, width: 30}}
 //               />
-//               <Text style={{color: 'black', flexWrap: 'wrap'}}>
+//               <Text style={{color: AppColors.black, flexWrap: 'wrap'}}>
 //                 D-51 A 2nd Floor
 //               </Text>
 //             </View>

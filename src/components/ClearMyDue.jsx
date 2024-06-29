@@ -10,6 +10,7 @@ import {
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
 import ClearMyDuePaymentModal from './modal/ClearMyDuePaymentModal';
+import { AppColors } from '../assets/Colors';
 
 const ClearMyDue = () => {
   const [myDuePaymentModal, setMyDuePaymentModal ] = useState(false);
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   title: {
-    color: 'black',
+    color: AppColors.black,
     fontWeight: '700',
     fontSize: 21,
     fontFamily: 'Roboto-Regular',
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
   },
   cellText: {
     flex: 1,
-    color: 'black',
+    color: AppColors.black,
     textAlign: 'center',
     padding: 10,
   },
@@ -240,7 +241,7 @@ export default ClearMyDue;
 //     marginBottom: 15,
 //   },
 //   title: {
-//     color: 'black',
+//     color: AppColors.black,
 //     fontWeight: '700',
 //     fontSize: 21,
 //     fontFamily: 'Roboto-Regular',
@@ -276,7 +277,7 @@ export default ClearMyDue;
 //   },
 //   cellText: {
 //     flex: 1,
-//     color: "black",
+//     color: AppColors.black,
 //     textAlign: 'center',
 //   },
 //   payButton: {
@@ -340,7 +341,7 @@ export default ClearMyDue;
 // //     // backgroundColor: 'white',
 // //     borderRadius: 10,
 // //     padding: 20,
-// //     shadowColor: '#000',
+// //     shadowColor: AppColors.black,
 // //     // shadowOffset: { width: 0, height: 2 },
 // //     // shadowOpacity: 0.1,
 // //     // shadowRadius: 4,
@@ -351,7 +352,7 @@ export default ClearMyDue;
 // //     marginBottom: 15,
 // //   },
 // //   title: {
-// //     color: 'black',
+// //     color: AppColors.black,
 // //     fontWeight: '700',
 // //     fontSize: 21,
 // //     fontFamily: 'Roboto-Regular',
@@ -389,7 +390,7 @@ export default ClearMyDue;
 // //   },
 // //   cellText: {
 // //     flex: 1,
-// //     color: "black",
+// //     color: AppColors.black,
 // //     textAlign: 'center',
 // //   },
 // //   payButton: {

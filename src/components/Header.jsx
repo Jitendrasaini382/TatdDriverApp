@@ -1,12 +1,10 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
-import {Dimensions} from 'react-native';
 import {AppLogo} from '../assets/images';
 import {AppFont} from '../assets/FontsFamily';
 import BackButton from './BackButton';
 import ExtraButtons from './ExtraButtons';
 import { AppColors } from '../assets/Colors';
-const {width, height} = Dimensions.get('window');
 const Header = ({backButton, extraButton}) => {
   return (
     <View style={styles.mainContainer}>
@@ -20,14 +18,12 @@ const Header = ({backButton, extraButton}) => {
         </View>
       </View>
 
-      {/* <BackButton  /> */}
       {backButton ? <BackButton /> : extraButton ? <ExtraButtons/> : null}
 
     </View>
   );
 };
 
-export default Header;
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -73,3 +69,5 @@ const styles = StyleSheet.create({
     fontFamily: AppFont.mainFont,
   },
 });
+
+export default Header;

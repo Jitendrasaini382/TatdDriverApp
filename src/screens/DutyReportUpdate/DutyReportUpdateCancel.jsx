@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Header from '../components/Header';
 
@@ -25,11 +25,6 @@ const DutyReportUpdateCancel = () => {
             </Text>
           </View>
         </View>
-
-        {/* <View style={{height: 315}}>
-        </View> */}
-
-        
       </View>
     </View>
   );
@@ -54,4 +49,3 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
-

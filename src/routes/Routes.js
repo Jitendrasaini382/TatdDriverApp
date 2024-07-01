@@ -14,8 +14,8 @@ import MyBonusStatusHistory from '../screens/MyBonusStatusHistory';
 import TicketsDriver from '../screens/TicketsDriver';
 import DutyReportUpdate from '../screens/DutyReportUpdate';
 import DutyReportUpdateProcess from '../screens/DutyReportUpdate/DutyReportUpdateProcess';
-import { NotificationDetailScreen } from '../components/AllNotificationsDetails';
-import { NoticeBoardDetailScreen } from '../components/AllNoticeBoardDetails';
+import {NotificationDetailScreen} from '../components/AllNotificationsDetails';
+import {NoticeBoardDetailScreen} from '../components/AllNoticeBoardDetails';
 
 const Stack = createStackNavigator();
 
@@ -38,33 +38,44 @@ const Route = () => {
             headerShown: false,
           }}>
           <Stack.Screen name="DriverLogin" component={DriverLogin} />
-          <Stack.Screen name="TrustedDriver" component={TrustedDriver} />
           <Stack.Screen name="CheckDriverOtp" component={CheckDriverOtp} />
-          <Stack.Screen name="DriverNotifications" component={DriverNotifications} />
-          <Stack.Screen name="ClearMyDuePayment" component={ClearMyDuePayment} />
+          <Stack.Screen name="TrustedDriver" component={TrustedDriver} />
+          <Stack.Screen
+            name="DriverNotifications"
+            component={DriverNotifications}
+          />
+          <Stack.Screen
+            name="ClearMyDuePayment"
+            component={ClearMyDuePayment}
+          />
           <Stack.Screen name="DriverEarning" component={DriverEarning} />
-          <Stack.Screen name="MyBonusStatusHistory" component={MyBonusStatusHistory} />
+          <Stack.Screen
+            name="MyBonusStatusHistory"
+            component={MyBonusStatusHistory}
+          />
           <Stack.Screen name="AgentLogin" component={AgentLogin} />
           {/* <Stack.Screen name="TicketsDriver" component={TicketsDriver} /> */}
-          <Stack.Screen name="TicketsDriver" component={DutyReportUpdateProcess} />
+          <Stack.Screen
+            name="TicketsDriver"
+            component={DutyReportUpdateProcess}
+          />
           <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
-          <Stack.Screen 
-          name="NotificationDetail" 
-          component={NotificationDetailScreen}
-          options={{ 
-            title: 'Notification',
-            headerBackTitle: 'Back'
-          }}
-        />
-        <Stack.Screen 
-          name="NoticeBoardDetail" 
-          component={NoticeBoardDetailScreen}
-          options={{ 
-            title: 'NoticeBoard',
-            headerBackTitle: 'Back'
-          }}
-        />
-          
+          <Stack.Screen
+            name="NotificationDetail"
+            component={NotificationDetailScreen}
+            options={{
+              title: 'Notification',
+              headerBackTitle: 'Back',
+            }}
+          />
+          <Stack.Screen
+            name="NoticeBoardDetail"
+            component={NoticeBoardDetailScreen}
+            options={{
+              title: 'NoticeBoard',
+              headerBackTitle: 'Back',
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </>

@@ -5,16 +5,16 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Dimensions,
   View,
 } from 'react-native';
-import {Dimensions} from 'react-native';
-import {AppColors} from '../assets/Colors';
+import {AppColors} from '../../assets/Colors';
 const {width, height} = Dimensions.get('window');
 
 const BookingModal = ({setBookingModal}) => {
   return (
     <TouchableWithoutFeedback onPress={() => setBookingModal(false)}>
-      <ScrollView>
+      {/* <ScrollView> */}
         <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>
             <Text style={styles.topHeading}>
@@ -64,7 +64,7 @@ const BookingModal = ({setBookingModal}) => {
             </TouchableOpacity>
           </View>
         </View>
-      </ScrollView>
+      {/* </ScrollView> */}
     </TouchableWithoutFeedback>
   );
 };

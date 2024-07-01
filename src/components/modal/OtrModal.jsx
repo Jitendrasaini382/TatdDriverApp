@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import {Dimensions} from 'react-native';
-import { AppColors } from '../assets/Colors';
+import { AppColors } from '../../assets/Colors';
 const {width, height} = Dimensions.get('window');
 
 const OtrModal = ({setModalVisible}) => {

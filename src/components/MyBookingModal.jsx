@@ -19,6 +19,72 @@ const MyBookingModal = ({setMyBookingModal}) => {
           <Text style={styles.buttonText}>x</Text>
         </TouchableOpacity>
 
+        <Text style={styles.buttonText}>Package jjjjjDetails</Text>
+        <Text style={styles.buttonText}>Package jjjjjDetails</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
+        <Text style={styles.buttonText}>Package Details</Text>
         <Text style={styles.buttonText}>Package Details</Text>
         <Text style={styles.buttonText}>Package Details</Text>
         <Text style={styles.buttonText}>Package Details</Text>
@@ -30,19 +96,15 @@ const MyBookingModal = ({setMyBookingModal}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F0F0F0',
-  },
-  backgroundContent: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+ 
   cornerButton: {
     position: 'absolute',
     right: 10,
     top: 10,
-    backgroundColor: '#007AFF',
+    // overflow: "scroll",
+    // flex: 1,
+
+    backgroundColor: 'red',
     padding: 10,
   },
   buttonText: {

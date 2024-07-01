@@ -13,17 +13,18 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import ToggleSwitch from 'toggle-switch-react-native';
 import Header from '../components/Header';
 import Modal from 'react-native-modal';
-import OtrModal from '../components/OtrModal';
+import OtrModal from '../components/modal/OtrModal';
 import {Dimensions} from 'react-native';
 import {AppColors} from '../assets/Colors';
 import ToggleButton from '../components/ToggleButton';
-import RatingModal from '../components/RatingModal';
-import BookingModal from '../components/BookingModal';
+import RatingModal from '../components/modal/RatingModal';
+import BookingModal from '../components/modal/BookingModal';
 import MainToggleModal from '../components/modal/MainToggleModal';
 import BookingView from '../components/BookingView';
 import AccordionTrainingVideo from '../components/TrainingVideos';
 import PackageDetails from '../components/modal/PackageDetails';
 import MyBookingAgencyModal from '../components/modal/MyBookingAgencyModal';
+import MyBookingModal from '../components/MyBookingModal';
 const {width, height} = Dimensions.get('window');
 
 const TrustedDriver = ({navigation}) => {
@@ -34,6 +35,11 @@ const TrustedDriver = ({navigation}) => {
   const [mainToggleContent, setMainToggleContent] = useState(false);
   const [videosContent, setVideoContent] = useState(false);
   const [myBookingAgencyModal, setMyBookingAgencyModal] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [bookingModal, setBookingModal] = useState(false);
+  const [ratingModal, setRatingModal] = useState(false);
+
+  // const [myBookingModal, setMyBookingModal] = useState(true);
 
   // useEffect(()=>{
   //   setMainToggleModal(true)
@@ -50,17 +56,11 @@ const TrustedDriver = ({navigation}) => {
       setVideoContent(false);
     }
   };
-  const [button, setButton] = useState(true);
-
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [bookingModal, setBookingModal] = useState(false);
-  const [ratingModal, setRatingModal] = useState(false);
-
-
-  const [myBookingModal, setMyBookingModal] = useState(false);
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: AppColors.white}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: AppColors.white,}}>
+      {/* {myBookingModal ? <MyBookingModal/> : null    } */}
+
       <Header extraButton={true} />
 
       <ScrollView>
@@ -74,6 +74,7 @@ const TrustedDriver = ({navigation}) => {
                 question and answer session.
               </Text>
             </Marquee>
+
           </View>
           {/* Middle Container */}
           <View style={styles.middleContainer}>
@@ -246,6 +247,8 @@ const TrustedDriver = ({navigation}) => {
               </TouchableOpacity>
             </View>
           </View>
+      {/* {myBookingModal ? <MyBookingModal/> : null    } */}
+
           {/* ToGGle Button */}
           <ToggleButton
             button1Label="Hindi"
@@ -310,6 +313,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: AppColors.mainColor,
     // width: '92%',
+    position: "relative"
   },
   middleContent: {
     backgroundColor: AppColors.mainColor,

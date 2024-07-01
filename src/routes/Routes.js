@@ -16,7 +16,6 @@ import DutyReportUpdate from '../screens/DutyReportUpdate';
 import DutyReportUpdateProcess from '../screens/DutyReportUpdate/DutyReportUpdateProcess';
 import { NotificationDetailScreen } from '../components/AllNotificationsDetails';
 import { NoticeBoardDetailScreen } from '../components/AllNoticeBoardDetails';
-import MyBookingsModal from '../components/Eeeeeeeeeeeeeeeeeeeeeeeeeee';
 
 const Stack = createStackNavigator();
 
@@ -46,10 +45,9 @@ const Route = () => {
           <Stack.Screen name="DriverEarning" component={DriverEarning} />
           <Stack.Screen name="MyBonusStatusHistory" component={MyBonusStatusHistory} />
           <Stack.Screen name="AgentLogin" component={AgentLogin} />
-          <Stack.Screen name="TicketsDriver" component={TicketsDriver} />
-          {/* <Stack.Screen name="TicketsDriver" component={DutyReportUpdateProcess} /> */}
+          {/* <Stack.Screen name="TicketsDriver" component={TicketsDriver} /> */}
+          <Stack.Screen name="TicketsDriver" component={DutyReportUpdateProcess} />
           <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
-          <Stack.Screen name="MyBookingsModal" component={MyBookingsModal} />
           <Stack.Screen 
           name="NotificationDetail" 
           component={NotificationDetailScreen}

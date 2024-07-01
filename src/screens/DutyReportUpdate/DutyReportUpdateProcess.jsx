@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Alert,
   Image,
   SafeAreaView,
   StyleSheet,
@@ -8,11 +9,16 @@ import {
   View,
 } from 'react-native';
 import Header from '../../components/Header';
-import {Address} from '../../assets/images';
+import {Address, CallingGif} from '../../assets/images';
 import RadioButtonMyBooking from '../../components/RadioButtonGroup';
-import { AppColors } from '../../assets/Colors';
+import {AppColors} from '../../assets/Colors';
+import SwipeableButton from '../../components/Eeeeeeeeeeeeeeeeeeeeeeeeeee';
 
 const DutyReportUpdateProcess = () => {
+  const handleSwipe = () => {
+    Alert.alert('Booking Accepted', 'You have accepted the booking.');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Header backButton={true} />
@@ -50,7 +56,7 @@ const DutyReportUpdateProcess = () => {
             <View>
               <Image
                 style={styles.callingGif}
-                source={require('../../assets/images/calling.gif')}
+                source={CallingGif}
                 resizeMode="cover"
               />
             </View>
@@ -65,8 +71,9 @@ const DutyReportUpdateProcess = () => {
             borderColor: '#ccc',
             padding: 15,
           }}>
-            <RadioButtonMyBooking />
-          </View>
+          <RadioButtonMyBooking />
+          <SwipeableButton onSwipe={handleSwipe} />
+        </View>
       </View>
     </SafeAreaView>
   );

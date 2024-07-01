@@ -5,7 +5,7 @@ import {AppFont} from '../assets/FontsFamily';
 import BackButton from './BackButton';
 import ExtraButtons from './ExtraButtons';
 import { AppColors } from '../assets/Colors';
-const Header = ({backButton, extraButton}) => {
+const Header = ({backButton, extraButton, OpenMyBookingModal}) => {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.leftContent}>
@@ -18,7 +18,7 @@ const Header = ({backButton, extraButton}) => {
         </View>
       </View>
 
-      {backButton ? <BackButton /> : extraButton ? <ExtraButtons/> : null}
+      {backButton ? <BackButton /> : extraButton ? <ExtraButtons  OpenMyBookingModal={OpenMyBookingModal} /> : null}
 
     </View>
   );

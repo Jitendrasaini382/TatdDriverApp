@@ -10,28 +10,34 @@ import {
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
 import ClearMyDuePaymentModal from './modal/ClearMyDuePaymentModal';
-import { AppColors } from '../assets/Colors';
+import {AppColors} from '../assets/Colors';
 
 const ClearMyDue = () => {
-  const [myDuePaymentModal, setMyDuePaymentModal ] = useState(false);
+  const [myDuePaymentModal, setMyDuePaymentModal] = useState(false);
+  const [selectedTrip, setSelectedTrip] = useState(null);
   const dummyData = [
     {
       bookingId: '430664',
       scheduleDate: '26 Jun, 2024 10:30:00',
       status: 'Cash With Driver',
       amount: '-307',
+      gst : '20'
     },
     {
       bookingId: '430664',
       scheduleDate: '26 Jun, 2024 10:30:00',
       status: 'Cash With Driver',
       amount: '-307',
+      gst : '40'
+
     },
     {
       bookingId: '430664',
       scheduleDate: '26 Jun, 2024 10:30:00',
       status: 'Cash With Driver',
       amount: '-307',
+      gst : '90'
+
     },
   ];
 
@@ -40,19 +46,24 @@ const ClearMyDue = () => {
     0,
   );
 
+  const handleEyePress = trip => {
+    setSelectedTrip(trip);
+    setMyDuePaymentModal(true);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.mainView}>
         <Text style={styles.title}>Clear My Due</Text>
       </View>
-      <Modal
+      {/* <Modal
         backdropOpacity={0}
         onBackdropPress={() => setMyDuePaymentModal(false)}
         animationIn={'fadeInDown'}
         animationOut={'fadeOutUp'}
         isVisible={myDuePaymentModal}>
-          <ClearMyDuePaymentModal  setMyDuePaymentModal={setMyDuePaymentModal} />
-      </Modal>
+        <ClearMyDuePaymentModal setMyDuePaymentModal={setMyDuePaymentModal} />
+      </Modal> */}
       <View style={styles.tableContainer}>
         <View style={styles.tableHeader}>
           <Text style={styles.headerText}>Booking Id</Text>
@@ -63,7 +74,7 @@ const ClearMyDue = () => {
           <Text style={[styles.headerText, styles.borderLeft]}>Amount</Text>
         </View>
         <ScrollView>
-          {dummyData.map((item, index) => (
+          {/* {dummyData.map((item, index) => (
             <View key={index} style={styles.tableRow}>
               <View style={styles.bookingIdCell}>
                 <Text style={styles.cellText}>{item.bookingId}</Text>
@@ -73,7 +84,16 @@ const ClearMyDue = () => {
                   }}>
                   <Icon name="eye" size={18} color="#16588e" />
                 </TouchableOpacity>
+              </View> */}
+          {dummyData.map((item, index) => (
+            <View key={index} style={styles.tableRow}>
+              <View style={styles.bookingIdCell}>
+                <Text style={styles.cellText}>{item.bookingId}</Text>
+                <TouchableOpacity onPress={() => handleEyePress(item)}>
+                  <Icon name="eye" size={18} color={AppColors.mainColor} />
+                </TouchableOpacity>
               </View>
+
               <Text style={[styles.cellText, styles.borderLeft]}>
                 {item.scheduleDate}
               </Text>
@@ -86,6 +106,17 @@ const ClearMyDue = () => {
             </View>
           ))}
         </ScrollView>
+        <Modal
+        backdropOpacity={0}
+        onBackdropPress={() => setMyDuePaymentModal(false)}
+        animationIn={'fadeInDown'}
+        animationOut={'fadeOutUp'}
+        isVisible={myDuePaymentModal}>
+        <ClearMyDuePaymentModal
+          setMyDuePaymentModal={setMyDuePaymentModal}
+          tripDetails={selectedTrip}
+        />
+      </Modal>
       </View>
       <TouchableOpacity
         onPress={() => Alert.alert('Loading Payment Page...')}

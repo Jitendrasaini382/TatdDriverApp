@@ -23,7 +23,7 @@ import MainToggleModal from '../components/modal/MainToggleModal';
 import BookingView from '../components/BookingView';
 import AccordionTrainingVideo from '../components/TrainingVideos';
 import MyBookingAgencyModal from '../components/modal/MyBookingAgencyModal';
-
+import MyBookingModal from '../components/MyBookingModal';
 
 const {width, height} = Dimensions.get('window');
 
@@ -41,6 +41,7 @@ const TrustedDriver = ({navigation}) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [bookingModal, setBookingModal] = useState(false);
   const [ratingModal, setRatingModal] = useState(false);
+  const [myBookingModal, setMyBookingModal] = useState(false);
 
   const MainToggleHandle = () => {
     if (!toggleButton) {
@@ -54,9 +55,16 @@ const TrustedDriver = ({navigation}) => {
     }
   };
 
+  const OpenMyBookingModal = ()=>{
+    setMyBookingModal(true)
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header extraButton={true} />
+      <Header extraButton={true} OpenMyBookingModal={OpenMyBookingModal} />
+      {myBookingModal ? (
+        <MyBookingModal setMyBookingModal={setMyBookingModal} />
+      ) : null}
 
       <ScrollView>
         <View style={styles.mainContainer}>
@@ -326,13 +334,13 @@ const styles = StyleSheet.create({
   topRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent  : 'space-between'
+    justifyContent: 'space-between',
   },
   earningView: {
     backgroundColor: 'rgb(255,255,255)',
     paddingHorizontal: responsiveSize(6),
     paddingVertical: responsiveSize(4),
-    margin: responsiveSize(3),
+    margin: responsiveSize(5),
   },
   rupeeIcon: {
     color: AppColors.mainColor,
@@ -341,7 +349,7 @@ const styles = StyleSheet.create({
     fontSize: responsiveSize(7),
   },
   notification: {
-    marginLeft: '2%',
+    margin: responsiveSize(5),
   },
   notificationCount: {
     position: 'absolute',
@@ -359,7 +367,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: AppColors.greyColor,
     // marginLeft: '10%',
-    marginRight: '2%',
+    margin: responsiveSize(5),
   },
   bottamView: {
     flexDirection: 'row',

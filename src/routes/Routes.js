@@ -15,7 +15,8 @@ import TicketsDriver from '../screens/TicketsDriver';
 import DutyReportUpdate from '../screens/DutyReportUpdate';
 import DutyReportUpdateProcess from '../screens/DutyReportUpdate/DutyReportUpdateProcess';
 import {NotificationDetailScreen} from '../components/AllNotificationsDetails';
-import {NoticeBoardDetailScreen} from '../components/AllNoticeBoardDetails';
+import DutyReportUpdateCancel from '../screens/DutyReportUpdate/DutyReportUpdateCancel';
+// import {NoticeBoardDetailScreen} from '../components/AllNoticeBoardDetails';
 
 const Stack = createStackNavigator();
 
@@ -54,11 +55,16 @@ const Route = () => {
             component={MyBonusStatusHistory}
           />
           <Stack.Screen name="AgentLogin" component={AgentLogin} />
-          {/* <Stack.Screen name="TicketsDriver" component={TicketsDriver} /> */}
+          <Stack.Screen name="TicketsDriver" component={TicketsDriver} />
           <Stack.Screen
-            name="TicketsDriver"
+            name="DutyReportUpdateProcess"
             component={DutyReportUpdateProcess}
           />
+           <Stack.Screen
+            name="DutyReportUpdateCancel"
+            component={DutyReportUpdateCancel}
+          />
+          
           <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
           <Stack.Screen
             name="NotificationDetail"
@@ -68,14 +74,14 @@ const Route = () => {
               headerBackTitle: 'Back',
             }}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="NoticeBoardDetail"
             component={NoticeBoardDetailScreen}
             options={{
               title: 'NoticeBoard',
               headerBackTitle: 'Back',
             }}
-          />
+          /> */}
         </Stack.Navigator>
       </NavigationContainer>
     </>

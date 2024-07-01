@@ -15,6 +15,19 @@ import { useNavigation } from '@react-navigation/native';
 import Header from './Header';
 import { AppColors } from '../assets/Colors';
 
+
+
+
+
+
+const { width, height } = Dimensions.get('window');
+const designWidth = width;
+const designHeight = height;
+
+const scale = size => (width / designWidth) * size;
+const verticalScale = size => (height / designHeight) * size;
+const moderateScale = (size, factor = 0.5) => size + (scale(size) - size) * factor;
+
 const notificationData = [
   'Dear MOHIT DHANAWAT, आप 207 मिनट लेट पहुंचे है। इसका दुष्प्र...',
   "Important Job Interview Alert! Dear MOHIT DHANAWAT, Please Reach The Customer's House On Time And Upon Meet...",
@@ -61,20 +74,6 @@ const showNotificationData = [
     ],
   },
 ];
-
-
-
-
-
-const { width, height } = Dimensions.get('window');
-const designWidth = width;
-const designHeight = height;
-
-const scale = size => (width / designWidth) * size;
-const verticalScale = size => (height / designHeight) * size;
-const moderateScale = (size, factor = 0.5) => size + (scale(size) - size) * factor;
-
-// ... (keep the notificationData and showNotificationData as they are)
 
 const NotificationList = ({ onNotificationPress }) => {
   return (
@@ -178,7 +177,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    width: scale(designWidth - 70), // Adjust based on your design
+    width: scale(designWidth - 70), 
   },
   indexText: {
     fontSize: moderateScale(15),

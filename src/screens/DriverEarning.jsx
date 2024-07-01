@@ -113,11 +113,16 @@ const tripData = [
 const DriverEarning = () => {
   const [packageDetailsDriverEarning, setPackageDetailsDriverEarning] =
     useState(false);
+  const [selectedTrip, setSelectedTrip] = useState(null);
 
   const renderTripItem = ({item}) => (
     <View style={styles.tripItem}>
       <View style={styles.tripHeader}>
-        <TouchableOpacity onPress={() => setPackageDetailsDriverEarning(true)}>
+        <TouchableOpacity
+          onPress={() => {
+            setSelectedTrip(item);
+            setPackageDetailsDriverEarning(true);
+          }}>
           <Icon
             name="eye"
             size={20}
@@ -125,7 +130,7 @@ const DriverEarning = () => {
             style={styles.eyeIcon}
           />
         </TouchableOpacity>
-        <Modal
+        {/* <Modal
           backdropOpacity={0}
           onBackdropPress={() => setPackageDetailsDriverEarning(false)}
           animationIn={'fadeInDown'}
@@ -134,7 +139,7 @@ const DriverEarning = () => {
           <DriverEarnIngModal
             setPackageDetailsDriverEarning={setPackageDetailsDriverEarning}
           />
-        </Modal>
+        </Modal> */}
 
         <View style={styles.contentContainer}>
           <View style={styles.tripInfo}>
@@ -156,6 +161,17 @@ const DriverEarning = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Header backButton={true} />
+      <Modal
+        backdropOpacity={0}
+        onBackdropPress={() => setPackageDetailsDriverEarning(false)}
+        animationIn={'fadeInDown'}
+        animationOut={'fadeOutUp'}
+        isVisible={packageDetailsDriverEarning}>
+        <DriverEarnIngModal
+          setPackageDetailsDriverEarning={setPackageDetailsDriverEarning}
+          tripDetails={selectedTrip}
+        />
+      </Modal>
       <View style={styles.earningHeader}>
         <Text style={styles.earningHeaderText}>My tatd Earning ₹215147</Text>
         <View style={styles.underLineView}></View>

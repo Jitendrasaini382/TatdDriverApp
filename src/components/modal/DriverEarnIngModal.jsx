@@ -9,7 +9,7 @@ import {
 import React from 'react';
 import {AppColors} from '../../assets/Colors';
 
-const DriverEarnIngModal = ({setPackageDetailsDriverEarning}) => {
+const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
   return (
     <TouchableWithoutFeedback
       onPress={() => setPackageDetailsDriverEarning(false)}>
@@ -81,7 +81,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning}) => {
                   fontFamily: 'Roboto-Regular',
                   fontSize: 13,
                 }}>
-                Round Trip
+                {tripDetails.type}
               </Text>
             </View>
             <View
@@ -106,7 +106,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning}) => {
                   fontFamily: 'Roboto-Regular',
                   fontSize: 13,
                 }}>
-                10 Hours
+                {tripDetails.duration}
               </Text>
             </View>
             <View
@@ -131,7 +131,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning}) => {
                   fontFamily: 'Roboto-Regular',
                   fontSize: 13,
                 }}>
-                Rs 1292
+               {tripDetails.amount}
               </Text>
             </View>
             <View

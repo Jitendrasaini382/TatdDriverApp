@@ -16,6 +16,8 @@ import DutyReportUpdate from '../screens/DutyReportUpdate';
 import DutyReportUpdateProcess from '../screens/DutyReportUpdate/DutyReportUpdateProcess';
 import {NotificationDetailScreen} from '../components/AllNotificationsDetails';
 import DutyReportUpdateCancel from '../screens/DutyReportUpdate/DutyReportUpdateCancel';
+import CheckAgentOtp from '../screens/CheckAgentOtp';
+import AgentPanel from '../screens/AgentPanel';
 // import {NoticeBoardDetailScreen} from '../components/AllNoticeBoardDetails';
 
 const Stack = createStackNavigator();
@@ -38,9 +40,9 @@ const Route = () => {
           screenOptions={{
             headerShown: false,
           }}>
+          <Stack.Screen name="TrustedDriver" component={TrustedDriver} />
           <Stack.Screen name="DriverLogin" component={DriverLogin} />
           <Stack.Screen name="CheckDriverOtp" component={CheckDriverOtp} />
-          <Stack.Screen name="TrustedDriver" component={TrustedDriver} />
           <Stack.Screen
             name="DriverNotifications"
             component={DriverNotifications}
@@ -54,8 +56,8 @@ const Route = () => {
             name="MyBonusStatusHistory"
             component={MyBonusStatusHistory}
           />
-          <Stack.Screen name="AgentLogin" component={AgentLogin} />
           <Stack.Screen name="TicketsDriver" component={TicketsDriver} />
+         
           <Stack.Screen
             name="DutyReportUpdateProcess"
             component={DutyReportUpdateProcess}
@@ -82,6 +84,11 @@ const Route = () => {
               headerBackTitle: 'Back',
             }}
           /> */}
+
+<Stack.Screen name="AgentLogin" component={AgentLogin} />
+<Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />
+<Stack.Screen name="AgentPanel" component={AgentPanel} />
+
         </Stack.Navigator>
       </NavigationContainer>
     </>

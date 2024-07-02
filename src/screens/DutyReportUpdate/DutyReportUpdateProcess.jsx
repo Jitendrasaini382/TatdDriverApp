@@ -172,7 +172,7 @@
 
 // export default DutyReportUpdateProcess;
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   Image,
@@ -185,12 +185,16 @@ import {
 } from 'react-native';
 import Header from '../../components/Header';
 import {Address, CallingGif} from '../../assets/images';
+import Modal from 'react-native-modal';
 import {AppColors} from '../../assets/Colors';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import RadioButtonMyBooking from '../../components/RadioButtonMyBooking';
 import SwipeableButton from '../../components/SwipeableButton';
 
 const DutyReportUpdateProcess = () => {
+
+  const [packageDetailsDutyReportUpdateProcess, setPackageDetailsDutyReportUpdateProcess] = useState(false)
+
   const handleSwipe = () => {
     Alert.alert('Booking Accepted', 'You have accepted the booking.');
   };
@@ -211,10 +215,23 @@ const DutyReportUpdateProcess = () => {
             <View>
               <Text style={styles.bookingNoText}>Booking No : #431062</Text>
             </View>
-            <TouchableOpacity style={styles.packageDetailsButton}>
+            <TouchableOpacity 
+            onPress={()=> setPackageDetailsDutyReportUpdateProcess(true) }
+            style={styles.packageDetailsButton}>
               <Text style={styles.packageDetailsText}>Package Details</Text>
             </TouchableOpacity>
           </View>
+          <Modal
+        backdropOpacity={0}
+        onBackdropPress={() => setPackageDetailsDutyReportUpdateProcess(false)}
+        animationIn={'fadeInDown'}
+        animationOut={'fadeOutUp'}
+        isVisible={packageDetailsDutyReportUpdateProcess}>
+        {/* <PackageDetailsDutyReportUpdateProcess
+          setPackageDetailsDutyReportUpdateProcess={setPackageDetailsDutyReportUpdateProcess}
+          // tripDetails={selectedTrip}
+        /> */}
+      </Modal>
           {/* middle */}
           <View style={styles.middleSection}>
             <View style={styles.nameTypeContainer}>
@@ -364,134 +381,3 @@ const styles = StyleSheet.create({
 });
 
 export default DutyReportUpdateProcess;
-
-// // import {
-// //   Image,
-// //   SafeAreaView,
-// //   StyleSheet,
-// //   Text,
-// //   TouchableOpacity,
-// //   View,
-// // } from 'react-native';
-
-// // import React from 'react';
-// // import YoutubePlayer from 'react-native-youtube-iframe';
-// // import Header from '../../components/Header';
-// // import Icon from 'react-native-vector-icons/dist/FontAwesome';
-// // import {Address, CallingGif} from '../../assets/images';
-
-// // const DutyReportUpdateProcess = () => {
-// //   return (
-// //     <SafeAreaView style={{flex: 1, flexDirection: 'column'}}>
-// //       <Header backButton={true} />
-
-// //       <View style={styles.mainView}>
-// //         {/* top */}
-
-// //         <View style={{marginBottom: 20, alignItems: 'center'}}>
-// //           <Text style={{color: AppColors.black, fontWeight: 'bold'}}>
-// //             Interview Time- 10:00 AM, 26 Jun,2024
-// //           </Text>
-// //         </View>
-// //         <View
-// //           style={{
-// //             marginBottom: 10,
-// //             flexDirection: 'row',
-// //             justifyContent: 'space-between',
-// //             alignItems: 'center',
-// //           }}>
-// //           <View>
-// //             <Text style={{color: AppColors.black}}>Booking No : #431062</Text>
-// //           </View>
-// //           <TouchableOpacity
-// //             style={{
-// //               padding: 10,
-// //               borderRadius: 10,
-// //               backgroundColor: 'white',
-// //               elevation: 10,
-// //             }}>
-// //             <Text style={{color: AppColors.black}}>Package Details</Text>
-// //           </TouchableOpacity>
-// //         </View>
-// //         {/* middle */}
-// //         <View
-// //           style={{
-// //             elevation: 1,
-// //             borderWidth: 1,
-// //             backgroundColor: 'lightgrey',
-// //             borderColor: '#ccc',
-// //             padding: 15,
-// //           }}>
-// //           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-// //             <Text style={{color: AppColors.black}}>Sagar Saxena</Text>
-// //             <Text style={{color: AppColors.black}}>Permanent</Text>
-// //           </View>
-// //           <View
-// //             style={{
-// //               flexDirection: 'row',
-// //               justifyContent: 'space-between',
-// //               marginVertical: 20,
-// //             }}>
-// //             <View
-// //               style={{
-// //                 flexDirection: 'row',
-// //                 alignItems: 'center',
-// //                 alignSelf: 'center',
-// //               }}>
-// //               <Image
-// //                 source={Address}
-// //                 resizeMode="contain"
-// //                 style={{height: 30, width: 30}}
-// //               />
-// //               <Text style={{color: AppColors.black, flexWrap: 'wrap'}}>
-// //                 D-51 A 2nd Floor
-// //               </Text>
-// //             </View>
-// //             <View style={{}}>
-// //               <Image
-// //               accessible={true}
-// //                 style={{
-// //                   width: 40,
-// //                   height: 40,
-// //                   borderColor: 'greyLight',
-// //                   borderWidth: 1,
-// //                   borderRadius: 20,
-// //                 }}
-// //                 source={CallingGif}
-// //               />
-
-// //             </View>
-// //           </View>
-// //         </View>
-// //         {/* bottam */}
-// //         <View></View>
-// //       </View>
-
-// //       {/* <YoutubePlayer height={600} autoPlay={false} videoId={'SsG_qwb0zLs'} /> */}
-// //     </SafeAreaView>
-// //   );
-// // };
-
-// // const styles = StyleSheet.create({
-// //   mainView: {
-// //     borderColor: '#ccc',
-// //     backgroundColor: 'white',
-// //     borderWidth: 1,
-// //     borderStyle: 'solid',
-// //     // marginTop: 10,
-// //     margin: 10,
-// //     paddingBottom: 65,
-// //     marginVertical: 20,
-// //     borderRadius: 8,
-// //     lineHeight: 20,
-// //     shadowColor: 'rgb(128,128,128)',
-// //     shadowOffset: {width: 5, height: 4},
-// //     shadowOpacity: 5,
-// //     elevation: 5,
-// //     shadowRadius: 5,
-// //     marginBottom: 20,
-// //     padding: 10,
-// //   },
-// // });
-
-// // export default DutyReportUpdateProcess;

@@ -1,0 +1,133 @@
+import React from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Alert,
+} from 'react-native';
+
+const PermanentBookingAcceptModal = ({setOpenModal}) => {
+  return (
+    <ScrollView style={{flex: 1}}>
+      
+      
+      <View style={styles.card}>
+        <Text style={styles.header}>Please Read Carefully.</Text>
+
+        <Text style={styles.subHeader}>Company Me Kaam Hai:</Text>
+
+        <View style={styles.listContainer}>
+          <Text style={styles.listItem}>
+            1. If you live within 10 KM of the customer's home, which is in
+            manmeet society, sector 122003.
+          </Text>
+          <Text style={styles.listItem}>
+            2. If you are proficient in driving a Audi, volvo.
+          </Text>
+          <Text style={styles.listItem}>
+            3. If you are well-versed in maintaining and keeping the vehicle
+            clean.
+          </Text>
+          <Text style={styles.listItem}>
+            4. If you can arrive on time for the interview on 03 Jul at 08:00
+            AM, the trial will be 2 hours - 0 Rs.
+          </Text>
+          <Text style={styles.listItem}>
+            5. If you agree to work for 26 days, 12 Hours, and a salary of
+            22000₹. The job will start on 29 Jun, and you need to be there every
+            day at 07:00 AM.
+          </Text>
+          <Text style={[styles.listItem, styles.warning]}>
+            6. Do not press the Accept button without reason. After accepting,
+            if you fail to reach the customer, your ID will be permanently or
+            temporarily suspended for 21 days.
+          </Text>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity 
+          onPress={()=>setOpenModal(false)}
+          style={styles.cancelButton}>
+            <Text style={styles.cancelButtonText}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+           onPress={() => {
+            Alert.alert('Are You Confirm');
+          }}
+          style={styles.applyButton}>
+            <Text style={styles.applyButtonText}>Apply</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  card: {
+    // flex:1,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  header: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 30,
+    color: 'black',
+  },
+  subHeader: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    // marginBottom: 10,
+    color: 'black',
+  },
+  listContainer: {
+    marginBottom: 20,
+  },
+  listItem: {
+    marginBottom: 15,
+    color: 'black',
+    fontSize: 18,
+  },
+  warning: {
+    color: 'red',
+    fontWeight: '500',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginBottom: 50,
+  },
+  cancelButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderRadius: 5,
+    width: '35%',
+    alignItems: 'center',
+  },
+  applyButton: {
+    backgroundColor: '#16588e',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 5,
+    width: '35%',
+    alignItems: 'center',
+  },
+  cancelButtonText: {
+    color: 'black',
+  },
+  applyButtonText: {
+    color: 'white',
+  },
+});
+
+export default PermanentBookingAcceptModal;

@@ -24,6 +24,8 @@ import BookingView from '../components/BookingView';
 import AccordionTrainingVideo from '../components/TrainingVideos';
 import MyBookingAgencyModal from '../components/modal/MyBookingAgencyModal';
 import MyBookingModal from '../components/MyBookingModal';
+import ReferFriendModal from '../components/modal/Eeeeeeeeee';
+import GuestCard from '../components/Eeeeeeeeeeeeeeeeeeeeeeeeeee';
 
 const {width, height} = Dimensions.get('window');
 
@@ -39,6 +41,7 @@ const TrustedDriver = ({navigation}) => {
   const [videosContent, setVideoContent] = useState(false);
   const [myBookingAgencyModal, setMyBookingAgencyModal] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [referFriendModal ,setReferFriendModal] = useState(false)
   const [bookingModal, setBookingModal] = useState(false);
   const [ratingModal, setRatingModal] = useState(false);
   const [myBookingModal, setMyBookingModal] = useState(false);
@@ -57,6 +60,9 @@ const TrustedDriver = ({navigation}) => {
 
   const OpenMyBookingModal = ()=>{
     setMyBookingModal(true)
+  }
+  const OpenReferFriendModal = ()=>{
+    setReferFriendModal(true)
   }
 
   return (
@@ -236,6 +242,17 @@ const TrustedDriver = ({navigation}) => {
         animationOut={'fadeOutUp'}
         isVisible={isModalVisible}>
         <OtrModal setModalVisible={setModalVisible} />
+        {/* <GuestCard /> */}
+        {/* <ReferFriendModal setModalVisible={setModalVisible} /> */}
+      </Modal>
+      <Modal
+        backdropOpacity={0}
+        onBackdropPress={() => setReferFriendModal(false)}
+        animationIn={'fadeInDown'}
+        animationOut={'fadeOutUp'}
+        isVisible={referFriendModal}>
+       
+        <ReferFriendModal OpenReferFriendModal={OpenReferFriendModal} />
       </Modal>
 
       <Modal

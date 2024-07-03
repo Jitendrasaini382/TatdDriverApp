@@ -8,3 +8,5 @@ export const Address = require('./address.png');
 export const CallingGif = require('./calling.gif');
 export const RightArrow = require('./arrow-right-tatd.png');
 export const ArrowFadeBlue = require('./arrow_fade_blue.png')
+
+export const Wallet_Icon = require( './wallet_icon.png')

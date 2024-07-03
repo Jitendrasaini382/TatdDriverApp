@@ -18,6 +18,9 @@ import {NotificationDetailScreen} from '../components/AllNotificationsDetails';
 import DutyReportUpdateCancel from '../screens/DutyReportUpdate/DutyReportUpdateCancel';
 import CheckAgentOtp from '../screens/CheckAgentOtp';
 import AgentPanel from '../screens/AgentPanel';
+import AgentKyc from '../screens/AgentKyc';
+import AgentTrainig from '../screens/AgentTrainig';
+import AgentWallet from '../screens/AgentWallet';
 // import {NoticeBoardDetailScreen} from '../components/AllNoticeBoardDetails';
 
 const Stack = createStackNavigator();
@@ -40,6 +43,8 @@ const Route = () => {
           screenOptions={{
             headerShown: false,
           }}>
+{/* <Stack.Screen name="AgentPanel" component={AgentPanel} /> */}
+
           <Stack.Screen name="TrustedDriver" component={TrustedDriver} />
           <Stack.Screen name="DriverLogin" component={DriverLogin} />
           <Stack.Screen name="CheckDriverOtp" component={CheckDriverOtp} />
@@ -88,6 +93,9 @@ const Route = () => {
 <Stack.Screen name="AgentLogin" component={AgentLogin} />
 <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />
 <Stack.Screen name="AgentPanel" component={AgentPanel} />
+<Stack.Screen name="AgentKyc" component={AgentKyc} />
+<Stack.Screen name="AgentTrainig" component={AgentTrainig} />
+<Stack.Screen name="AgentWallet" component={AgentWallet} />
 
         </Stack.Navigator>
       </NavigationContainer>

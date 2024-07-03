@@ -96,10 +96,12 @@ const AccordionItem = ({title, videoId, isOpen, onToggle, index}) => {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 10,
+    padding:15,
     backgroundColor: 'white',
   },
   itemContainer: {
     marginBottom: 10,
+    padding:10
   },
   touchable: {
     flexDirection: 'row',

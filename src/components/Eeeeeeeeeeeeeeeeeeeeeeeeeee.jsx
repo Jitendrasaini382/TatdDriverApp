@@ -1,3 +1,4 @@
+
 // // import React from 'react';
 // // import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
@@ -87,7 +88,6 @@
 
 // // /////////////////////////////////////////////////////////////////////////////////////////
 
-
 // import React, {useState} from 'react';
 // import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 // import {RightArrow} from '../assets/images';
@@ -101,14 +101,14 @@
 
 //   return (
 //     <View style={styles.container}>
-//       <TouchableOpacity 
+//       <TouchableOpacity
 //       // onPress={()=> setMyBookingModal(false)}
 //        >
 //       <View style={styles.closeButtonContainer}>
 //         <Text style={styles.closeButtonText}>x</Text>
 //       </View>
 //       </TouchableOpacity>
-      
+
 //       <View style={styles.tabContainer}>
 //         <TouchableOpacity onPress={() => setMyBooking(true)}>
 //           <View style={[styles.tabItem, myBooking && styles.activeTab]}>
@@ -282,7 +282,7 @@
 // export default BookingsComponent;
 
 // {
-//   /* 
+//   /*
 // import React, {useState} from 'react';
 // import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 // import {RightArrow} from '../assets/images';

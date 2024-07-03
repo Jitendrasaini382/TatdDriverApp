@@ -14,8 +14,8 @@ import {AppFont} from '../assets/FontsFamily';
 import Modal from 'react-native-modal';
 import MyBookingAgencyModal from './modal/MyBookingAgencyModal';
 import RoundTripBookingView from './bookingsView/RoundTripBookingView';
-import ReferFriendModal from './modal/Eeeeeeeeee';
 import PermanentBookingView from './bookingsView/PermanentBookingView';
+import FlexibleBookingView from './bookingsView/FlexibleBookingView';
 
 const {width} = Dimensions.get('window');
 
@@ -56,7 +56,8 @@ const BookingView = ({setMyBookingAgencyModal}) => {
           receive an SMS alert when a new booking comes in.
         </Text>
       </View>
-      <RoundTripBookingView />
+      <FlexibleBookingView/>
+      {/* <RoundTripBookingView /> */}
       <PermanentBookingView />
     </View>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   TouchableOpacity,
@@ -10,9 +10,11 @@ import {
 import Modal from 'react-native-modal';
 import {AppColors} from '../../assets/Colors';
 import PermanentBookingAcceptModal from '../modal/PermanentBookingAcceptModal';
+import ReferFriendModal from '../modal/ReferFriendModal';
 
 const BookingCard = ({booking}) => {
   const [openModal, setOpenModal] = useState(false);
+  const [referFriendModal, setReferFriendModal] = useState(false);
 
   const {type, cars, amount, duration, location, eventType, date} = booking;
 
@@ -40,7 +42,7 @@ const BookingCard = ({booking}) => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={() => {
-              // OpenReferFriendModal(true);
+              setReferFriendModal(true);
             }}
             style={styles.referButton}>
             <Text style={styles.referButtonText}>
@@ -50,11 +52,10 @@ const BookingCard = ({booking}) => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-           onPress={() => {
-          setOpenModal(true);
-          }}
-          
-          style={styles.acceptButton}>
+            onPress={() => {
+              setOpenModal(true);
+            }}
+            style={styles.acceptButton}>
             <Text style={styles.acceptButtonText}>Accept</Text>
           </TouchableOpacity>
           <Modal
@@ -64,7 +65,14 @@ const BookingCard = ({booking}) => {
             animationOut={'fadeOutUp'}
             isVisible={openModal}>
             <PermanentBookingAcceptModal setOpenModal={setOpenModal} />
-            
+          </Modal>
+          <Modal
+            backdropOpacity={0}
+            onBackdropPress={() => setReferFriendModal(false)}
+            animationIn={'fadeInDown'}
+            animationOut={'fadeOutUp'}
+            isVisible={referFriendModal}>
+            <ReferFriendModal setReferFriendModal={setReferFriendModal} />
           </Modal>
         </View>
       </View>
@@ -182,6 +190,10 @@ const styles = StyleSheet.create({
 });
 
 export default PermanentBookingView;
+
+//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+
+
 
 // import Icon from 'react-native-vector-icons/dist/FontAwesome';
 // import {

@@ -4,12 +4,14 @@ import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {Wallet_Icon} from '../assets/images';
+import CommissionList from '../components/modal/Eeeeeeeeee';
 
 const AgentWallet = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header backButton={true} />
 
+      <View>
       <View
         style={{
           alignItems: 'flex-end',
@@ -37,8 +39,7 @@ const AgentWallet = () => {
       </View>
       <View style={styles.container}>
         <View style={styles.leftContent}>
-          {/* <Icon name="wallet-outline" size={24} color="#2c6ba0" /> */}
-          {/* <Image height={20} width={20} source={Wallet_Icon} /> */}
+         
           <Image
             source={Wallet_Icon}
             style={{width: 20, height: 20, marginRight: 8}}
@@ -46,6 +47,10 @@ const AgentWallet = () => {
           <Text style={styles.balanceText}>tat d balance</Text>
         </View>
         <Text style={styles.amountText}>₹0</Text>
+      </View>
+
+          <CommissionList/>
+
       </View>
     </SafeAreaView>
   );

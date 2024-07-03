@@ -43,10 +43,10 @@ const Route = () => {
           screenOptions={{
             headerShown: false,
           }}>
-{/* <Stack.Screen name="AgentPanel" component={AgentPanel} /> */}
+          {/* <Stack.Screen name="AgentPanel" component={AgentPanel} /> */}
 
-          <Stack.Screen name="TrustedDriver" component={TrustedDriver} />
           <Stack.Screen name="DriverLogin" component={DriverLogin} />
+          <Stack.Screen name="TrustedDriver" component={TrustedDriver} />
           <Stack.Screen name="CheckDriverOtp" component={CheckDriverOtp} />
           <Stack.Screen
             name="DriverNotifications"
@@ -62,16 +62,16 @@ const Route = () => {
             component={MyBonusStatusHistory}
           />
           <Stack.Screen name="TicketsDriver" component={TicketsDriver} />
-         
+
           <Stack.Screen
             name="DutyReportUpdateProcess"
             component={DutyReportUpdateProcess}
           />
-           <Stack.Screen
+          <Stack.Screen
             name="DutyReportUpdateCancel"
             component={DutyReportUpdateCancel}
           />
-          
+
           <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
           <Stack.Screen
             name="NotificationDetail"
@@ -90,13 +90,12 @@ const Route = () => {
             }}
           /> */}
 
-<Stack.Screen name="AgentLogin" component={AgentLogin} />
-<Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />
-<Stack.Screen name="AgentPanel" component={AgentPanel} />
-<Stack.Screen name="AgentKyc" component={AgentKyc} />
-<Stack.Screen name="AgentTrainig" component={AgentTrainig} />
-<Stack.Screen name="AgentWallet" component={AgentWallet} />
-
+          <Stack.Screen name="AgentLogin" component={AgentLogin} />
+          <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />
+          <Stack.Screen name="AgentPanel" component={AgentPanel} />
+          <Stack.Screen name="AgentKyc" component={AgentKyc} />
+          <Stack.Screen name="AgentTrainig" component={AgentTrainig} />
+          <Stack.Screen name="AgentWallet" component={AgentWallet} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

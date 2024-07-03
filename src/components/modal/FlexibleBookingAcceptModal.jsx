@@ -1,6 +1,3 @@
-
-
-
 import React from 'react';
 import {
   View,
@@ -8,11 +5,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Alert,
 } from 'react-native';
+import {AppColors} from '../../assets/Colors';
 
-const FlexibleBookingAcceptModal = () => {
+const FlexibleBookingAcceptModal = ({setOpenModal}) => {
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={styles.card}>
         <Text style={styles.header}>Please Read Carefully.</Text>
 
@@ -47,11 +46,17 @@ const FlexibleBookingAcceptModal = () => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.cancelButton}>
+          <TouchableOpacity
+            onPress={() => setOpenModal(false)}
+            style={styles.cancelButton}>
             <Text style={styles.cancelButtonText}>Cancel</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.acceptButton}>
-            <Text style={styles.acceptButtonText}>Accept</Text>
+          <TouchableOpacity
+            onPress={() => {
+              Alert.alert('Are You Confirm');
+            }}
+            style={styles.applyButton}>
+            <Text style={styles.applyButtonText}>Apply</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -72,47 +77,53 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   header: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: 'black',
-    marginBottom: 15,
+    marginBottom: 20,
   },
   contentContainer: {
     marginBottom: 20,
   },
   paragraph: {
-    marginBottom: 10,
+    marginBottom: 20,
     color: 'black',
+    padding: 5,
   },
   warningText: {
     color: 'red',
     fontWeight: 'bold',
+    fontFamily: 'Roboto-Regular',
   },
   highlightText: {
-    color: 'blue',
+    color: AppColors.mainColor,
   },
+
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
+    marginBottom: 50,
   },
   cancelButton: {
-    backgroundColor: '#f0f0f0',
-    padding: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderWidth: 1,
     borderRadius: 5,
-    width: '45%',
+    width: '35%',
     alignItems: 'center',
   },
-  acceptButton: {
-    backgroundColor: '#0047AB',
-    padding: 10,
+  applyButton: {
+    backgroundColor: '#16588e',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
     borderRadius: 5,
-    width: '45%',
+    width: '35%',
     alignItems: 'center',
   },
   cancelButtonText: {
     color: 'black',
   },
-  acceptButtonText: {
+  applyButtonText: {
     color: 'white',
   },
 });

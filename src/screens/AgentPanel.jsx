@@ -15,6 +15,7 @@ import Modal from 'react-native-modal';
 import {AppColors} from '../assets/Colors';
 import {ArrowFadeBlue, LeftArrow} from '../assets/images';
 import AgentPanelModal from '../components/modal/AgentPanelModal';
+import DataListAgentPanel from '../components/DataListAgentPanel';
 
 const {width, height} = Dimensions.get('window');
 
@@ -33,9 +34,8 @@ const AgentPanel = ({navigation}) => {
     <SafeAreaView style={styles.safeArea}>
       <Header backButton={true} />
 
-      <ScrollView>
+      {/* <ScrollView> */}
         <View style={styles.mainContainer}>
-          {/* Marquee View */}
 
           {/* Middle Container */}
           <View style={styles.middleContainer}>
@@ -43,7 +43,7 @@ const AgentPanel = ({navigation}) => {
               {/* Top div */}
               <View style={styles.topView}>
                 <TouchableOpacity
-                //   onPress={() => navigation.navigate('AgentWallet')}
+                  onPress={() => navigation.navigate('AgentWallet')}
                   style={styles.topLeft}>
                   <Text style={styles.topLeftText}>
                     <Icon name="rupee" color="white" size={15} style={{}} />0
@@ -61,8 +61,7 @@ const AgentPanel = ({navigation}) => {
                       flexDirection: 'row',
                       //   alignItems: 'center',
                       justifyContent: 'space-evenly',
-                    }}
-                  >
+                    }}>
                     <Icon
                       name="plus"
                       color="white"
@@ -181,9 +180,14 @@ const AgentPanel = ({navigation}) => {
             </View>
           </View>
 
-         
-          <View style={styles.toggleContentContainer}>
-          
+          <View style={{
+            borderWidth:2,
+            marginTop:30,
+            borderColor: AppColors.mainColor,
+            borderRadius:8,
+            margin:2
+          }}>
+         <DataListAgentPanel/>
           </View>
           <Modal
             backdropOpacity={0}
@@ -194,7 +198,7 @@ const AgentPanel = ({navigation}) => {
             <AgentPanelModal setAgentPanelModal={setAgentPanelModal} />
           </Modal>
         </View>
-      </ScrollView>
+      {/* </ScrollView> */}
     </SafeAreaView>
   );
 };
@@ -206,12 +210,11 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 1,
+    margin:20,
     backgroundColor: 'white',
     marginVertical: responsiveSize(20),
   },
-  marqueeView: {
-    paddingHorizontal: '2%',
-  },
+ 
   marqueeText: {
     color: AppColors.black,
     fontSize: responsiveSize(15),
@@ -220,7 +223,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto',
   },
   middleContainer: {
-    margin: '4%',
+    // margin: '4%',
     marginTop: 0,
     backgroundColor: AppColors.white,
     borderWidth: 1,
@@ -426,4 +429,3 @@ const styles = StyleSheet.create({
 });
 
 export default AgentPanel;
-

@@ -1,6 +1,73 @@
-import React from 'react';
-import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
-import {ArrowFadeBlue} from '../../assets/images';
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import Modal from 'react-native-modal';
+import {AppColors} from '../../assets/Colors';
+import FlexibleBookingAcceptModal from '../modal/FlexibleBookingAcceptModal';
+
+const BookingCard = ({booking, index, total}) => {
+  const [openModal, setOpenModal] = useState(false);
+
+  return (
+    <View style={styles.card}>
+      <View style={styles.header}>
+        <View style={styles.headerLeft}>
+          <Text style={styles.days}>{booking.days} Days | </Text>
+          <Text style={styles.price}>
+            Rs {booking.price} | {booking.paymentMethod}
+          </Text>
+        </View>
+        <View style={styles.vehicleType}>
+          <Icon color={'#16588e'} name="car" />
+          <Text style={styles.vehicleText}>{booking.vehicleType}</Text>
+        </View>
+      </View>
+      <Text style={styles.title}>{booking.location}</Text>
+      <View style={styles.dates}>
+        {booking.dates.map((date, idx) => (
+          <Text key={idx} style={styles.dateText}>
+            {date} |
+          </Text>
+        ))}
+      </View>
+      <View style={styles.times}>
+        {booking.times.map((time, idx) => (
+          <Text key={idx} style={styles.timeText}>
+            {time}
+          </Text>
+        ))}
+      </View>
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>
+          <Text style={{fontSize: 20}}>Rs {booking.total} </Text>
+          {booking.hoursPerDay} Hours/day
+        </Text>
+        <TouchableOpacity
+         onPress={() => {
+          setOpenModal(true);
+        }}
+        style={styles.acceptButton}>
+          <Text style={styles.acceptButtonText}>Accept</Text>
+        </TouchableOpacity>
+
+        <Modal
+          backdropOpacity={0}
+          onBackdropPress={() => setOpenModal(false)}
+          animationIn={'fadeInDown'}
+          animationOut={'fadeOutUp'}
+          isVisible={openModal}>
+          <FlexibleBookingAcceptModal setOpenModal={setOpenModal} />
+        </Modal>
+      </View>
+    </View>
+  );
+};
 
 const FlexibleBookingView = () => {
   const bookingDetails = [
@@ -58,46 +125,73 @@ const FlexibleBookingView = () => {
       total: 1032,
       hoursPerDay: 12,
     },
+    {
+      days: 7,
+      price: 7224,
+      paymentMethod: 'Cash',
+      vehicleType: 'Manual - Hatchback',
+      location: 'Testing for internal purpose, Chennai',
+      dates: [
+        '03 Jul',
+        '04 Jul',
+        '05 Jul',
+        '06 Jul',
+        '07 Jul',
+        '08 Jul',
+        '09 Jul',
+      ],
+      times: [
+        '10:00 AM',
+        '10:00 AM',
+        '10:00 AM',
+        '10:00 AM',
+        '10:00 AM',
+        '10:00 AM',
+        '10:00 AM',
+      ],
+      total: 1032,
+      hoursPerDay: 12,
+    },
+    {
+      days: 4,
+      price: 1624,
+      paymentMethod: 'Cash',
+      vehicleType: 'Manual - Luxury',
+      location: 'Testing for External purpose, Chennai',
+      dates: [
+        '03 Jul',
+        '04 Jul',
+        '05 Jul',
+        '06 Jul',
+        '07 Jul',
+        '08 Jul',
+        '09 Jul',
+      ],
+      times: [
+        '10:00 AM',
+        '10:00 AM',
+        '10:00 AM',
+        '10:00 AM',
+        '10:00 AM',
+        '10:00 AM',
+        '10:00 AM',
+      ],
+      total: 1032,
+      hoursPerDay: 12,
+    },
   ];
 
   return (
-    <View style={styles.card}>
-      <View style={styles.header}>
-        <Text style={styles.days}>{bookingDetails.days} Days</Text>
-        <Text style={styles.price}>
-          Rs {bookingDetails.price} | {bookingDetails.paymentMethod}
-        </Text>
-        <View style={styles.vehicleType}>
-          <Image style={styles.carIcon} source={ArrowFadeBlue} />
-          <Text style={styles.vehicleText}>{bookingDetails.vehicleType}</Text>
-        </View>
-      </View>
-      <Text style={styles.title}>{bookingDetails.location}</Text>
-      <View style={styles.dates}>
-        {bookingDetails.dates.map((date, index) => (
-          <Text key={index} style={styles.dateText}>
-            {date} |
-          </Text>
-        ))}
-      </View>
-      <View style={styles.times}>
-        {bookingDetails.times.map((time, index) => (
-          <Text key={index} style={styles.timeText}>
-            {time}
-          </Text>
-        ))}
-      </View>
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          {' '}
-          <Text style={{fontSize: 20}}>Rs{bookingDetails.total} </Text>{' '}
-          {bookingDetails.hoursPerDay} Hours/day
-        </Text>
-        <TouchableOpacity style={styles.acceptButton}>
-          <Text style={styles.acceptButtonText}>Accept</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    <ScrollView>
+      {bookingDetails.map((booking, index) => (
+        <BookingCard
+          key={index}
+          booking={booking}
+          index={index}
+          total={bookingDetails.length}
+        />
+      ))}
+    </ScrollView>
   );
 };
 
@@ -108,24 +202,24 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     backgroundColor: '#16588e',
-    // margin: 20
+    marginBottom: 10,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // alignItems: 'center',
     backgroundColor: 'white',
     padding: 5,
     borderRadius: 5,
     marginBottom: 10,
   },
+  headerLeft: {flexDirection: 'row'},
   days: {
     color: 'red',
     fontWeight: 'bold',
     textAlign: 'left',
   },
   price: {
-    color: 'black',
+    color: '#16588e',
     fontWeight: 'bold',
   },
   vehicleType: {
@@ -133,18 +227,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: 'right',
   },
-  carIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 5,
-  },
   vehicleText: {
-    color: 'black',
+    color: '#16588e',
+    marginLeft: 5,
   },
   title: {
     color: '#fff',
-    fontWeight: 'bold',
-    marginBottom: 10,
+    fontWeight: '400',
+    marginBottom: 15,
+    fontFamily: 'Roboto-Medium',
+    fontSize: 22,
   },
   dates: {
     flexDirection: 'row',
@@ -174,7 +266,6 @@ const styles = StyleSheet.create({
   footerText: {
     color: '#fff',
     fontWeight: 'bold',
-    // fontSize: 20
   },
   acceptButton: {
     backgroundColor: '#fff',
@@ -186,6 +277,266 @@ const styles = StyleSheet.create({
     color: '#1E5ABF',
     fontWeight: 'bold',
   },
+  indexIndicator: {
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  indexText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
 });
 
 export default FlexibleBookingView;
+
+//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+
+// import React from 'react';
+// import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+// import Icon from 'react-native-vector-icons/dist/FontAwesome';
+// import {AppColors} from '../../assets/Colors';
+
+// const FlexibleBookingView = () => {
+//   const bookingDetails = [
+//     {
+//       days: 7,
+//       price: 7224,
+//       paymentMethod: 'Cash',
+//       vehicleType: 'Manual - Hatchback',
+//       location: 'Testing for internal purpose, Chennai',
+//       dates: [
+//         '03 Jul',
+//         '04 Jul',
+//         '05 Jul',
+//         '06 Jul',
+//         '07 Jul',
+//         '08 Jul',
+//         '09 Jul',
+//       ],
+//       times: [
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//       ],
+//       total: 1032,
+//       hoursPerDay: 12,
+//     },
+//     {
+//       days: 4,
+//       price: 1624,
+//       paymentMethod: 'Cash',
+//       vehicleType: 'Manual - Luxury',
+//       location: 'Testing for External purpose, Chennai',
+//       dates: [
+//         '03 Jul',
+//         '04 Jul',
+//         '05 Jul',
+//         '06 Jul',
+//         '07 Jul',
+//         '08 Jul',
+//         '09 Jul',
+//       ],
+//       times: [
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//       ],
+//       total: 1032,
+//       hoursPerDay: 12,
+//     },
+//     {
+//       days: 7,
+//       price: 7224,
+//       paymentMethod: 'Cash',
+//       vehicleType: 'Manual - Hatchback',
+//       location: 'Testing for internal purpose, Chennai',
+//       dates: [
+//         '03 Jul',
+//         '04 Jul',
+//         '05 Jul',
+//         '06 Jul',
+//         '07 Jul',
+//         '08 Jul',
+//         '09 Jul',
+//       ],
+//       times: [
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//       ],
+//       total: 1032,
+//       hoursPerDay: 12,
+//     },
+//     {
+//       days: 4,
+//       price: 1624,
+//       paymentMethod: 'Cash',
+//       vehicleType: 'Manual - Luxury',
+//       location: 'Testing for External purpose, Chennai',
+//       dates: [
+//         '03 Jul',
+//         '04 Jul',
+//         '05 Jul',
+//         '06 Jul',
+//         '07 Jul',
+//         '08 Jul',
+//         '09 Jul',
+//       ],
+//       times: [
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//         '10:00 AM',
+//       ],
+//       total: 1032,
+//       hoursPerDay: 12,
+//     },
+//   ];
+
+//   return (
+//     <View>
+//       {bookingDetails.map((booking, index) => (
+//         <View key={index} style={styles.card}>
+//           <View style={styles.header}>
+//             <View style={{flexDirection: 'row'}}>
+//               <Text style={styles.days}>{booking.days} Days | </Text>
+//               <Text style={styles.price}>
+//                 Rs {booking.price} | {booking.paymentMethod}
+//               </Text>
+//             </View>
+//             <View style={styles.vehicleType}>
+//               <Icon color={"#16588e"} name="car" />
+//               <Text style={styles.vehicleText}>{booking.vehicleType}</Text>
+//             </View>
+//           </View>
+//           <Text style={styles.title}>{booking.location}</Text>
+//           <View style={styles.dates}>
+//             {booking.dates.map((date, dateIndex) => (
+//               <Text key={dateIndex} style={styles.dateText}>
+//                 {date} |
+//               </Text>
+//             ))}
+//           </View>
+//           <View style={styles.times}>
+//             {booking.times.map((time, timeIndex) => (
+//               <Text key={timeIndex} style={styles.timeText}>
+//                 {time}
+//               </Text>
+//             ))}
+//           </View>
+//           <View style={styles.footer}>
+//             <Text style={styles.footerText}>
+//               <Text style={{fontSize: 20}}>Rs {booking.total}  </Text>
+//               {booking.hoursPerDay} Hours/day
+//             </Text>
+//             <TouchableOpacity style={styles.acceptButton}>
+//               <Text style={styles.acceptButtonText}>Accept</Text>
+//             </TouchableOpacity>
+//           </View>
+//         </View>
+//       ))}
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   card: {
+//     borderWidth: 1,
+//     borderColor: '#ddd',
+//     borderRadius: 10,
+//     padding: 10,
+//     backgroundColor: '#16588e',
+//     marginBottom: 10, // Add margin to separate the cards
+//   },
+//   header: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     backgroundColor: 'white',
+//     padding: 5,
+//     borderRadius: 5,
+//     marginBottom: 10,
+//   },
+//   days: {
+//     color: 'red',
+//     fontWeight: 'bold',
+//     textAlign: 'left',
+//     marginHorizontal: 5,
+//   },
+//   price: {
+//     color: AppColors.mainColor,
+//     fontWeight: 'bold',
+//   },
+//   vehicleType: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     textAlign: 'right',
+//   },
+//   vehicleText: {
+//     color: AppColors.mainColor,
+//     marginLeft: 5,
+//   },
+//   title: {
+//     color: '#fff',
+//     fontWeight: '400',
+//     marginBottom: 15,
+//     fontFamily: 'Roboto-Medium',
+//     fontSize: 22,
+//   },
+//   dates: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     marginBottom: 10,
+//   },
+//   dateText: {
+//     color: '#fff',
+//   },
+//   times: {
+//     flexDirection: 'row',
+//     flexWrap: 'wrap',
+//     marginBottom: 10,
+//   },
+//   timeText: {
+//     backgroundColor: '#fff',
+//     borderRadius: 5,
+//     padding: 5,
+//     color: 'black',
+//     margin: 2,
+//   },
+//   footer: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//   },
+//   footerText: {
+//     color: '#fff',
+//     fontWeight: 'bold',
+//   },
+//   acceptButton: {
+//     backgroundColor: '#fff',
+//     paddingVertical: 5,
+//     paddingHorizontal: 10,
+//     borderRadius: 5,
+//   },
+//   acceptButtonText: {
+//     color: '#1E5ABF',
+//     fontWeight: 'bold',
+//   },
+// });
+
+// export default FlexibleBookingView;

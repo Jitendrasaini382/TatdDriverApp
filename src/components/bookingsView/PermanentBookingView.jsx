@@ -36,7 +36,7 @@ const BookingCard = ({booking}) => {
         </View>
         <Text style={styles.location}>{location}</Text>
         <View style={styles.eventContainer}>
-          <Text style={styles.eventText}>{eventType}</Text>
+          <Text style={styles.eventTypeText}>{eventType}</Text>
           <Text style={styles.eventText}>{date}</Text>
         </View>
         <View style={styles.buttonContainer}>
@@ -161,10 +161,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 15,
   },
+  eventTypeText: {
+    color: AppColors.white,
+    fontSize: 15,
+    marginRight: 10,
+  },
   eventText: {
     color: AppColors.white,
     fontSize: 15,
     marginRight: 10,
+    fontWeight: 'bold',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -192,8 +198,6 @@ const styles = StyleSheet.create({
 export default PermanentBookingView;
 
 //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-
-
 
 // import Icon from 'react-native-vector-icons/dist/FontAwesome';
 // import {

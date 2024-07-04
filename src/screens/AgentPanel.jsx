@@ -13,9 +13,10 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Header from '../components/Header';
 import Modal from 'react-native-modal';
 import {AppColors} from '../assets/Colors';
-import {ArrowFadeBlue, LeftArrow} from '../assets/images';
+import {ArrowFadeBlue} from '../assets/images';
 import AgentPanelModal from '../components/modal/AgentPanelModal';
-import DataListAgentPanel from '../components/DataListAgentPanel';
+import MyNetworkDataList from '../components/MyNetworkDataList';
+import MyLeadsDataList from '../components/MyLeadsDataList';
 
 const {width, height} = Dimensions.get('window');
 
@@ -34,171 +35,136 @@ const AgentPanel = ({navigation}) => {
     <SafeAreaView style={styles.safeArea}>
       <Header backButton={true} />
 
-      {/* <ScrollView> */}
-        <View style={styles.mainContainer}>
-
-          {/* Middle Container */}
-          <View style={styles.middleContainer}>
-            <View style={styles.middleContent}>
-              {/* Top div */}
-              <View style={styles.topView}>
+      <View style={styles.mainContainer}>
+        {/* Middle Container */}
+        <View style={styles.middleContainer}>
+          <View style={styles.middleContent}>
+            {/* Top div */}
+            <View style={styles.topView}>
+              <TouchableOpacity
+                // onPress={() => navigation.navigate('AgentWallet')}
+                style={styles.topLeft}>
+                <Text style={styles.topLeftText}>
+                  <Icon name="rupee" color="white" size={15} style={{}} />0
+                </Text>
+              </TouchableOpacity>
+              <View style={styles.topRight}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('AgentWallet')}
-                  style={styles.topLeft}>
-                  <Text style={styles.topLeftText}>
-                    <Icon name="rupee" color="white" size={15} style={{}} />0
-                  </Text>
-                  {/* <Text style={styles.bottamLeftText}>Commission</Text> */}
+                  onPress={() => navigation.navigate('SelectYourState')}
+                  style={{
+                    backgroundColor: AppColors.mainColor,
+                    borderRadius: 8,
+                    paddingHorizontal: 15,
+                    paddingVertical: 7,
+                    flexDirection: 'row',
+                    justifyContent: 'space-evenly',
+                  }}>
+                  <Icon
+                    name="plus"
+                    color="white"
+                    size={10}
+                    style={{margin: 5}}
+                  />
+                  <Image
+                    source={ArrowFadeBlue}
+                    style={{
+                      width: 16,
+                      height: 16,
+                      transform: [{rotate: '180deg'}],
+                    }}
+                  />
                 </TouchableOpacity>
-                <View style={styles.topRight}>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: AppColors.mainColor,
-                      borderRadius: 8,
-                      //   padding: 10,
-                      paddingHorizontal: 15,
-                      paddingVertical: 7,
-                      flexDirection: 'row',
-                      //   alignItems: 'center',
-                      justifyContent: 'space-evenly',
-                    }}>
-                    <Icon
-                      name="plus"
-                      color="white"
-                      size={10}
-                      style={{margin: 5}}
-                    />
-                    <Image
-                      source={ArrowFadeBlue}
-                      style={{
-                        width: 16,
-                        height: 16,
-                        transform: [{rotate: '180deg'}],
-                      }}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              {/* Bottom div */}
-              <View style={styles.bottamView}>
-                <View style={styles.driverNameView}>
-                  <Text style={styles.driverNameText}>MOHIT DHANAWAT</Text>
-                </View>
-                <View style={styles.bottamRightView}>
-                  {/* <TouchableOpacity
-                    style={{
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginHorizontal: 10,
-                    }}>
-                    <Text style={{color: '#939393'}}>0</Text>
-                    <Text style={{color: '#939393'}}>My Network</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginHorizontal: 10,
-                    }}>
-                    <Text style={{color: '#939393'}}>0</Text>
-                    <Text style={{color: '#939393'}}>My Leads</Text>
-                  </TouchableOpacity> */}
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginHorizontal: 10,
-                    }}
-                    onPress={() => setMyNetworkData(true)}>
-                    <Text
-                      style={{color: myNetworkData ? '#16588e' : '#939393'}}>
-                      0
-                    </Text>
-                    <Text
-                      style={{color: myNetworkData ? '#16588e' : '#939393'}}>
-                      My Network
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginHorizontal: 10,
-                    }}
-                    onPress={() => setMyNetworkData(false)}>
-                    <Text
-                      style={{color: myNetworkData ? '#939393' : '#16588e'}}>
-                      0
-                    </Text>
-                    <Text
-                      style={{color: myNetworkData ? '#939393' : '#16588e'}}>
-                      My Leads
-                    </Text>
-                  </TouchableOpacity>
-                </View>
               </View>
             </View>
 
             {/* Bottom div */}
-            <View style={styles.bottamContent}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('AgentKyc')}
-                style={styles.bottamContent2}>
-                <Text style={styles.mainText}>My Bank</Text>
-                <Text style={styles.textIcon}>Details</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('AgentTrainig')}
-                style={styles.bottamContent1}>
-                <Text style={styles.absoulteText}>3</Text>
-                <View style={styles.absoulteView}>
-                  <Text style={[styles.bottamContent1Text, ,]}>Training</Text>
-                  <Text style={[styles.bottamContent1Text]}>Videos</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                // onPress={() => navigation.navigate('AgentWallet')}
-                style={styles.bottamContent3}>
-                <Text style={styles.mainText}>Wallet Balance</Text>
-                <Text style={styles.textIcon}>
-                  <Icon name="rupee" size={responsiveSize(9)} /> 0
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                // onPress={() => navigation.navigate('#')}
-                style={styles.bottamContent4}>
-                <Text style={styles.mainText}>My Earning</Text>
-                <Text style={styles.textIcon}>
-                  <Icon name="rupee" size={responsiveSize(9)} /> 0
-                </Text>
-              </TouchableOpacity>
+            <View style={styles.bottamView}>
+              <View style={styles.driverNameView}>
+                <Text style={styles.driverNameText}>MOHIT DHANAWAT</Text>
+              </View>
+              <View style={styles.bottamRightView}>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginHorizontal: 10,
+                  }}
+                  onPress={() => setMyNetworkData(true)}>
+                  <Text style={{color: myNetworkData ? '#16588e' : '#939393'}}>
+                    0
+                  </Text>
+                  <Text style={{color: myNetworkData ? '#16588e' : '#939393'}}>
+                    My Network
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginHorizontal: 10,
+                  }}
+                  onPress={() => setMyNetworkData(false)}>
+                  <Text style={{color: myNetworkData ? '#939393' : '#16588e'}}>
+                    0
+                  </Text>
+                  <Text style={{color: myNetworkData ? '#939393' : '#16588e'}}>
+                    My Leads
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
 
-          <View style={{
-            borderWidth:2,
-            marginTop:30,
-            borderColor: AppColors.mainColor,
-            borderRadius:8,
-            margin:2
-          }}>
-         <DataListAgentPanel/>
+          {/* Bottom div */}
+          <View style={styles.bottamContent}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('AgentKyc')}
+              style={styles.bottamContent2}>
+              <Text style={styles.mainText}>My Bank</Text>
+              <Text style={styles.textIcon}>Details</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('AgentTrainig')}
+              style={styles.bottamContent1}>
+              <Text style={styles.absoulteText}>3</Text>
+              <View style={styles.absoulteView}>
+                <Text style={[styles.bottamContent1Text, ,]}>Training</Text>
+                <Text style={[styles.bottamContent1Text]}>Videos</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              // onPress={() => navigation.navigate('AgentWallet')}
+              style={styles.bottamContent3}>
+              <Text style={styles.mainText}>Wallet Balance</Text>
+              <Text style={styles.textIcon}>
+                <Icon name="rupee" size={responsiveSize(9)} /> 0
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              // onPress={() => navigation.navigate('#')}
+              style={styles.bottamContent4}>
+              <Text style={styles.mainText}>My Earning</Text>
+              <Text style={styles.textIcon}>
+                <Icon name="rupee" size={responsiveSize(9)} /> 0
+              </Text>
+            </TouchableOpacity>
           </View>
-          <Modal
-            backdropOpacity={0}
-            onBackdropPress={() => setAgentPanelModal(false)}
-            animationIn={'fadeInDown'}
-            animationOut={'fadeOutUp'}
-            isVisible={agentPanelModal}>
-            <AgentPanelModal setAgentPanelModal={setAgentPanelModal} />
-          </Modal>
         </View>
-      {/* </ScrollView> */}
+
+        {/* {myNetworkData ? <MyNetworkDataList /> : <MyLeadsDataList/>} */}
+
+
+        <Modal
+          backdropOpacity={0}
+          onBackdropPress={() => setAgentPanelModal(false)}
+          animationIn={'fadeInDown'}
+          animationOut={'fadeOutUp'}
+          isVisible={agentPanelModal}>
+          <AgentPanelModal setAgentPanelModal={setAgentPanelModal} />
+        </Modal>
+      </View>
     </SafeAreaView>
   );
 };
@@ -210,11 +176,11 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 1,
-    margin:20,
+    margin: 20,
     backgroundColor: 'white',
     marginVertical: responsiveSize(20),
   },
- 
+
   marqueeText: {
     color: AppColors.black,
     fontSize: responsiveSize(15),
@@ -260,12 +226,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: AppColors.white,
   },
-  bottamLeftText: {
-    color: AppColors.mainColor,
-    fontSize: responsiveSize(9),
-    fontWeight: '300',
-    fontFamily: 'Roboto-Regular',
-  },
+
   topRight: {
     alignItems: 'center',
   },

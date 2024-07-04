@@ -8,6 +8,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { AppColors } from '../../assets/Colors';
 
 const ReferFriendModal = ({setReferFriendModal}) => {
   const [friendName, setFriendName] = useState('');
@@ -19,7 +20,7 @@ const ReferFriendModal = ({setReferFriendModal}) => {
         <TouchableOpacity
           style={styles.closeButton}
           onPress={() => setReferFriendModal(false)}>
-          <Icon name="close" size={20} color="white" />
+          <Icon name="close" size={20} color={AppColors.white} />
         </TouchableOpacity>
         <View style={styles.content}>
           <Text style={styles.description}>
@@ -91,10 +92,10 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: 'white',
     borderRadius: 20,
-    shadowColor: "white",
+    shadowColor: AppColors.white,
     elevation: 5,
     borderWidth:2,
-    borderColor:"white"
+    borderColor:AppColors.white
   },
   description: {
     color: 'black',

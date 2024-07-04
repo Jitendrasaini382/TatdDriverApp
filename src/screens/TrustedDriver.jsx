@@ -24,6 +24,7 @@ import BookingView from '../components/BookingView';
 import AccordionTrainingVideo from '../components/TrainingVideos';
 import MyBookingAgencyModal from '../components/modal/MyBookingAgencyModal';
 import MyBookingModal from '../components/MyBookingModal';
+import AgentLeadsModal from '../components/modal/AgentLeadsModal';
 
 const {width, height} = Dimensions.get('window');
 
@@ -237,6 +238,7 @@ const TrustedDriver = ({navigation}) => {
         animationOut={'fadeOutUp'}
         isVisible={isModalVisible}>
         <OtrModal setModalVisible={setModalVisible} />
+        {/* <AgentLeadsModal setModalVisible={setModalVisible} /> */}
       </Modal>
       
 

@@ -57,7 +57,7 @@ const BookingView = ({setMyBookingAgencyModal}) => {
         </Text>
       </View>
       <FlexibleBookingView/>
-      {/* <RoundTripBookingView /> */}
+      <RoundTripBookingView />
       <PermanentBookingView />
     </View>
   );

@@ -3,6 +3,7 @@ import React from 'react';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
+import AddDriverComponent from '../components/Eeeeeeeeeeeeeeeeeeeeeeeeeee';
 
 
 const MyBonus = () => {
@@ -61,7 +62,8 @@ const MyBonusStatusHistory = () => {
           padding: 10,
           backgroundColor: 'white'
         }}>
-        <MyBonus />
+        {/* <MyBonus /> */}
+        <AddDriverComponent />
       </View>
       </ScrollView>
     </View>

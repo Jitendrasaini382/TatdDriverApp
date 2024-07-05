@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   card: {
     margin: moderateScale(15),
     backgroundColor: AppColors.white,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: moderateScale(10),
     borderColor: AppColors.mainColor,
     // width: '92%',

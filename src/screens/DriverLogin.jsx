@@ -19,54 +19,62 @@ const designHeight = height;
 
 const scale = size => (width / designWidth) * size;
 const verticalScale = size => (height / designHeight) * size;
-const moderateScale = (size, factor = 0.5) => size + (scale(size) - size) * factor;
+const moderateScale = (size, factor = 0.5) =>
+  size + (scale(size) - size) * factor;
 
 const DriverLogin = ({navigation}) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header backButton={false} />
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-
-      <View style={styles.mainContainer}>
-        <View style={styles.contentContainer}>
-          <View style={styles.mainView}>
-            <View style={styles.mainTopView}>
-              <View style={styles.mainTopContent}>
-                <View style={styles.headingView}>
-                  <Text style={styles.headingText}>
-                    Trusted & Trained Driver
-                  </Text>
+        <View style={styles.mainContainer}>
+          <View style={styles.contentContainer}>
+            <View style={styles.mainView}>
+              <View style={styles.mainTopView}>
+                <View style={styles.mainTopContent}>
+                  <View style={styles.headingView}>
+                    <Text style={styles.headingText}>
+                      Trusted & Trained Driver
+                    </Text>
+                  </View>
+                  <View style={styles.triangleMainView}>
+                    <View style={styles.triangleView}></View>
+                    <View
+                      style={[
+                        styles.triangleView,
+                        styles.rotatedTriangle,
+                      ]}></View>
+                  </View>
                 </View>
-                <View style={styles.triangleMainView}>
-                  <View style={styles.triangleView}></View>
-                  <View style={[styles.triangleView, styles.rotatedTriangle]}></View>
+                <Text style={styles.mainHeading}>Driver Login</Text>
+              </View>
+
+              <View style={styles.mainMiddleView}>
+                <View style={styles.iconView}>
+                  <Icon
+                    name="phone"
+                    size={moderateScale(15)}
+                    color={AppColors.greyColor}
+                  />
+                </View>
+                <View style={styles.inputView}>
+                  <TextInput
+                    style={styles.inputText}
+                    keyboardType="numeric"
+                    placeholder="Enter Driver Mobile Number"
+                    placeholderTextColor="rgb(42, 42, 42)"
+                  />
                 </View>
               </View>
-              <Text style={styles.mainHeading}>Driver Login</Text>
-            </View>
 
-            <View style={styles.mainMiddleView}>
-              <View style={styles.iconView}>
-                <Icon name="phone" size={moderateScale(15)} color={AppColors.greyColor} />
-              </View>
-              <View style={styles.inputView}>
-                <TextInput
-                  style={styles.inputText}
-                  keyboardType="numeric"
-                  placeholder="Enter Driver Mobile Number"
-                  placeholderTextColor="rgb(42, 42, 42)"
-                />
-              </View>
+              <TouchableOpacity
+                style={styles.btnView}
+                onPress={() => navigation.navigate('CheckDriverOtp')}>
+                <Text style={styles.btnText}>Submit</Text>
+              </TouchableOpacity>
             </View>
-
-            <TouchableOpacity
-              style={styles.btnView}
-              onPress={() => navigation.navigate('CheckDriverOtp')}>
-              <Text style={styles.btnText}>Submit</Text>
-            </TouchableOpacity>
           </View>
         </View>
-      </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -92,14 +100,15 @@ const styles = StyleSheet.create({
   },
   mainView: {
     backgroundColor: AppColors.white,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: moderateScale(10),
     borderColor: AppColors.mainColor,
     width: '100%',
   },
   mainTopView: {
     backgroundColor: AppColors.mainColor,
-    width: '100%',
+    // width: '100%',
+    // height: '100%',
     borderRadius: moderateScale(8),
     marginBottom: verticalScale(12),
   },
@@ -192,36 +201,6 @@ const styles = StyleSheet.create({
 
 export default DriverLogin;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import {
 //   Dimensions,
 //   SafeAreaView,
@@ -238,7 +217,6 @@ export default DriverLogin;
 // const DriverLogin = ({navigation}) => {
 //   const windowWidth = Dimensions.get('window').width;
 // const windowHeight = Dimensions.get('window').height;
-
 
 // console.log(windowHeight,'h');
 // console.log(windowWidth, 'w');
@@ -419,28 +397,6 @@ export default DriverLogin;
 //     fontFamily: 'Roboto-Regular',
 //   },
 // });
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // // import React from 'react';
 //     // import {
@@ -455,11 +411,11 @@ export default DriverLogin;
 //     // import Header from '../components/Header';
 //     // import Icon from 'react-native-vector-icons/FontAwesome';
 //     // import { AppColors } from '../assets/Colors';
-    
+
 //     // const { width, height } = Dimensions.get('window');
 //     // const screenWidth = width;
 //     // const screenHeight = height;
-    
+
 //     // const DriverLogin = ({ navigation }) => {
 //     //   return (
 //     //     <SafeAreaView style={{ flex: 1 }}>
@@ -483,15 +439,15 @@ export default DriverLogin;
 //     //                     ]}></View>
 //     //                 </View>
 //     //               </View>
-    
+
 //     //               <Text style={styles.mainHeading}>Driver Login</Text>
 //     //             </View>
-    
+
 //     //             <View style={styles.mainMiddleView}>
 //     //               <View style={styles.iconView}>
 //     //                 <Icon name="phone" size={screenWidth * 0.04} color={AppColors.greyColor} />
 //     //               </View>
-    
+
 //     //               <View style={styles.inputView}>
 //     //                 <TextInput
 //     //                   style={styles.inputText}
@@ -501,7 +457,7 @@ export default DriverLogin;
 //     //                 />
 //     //               </View>
 //     //             </View>
-    
+
 //     //             <View style={styles.btnView}>
 //     //               <TouchableOpacity
 //     //                 onPress={() => navigation.navigate('CheckDriverOtp')}>
@@ -514,9 +470,9 @@ export default DriverLogin;
 //     //     </SafeAreaView>
 //     //   );
 //     // };
-    
+
 //     // export default DriverLogin;
-    
+
 //     // const styles = StyleSheet.create({
 //     //   mainContainer: { flex: 1, backgroundColor: 'white' },
 //     //   contentContainer: {
@@ -626,7 +582,7 @@ export default DriverLogin;
 //     //     fontFamily: 'Roboto-Regular',
 //     //   },
 //     // });
-    
+
 //     // import {
 //     //   SafeAreaView,
 //     //   StyleSheet,
@@ -648,5 +604,5 @@ export default DriverLogin;
 //     //     </SafeAreaView>
 //     //   );
 //     // };
-    
+
 //     // export default DriverLogin;

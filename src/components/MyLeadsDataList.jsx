@@ -47,7 +47,7 @@ const ListItem = ({phone, date, amount}) => (
   </View>
 );
 
-('whatsapp://send?phone=+123456789&text=Hello');
+// ('whatsapp://send?phone=+123456789&text=Hello');
 
 const openWhatsApp = () => {
   // let url = 'whatsapp://send?text=Hello'; // You can customize the text or add a phone number like: 'whatsapp://send?phone=+123456789&text=Hello'

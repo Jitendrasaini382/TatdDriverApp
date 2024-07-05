@@ -64,7 +64,7 @@ const MainToggleModal = ({setMainToggleModal}) => {
                   paddingHorizontal: 30,
                   backgroundColor: AppColors.mainColor,
                 }}>
-                <Text style={{color: 'white'}}>I am available</Text>
+                <Text style={{color: AppColors.white}}>I am available</Text>
 
                 {/* <Button color={AppColors.mainColor} title="i am available" /> */}
               </View>
@@ -78,7 +78,7 @@ const MainToggleModal = ({setMainToggleModal}) => {
                   paddingHorizontal: 20,
                   backgroundColor: AppColors.mainColor,
                 }}>
-                <Text style={{color: 'white'}}>I am not available</Text>
+                <Text style={{color: AppColors.white}}>I am not available</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   mainContainer: {flex: 1},
   contentContainer: {
     // flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     justifyContent: 'flex-start',
     justifyContent: 'center',
     alignItems: 'center',
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 12,
     borderTopWidth: 12,
     borderRightColor: 'transparent',
-    borderTopColor: 'white',
+    borderTopColor: AppColors.white,
   },
   mainHeading: {
     fontSize: 27,

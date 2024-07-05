@@ -22,6 +22,7 @@ import {
   WhatsApp_Icon,
 } from '../assets/images';
 import {AppFont} from '../assets/FontsFamily';
+import { AppColors } from '../assets/Colors';
 
 const AddDriverComponent = () => {
   const textToCopy =
@@ -130,7 +131,7 @@ const AddDriverComponent = () => {
       </View>
       <View style={styles.middleView}>
         <View style={styles.middleLeftView}>
-          <Text style={{color: 'black', fontFamily: AppFont.regularFont}}>
+          <Text style={{color: AppColors.black, fontFamily: AppFont.regularFont}}>
             OR
           </Text>
         </View>
@@ -145,7 +146,7 @@ const AddDriverComponent = () => {
           <Text
             style={{
               paddingTop: 5,
-              color: 'black',
+              color: AppColors.black,
               fontFamily: AppFont.regularFont,
               marginLeft: 10,
             }}>
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Bold',
     marginBottom: 35,
     textAlign: 'center',
-    color: 'black',
+    color: AppColors.black,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: AppColors.black,
     marginRight: 10,
   },
   bottamView: {
@@ -244,7 +245,7 @@ const styles = StyleSheet.create({
   },
   iconView: {justifyContent: 'center', alignItems: 'center'},
   ImageIcon: {width: 35, height: 35},
-  textIcon: {color: 'black', paddingTop: 10},
+  textIcon: {color: AppColors.black, paddingTop: 10},
   button: {
     backgroundColor: '#FF9800',
     paddingVertical: 10,

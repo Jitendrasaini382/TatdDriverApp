@@ -87,7 +87,7 @@ const AccordionItem = ({title, videoId, isOpen, onToggle, index}) => {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 10,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
   },
   itemContainer: {
     marginBottom: 10,

@@ -45,7 +45,7 @@ const AgentLeadsModal = ({setAgentLeadsModal}) => {
       </TouchableOpacity>
       <Text
         style={{
-          color: 'black',
+          color: AppColors.black,
           paddingHorizontal: 20,
           paddingBottom: 20,
           letterSpacing: 0.5,

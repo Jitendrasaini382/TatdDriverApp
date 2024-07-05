@@ -14,9 +14,7 @@ const CreateTicketModal = ({setCreateTicketModal}) => {
    <ScrollView>
      <View style={styles.container}>
       <View style={{flex: 1, padding: 10, elevation:5}}>
-        {/* <View style={{height:10, width: 10, borderRadius: 5}} >
-            <Text style={{color: "white",alignSelf :"flex-end", backgroundColor: "red", }} > x</Text>
-        </View> */}
+       
         <View style={styles.modal}>
         <TouchableOpacity 
           onPress={()=> setCreateTicketModal(false)}
@@ -107,7 +105,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,
-    color: 'white',
+    color: AppColors.black,
     borderWidth: 1,
     borderColor: '#e7e7e7',
   },

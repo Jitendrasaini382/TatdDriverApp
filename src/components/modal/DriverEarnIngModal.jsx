@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   payButtonText: {
-    color: 'white',
+    color: AppColors.white,
     fontWeight: 'bold',
   },
 });

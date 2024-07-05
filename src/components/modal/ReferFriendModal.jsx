@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     borderColor:AppColors.white
   },
   description: {
-    color: 'black',
+    color: AppColors.black,
     // lineHeight: 20,
     fontSize: 15
   },
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     fontSize: 15,
-    color: 'black',
+    color: AppColors.black,
     marginBottom: 15,
     backgroundColor: 'white',
   },

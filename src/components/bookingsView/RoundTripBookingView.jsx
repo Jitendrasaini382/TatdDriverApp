@@ -41,7 +41,7 @@ const TripCard = ({trip}) => {
                   height: 10,
                   width: 10,
                   borderRadius: 5,
-                  backgroundColor: index === 0 ? '#0dc53d' : 'black',
+                  backgroundColor: index === 0 ? '#0dc53d' : AppColors.black,
                   alignItems: 'flex-start',
                   top: 5,
                   left: 10,
@@ -252,7 +252,7 @@ export default RoundTripBookingView;
 //     <View
 //       style={[
 //         styles.addressDot,
-//         {backgroundColor: isOrigin ? '#0dc53d' : 'black'},
+        // {backgroundColor: isOrigin ? '#0dc53d' : AppColors.black},
 //       ]}
 //     />
 //     <Text style={styles.address}>{address}</Text>

@@ -123,7 +123,7 @@ export default AllNoticeBoardDetails;
 const styles = StyleSheet.create({
 fullScreenContainer: {
   flex: 1,
-  backgroundColor: 'white',
+  backgroundColor: AppColors.white,
 },
 scrollView: {
   flex: 1,
@@ -148,7 +148,7 @@ detailText: {
 container: {
   padding: 10,
   margin: 10,
-  backgroundColor: 'white',
+  backgroundColor: AppColors.white,
 },
 touchable: {
   flexDirection: 'row',
@@ -176,7 +176,7 @@ indexText: {
 },
 fullScreenContainer: {
   flex: 1,
-  backgroundColor: 'white',
+  backgroundColor: AppColors.white,
 },
 detailContainer: {
   padding: 20,
@@ -252,7 +252,7 @@ detailText: {
 // //     <View style={{
 // //         padding: 10,
 // //         margin: 10,
-// //         backgroundColor: 'white',
+// //         backgroundColor: AppColors.white,
 // //     }} >
 //     //   <View>
 //     //     <Text style={{ fontSize: 20, color: AppColors.black}}>जरूरी जानकारी।</Text>
@@ -373,7 +373,7 @@ detailText: {
 // const styles = StyleSheet.create({
 //   fullScreenContainer: {
 //     flex: 1,
-//     backgroundColor: 'white',
+//     backgroundColor: AppColors.white,
 //   },
 //   scrollView: {
 //     flex: 1,
@@ -392,7 +392,7 @@ detailText: {
 //   container: {
 //     padding: 10,
 //     margin: 10,
-//     backgroundColor: 'white',
+//     backgroundColor: AppColors.white,
 //   },
 //   touchable: {
 //     flexDirection: 'row',
@@ -420,7 +420,7 @@ detailText: {
 //   },
 //   fullScreenContainer: {
 //     flex: 1,
-//     backgroundColor: 'white',
+//     backgroundColor: AppColors.white,
 //   },
 //   detailContainer: {
 //     padding: 20,

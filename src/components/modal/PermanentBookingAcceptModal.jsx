@@ -7,6 +7,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
+import { AppColors } from '../../assets/Colors';
 
 const PermanentBookingAcceptModal = ({setOpenModal}) => {
   return (
@@ -81,20 +82,20 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 30,
-    color: 'black',
+    color: AppColors.black,
   },
   subHeader: {
     fontSize: 16,
     fontWeight: 'bold',
     // marginBottom: 10,
-    color: 'black',
+    color: AppColors.black,
   },
   listContainer: {
     marginBottom: 20,
   },
   listItem: {
     marginBottom: 15,
-    color: 'black',
+    color: AppColors.black,
     fontSize: 18,
   },
   warning: {
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cancelButtonText: {
-    color: 'black',
+    color: AppColors.black,
   },
   applyButtonText: {
     color: 'white',

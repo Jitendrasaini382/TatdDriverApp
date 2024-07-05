@@ -225,13 +225,13 @@ const styles = StyleSheet.create({
   headlineAmount: {
     fontWeight: '600',
     textAlign: 'center',
-    color: 'white',
+    color: AppColors.white,
     fontSize: 13,
   },
   headlineDays: {
     textAlign: 'center',
     fontWeight: '600',
-    color: 'white',
+    color: AppColors.white,
     fontSize: 10,
   },
 
@@ -262,12 +262,12 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH * 0.2,
   },
   earningAmount: {
-    color: 'white',
+    color: AppColors.white,
     fontSize: 16,
     fontWeight: 'bold',
   },
   earningDays: {
-    color: 'white',
+    color: AppColors.white,
     fontSize: 12,
   },
   tripList: {

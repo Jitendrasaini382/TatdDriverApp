@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     shadowRadius: 14,
     elevation: 13,
     // padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
   },
   topHeading: {
     textAlign: 'center',

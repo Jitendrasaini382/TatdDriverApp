@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 5,
     padding: 5,
-    color: 'black',
+    color: AppColors.black,
     margin: 2,
   },
   footer: {
@@ -515,7 +515,7 @@ export default FlexibleBookingView;
 //     backgroundColor: '#fff',
 //     borderRadius: 5,
 //     padding: 5,
-//     color: 'black',
+//     color: AppColors.black,
 //     margin: 2,
 //   },
 //   footer: {

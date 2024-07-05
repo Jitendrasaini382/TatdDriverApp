@@ -19,7 +19,7 @@ const MyBookingAgencyModal = ({setMyBookingAgencyModal, setModalVisible}) => {
       <SafeAreaView style={{flex: 1, }}>
         <View
           style={{
-            backgroundColor: 'white',
+            backgroundColor: AppColors.white,
             // height:800,
             // flex: 1,
             borderRadius: 20,
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 10,
     borderTopWidth: 10,
     borderRightColor: 'transparent',
-    borderTopColor: 'white',
+    borderTopColor: AppColors.white,
     marginLeft: -0.5,
   },
   triangleBottom: {
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 10,
     borderTopWidth: 10,
     borderRightColor: 'transparent',
-    borderTopColor: 'white',
+    borderTopColor: AppColors.white,
     marginLeft: -0.5,
     transform: [{rotate: '270deg'}],
   },
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
 //     borderRightWidth: 10,
 //     borderTopWidth: 10,
 //     borderRightColor: 'transparent',
-//     borderTopColor: 'white',
+//     borderTopColor: AppColors.white,
 //     marginLeft: -0.5,
 //   },
 //   triangleBottom: {
@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
 //     borderRightWidth: 10,
 //     borderTopWidth: 10,
 //     borderRightColor: 'transparent',
-//     borderTopColor: 'white',
+//     borderTopColor: AppColors.white,
 //     marginLeft: -0.5,
 //     transform: [{rotate: '270deg'}],
 //   },

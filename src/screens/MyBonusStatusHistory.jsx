@@ -2,25 +2,93 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
-import {AppFont} from '../assets/FontsFamily';
-import AddDriverComponent from '../components/Eeeeeeeeeeeeeeeeeeeeeeeeeee';
-
 
 const MyBonus = () => {
   const bonusData = [
-    { createDate: '26 Jun,2024', name: 'Mohd Waris', bonusType: 'Cash Adjustment-430664', paymentStatus: 'Due', amount: '100' },
-    { createDate: '26 Jun,2024', name: 'Mohd Waris', bonusType: 'Cash Adjustment-430664', paymentStatus: 'Due', amount: '100' },
-    { createDate: '26 Jun,2024', name: 'Mohd Waris', bonusType: 'Cash Adjustment-430664', paymentStatus: 'Due', amount: '100' },
-    { createDate: '26 Jun,2024', name: 'Mohd Waris', bonusType: 'Cash Adjustment-430664', paymentStatus: 'Due', amount: '100' },
-    { createDate: '26 Jun,2024', name: 'Mohd Waris', bonusType: 'Cash Adjustment-430664', paymentStatus: 'Due', amount: '100' },
-    { createDate: '26 Jun,2024', name: 'Mohd Waris', bonusType: 'Cash Adjustment-430664', paymentStatus: 'Due', amount: '100' },
-    { createDate: '26 Jun,2024', name: 'Mohd Waris', bonusType: 'Cash Adjustment-430664', paymentStatus: 'Due', amount: '100' },
-    { createDate: '26 Jun,2024', name: 'Mohd Waris', bonusType: 'Cash Adjustment-430664', paymentStatus: 'Due', amount: '100' },
-    { createDate: '26 Jun,2024', name: 'Mohd Waris', bonusType: 'Cash Adjustment-430664', paymentStatus: 'Due', amount: '100' },
-    { createDate: '26 Jun,2024', name: 'Mohd Waris', bonusType: 'Cash Adjustment-430664', paymentStatus: 'Due', amount: '100' },
-    { createDate: '26 Jun,2024', name: 'Mohd Waris', bonusType: 'Cash Adjustment-430664', paymentStatus: 'Due', amount: '100' },
-    { createDate: '26 Jun,2024', name: 'Mohd Waris', bonusType: 'Cash Adjustment-430664', paymentStatus: 'Due', amount: '100' },
-   
+    {
+      createDate: '26 Jun,2024',
+      name: 'Mohd Waris',
+      bonusType: 'Cash Adjustment-430664',
+      paymentStatus: 'Due',
+      amount: '100',
+    },
+    {
+      createDate: '26 Jun,2024',
+      name: 'Mohd Waris',
+      bonusType: 'Cash Adjustment-430664',
+      paymentStatus: 'Due',
+      amount: '100',
+    },
+    {
+      createDate: '26 Jun,2024',
+      name: 'Mohd Waris',
+      bonusType: 'Cash Adjustment-430664',
+      paymentStatus: 'Due',
+      amount: '100',
+    },
+    {
+      createDate: '26 Jun,2024',
+      name: 'Mohd Waris',
+      bonusType: 'Cash Adjustment-430664',
+      paymentStatus: 'Due',
+      amount: '100',
+    },
+    {
+      createDate: '26 Jun,2024',
+      name: 'Mohd Waris',
+      bonusType: 'Cash Adjustment-430664',
+      paymentStatus: 'Due',
+      amount: '100',
+    },
+    {
+      createDate: '26 Jun,2024',
+      name: 'Mohd Waris',
+      bonusType: 'Cash Adjustment-430664',
+      paymentStatus: 'Due',
+      amount: '100',
+    },
+    {
+      createDate: '26 Jun,2024',
+      name: 'Mohd Waris',
+      bonusType: 'Cash Adjustment-430664',
+      paymentStatus: 'Due',
+      amount: '100',
+    },
+    {
+      createDate: '26 Jun,2024',
+      name: 'Mohd Waris',
+      bonusType: 'Cash Adjustment-430664',
+      paymentStatus: 'Due',
+      amount: '100',
+    },
+    {
+      createDate: '26 Jun,2024',
+      name: 'Mohd Waris',
+      bonusType: 'Cash Adjustment-430664',
+      paymentStatus: 'Due',
+      amount: '100',
+    },
+    {
+      createDate: '26 Jun,2024',
+      name: 'Mohd Waris',
+      bonusType: 'Cash Adjustment-430664',
+      paymentStatus: 'Due',
+      amount: '100',
+    },
+    {
+      createDate: '26 Jun,2024',
+      name: 'Mohd Waris',
+      bonusType: 'Cash Adjustment-430664',
+      paymentStatus: 'Due',
+      amount: '100',
+    },
+    {
+      createDate: '26 Jun,2024',
+      name: 'Mohd Waris',
+      bonusType: 'Cash Adjustment-430664',
+      paymentStatus: 'Due',
+      amount: '100',
+    },
   ];
 
   return (
@@ -28,59 +96,74 @@ const MyBonus = () => {
       <Text style={styles.title}>My Bonus</Text>
       <View style={styles.tableContainer}>
         <View style={styles.headerRow}>
-          <Text style={[styles.headerCell, styles.createDateCell]}>Create Date</Text>
+          <Text style={[styles.headerCell, styles.createDateCell]}>
+            Create Date
+          </Text>
           <Text style={[styles.headerCell, styles.nameCell]}>Name</Text>
-          <Text style={[styles.headerCell, styles.bonusTypeCell]}>Bonus Type</Text>
-          <Text style={[styles.headerCell, styles.paymentStatusCell]}>Payment Status</Text>
+          <Text style={[styles.headerCell, styles.bonusTypeCell]}>
+            Bonus Type
+          </Text>
+          <Text style={[styles.headerCell, styles.paymentStatusCell]}>
+            Payment Status
+          </Text>
           <Text style={[styles.headerCell, styles.amountCell]}>Amount</Text>
         </View>
-          {bonusData.map((item, index) => (
-            <View key={index} style={[styles.dataRow, index % 2 === 0 ? styles.evenRow : styles.oddRow]}>
-              <Text style={[styles.dataCell, styles.createDateCell]}>{item.createDate}</Text>
-              <Text style={[styles.dataCell, styles.nameCell]}>{item.name}</Text>
-              <Text style={[styles.dataCell, styles.bonusTypeCell]}>{item.bonusType}</Text>
-              <Text style={[styles.dataCell, styles.paymentStatusCell]}>{item.paymentStatus}</Text>
-              <Text style={[styles.dataCell, styles.amountCell]}>{item.amount}</Text>
-            </View>
-          ))}
+        {bonusData.map((item, index) => (
+          <View
+            key={index}
+            style={[
+              styles.dataRow,
+              index % 2 === 0 ? styles.evenRow : styles.oddRow,
+            ]}>
+            <Text style={[styles.dataCell, styles.createDateCell]}>
+              {item.createDate}
+            </Text>
+            <Text style={[styles.dataCell, styles.nameCell]}>{item.name}</Text>
+            <Text style={[styles.dataCell, styles.bonusTypeCell]}>
+              {item.bonusType}
+            </Text>
+            <Text style={[styles.dataCell, styles.paymentStatusCell]}>
+              {item.paymentStatus}
+            </Text>
+            <Text style={[styles.dataCell, styles.amountCell]}>
+              {item.amount}
+            </Text>
+          </View>
+        ))}
       </View>
     </View>
   );
 };
 
-
-
-
 const MyBonusStatusHistory = () => {
   return (
-    <View style={{flex: 1, flexDirection: 'column', backgroundColor:'white'}}>
-      <Header backButton="true" />
+    <View style={styles.mainContainer}>
+      <Header backButton={true} />
       <ScrollView>
-      <View
-        style={{
-          marginTop: 20,
-          padding: 10,
-          backgroundColor: 'white'
-        }}>
-        <MyBonus />
-      </View>
+        <View style={styles.content}>
+          <MyBonus />
+        </View>
       </ScrollView>
     </View>
   );
 };
 
-
-
 const styles = StyleSheet.create({
+  mainContainer: {flex: 1, flexDirection: 'column', backgroundColor: 'white'},
   container: {
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
     shadowColor: AppColors.black,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 5,
+  },
+  content: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 24,
@@ -123,7 +206,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     borderRightWidth: 1,
     borderRightColor: '#ddd',
-    color: AppColors.black
+    color: AppColors.black,
   },
   createDateCell: {
     flex: 1.2,

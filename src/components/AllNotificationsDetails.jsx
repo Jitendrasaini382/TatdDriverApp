@@ -140,7 +140,7 @@ export default AllNotificationComponent;
 const styles = StyleSheet.create({
   fullScreenContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
   },
   scrollView: {
     flex: 1,
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
   },
   touchable: {
     flexDirection: 'row',
@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
 // const styles = StyleSheet.create({
 //   fullScreenContainer: {
 //     flex: 1,
-//     backgroundColor: 'white',
+//     backgroundColor: AppColors.white,
 //   },
 //   scrollView: {
 //     flex: 1,
@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
 //   container: {
 //     padding: 10,
 //     margin: 10,
-//     backgroundColor: 'white',
+//     backgroundColor: AppColors.white,
 //   },
 //   touchable: {
 //     flexDirection: 'row',
@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
 //   },
 //   fullScreenContainer: {
 //     flex: 1,
-//     backgroundColor: 'white',
+//     backgroundColor: AppColors.white,
 //   },
 //   detailContainer: {
 //     padding: 20,

@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     elevation: 3,
     padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     // borderRadius: 12,
     paddingLeft: 15,
   },

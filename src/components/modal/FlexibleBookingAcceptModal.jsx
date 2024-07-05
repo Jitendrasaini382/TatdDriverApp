@@ -66,7 +66,7 @@ const FlexibleBookingAcceptModal = ({setOpenModal}) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     borderRadius: 10,
     padding: 20,
     shadowColor: '#000',
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'black',
+    color: AppColors.black,
     marginBottom: 20,
   },
   contentContainer: {
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   },
   paragraph: {
     marginBottom: 20,
-    color: 'black',
+    color: AppColors.black,
     padding: 5,
   },
   warningText: {
@@ -120,10 +120,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cancelButtonText: {
-    color: 'black',
+    color: AppColors.black,
   },
   applyButtonText: {
-    color: 'white',
+    color: AppColors.white,
   },
 });
 

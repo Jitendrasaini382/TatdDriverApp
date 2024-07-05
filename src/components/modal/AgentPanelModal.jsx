@@ -1,5 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
+import { AppColors } from '../../assets/Colors';
 
 const AgentPanelModal = ({setAgentPanelModal}) => {
   return (
@@ -20,7 +21,7 @@ const AgentPanelModal = ({setAgentPanelModal}) => {
           <View style={{padding: 10}}>
             <Text
               style={{
-                color: 'black',
+                color: AppColors.black,
                 fontSize: 14,
                 fontWeight: '500',
                 fontFamily: 'Roboto-Regular',
@@ -35,7 +36,7 @@ const AgentPanelModal = ({setAgentPanelModal}) => {
             </Text>
             <Text
               style={{
-                color: 'black',
+                color: AppColors.black,
                 fontSize: 14,
                 fontWeight: '500',
                 fontFamily: 'Roboto-Regular',
@@ -49,7 +50,7 @@ const AgentPanelModal = ({setAgentPanelModal}) => {
             </Text>
             <Text
               style={{
-                color: 'black',
+                color: AppColors.black,
                 fontSize: 14,
                 fontWeight: '500',
                 fontFamily: 'Roboto-Regular',
@@ -73,7 +74,7 @@ const AgentPanelModal = ({setAgentPanelModal}) => {
                   paddingVertical: 4,
                   fontWeight: 'bold',
                   paddingHorizontal: 14,
-                  color: 'black',
+                  color: AppColors.black,
                 }}>
                 Close
               </Text>
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   closeButtonText: {
-    color: 'black',
+    color: AppColors.black,
     fontSize: 16,
     fontWeight: 'bold',
     paddingHorizontal: 5,

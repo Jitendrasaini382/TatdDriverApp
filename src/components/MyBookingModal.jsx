@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#16588e',
   },
   tabText: {
-    color: 'black',
+    color: AppColors.black,
     paddingBottom: 3,
   },
   activeTabText: {
@@ -158,14 +158,14 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   headerText: {
-    color: 'black',
+    color: AppColors.black,
     marginRight: 15,
     alignSelf: 'center',
     fontSize: 16,
     paddingBottom: 3,
   },
   dueAmountText: {
-    color: 'black',
+    color: AppColors.black,
     fontSize: 16,
   },
   bookingContainer: {

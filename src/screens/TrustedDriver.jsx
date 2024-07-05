@@ -24,7 +24,6 @@ import BookingView from '../components/BookingView';
 import AccordionTrainingVideo from '../components/TrainingVideos';
 import MyBookingAgencyModal from '../components/modal/MyBookingAgencyModal';
 import MyBookingModal from '../components/MyBookingModal';
-import AgentLeadsModal from '../components/modal/AgentLeadsModal';
 
 const {width, height} = Dimensions.get('window');
 
@@ -238,7 +237,6 @@ const TrustedDriver = ({navigation}) => {
         animationOut={'fadeOutUp'}
         isVisible={isModalVisible}>
         <OtrModal setModalVisible={setModalVisible} />
-        {/* <AgentLeadsModal setModalVisible={setModalVisible} /> */}
       </Modal>
       
 
@@ -370,7 +368,6 @@ const styles = StyleSheet.create({
     borderRadius: responsiveSize(34),
     borderWidth: 1,
     borderColor: AppColors.greyColor,
-    // marginLeft: '10%',
     margin: responsiveSize(5),
   },
   bottamView: {
@@ -495,7 +492,6 @@ const styles = StyleSheet.create({
     fontSize: 9,
     fontWeight: '400',
     paddingTop: 5,
-    // justifyContent: 'center',
     textAlign: 'center',
   },
   textIcon: {

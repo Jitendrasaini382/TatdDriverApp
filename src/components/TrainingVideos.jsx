@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 10,
     padding:15,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
   },
   itemContainer: {
     marginBottom: 10,
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
 //   container: {
 
 //     paddingTop: 10,
-//     backgroundColor: 'white',
+//     backgroundColor: AppColors.white,
 //   },
 //   title: {
 //     fontSize: 10,

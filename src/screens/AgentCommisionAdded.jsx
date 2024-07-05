@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   amountValue: {
     fontWeight: 'bold',
     fontSize: 42,
-    color: 'black',
+    color: AppColors.black,
   },
   checkImage: {
     width: 45,
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingBottom: 20,
     fontWeight: '400',
-    color: 'black',
+    color: AppColors.black,
     fontFamily: AppFont.regularFont,
     marginTop: 10,
   },
@@ -90,20 +90,20 @@ const styles = StyleSheet.create({
     marginVertical: 30,
   },
   detailText: {
-    color: 'black',
+    color: AppColors.black,
     fontSize: 20,
     fontFamily: AppFont.regularFont,
   },
   agentName: {
     marginBottom: 20,
-    color: 'black',
+    color: AppColors.black,
     fontSize: 30,
     fontFamily: AppFont.regularFont,
   },
   invoiceValue: {
     marginBottom: 20,
     fontSize: 18,
-    color: 'black',
+    color: AppColors.black,
     fontFamily: AppFont.regularFont,
   },
 });
@@ -160,7 +160,7 @@ export default AgentCommisionAdded;
 //             Amount
 //           </Text>
 //           <View style={{flexDirection: 'row'}}>
-//             <Text style={{fontWeight: 'bold', fontSize: 42, color: 'black'}}>
+//             <Text style={{fontWeight: 'bold', fontSize: 42, color: AppColors.black}}>
 //               <Icon name="rupee" size={40} color={AppColors.black} />
 //               880
 //             </Text>
@@ -173,7 +173,7 @@ export default AgentCommisionAdded;
 //               fontSize: 20,
 //               paddingBottom: 20,
 //               fontWeight: '400',
-//               color: 'black',
+//               color: AppColors.black,
 //               fontFamily: AppFont.regularFont,
 //               marginTop: 10,
 //             }}>
@@ -188,7 +188,7 @@ export default AgentCommisionAdded;
 //           }}>
 //           <Text
 //             style={{
-//               color: 'black',
+//               color: AppColors.black,
 //               fontSize: 20,
 //               fontFamily: AppFont.regularFont,
 //             }}>
@@ -196,7 +196,7 @@ export default AgentCommisionAdded;
 //           </Text>
 //           <Text
 //             style={{
-//               color: 'black',
+//               color: AppColors.black,
 //               fontSize: 20,
 //               fontFamily: AppFont.regularFont,
 //             }}>
@@ -208,7 +208,7 @@ export default AgentCommisionAdded;
 //           <Text
 //             style={{
 //               marginBottom: 20,
-//               color: 'black',
+//               color: AppColors.black,
 //               fontSize: 30,
 //               fontFamily: AppFont.regularFont,
 //             }}>
@@ -218,7 +218,7 @@ export default AgentCommisionAdded;
 //             style={{
 //               marginBottom: 20,
 //               fontSize: 18,
-//               color: 'black',
+//               color: AppColors.black,
 //               fontFamily: AppFont.regularFont,
 //             }}>
 //             Invoice Value {''}

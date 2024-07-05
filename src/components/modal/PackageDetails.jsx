@@ -20,7 +20,7 @@ const PackageDetails = ({setModalVisible}) => {
           borderWidth: 1,
           borderColor: AppColors.mainColor,
           flexDirection: 'column',
-          backgroundColor: 'white',
+          backgroundColor: AppColors.white,
         }}>
         <View
           style={{
@@ -42,7 +42,7 @@ const PackageDetails = ({setModalVisible}) => {
                 style={{
                   fontWeight: '500',
                   fontSize: 15,
-                  color: 'white',
+                  color: AppColors.white,
                   padding: 5,
                   //   paddingHorizontal:10,
                   //   margin:5
@@ -103,7 +103,7 @@ const PackageDetails = ({setModalVisible}) => {
 const styles = StyleSheet.create({
   modalContent: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     borderRadius: 10,
     padding: 20,
     width: '90%',
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   closeButtonBottomText: {
-    color: 'white',
+    color: AppColors.white,
     fontWeight: 'bold',
   },
 });

@@ -190,7 +190,7 @@ export default AgentKyc;
 //             <TextInput
 //               style={styles.input}
 //               placeholder="XYZ"
-//               placeholderTextColor={'black'}
+//               placeholderTextColor={AppColors.black}
 //             />
 //           </View>
 //           <View style={styles.inputGroup}>
@@ -198,7 +198,7 @@ export default AgentKyc;
 //             <TextInput
 //               style={styles.input}
 //               placeholder="'XYZ"
-//               placeholderTextColor={'black'}
+//               placeholderTextColor={AppColors.black}
 //             />
 //           </View>
 //           <View style={styles.inputGroup}>
@@ -206,7 +206,7 @@ export default AgentKyc;
 //             <TextInput
 //               style={styles.input}
 //               placeholder="XYZ"
-//               placeholderTextColor={'black'}
+//               placeholderTextColor={AppColors.black}
 //             />
 //           </View>
 //           <View style={styles.inputGroup}>
@@ -214,7 +214,7 @@ export default AgentKyc;
 //             <TextInput
 //               style={styles.input}
 //               placeholder="XYZ"
-//               placeholderTextColor={'black'}
+//               placeholderTextColor={AppColors.black}
 //             />
 //           </View>
 //           <View style={styles.inputGroup}>
@@ -222,7 +222,7 @@ export default AgentKyc;
 //             <TextInput
 //               style={styles.input}
 //               placeholder="XYZ"
-//               placeholderTextColor={'black'}
+//               placeholderTextColor={AppColors.black}
 //             />
 //           </View>
 //           <Button title="Edit" onPress={() => {}} color={AppColors.mainColor} />
@@ -242,7 +242,7 @@ export default AgentKyc;
 //     fontWeight: 'bold',
 //     textAlign: 'right',
 //     marginBottom: 20,
-//     color: 'black',
+//     color: AppColors.black,
 //   },
 //   inputGroup: {
 //     marginBottom: 15,
@@ -257,7 +257,7 @@ export default AgentKyc;
 //     borderColor: '#ccc',
 //     padding: 10,
 //     borderRadius: 5,
-//     color: 'black',
+//     color: AppColors.black,
 //     fontSize: 16,
 //     // backgroundColor: '#f9f9f9'
 //   },

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { AppColors } from '../assets/Colors';
 
 const dummyData = [
   { id: '121785', date: '22 Jun, 11:08 AM', status: 'Closed' },
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
   container: {
     borderWidth: 1,
     borderColor: 'rgb(204, 204, 204)',
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
   },
   header: {
     flexDirection: 'row',
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   firstStatusText: {
-    color: 'white',
+    color: AppColors.white,
   },
 });
 

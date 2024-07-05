@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   container: {
     overflow: 'hidden',
     borderRadius: 30,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   arrow: {
-    color: 'white',
+    color: AppColors.white,
     fontSize: 20,
 
   },

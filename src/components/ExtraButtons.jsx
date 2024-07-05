@@ -27,7 +27,7 @@ const ExtraButtons = ({OpenMyBookingModal}) => {
               padding: 7,
               fontSize: 10,
               fontWeight: '500',
-              color: 'white',
+              color: AppColors.white,
             }}>
             Need Help ?
           </Text>
@@ -47,7 +47,7 @@ const ExtraButtons = ({OpenMyBookingModal}) => {
               padding: 7,
               fontSize: 10,
               fontWeight: '500',
-              color: 'white',
+              color: AppColors.white,
             }}>
             My Bookings
           </Text>

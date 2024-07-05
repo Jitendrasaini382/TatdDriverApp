@@ -8,6 +8,7 @@ import {
   Alert,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { AppColors } from '../../assets/Colors';
 
 const RoundTripBookingAceeptModal = ({setOpenModal}) => {
   return (
@@ -28,7 +29,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal}) => {
                   textAlign: 'right',
                   fontSize: 20,
                   fontFamily: 'Roboto',
-                  color: 'black',
+                  color: AppColors.black,
                 }}>
                 X
               </Text>
@@ -75,7 +76,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal}) => {
             <Text
               style={{
                 fontSize: 15,
-                color: 'black',
+                color: AppColors.black,
                 fontFamily: 'Roboto-Medium',
               }}>
               I will reach the coustomer on time{'\n'}
@@ -89,7 +90,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal}) => {
                 backgroundColor: '#16588e',
                 padding: 10,
                 borderWidth: 1,
-                borderColor: 'black',
+                borderColor: AppColors.black,
                 paddingHorizontal: 20,
                 marginBottom: 20,
               }}>

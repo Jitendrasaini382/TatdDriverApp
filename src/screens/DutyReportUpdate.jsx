@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Header from '../components/Header';
+import { AppColors } from '../assets/Colors';
 
 const DutyReportUpdate = () => {
   return (

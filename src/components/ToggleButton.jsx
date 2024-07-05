@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   activeButton: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
   },
   inactiveButton: {},
   buttonText: {
@@ -170,10 +170,10 @@ export default ToggleButton;
 //     justifyContent: 'center',
 //   },
 //   activeButton: {
-//     backgroundColor: 'white',
+//     backgroundColor: AppColors.white,
 //   },
 //   inactiveButton: {
-//     // backgroundColor: 'white',
+//     // backgroundColor: AppColors.white,
 //   },
 //   buttonText: {
 //     // fontWeight: 'bold',

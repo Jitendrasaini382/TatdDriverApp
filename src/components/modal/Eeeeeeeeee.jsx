@@ -142,7 +142,7 @@
 //     alignItems: 'center',
 //   },
 //   stateButtonText: {
-//     color: 'white',
+//     color: AppColors.white,
 //     fontSize: 16,
 //   },
 
@@ -216,7 +216,7 @@
 // // const styles = StyleSheet.create({
 // //   container: {
 // //     // flex: 1,
-// //     backgroundColor: 'white',
+// //     backgroundColor: AppColors.white,
 // //     padding: 10,
 // //   },
 // //   listContent: {
@@ -226,7 +226,7 @@
 // //     flexDirection: 'row',
 // //     justifyContent: 'space-between',
 // //     alignItems: 'center',
-// //     backgroundColor: 'white',
+// //     backgroundColor: AppColors.white,
 // //     borderWidth: 1,
 // //     borderColor: '#ccc',
 // //     borderRadius: 5,
@@ -401,12 +401,12 @@
 // //     justifyContent: 'center',
 // //     alignItems: 'center',
 // //     borderWidth: 2,
-// //     borderColor: 'white',
+// //     borderColor: AppColors.white,
 // //     zIndex: 1,
 // //   },
 // //   content: {
 // //     padding: 20,
-// //     backgroundColor: 'white',
+// //     backgroundColor: AppColors.white,
 // //     borderRadius: 20,
 // //     shadowColor: "white",
 // //     elevation: 5,
@@ -414,7 +414,7 @@
 // //     borderColor:"white"
 // //   },
 // //   description: {
-// //     color: 'black',
+// //     color: AppColors.black,
 // //     // lineHeight: 20,
 // //     fontSize: 15
 // //   },
@@ -426,7 +426,7 @@
 // //     fontSize: 22,
 // //     fontWeight: 'bold',
 // //     marginBottom: 15,
-// //     color: 'white',
+// //     color: AppColors.white,
 // //   },
 // //   input: {
 // //     borderWidth: 1,
@@ -434,9 +434,9 @@
 // //     borderRadius: 5,
 // //     padding: 10,
 // //     fontSize: 15,
-// //     color: 'black',
+// //     color: AppColors.black,
 // //     marginBottom: 15,
-// //     backgroundColor: 'white',
+// //     backgroundColor: AppColors.white,
 // //   },
 // //   referButton: {
 // //     backgroundColor: '#ddd',
@@ -482,9 +482,9 @@
 // // //           backgroundColor: '#16588e',
 // // //           justifyContent: 'center',
 // // //           alignItems: 'center',
-// // //           borderTopColor: 'white',
-// // //           borderLeftColor: 'white',
-// // //           borderRightColor: 'white',
+// // //           borderTopColor: AppColors.white,
+// // //           borderLeftColor: AppColors.white,
+// // //           borderRightColor: AppColors.white,
 // // //           borderWidth: 2,
 // // //           alignSelf: 'flex-end',
 // // //         }}
@@ -545,31 +545,31 @@
 // // //   },
 
 // // //   headerText: {
-// // //     color: 'black',
+// // //     color: AppColors.black,
 // // //     fontSize: 18,
 // // //     fontWeight: 'bold',
 // // //   },
 // // //   closeButton: {
 // // //     // padding: 5,
-// // //     // color: 'black',
+// // //     // color: AppColors.black,
 // // //   },
 // // //   content: {
 // // //     padding: 10,
-// // //     backgroundColor: 'white',
+// // //     backgroundColor: AppColors.white,
 // // //     borderRadius: 10,
 // // //     borderWidth: 2,
-// // //     borderColor: 'white',
+// // //     borderColor: AppColors.white,
 // // //   },
 // // //   description: {
 // // //     marginBottom: 20,
 // // //     lineHeight: 20,
-// // //     color: 'black',
+// // //     color: AppColors.black,
 // // //   },
 // // //   sectionTitle: {
 // // //     fontSize: 22,
 // // //     fontWeight: 'bold',
 // // //     marginBottom: 15,
-// // //     color: 'white',
+// // //     color: AppColors.white,
 // // //     fontFamily: 'Roboto-Regular',
 // // //   },
 // // //   input: {
@@ -578,9 +578,9 @@
 // // //     borderRadius: 5,
 // // //     padding: 10,
 // // //     fontSize: 15,
-// // //     color: 'black',
+// // //     color: AppColors.black,
 // // //     marginBottom: 15,
-// // //     backgroundColor: 'white',
+// // //     backgroundColor: AppColors.white,
 // // //   },
 // // //   referButton: {
 // // //     backgroundColor: 'grey',
@@ -658,7 +658,7 @@
 
 // // // const styles = StyleSheet.create({
 // // //   card: {
-// // //     backgroundColor: 'white',
+// // //     backgroundColor: AppColors.white,
 // // //     borderRadius: 10,
 // // //     padding: 20,
 // // //     margin: 10,
@@ -671,7 +671,7 @@
 // // //   header: {
 // // //     fontSize: 18,
 // // //     fontWeight: 'bold',
-// // //     color: 'black',
+// // //     color: AppColors.black,
 // // //     marginBottom: 15,
 // // //   },
 // // //   contentContainer: {
@@ -679,7 +679,7 @@
 // // //   },
 // // //   paragraph: {
 // // //     marginBottom: 10,
-// // //     color: 'black',
+// // //     color: AppColors.black,
 // // //   },
 // // //   warningText: {
 // // //     color: 'red',
@@ -707,10 +707,10 @@
 // // //     alignItems: 'center',
 // // //   },
 // // //   cancelButtonText: {
-// // //     color: 'black',
+// // //     color: AppColors.black,
 // // //   },
 // // //   acceptButtonText: {
-// // //     color: 'white',
+// // //     color: AppColors.white,
 // // //   },
 // // // });
 
@@ -753,7 +753,7 @@
 // // // const styles = StyleSheet.create({
 // // //   card: {
 // // //     // flex:1,
-// // //     backgroundColor: 'white',
+// // //     backgroundColor: AppColors.white,
 // // //     borderRadius: 10,
 // // //     padding: 20,
 // // //     margin: 10,
@@ -806,10 +806,10 @@
 // // //     alignItems: 'center',
 // // //   },
 // // //   cancelButtonText: {
-// // //     color: 'black',
+// // //     color: AppColors.black,
 // // //   },
 // // //   applyButtonText: {
-// // //     color: 'white',
+// // //     color: AppColors.white,
 // // //   },
 // // // });
 
@@ -893,7 +893,7 @@
 // // // //     textAlign: "left"
 // // // //   },
 // // // //   price: {
-// // // //     color: 'black',
+// // // //     color: AppColors.black,
 // // // //     fontWeight: 'bold',
 // // // //   },
 // // // //   vehicleType: {
@@ -1020,16 +1020,16 @@
 // // // // //     flexDirection: 'row',
 // // // // //   },
 // // // // //   days: {
-// // // // //     color: 'white',
+// // // // //     color: AppColors.white,
 // // // // //     marginRight: 10,
 // // // // //   },
 // // // // //   price: {
-// // // // //     color: 'white',
+// // // // //     color: AppColors.white,
 // // // // //     fontWeight: 'bold',
 // // // // //     marginRight: 10,
 // // // // //   },
 // // // // //   paymentMethod: {
-// // // // //     color: 'white',
+// // // // //     color: AppColors.white,
 // // // // //   },
 // // // // //   rightHeader: {
 // // // // //     backgroundColor: 'rgba(255,255,255,0.2)',
@@ -1037,10 +1037,10 @@
 // // // // //     borderRadius: 5,
 // // // // //   },
 // // // // //   carType: {
-// // // // //     color: 'white',
+// // // // //     color: AppColors.white,
 // // // // //   },
 // // // // //   purpose: {
-// // // // //     color: 'white',
+// // // // //     color: AppColors.white,
 // // // // //     fontSize: 16,
 // // // // //     marginBottom: 10,
 // // // // //   },
@@ -1054,11 +1054,11 @@
 // // // // //     marginBottom: 10,
 // // // // //   },
 // // // // //   date: {
-// // // // //     color: 'white',
+// // // // //     color: AppColors.white,
 // // // // //     textAlign: 'center',
 // // // // //   },
 // // // // //   timeWrapper: {
-// // // // //     backgroundColor: 'white',
+// // // // //     backgroundColor: AppColors.white,
 // // // // //     borderRadius: 5,
 // // // // //     padding: 5,
 // // // // //     marginTop: 5,
@@ -1074,7 +1074,7 @@
 // // // // //     marginTop: 10,
 // // // // //   },
 // // // // //   rate: {
-// // // // //     color: 'white',
+// // // // //     color: AppColors.white,
 // // // // //     fontSize: 18,
 // // // // //     fontWeight: 'bold',
 // // // // //   },
@@ -1083,7 +1083,7 @@
 // // // // //     fontWeight: 'normal',
 // // // // //   },
 // // // // //   acceptButton: {
-// // // // //     backgroundColor: 'white',
+// // // // //     backgroundColor: AppColors.white,
 // // // // //     padding: 10,
 // // // // //     borderRadius: 5,
 // // // // //   },
@@ -1151,7 +1151,7 @@
 // // // // // //     justifyContent: 'space-between',
 // // // // // //     alignItems: 'center',
 // // // // // //     marginBottom: 10,
-// // // // // //     backgroundColor: 'white',
+// // // // // //     backgroundColor: AppColors.white,
 // // // // // //     paddingHorizontal: 10,
 // // // // // //     paddingVertical: 10,
 // // // // // //     borderRadius: 5,
@@ -1161,7 +1161,7 @@
 // // // // // //     fontWeight: 'bold',
 // // // // // //   },
 // // // // // //   price: {
-// // // // // //     color: 'black',
+// // // // // //     color: AppColors.black,
 // // // // // //     fontWeight: 'bold',
 // // // // // //   },
 // // // // // //   vehicleType: {
@@ -1200,7 +1200,7 @@
 // // // // // //     backgroundColor: '#fff',
 // // // // // //     borderRadius: 5,
 // // // // // //     padding: 5,
-// // // // // //     color: 'black',
+// // // // // //     color: AppColors.black,
 // // // // // //     marginHorizontal: 5,
 // // // // // //   },
 // // // // // //   footer: {
@@ -1283,7 +1283,7 @@
 // // // // // // //     backgroundColor: "white"
 // // // // // // //   },
 // // // // // // //   headerText: {
-// // // // // // //     color: 'black',
+// // // // // // //     color: AppColors.black,
 // // // // // // //     fontSize: width * 0.035,
 // // // // // // //   },
 // // // // // // //   carInfo: {
@@ -1291,7 +1291,7 @@
 // // // // // // //     alignItems: 'center',
 // // // // // // //   },
 // // // // // // //   title: {
-// // // // // // //     color: 'white',
+// // // // // // //     color: AppColors.white,
 // // // // // // //     fontSize: width * 0.045,
 // // // // // // //     fontWeight: 'bold',
 // // // // // // //     marginBottom: width * 0.02,
@@ -1302,7 +1302,7 @@
 // // // // // // //     marginBottom: width * 0.02,
 // // // // // // //   },
 // // // // // // //   dateText: {
-// // // // // // //     color: 'white',
+// // // // // // //     color: AppColors.white,
 // // // // // // //     fontSize: width * 0.03,
 // // // // // // //   },
 // // // // // // //   times: {
@@ -1311,7 +1311,7 @@
 // // // // // // //     marginBottom: width * 0.04,
 // // // // // // //   },
 // // // // // // //   timeItem: {
-// // // // // // //     backgroundColor: 'white',
+// // // // // // //     backgroundColor: AppColors.white,
 // // // // // // //     padding: width * 0.015,
 // // // // // // //     borderRadius: 5,
 // // // // // // //   },
@@ -1328,16 +1328,16 @@
 // // // // // // //     flex: 1,
 // // // // // // //   },
 // // // // // // //   priceText: {
-// // // // // // //     color: 'white',
+// // // // // // //     color: AppColors.white,
 // // // // // // //     fontSize: width * 0.05,
 // // // // // // //     fontWeight: 'bold',
 // // // // // // //   },
 // // // // // // //   hoursText: {
-// // // // // // //     color: 'white',
+// // // // // // //     color: AppColors.white,
 // // // // // // //     fontSize: width * 0.035,
 // // // // // // //   },
 // // // // // // //   button: {
-// // // // // // //     backgroundColor: 'white',
+// // // // // // //     backgroundColor: AppColors.white,
 // // // // // // //     padding: width * 0.02,
 // // // // // // //     borderRadius: 5,
 // // // // // // //     width: width * 0.2,
@@ -1417,14 +1417,14 @@
 // // // // // // // //     marginBottom: 10,
 // // // // // // // //   },
 // // // // // // // //   headerText: {
-// // // // // // // //     color: 'white',
+// // // // // // // //     color: AppColors.white,
 // // // // // // // //     fontWeight: 'bold',
 // // // // // // // //   },
 // // // // // // // //   carIcon: {
 // // // // // // // //     // Add car icon styling here
 // // // // // // // //   },
 // // // // // // // //   title: {
-// // // // // // // //     color: 'white',
+// // // // // // // //     color: AppColors.white,
 // // // // // // // //     fontSize: 20,
 // // // // // // // //     fontWeight: 'bold',
 // // // // // // // //     marginBottom: 10,
@@ -1433,7 +1433,7 @@
 // // // // // // // //     marginBottom: 10,
 // // // // // // // //   },
 // // // // // // // //   dateText: {
-// // // // // // // //     color: 'white',
+// // // // // // // //     color: AppColors.white,
 // // // // // // // //   },
 // // // // // // // //   times: {
 // // // // // // // //     flexDirection: 'row',
@@ -1441,7 +1441,7 @@
 // // // // // // // //     marginBottom: 10,
 // // // // // // // //   },
 // // // // // // // //   timeItem: {
-// // // // // // // //     backgroundColor: 'white',
+// // // // // // // //     backgroundColor: AppColors.white,
 // // // // // // // //     padding: 5,
 // // // // // // // //     borderRadius: 5,
 // // // // // // // //   },
@@ -1455,12 +1455,12 @@
 // // // // // // // //     marginBottom: 10,
 // // // // // // // //   },
 // // // // // // // //   priceText: {
-// // // // // // // //     color: 'white',
+// // // // // // // //     color: AppColors.white,
 // // // // // // // //     fontSize: 20,
 // // // // // // // //     fontWeight: 'bold',
 // // // // // // // //   },
 // // // // // // // //   button: {
-// // // // // // // //     backgroundColor: 'white',
+// // // // // // // //     backgroundColor: AppColors.white,
 // // // // // // // //     padding: 10,
 // // // // // // // //     borderRadius: 5,
 // // // // // // // //   },

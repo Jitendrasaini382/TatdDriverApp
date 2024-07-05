@@ -62,8 +62,7 @@ const MyBonusStatusHistory = () => {
           padding: 10,
           backgroundColor: 'white'
         }}>
-        {/* <MyBonus /> */}
-        <AddDriverComponent />
+        <MyBonus />
       </View>
       </ScrollView>
     </View>

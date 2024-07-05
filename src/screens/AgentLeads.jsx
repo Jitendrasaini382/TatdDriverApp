@@ -29,9 +29,9 @@ import { AppColors } from '../assets/Colors';
 const AgentLeads = () => {
   const [agentLeadsModal, setAgentLeadsModal] = useState(false);
 
-  //   useEffect(() => {
-  //     setAgentLeadsModal(true);
-  //   }, []);
+    useEffect(() => {
+      setAgentLeadsModal(true);
+    }, []);
 
   const textToCopy =
     "Hi! I'm inviting you to use this referral link - https://tatd.in/driver-interface.php?referrer=ODExODgxMzE0OA%3D%3D";

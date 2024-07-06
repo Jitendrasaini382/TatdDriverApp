@@ -190,6 +190,7 @@ import {AppColors} from '../../assets/Colors';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import RadioButtonMyBooking from '../../components/RadioButtonMyBooking';
 import SwipeableButton from '../../components/SwipeableButton';
+import PackageDetailsDutyReportUpdateProcess from '../../components/modal/PackageDetailsDutyReportUpdateProcess';
 
 const DutyReportUpdateProcess = () => {
 
@@ -227,10 +228,10 @@ const DutyReportUpdateProcess = () => {
         animationIn={'fadeInDown'}
         animationOut={'fadeOutUp'}
         isVisible={packageDetailsDutyReportUpdateProcess}>
-        {/* <PackageDetailsDutyReportUpdateProcess
+        <PackageDetailsDutyReportUpdateProcess
           setPackageDetailsDutyReportUpdateProcess={setPackageDetailsDutyReportUpdateProcess}
           // tripDetails={selectedTrip}
-        /> */}
+        />
       </Modal>
           {/* middle */}
           <View style={styles.middleSection}>
@@ -239,7 +240,8 @@ const DutyReportUpdateProcess = () => {
               <Text style={styles.typeText}>Permanent</Text>
             </View>
             <View style={styles.addressCallContainer}>
-              <View style={styles.addressContainer}>
+             <View>
+             <View style={styles.addressContainer}>
                 <Image
                   source={Address}
                   resizeMode="contain"
@@ -247,6 +249,15 @@ const DutyReportUpdateProcess = () => {
                 />
                 <Text style={styles.addressText}>D-51 A 2nd Floor</Text>
               </View>
+              <View style={styles.addressContainer}>
+                <Image
+                  source={Address}
+                  resizeMode="contain"
+                  style={styles.addressIcon}
+                />
+                <Text style={styles.addressText}>Noida Floor</Text>
+              </View>
+             </View>
               <View>
                 <Image
                   style={styles.callingGif}
@@ -360,12 +371,14 @@ const styles = StyleSheet.create({
   },
   addressContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'center',
+    // alignItems: 'center',
+    // alignSelf: 'center',
+    marginVertical: 8
   },
   addressIcon: {
-    height: 30,
-    width: 30,
+    height: 20,
+    width: 20,
+    tintColor:"grey"
   },
   addressText: {
     color: AppColors.black,

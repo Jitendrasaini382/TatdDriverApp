@@ -48,13 +48,14 @@ const SwipeableButton = ({ onSwipe }) => {
 const styles = StyleSheet.create({
   container: {
     overflow: 'hidden',
-    borderRadius: 30,
+    borderRadius: 40,
     backgroundColor: AppColors.white,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowRadius: 4,marginVertical:20,
+    // paddingVertical:10
   },
   button: {
     flexDirection: 'row',
@@ -62,9 +63,9 @@ const styles = StyleSheet.create({
     // padding: 30,
   },
   circle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     backgroundColor: AppColors.mainColor,
     justifyContent: 'center',
     alignItems: 'center',

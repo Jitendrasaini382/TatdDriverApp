@@ -58,7 +58,7 @@ const AgentPanel = ({navigation}) => {
             {/* Top div */}
             <View style={styles.topView}>
               <TouchableOpacity
-                // onPress={() => navigation.navigate('AgentWallet')}
+                onPress={() => navigation.navigate('AgentWallet')}
                 style={styles.topLeft}>
                 <Text style={styles.topLeftText}>
                   <Icon name="rupee" color="white" size={15} style={{}} />0
@@ -164,7 +164,7 @@ const AgentPanel = ({navigation}) => {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              // onPress={() => navigation.navigate('AgentWallet')}
+              onPress={() => navigation.navigate('AgentWallet')}
               style={styles.bottamContent3}>
               <Text style={styles.mainText}>Wallet Balance</Text>
               <Text style={styles.textIcon}>
@@ -172,7 +172,7 @@ const AgentPanel = ({navigation}) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              // onPress={() => navigation.navigate('#')}
+              // onPress={() => navigation.navigate('AgentWallet')}
               style={styles.bottamContent4}>
               <Text style={styles.mainText}>My Earning</Text>
               <Text style={styles.textIcon}>
@@ -405,7 +405,6 @@ const styles = StyleSheet.create({
     fontSize: 9,
     fontWeight: '400',
     paddingTop: 5,
-    // justifyContent: 'center',
     textAlign: 'center',
   },
   textIcon: {

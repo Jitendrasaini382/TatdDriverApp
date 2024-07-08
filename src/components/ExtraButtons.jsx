@@ -1,56 +1,20 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {AppColors} from '../assets/Colors';
 
 const ExtraButtons = ({OpenMyBookingModal}) => {
   const navigation = useNavigation();
   return (
-    <View
-      style={{
-        justifyContent: 'center',
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'row',
-        // marginTop:8
-      }}>
-      <View
-        style={{
-          margin: 5,
-          borderWidth: 1,
-          borderRadius: 5,
-          backgroundColor: '#16588e',
-        }}>
+    <View style={styles.mainView}>
+      <View style={styles.leftView}>
         <TouchableOpacity onPress={() => navigation.navigate('TicketsDriver')}>
-          <Text
-            style={{
-              padding: 7,
-              fontSize: 10,
-              fontWeight: '500',
-              color: AppColors.white,
-            }}>
-            Need Help ?
-          </Text>
+          <Text style={styles.leftText}>Need Help ?</Text>
         </TouchableOpacity>
       </View>
-      <View
-        style={{
-          margin: 5,
-          marginRight: 17,
-          borderWidth: 1,
-          borderRadius: 5,
-          backgroundColor: AppColors.mainColor,
-        }}>
+      <View style={styles.rightView}>
         <TouchableOpacity onPress={() => OpenMyBookingModal(true)}>
-          <Text
-            style={{
-              padding: 7,
-              fontSize: 10,
-              fontWeight: '500',
-              color: AppColors.white,
-            }}>
-            My Bookings
-          </Text>
+          <Text style={styles.rightText}>My Bookings</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -59,4 +23,36 @@ const ExtraButtons = ({OpenMyBookingModal}) => {
 
 export default ExtraButtons;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  mainView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  leftView: {
+    margin: 5,
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: AppColors.mainColor,
+  },
+  leftText: {
+    padding: 7,
+    fontSize: 10,
+    fontWeight: '500',
+    color: AppColors.white,
+  },
+  rightView: {
+    margin: 5,
+    marginRight: 17,
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: AppColors.mainColor,
+  },
+  rightText: {
+    padding: 7,
+    fontSize: 10,
+    fontWeight: '500',
+    color: AppColors.white,
+  },
+});

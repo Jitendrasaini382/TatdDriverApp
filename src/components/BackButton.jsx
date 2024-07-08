@@ -7,35 +7,10 @@ const BackButton = () => {
   const navigation = useNavigation();
 
   return (
-    <View
-      style={{
-        // justifyContent: 'flex-start',
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'row',
-        //   paddingBottom: 5,
-        //   marginTop: 40
-      }}>
-      <View
-        style={{
-          margin: 5,
-          // justifyContent: 'flex-end',
-
-          marginRight: 17,
-          borderWidth: 1,
-          borderRadius: 5,
-          paddingHorizontal: 5,
-          borderColor: 'rgb(204,204,204)',
-        }}>
+    <View style={styles.mainView}>
+      <View style={styles.buttonView}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text
-            style={{
-              color: AppColors.black,
-              margin: 5,
-              opacity: 0.8,
-            }}>
-            Back
-          </Text>
+          <Text style={styles.buttonText}>Back</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -44,4 +19,23 @@ const BackButton = () => {
 
 export default BackButton;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  mainView: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  buttonView: {
+    margin: 5,
+    marginRight: 17,
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 5,
+    borderColor: 'rgb(204,204,204)',
+  },
+  buttonText: {
+    color: AppColors.black,
+    margin: 5,
+    opacity: 0.8,
+  },
+});

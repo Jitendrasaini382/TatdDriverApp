@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { AppColors } from '../assets/Colors';
+import React, {useState} from 'react';
+import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {AppColors} from '../assets/Colors';
 
-const ToggleButton = ({ button1Label, button2Label, onToggle }) => {
+const ToggleButton = ({button1Label, button2Label, onToggle}) => {
   const [currentState, setCurrentState] = useState(button1Label);
 
-  const handlePress = (label) => {
+  const handlePress = label => {
     setCurrentState(label);
     onToggle(label);
   };
@@ -87,111 +87,3 @@ const styles = StyleSheet.create({
 });
 
 export default ToggleButton;
-
-
-
-
-
-
-
-
-
-
-// import React, {useState} from 'react';
-// import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
-
-// const ToggleButton = ({ button1Label, button2Label }) => {
-//   const [currentState, setCurrentState] = useState(button1Label);
-
-//   return (
-//     <View
-//       style={{
-//         backgroundColor: '#edecf1',
-//         display: 'flex',
-//         flexDirection: 'row',
-//         marginTop: 20,
-//         paddingLeft: 10,
-//         paddingRight: 10,
-//         margin: 15,
-//         borderRadius: 5,
-//         // padding: 8,
-//       }}>
-//       <View style={styles.toggleButton}>
-//         <TouchableOpacity
-//           style={[
-//             styles.toggleButton,
-//             currentState == button1Label
-//               ? styles.activeButton
-//               : styles.inactiveButton,
-//           ]}
-//           onPress={() => setCurrentState(button1Label)}>
-//           <Text
-//             style={[
-//               styles.buttonText,
-//               currentState == button1Label
-//                 ? styles.activeButton_text
-//                 : styles.inactiveButton_text,
-//             ]}>
-//             {button1Label}
-//           </Text>
-//         </TouchableOpacity>
-
-//         <TouchableOpacity
-//           style={[
-//             styles.toggleButton,
-//             currentState == button2Label
-//               ? styles.activeButton
-//               : styles.inactiveButton,
-//           ]}
-//           onPress={() => setCurrentState(button2Label)}>
-//           <Text
-//             style={[
-//               styles.buttonText,
-//               currentState == button2Label
-//                 ? styles.activeButton_text
-//                 : styles.inactiveButton_text,
-//             ]}>
-//             {button2Label}
-//           </Text>
-//         </TouchableOpacity>
-//       </View>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   toggleButton: {
-//     flex: 1,
-//     padding: 8,
-//     paddingHorizontal: 2,
-//     display: 'flex',
-//     flexDirection: 'row',
-//     borderRadius: 5,
-//     justifyContent: 'center',
-//   },
-//   activeButton: {
-//     backgroundColor: AppColors.white,
-//   },
-//   inactiveButton: {
-//     // backgroundColor: AppColors.white,
-//   },
-//   buttonText: {
-//     // fontWeight: 'bold',
-//     fontSize: 12,
-//     color: AppColors.black,
-//     fontWeight : '500',
-//     textAlign: 'center',
-//     // justifyContent : 'space-evenly'
-//     // color: 'rgb(51,51,51)',
-//     // textAlign: 'center',
-//     padding: 5
-//   },
-//   activeButton_text: {
-//     color: AppColors.black,
-//   },
-//   inactiveButton_text: {
-//     color: AppColors.black,
-//   },
-// });
-
-// export default ToggleButton;

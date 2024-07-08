@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   Image,
   StyleSheet,
@@ -20,8 +20,6 @@ import FlexibleBookingView from './bookingsView/FlexibleBookingView';
 const {width} = Dimensions.get('window');
 
 const BookingView = ({setMyBookingAgencyModal}) => {
- 
-
   <Modal
     backdropOpacity={0}
     onBackdropPress={() => setMyBookingAgencyModal(false)}
@@ -30,8 +28,6 @@ const BookingView = ({setMyBookingAgencyModal}) => {
     isVisible={true}>
     <MyBookingAgencyModal setMyBookingAgencyModal={setMyBookingAgencyModal} />
   </Modal>;
-
-
 
   return (
     <View style={styles.container}>
@@ -56,7 +52,7 @@ const BookingView = ({setMyBookingAgencyModal}) => {
           receive an SMS alert when a new booking comes in.
         </Text>
       </View>
-      <FlexibleBookingView/>
+      <FlexibleBookingView />
       <RoundTripBookingView />
       <PermanentBookingView />
     </View>

@@ -53,15 +53,11 @@ const ShowDataList = ({data}) => {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // backgroundColor: 'white',
     padding: 10,
-
     borderWidth: 2,
     marginTop: 30,
     borderColor: AppColors.mainColor,
     borderRadius: 8,
-    // margin: 2,
   },
   listContent: {
     paddingVertical: 5,

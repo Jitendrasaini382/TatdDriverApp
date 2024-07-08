@@ -55,12 +55,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,marginVertical:20,
-    // paddingVertical:10
   },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    // padding: 30,
   },
   circle: {
     width: 80,

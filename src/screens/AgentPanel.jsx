@@ -155,7 +155,6 @@ const AgentPanel = ({navigation}) => {
 
         {/* {myNetworkData ? <MyNetworkDataList /> : <MyLeadsDataList/>} */}
 
-
         <Modal
           backdropOpacity={0}
           onBackdropPress={() => setAgentPanelModal(false)}

@@ -5,5 +5,6 @@ export const AppColors ={
     white : "#fff",
     black : "#000" ,
     silverGrey : "#9E9E9E",
-    orange : "#ff8b00"
+    orange : "#ff8b00",
+    borderColor : "#ccc"
 }

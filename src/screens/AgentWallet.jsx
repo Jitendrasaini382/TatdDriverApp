@@ -199,13 +199,13 @@ const AgentWallet = ({navigation}) => {
           </Text>
         </View>
 
-        {data.map((item, index) => (
+        {/* {data.map((item, index) => (
           <TouchableOpacity
             onPress={() => navigation.navigate('AgentCommisionAdded', item)}
             key={index.toString()}>
             {renderTripItem({item})}
           </TouchableOpacity>
-        ))}
+        ))} */}
       </ScrollView>
     </SafeAreaView>
   );

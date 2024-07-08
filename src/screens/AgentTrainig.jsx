@@ -60,7 +60,6 @@ const AgentTrainig = ({navigation}) => {
               </View>
 
               <View style={{marginTop: 30}}>
-                {/* <AgentTrainingVideo /> */}
                 <AccordionTrainingVideo data={item} />
               </View>
             </View>

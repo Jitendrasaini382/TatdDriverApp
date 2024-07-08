@@ -130,17 +130,7 @@ const DriverEarning = () => {
             style={styles.eyeIcon}
           />
         </TouchableOpacity>
-        {/* <Modal
-          backdropOpacity={0}
-          onBackdropPress={() => setPackageDetailsDriverEarning(false)}
-          animationIn={'fadeInDown'}
-          animationOut={'fadeOutUp'}
-          isVisible={packageDetailsDriverEarning}>
-          <DriverEarnIngModal
-            setPackageDetailsDriverEarning={setPackageDetailsDriverEarning}
-          />
-        </Modal> */}
-
+     
         <View style={styles.contentContainer}>
           <View style={styles.tripInfo}>
             <Text style={styles.tripType}>

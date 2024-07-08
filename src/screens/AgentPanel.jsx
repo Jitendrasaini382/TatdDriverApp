@@ -15,14 +15,30 @@ import Modal from 'react-native-modal';
 import {AppColors} from '../assets/Colors';
 import {ArrowFadeBlue} from '../assets/images';
 import AgentPanelModal from '../components/modal/AgentPanelModal';
-import MyNetworkDataList from '../components/MyNetworkDataList';
-import MyLeadsDataList from '../components/MyLeadsDataList';
+import ShowDataList from '../components/ShowDataList';
 
 const {width, height} = Dimensions.get('window');
 
 const responsiveSize = size => {
   return (width / 411.42857142857144) * size;
 };
+
+const MyNetworkDATA = [
+  {phone: '9595856995', date: '02 Jun 2024 17:51 PM', amount: '283 Rs'},
+  {phone: '9500551047', date: '29 Mar 2024 10:39 AM', amount: '55 Rs'},
+  {phone: '961007344', date: '09 Apr 2024 07:35 AM', amount: '119 Rs'},
+  {phone: '909794411', date: '02 Jan 2024 09:06 AM', amount: '28 Rs'},
+  {phone: '901966369', date: '03 Oct 2023 14:52 PM', amount: '67 Rs'},
+  {phone: '968992293', date: '17 Jun 2024 17:34 PM', amount: '143 Rs'},
+  {phone: '9717253684', date: '04 Aug 2023 15:51 PM', amount: '255 Rs'},
+];
+
+const MyLeadsDATA = [
+  {phone: '900000000', date: '02 Jan 2024 09:06 AM', amount: '28 Rs'},
+  {phone: '901966369', date: '03 Oct 2023 14:52 PM', amount: '67 Rs'},
+  {phone: '968992293', date: '17 Jun 2024 17:34 PM', amount: '143 Rs'},
+  {phone: '9717253684', date: '04 Aug 2023 15:51 PM', amount: '1255 Rs'},
+];
 
 const AgentPanel = ({navigation}) => {
   const [myNetworkData, setMyNetworkData] = useState(true);
@@ -67,11 +83,7 @@ const AgentPanel = ({navigation}) => {
                   />
                   <Image
                     source={ArrowFadeBlue}
-                    style={{
-                      width: 16,
-                      height: 16,
-                      transform: [{rotate: '180deg'}],
-                    }}
+                    style={styles.arrowImage}
                   />
                 </TouchableOpacity>
               </View>
@@ -152,9 +164,7 @@ const AgentPanel = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
-
-        {/* {myNetworkData ? <MyNetworkDataList /> : <MyLeadsDataList/>} */}
-
+        <ShowDataList data={myNetworkData ? MyNetworkDATA : MyLeadsDATA} />
         <Modal
           backdropOpacity={0}
           onBackdropPress={() => setAgentPanelModal(false)}
@@ -385,6 +395,11 @@ const styles = StyleSheet.create({
     color: AppColors.mainColor,
     fontSize: 9,
     textAlign: 'center',
+  },
+  arrowImage: {
+    width: 16,
+    height: 16,
+    transform: [{rotate: '180deg'}],
   },
 });
 

@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   headingText: {
-    color: '#16588e',
+    color: AppColors.mainColor,
     fontSize: moderateScale(14),
     paddingLeft: moderateScale(4),
   },

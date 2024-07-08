@@ -1,31 +1,9 @@
-// import { View, Text } from 'react-native'
-// import React from 'react'
-
-// const MyLeadsDataList = () => {
-//   return (
-//     <View>
-//       <Text>MyLeadsDataList</Text>
-//     </View>
-//   )
-// }
-
-// export default 
-
-
-
 import React from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {Linking} from 'react-native';
 import {AppColors} from '../assets/Colors';
 
-const DATA = [
- 
-  {phone: '900000000', date: '02 Jan 2024 09:06 AM', amount: '28 Rs'},
-  {phone: '901966369', date: '03 Oct 2023 14:52 PM', amount: '67 Rs'},
-  {phone: '968992293', date: '17 Jun 2024 17:34 PM', amount: '143 Rs'},
-  {phone: '9717253684', date: '04 Aug 2023 15:51 PM', amount: '255 Rs'},
-];
 
 const ListItem = ({phone, date, amount}) => (
   <View style={styles.itemContainer}>
@@ -47,7 +25,6 @@ const ListItem = ({phone, date, amount}) => (
   </View>
 );
 
-// ('whatsapp://send?phone=+123456789&text=Hello');
 
 const openWhatsApp = () => {
   // let url = 'whatsapp://send?text=Hello'; // You can customize the text or add a phone number like: 'whatsapp://send?phone=+123456789&text=Hello'
@@ -61,11 +38,11 @@ const openWhatsApp = () => {
     });
 };
 
-const MyLeadsDataList = () => {
+const ShowDataList = ({data}) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={DATA}
+        data={data}
         renderItem={({item}) => <ListItem {...item} />}
         keyExtractor={item => item.phone}
         contentContainerStyle={styles.listContent}
@@ -118,4 +95,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyLeadsDataList;
+export default ShowDataList;

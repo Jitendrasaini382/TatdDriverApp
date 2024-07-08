@@ -81,10 +81,7 @@ const AgentPanel = ({navigation}) => {
                     size={10}
                     style={{margin: 5}}
                   />
-                  <Image
-                    source={ArrowFadeBlue}
-                    style={styles.arrowImage}
-                  />
+                  <Image source={ArrowFadeBlue} style={styles.arrowImage} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -103,10 +100,20 @@ const AgentPanel = ({navigation}) => {
                     marginHorizontal: 10,
                   }}
                   onPress={() => setMyNetworkData(true)}>
-                  <Text style={{color: myNetworkData ? '#16588e' : '#939393'}}>
-                    0
+                  <Text
+                    style={{
+                      color: myNetworkData
+                        ? AppColors.mainColor
+                        : AppColors.silverGrey,
+                    }}>
+                    7
                   </Text>
-                  <Text style={{color: myNetworkData ? '#16588e' : '#939393'}}>
+                  <Text
+                    style={{
+                      color: myNetworkData
+                        ? AppColors.mainColor
+                        : AppColors.silverGrey,
+                    }}>
                     My Network
                   </Text>
                 </TouchableOpacity>
@@ -118,10 +125,20 @@ const AgentPanel = ({navigation}) => {
                     marginHorizontal: 10,
                   }}
                   onPress={() => setMyNetworkData(false)}>
-                  <Text style={{color: myNetworkData ? '#939393' : '#16588e'}}>
-                    0
+                  <Text
+                    style={{
+                      color: myNetworkData
+                        ? AppColors.silverGrey
+                        : AppColors.mainColor,
+                    }}>
+                    4
                   </Text>
-                  <Text style={{color: myNetworkData ? '#939393' : '#16588e'}}>
+                  <Text
+                    style={{
+                      color: myNetworkData
+                        ? AppColors.silverGrey
+                        : AppColors.mainColor,
+                    }}>
                     My Leads
                   </Text>
                 </TouchableOpacity>

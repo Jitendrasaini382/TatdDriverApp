@@ -30,15 +30,21 @@ const CheckAgentOtp = ({navigation}) => {
         <View style={styles.contentContainer}>
           <View style={styles.card}>
             <View style={styles.cardHeader}>
-              <View style={styles.headerTextContainer}>
-                <View style={styles.whiteBackground}>
-                  <Text style={styles.headerText}>
-                    Verified & Experienced Driver
+
+              
+              <View style={styles.mainTopContent}>
+                <View style={styles.headingView}>
+                  <Text style={styles.headingText}>
+                    Trusted & Trained Driver
                   </Text>
                 </View>
-                <View style={styles.triangleContainer}>
-                  <View style={styles.triangleTop} />
-                  <View style={styles.triangleBottom} />
+                <View style={styles.triangleMainView}>
+                  <View style={styles.triangleView}></View>
+                  <View
+                    style={[
+                      styles.triangleView,
+                      styles.rotatedTriangle,
+                    ]}></View>
                 </View>
               </View>
               <View style={styles.titleContainer}>
@@ -131,43 +137,45 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(10),
     marginBottom: verticalScale(12),
   },
-  whiteBackground: {
+  mainTopContent: {
+    flexDirection: 'row',
+    paddingRight: moderateScale(6),
+    paddingVertical: verticalScale(10),
+    marginBottom: verticalScale(12),
+  },
+  headingView: {
     backgroundColor: AppColors.white,
     width: '80%',
   },
-  headerText: {
+  headingText: {
     color: AppColors.mainColor,
-    lineHeight: verticalScale(20),
     fontSize: moderateScale(14),
     paddingLeft: moderateScale(4),
   },
-  triangleContainer: {
+  triangleMainView: {
     flexDirection: 'column',
   },
-  triangleTop: {
+  triangleView: {
     width: 0,
     height: 0,
     backgroundColor: 'transparent',
     borderStyle: 'solid',
-    borderRightWidth: moderateScale(10),
-    borderTopWidth: moderateScale(10),
+    borderRightWidth: moderateScale(12),
+    borderTopWidth: moderateScale(12),
     borderRightColor: 'transparent',
     borderTopColor: 'white',
-    marginLeft: -0.5,
   },
-  triangleBottom: {
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderRightWidth: moderateScale(10),
-    borderTopWidth: moderateScale(10),
-    borderRightColor: 'transparent',
-    borderTopColor: 'white',
-    marginLeft: -0.5,
+  rotatedTriangle: {
     transform: [{rotate: '270deg'}],
   },
-  titleContainer: {
+
+  cardHeader: {
+    backgroundColor: AppColors.mainColor,
+    // width: '100%',
+    borderRadius: moderateScale(6),
+    marginBottom: verticalScale(12),
+  },
+titleContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: verticalScale(15),

@@ -30,7 +30,7 @@ const CheckDriverOtp = ({navigation}) => {
         <View style={styles.contentContainer}>
           <View style={styles.card}>
             <View style={styles.cardHeader}>
-              <View style={styles.headerTextContainer}>
+              {/* <View style={styles.headerTextContainer}>
                 <View style={styles.whiteBackground}>
                   <Text style={styles.headerText}>
                     Verified & Experienced Driver
@@ -39,6 +39,21 @@ const CheckDriverOtp = ({navigation}) => {
                 <View style={styles.triangleContainer}>
                   <View style={styles.triangleTop} />
                   <View style={styles.triangleBottom} />
+                </View>
+              </View> */}
+              <View style={styles.mainTopContent}>
+                <View style={styles.headingView}>
+                  <Text style={styles.headingText}>
+                    Trusted & Trained Driver
+                  </Text>
+                </View>
+                <View style={styles.triangleMainView}>
+                  <View style={styles.triangleView}></View>
+                  <View
+                    style={[
+                      styles.triangleView,
+                      styles.rotatedTriangle,
+                    ]}></View>
                 </View>
               </View>
               <View style={styles.titleContainer}>
@@ -100,16 +115,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: AppColors.white,
     justifyContent: 'flex-start',
-    // alignItems: 'center',
-    // marginTop: 10
-    // flex: 1,
-    // backgroundColor: 'white',
-    // justifyContent: 'flex-start',
-    // alignItems: 'center',
-    // paddingVertical: verticalScale(10),
-    // padding: moderateScale(15),
-
-    // padding: 10
   },
   card: {
     margin: moderateScale(15),
@@ -131,13 +136,45 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(10),
     marginBottom: verticalScale(12),
   },
+  mainTopContent: {
+    flexDirection: 'row',
+    paddingRight: moderateScale(6),
+    paddingVertical: verticalScale(10),
+    marginBottom: verticalScale(12),
+  },
+  headingView: {
+    backgroundColor: AppColors.white,
+    width: '80%',
+  },
+  headingText: {
+    color: AppColors.mainColor,
+    fontSize: moderateScale(14),
+    paddingLeft: moderateScale(4),
+  },
+  triangleMainView: {
+    flexDirection: 'column',
+  },
+  triangleView: {
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderRightWidth: moderateScale(12),
+    borderTopWidth: moderateScale(12),
+    borderRightColor: 'transparent',
+    borderTopColor: 'white',
+  },
+  rotatedTriangle: {
+    transform: [{rotate: '270deg'}],
+  },
+
   whiteBackground: {
     backgroundColor: AppColors.white,
     width: '80%',
   },
   headerText: {
     color: AppColors.mainColor,
-    lineHeight: verticalScale(20),
+    // lineHeight: verticalScale(20),
     fontSize: moderateScale(14),
     paddingLeft: moderateScale(4),
   },
@@ -149,22 +186,22 @@ const styles = StyleSheet.create({
     height: 0,
     backgroundColor: 'transparent',
     borderStyle: 'solid',
-    borderRightWidth: moderateScale(10),
-    borderTopWidth: moderateScale(10),
+    borderRightWidth: moderateScale(12),
+    borderTopWidth: moderateScale(12),
     borderRightColor: 'transparent',
     borderTopColor: 'white',
-    marginLeft: -0.5,
+    // marginLeft: -0.5,
   },
   triangleBottom: {
     width: 0,
     height: 0,
     backgroundColor: 'transparent',
     borderStyle: 'solid',
-    borderRightWidth: moderateScale(10),
-    borderTopWidth: moderateScale(10),
+    borderRightWidth: moderateScale(12),
+    borderTopWidth: moderateScale(12),
     borderRightColor: 'transparent',
     borderTopColor: 'white',
-    marginLeft: -0.5,
+    // marginLeft: -0.5,
     transform: [{rotate: '270deg'}],
   },
   titleContainer: {

@@ -8,12 +8,12 @@ import {
   SafeAreaView,
   Image,
   Linking,
-  Clipboard,
   Alert,
   ScrollView,
 } from 'react-native';
 
 import Modal from 'react-native-modal';
+
 import AgentLeadsModal from '../components/modal/AgentLeadsModal';
 import {
   Copy_Icon,
@@ -25,6 +25,7 @@ import {
 import {AppFont} from '../assets/FontsFamily';
 import Header from '../components/Header';
 import { AppColors } from '../assets/Colors';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const AgentLeads = () => {
   const [agentLeadsModal, setAgentLeadsModal] = useState(false);

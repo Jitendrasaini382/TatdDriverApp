@@ -4,26 +4,36 @@ import {AppLogo} from '../assets/images';
 import {AppFont} from '../assets/FontsFamily';
 import BackButton from './BackButton';
 import ExtraButtons from './ExtraButtons';
-import { AppColors } from '../assets/Colors';
+import {AppColors} from '../assets/Colors';
+import {useNavigation} from '@react-navigation/native';
 const Header = ({backButton, extraButton, OpenMyBookingModal}) => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.mainContainer}>
       <View style={styles.leftContent}>
-        <View style={styles.logoView}>
-          <Image source={AppLogo} />
-          <Text style={styles.logoText}>tat d</Text>
-        </View>
+        <TouchableOpacity 
+        onPress={()=>navigation.navigate('DriverLogin')}
+        >
+          <View style={styles.logoView}>
+            <Image source={AppLogo} />
+            <Text style={styles.logoText}>tat d</Text>
+          </View>
+        </TouchableOpacity>
+
         <View style={styles.logoBottom}>
           <Text style={styles.logoBottomText}>trusted & trained driver</Text>
         </View>
       </View>
 
-      {backButton ? <BackButton /> : extraButton ? <ExtraButtons  OpenMyBookingModal={OpenMyBookingModal} /> : null}
-
+      {backButton ? (
+        <BackButton />
+      ) : extraButton ? (
+        <ExtraButtons OpenMyBookingModal={OpenMyBookingModal} />
+      ) : null}
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   mainContainer: {

@@ -45,8 +45,6 @@ const Route = () => {
           screenOptions={{
             headerShown: false,
           }}>
-          {/* <Stack.Screen name="AgentPanel" component={AgentPanel} /> */}
-
           <Stack.Screen name="DriverLogin" component={DriverLogin} />
           <Stack.Screen name="TrustedDriver" component={TrustedDriver} />
           <Stack.Screen name="CheckDriverOtp" component={CheckDriverOtp} />
@@ -64,8 +62,6 @@ const Route = () => {
             component={MyBonusStatusHistory}
           />
           <Stack.Screen name="TicketsDriver" component={TicketsDriver} />
-
-       
 
           <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
           <Stack.Screen
@@ -91,14 +87,13 @@ const Route = () => {
           <Stack.Screen name="AgentKyc" component={AgentKyc} />
           <Stack.Screen name="AgentTrainig" component={AgentTrainig} />
           <Stack.Screen name="AgentWallet" component={AgentWallet} />
-          <Stack.Screen name="AgentCommisionAdded" component={AgentCommisionAdded} />
+          <Stack.Screen
+            name="AgentCommisionAdded"
+            component={AgentCommisionAdded}
+          />
           <Stack.Screen name="SelectYourState" component={SelectYourState} />
           <Stack.Screen name="SelectYourCity" component={SelectYourCity} />
           <Stack.Screen name="AgentLeads" component={AgentLeads} />
-
-          
-          
-          
         </Stack.Navigator>
       </NavigationContainer>
     </>

@@ -10,6 +10,7 @@ import {
   Linking,
   Alert,
   ScrollView,
+  Clipboard,
 } from 'react-native';
 
 import Modal from 'react-native-modal';

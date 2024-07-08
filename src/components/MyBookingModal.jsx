@@ -47,7 +47,7 @@ const MyBookingModal = ({setMyBookingModal}) => {
         <>
           <View style={styles.bookingContainer}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('DutyReportUpdateProcess')}>
+              onPress={() => navigation.navigate('DutyReportUpdate')}>
               <View style={styles.bookingCard}>
                 <Text style={styles.bookingText}>
                   432791 - 08 Jul, 17:45 PM
@@ -63,7 +63,7 @@ const MyBookingModal = ({setMyBookingModal}) => {
 
           <View style={styles.bookingContainer}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('DutyReportUpdateCancel')}>
+              onPress={() => navigation.navigate('DutyReportUpdate')}>
               <View style={[styles.bookingCard, styles.activeBookingCard]}>
                 <Text style={[styles.bookingText, styles.activeBookingText]}>
                   430664 - 26 Jun, 10:30 AM

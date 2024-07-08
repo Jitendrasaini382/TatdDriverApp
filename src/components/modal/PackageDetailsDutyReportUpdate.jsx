@@ -9,12 +9,12 @@ import {
 import React from 'react';
 import {AppColors} from '../../assets/Colors';
 
-const PackageDetailsDutyReportUpdateProcess = ({
-  setPackageDetailsDutyReportUpdateProcess,
+const PackageDetailsDutyReportUpdate = ({
+  setPackageDetailsDutyReportUpdate,
 }) => {
   return (
     <TouchableWithoutFeedback
-      onPress={() => setPackageDetailsDutyReportUpdateProcess(false)}>
+      onPress={() => setPackageDetailsDutyReportUpdate(false)}>
       <ScrollView>
         <View
           style={{
@@ -44,7 +44,7 @@ const PackageDetailsDutyReportUpdateProcess = ({
               Package Details
             </Text>
             <TouchableOpacity
-              onPress={() => setPackageDetailsDutyReportUpdateProcess(false)}
+              onPress={() => setPackageDetailsDutyReportUpdate(false)}
               style={{backgroundColor: AppColors.mainColor, borderRadius: 5}}>
               <Text
                 style={{
@@ -288,7 +288,7 @@ const PackageDetailsDutyReportUpdateProcess = ({
           {/* bottam content button  */}
 
           <TouchableOpacity
-            onPress={() => setPackageDetailsDutyReportUpdateProcess(false)}
+            onPress={() => setPackageDetailsDutyReportUpdate(false)}
             style={styles.payButton}>
             <Text style={styles.payButtonText}>Close</Text>
           </TouchableOpacity>
@@ -335,4 +335,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PackageDetailsDutyReportUpdateProcess;
+export default PackageDetailsDutyReportUpdate;

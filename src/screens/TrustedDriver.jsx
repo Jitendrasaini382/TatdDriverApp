@@ -21,7 +21,7 @@ import RatingModal from '../components/modal/RatingModal';
 import BookingModal from '../components/modal/BookingModal';
 import MainToggleModal from '../components/modal/MainToggleModal';
 import BookingView from '../components/BookingView';
-import AccordionTrainingVideo from '../components/TrainingVideos';
+import TrainingVideo from '../components/TrainingVideos';
 import MyBookingAgencyModal from '../components/modal/MyBookingAgencyModal';
 import MyBookingModal from '../components/MyBookingModal';
 
@@ -55,10 +55,10 @@ const TrustedDriver = ({navigation}) => {
     }
   };
 
-  const OpenMyBookingModal = ()=>{
-    setMyBookingModal(true)
-  }
- 
+  const OpenMyBookingModal = () => {
+    setMyBookingModal(true);
+  };
+
   const Item = [
     {
       title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
@@ -80,7 +80,7 @@ const TrustedDriver = ({navigation}) => {
       title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
       videoId: 'v6n5SvV3XSs',
     },
-  ]
+  ];
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -237,7 +237,7 @@ const TrustedDriver = ({navigation}) => {
             {mainToggleContent ? (
               <BookingView setMyBookingAgencyModal={setMyBookingAgencyModal} />
             ) : videosContent ? (
-              <AccordionTrainingVideo  data={Item} />
+              <TrainingVideo data={Item} />
             ) : null}
           </View>
         </View>
@@ -260,7 +260,6 @@ const TrustedDriver = ({navigation}) => {
         isVisible={isModalVisible}>
         <OtrModal setModalVisible={setModalVisible} />
       </Modal>
-      
 
       <Modal
         backdropOpacity={0}

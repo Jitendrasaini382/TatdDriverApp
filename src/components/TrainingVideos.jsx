@@ -9,7 +9,7 @@ import {AppColors} from '../assets/Colors';
 
 
 
-const AccordionTrainingVideo = ({data}) => {
+const TrainingVideo = ({data}) => {
   const [openIndex, setOpenIndex] = useState(null);
 
   const toggleItem = index => {
@@ -36,7 +36,7 @@ const AccordionTrainingVideo = ({data}) => {
   );
 };
 
-export default AccordionTrainingVideo;
+export default TrainingVideo;
 
 const AccordionItem = ({title, videoId, isOpen, onToggle, index}) => {
   return (
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
 // import {OpenEnvelop} from '../assets/images';
 // import { AppColors } from '../assets/Colors';
 
-// const AccordionTrainingVideo = ({items}) => {
+// const TrainingVideo = ({items}) => {
 //   const [openIndex, setOpenIndex] = useState(null);
 
 //   const toggleItem = index => {
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
 //   );
 // };
 
-// export default AccordionTrainingVideo;
+// export default TrainingVideo;
 
 // const AccordionItem = ({title, videoId, isOpen, onToggle}) => {
 //   return (

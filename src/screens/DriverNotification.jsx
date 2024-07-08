@@ -1,12 +1,10 @@
 import {
   Image,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   SafeAreaView,
-  Dimensions,
   ScrollView,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
@@ -20,7 +18,6 @@ const DriverNotifications = ({ navigation }) => {
   const [currentView, setCurrentView] = useState('NOTIFICATIONS');
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.headerContainer}>
           <Header backButton={true} />

@@ -3,15 +3,13 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
   View,
   Dimensions,
   ScrollView,
 } from 'react-native';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
-import AccordionTrainingVideo from '../components/TrainingVideos';
+import TrainingVideo from '../components/TrainingVideos';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -60,7 +58,7 @@ const AgentTrainig = ({navigation}) => {
               </View>
 
               <View style={{marginTop: 30}}>
-                <AccordionTrainingVideo data={item} />
+                <TrainingVideo data={item} />
               </View>
             </View>
           </View>

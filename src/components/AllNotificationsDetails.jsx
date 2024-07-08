@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   detailText: {
-    fontSize: moderateScale(16),
+    fontSize: moderateScale(20),
     fontFamily: 'Roboto-Regular',
     color: AppColors.black,
     marginBottom: verticalScale(10),
@@ -162,6 +162,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(15),
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
+    marginVertical: verticalScale(10),
   },
   iconContainer: {
     marginRight: moderateScale(10),

@@ -7,7 +7,6 @@ import {
   Image,
   SafeAreaView,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {RightArrow_White} from '../assets/images';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';

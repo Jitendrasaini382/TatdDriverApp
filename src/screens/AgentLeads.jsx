@@ -25,7 +25,6 @@ import {
 import {AppFont} from '../assets/FontsFamily';
 import Header from '../components/Header';
 import { AppColors } from '../assets/Colors';
-import Clipboard from '@react-native-clipboard/clipboard';
 
 const AgentLeads = () => {
   const [agentLeadsModal, setAgentLeadsModal] = useState(false);

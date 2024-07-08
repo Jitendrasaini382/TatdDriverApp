@@ -33,7 +33,7 @@ const SelectYourState = ({navigation}) => {
         <View style={styles.buttonContainer}>
           {states.map((state, index) => (
             <TouchableOpacity
-              // onPress={() => navigation.navigate('SelectYourCity', {state})}
+              onPress={() => navigation.navigate('SelectYourCity', {state})}
               key={index}
               style={styles.button}>
               <Text style={styles.buttonText}>{state}</Text>

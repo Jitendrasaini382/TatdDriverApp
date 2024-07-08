@@ -12,10 +12,10 @@ import {
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import ToggleSwitch from 'toggle-switch-react-native';
-import Header from '../components/Header';
 import Modal from 'react-native-modal';
-import OtrModal from '../components/modal/OtrModal';
 import {AppColors} from '../assets/Colors';
+import Header from '../components/Header';
+import OtrModal from '../components/modal/OtrModal';
 import ToggleButton from '../components/ToggleButton';
 import RatingModal from '../components/modal/RatingModal';
 import BookingModal from '../components/modal/BookingModal';
@@ -59,6 +59,28 @@ const TrustedDriver = ({navigation}) => {
     setMyBookingModal(true)
   }
  
+  const Item = [
+    {
+      title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
+      videoId: 'uuCULpkpKrA',
+    },
+    {
+      title: 'Login करने के बाद आपको अपनी मर्जी की बुकिंग उठानी होगी। ',
+      videoId: '4HDKAi75-Vo',
+    },
+    {
+      title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
+      videoId: 'u892FTsKLKk',
+    },
+    {
+      title: 'Login करने के बाद आपको अपनी मर्जी की बुकिंग उठानी होगी।',
+      videoId: 'M-iyhUZ-h7o',
+    },
+    {
+      title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
+      videoId: 'v6n5SvV3XSs',
+    },
+  ]
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -215,7 +237,7 @@ const TrustedDriver = ({navigation}) => {
             {mainToggleContent ? (
               <BookingView setMyBookingAgencyModal={setMyBookingAgencyModal} />
             ) : videosContent ? (
-              <AccordionTrainingVideo />
+              <AccordionTrainingVideo  data={Item} />
             ) : null}
           </View>
         </View>

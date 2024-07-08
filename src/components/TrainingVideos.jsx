@@ -5,32 +5,11 @@ import YoutubePlayer from 'react-native-youtube-iframe';
 import {OpenEnvelop} from '../assets/images';
 import {AppColors} from '../assets/Colors';
 
-const accordionItems = [
-  {
-    title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
-    videoId: 'uuCULpkpKrA',
-  },
-  {
-    title: 'Login करने के बाद आपको अपनी मर्जी की बुकिंग उठानी होगी। ',
-    videoId: '4HDKAi75-Vo',
-  },
-  {
-    title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
-    videoId: 'u892FTsKLKk',
-  },
-  {
-    title: 'Login करने के बाद आपको अपनी मर्जी की बुकिंग उठानी होगी।',
-    videoId: 'M-iyhUZ-h7o',
-  },
-  {
-    title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
-    videoId: 'v6n5SvV3XSs',
-  },
-];
 
 
 
-const AccordionTrainingVideo = () => {
+
+const AccordionTrainingVideo = ({data}) => {
   const [openIndex, setOpenIndex] = useState(null);
 
   const toggleItem = index => {
@@ -43,7 +22,7 @@ const AccordionTrainingVideo = () => {
 
   return (
     <View style={styles.container}>
-      {accordionItems.map((item, index) => (
+      {data.map((item, index) => (
         <AccordionItem
           key={index}
           title={item.title}
@@ -96,7 +75,7 @@ const AccordionItem = ({title, videoId, isOpen, onToggle, index}) => {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 10,
-    padding:15,
+    // padding:15,
     backgroundColor: AppColors.white,
   },
   itemContainer: {
@@ -123,7 +102,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   indexText: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: 'bold',
     color: AppColors.black,
   },

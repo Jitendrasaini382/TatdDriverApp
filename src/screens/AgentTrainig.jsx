@@ -10,13 +10,22 @@ import {
   ScrollView,
 } from 'react-native';
 import Header from '../components/Header';
-import AgentTrainingVideo from '../components/AgentTrainingVideos';
-import { AppColors } from '../assets/Colors';
-
+import {AppColors} from '../assets/Colors';
+import AccordionTrainingVideo from '../components/TrainingVideos';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
 const designHeight = height;
+const item = [
+  {
+    title: '1. कस्टमर ड्राइवर और एजेंट को कैसे जोड़ें ?',
+    videoId: 'MGdKBPlGpg4',
+  },
+  {
+    title: '2. कमाए हुए कमीशन के बारे में कैसे पता चलेगा ?',
+    videoId: 'Rp_zZTXTi-E',
+  },
+];
 
 const scale = size => (width / designWidth) * size;
 const verticalScale = size => (height / designHeight) * size;
@@ -51,7 +60,8 @@ const AgentTrainig = ({navigation}) => {
               </View>
 
               <View style={{marginTop: 30}}>
-                <AgentTrainingVideo />
+                {/* <AgentTrainingVideo /> */}
+                <AccordionTrainingVideo data={item} />
               </View>
             </View>
           </View>

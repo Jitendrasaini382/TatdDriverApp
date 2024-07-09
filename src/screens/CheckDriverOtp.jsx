@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -8,10 +8,14 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  Alert,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AppColors} from '../assets/Colors';
+import {useRoute} from '@react-navigation/native';
+import {VERIFY_OTP_LOGIN} from '../apis/Apis';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -23,6 +27,37 @@ const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;
 
 const CheckDriverOtp = ({navigation}) => {
+  const route = useRoute();
+  const {mobile} = route.params;
+  console.log(mobile, 'mmmmmmmmmmmmmmmm');
+
+  const [otp, setOtp] = useState('');
+
+  const handleChange = text => {
+    setOtp(text);
+  };
+
+  const verifyOtp = async () => {
+    try {
+      if (!otp) {
+        Alert.alert('Please Enter OTP');
+        return;
+      }
+      const response = await VERIFY_OTP_LOGIN({
+        mobile: mobile,
+        otp: otp,
+      });
+      console.log(response.status_code);
+      if (response.status_code == 200) {
+        console.log(response, 'hjhjhjh');
+        await AsyncStorage.setItem('jwt-token', response.refresh_token);
+        navigation.navigate('TrustedDriver');
+      }
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Header />
@@ -63,7 +98,7 @@ const CheckDriverOtp = ({navigation}) => {
 
             <View style={styles.otpInfoContainer}>
               <Text style={styles.otpInfoText}>
-                An OTP is sent to 9810369319{' '}
+                An OTP is sent to {mobile}{' '}
               </Text>
               <TouchableOpacity
                 onPress={() => {
@@ -84,16 +119,16 @@ const CheckDriverOtp = ({navigation}) => {
               <View style={styles.textInputContainer}>
                 <TextInput
                   style={styles.textInput}
+                  onChangeText={handleChange}
+                  value={otp}
                   keyboardType="numeric"
                   placeholder="Enter OTP or Password"
-                  placeholderTextColor="rgb(42,42,42)"
+                  placeholderTextColor="rgb(42, 42, 42)"
                 />
               </View>
             </View>
 
-            <TouchableOpacity
-              style={styles.verifyButton}
-              onPress={() => navigation.navigate('TrustedDriver')}>
+            <TouchableOpacity style={styles.verifyButton} onPress={verifyOtp}>
               <Text style={styles.verifyButtonText}>Verify</Text>
             </TouchableOpacity>
           </View>

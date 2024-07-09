@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,11 +8,14 @@ import {
   View,
   Dimensions,
   ScrollView,
+  Alert,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AppColors} from '../assets/Colors';
-import { AppFont } from '../assets/FontsFamily';
+import {AppFont} from '../assets/FontsFamily';
+import {DRIVER_LOGIN} from '../apis/Apis';
+import {useNavigation} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -23,7 +26,37 @@ const verticalScale = size => (height / designHeight) * size;
 const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;
 
-const DriverLogin = ({navigation}) => {
+const DriverLogin = () => {
+  const navigation = useNavigation();
+  const [field, setField] = useState("");
+
+  const handleChange = text => {
+    setField({mobile: text});
+  };
+
+  const sendOtp = async () => {
+    try {
+      if (!field.mobile) {
+        Alert.alert('Please Enter Mobile No.');
+        return;
+      } else if (field.mobile.length !== 10) {
+        Alert.alert('Please Enter Valid Mobile No.');
+        return;
+      }
+
+      const response = await DRIVER_LOGIN(field);
+      console.log(response.status_code);
+      if (response.status_code == 200) {
+        console.log(response);
+        navigation.navigate('CheckDriverOtp', {mobile: field.mobile});
+      } else {
+        console.log('Failed to retrieve OTP');
+      }
+    } catch (err) {
+      console.log(err, 'err');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header backButton={false} />
@@ -61,6 +94,8 @@ const DriverLogin = ({navigation}) => {
                 <View style={styles.inputView}>
                   <TextInput
                     style={styles.inputText}
+                    onChangeText={handleChange}
+                    // value={field.mobile}
                     keyboardType="numeric"
                     placeholder="Enter Driver Mobile Number"
                     placeholderTextColor="rgb(42, 42, 42)"
@@ -68,9 +103,7 @@ const DriverLogin = ({navigation}) => {
                 </View>
               </View>
 
-              <TouchableOpacity
-                style={styles.btnView}
-                onPress={() => navigation.navigate('CheckDriverOtp')}>
+              <TouchableOpacity style={styles.btnView} onPress={sendOtp}>
                 <Text style={styles.btnText}>Submit</Text>
               </TouchableOpacity>
             </View>

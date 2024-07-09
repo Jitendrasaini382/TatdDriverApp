@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@animatereactnative/marquee": "^0.2.0",
+    "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-masked-view/masked-view": "^0.3.1",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/stack": "^6.3.29",
     "@reduxjs/toolkit": "^2.2.6",
+    "axios": "^1.7.2",
     "react": "18.2.0",
     "react-native": "0.74.2",
     "react-native-collapsible": "^1.6.1",

@@ -172,7 +172,7 @@ const AgentPanel = ({navigation}) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              // onPress={() => navigation.navigate('AgentWallet')}
+              onPress={() => navigation.navigate('AgentWallet')}
               style={styles.bottamContent4}>
               <Text style={styles.mainText}>My Earning</Text>
               <Text style={styles.textIcon}>

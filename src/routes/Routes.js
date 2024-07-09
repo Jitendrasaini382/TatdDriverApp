@@ -22,8 +22,6 @@ import AgentWallet from '../screens/AgentWallet';
 import AgentCommisionAdded from '../screens/AgentCommisionAdded';
 import SelectYourState from '../screens/SelectYourState';
 import SelectYourCity from '../screens/SelectYourDist';
-import AgentLeads from '../screens/AgentLeads';
-// import {NoticeBoardDetailScreen} from '../components/AllNoticeBoardDetails';
 
 const Stack = createStackNavigator();
 
@@ -93,7 +91,6 @@ const Route = () => {
           />
           <Stack.Screen name="SelectYourState" component={SelectYourState} />
           <Stack.Screen name="SelectYourCity" component={SelectYourCity} />
-          <Stack.Screen name="AgentLeads" component={AgentLeads} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

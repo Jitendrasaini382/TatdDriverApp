@@ -1,9 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import {AppColors} from '../assets/Colors';
 
-const ToggleButton = ({button1Label, button2Label, onToggle}) => {
-  const [currentState, setCurrentState] = useState(button1Label);
+const ToggleButton = ({button1Label, button2Label, onToggle, initialState}) => {
+  const [currentState, setCurrentState] = useState(initialState);
+
+  useEffect(() => {
+    setCurrentState(initialState);
+  });
 
   const handlePress = label => {
     setCurrentState(label);
@@ -11,7 +15,7 @@ const ToggleButton = ({button1Label, button2Label, onToggle}) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.buttonContainer}>
       <TouchableOpacity
         style={[
           styles.toggleButton,
@@ -54,7 +58,7 @@ const ToggleButton = ({button1Label, button2Label, onToggle}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  buttonContainer: {
     backgroundColor: '#edecf1',
     flexDirection: 'row',
     marginTop: 20,
@@ -72,7 +76,9 @@ const styles = StyleSheet.create({
   activeButton: {
     backgroundColor: AppColors.white,
   },
-  inactiveButton: {},
+  inactiveButton: {
+    backgroundColor: 'transparent',
+  },
   buttonText: {
     fontSize: 12,
     fontWeight: '500',

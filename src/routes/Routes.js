@@ -23,6 +23,8 @@ import AgentCommisionAdded from '../screens/AgentCommisionAdded';
 import SelectYourState from '../screens/SelectYourState';
 import SelectYourCity from '../screens/SelectYourDist';
 import AgentLeads from '../screens/AgentLeads';
+import DriverNotice from '../screens/DriverNotice';
+import { NoticeBoardDetailScreen } from '../components/AllNoticeBoardDetails';
 // import {NoticeBoardDetailScreen} from '../components/AllNoticeBoardDetails';
 
 const Stack = createStackNavigator();
@@ -51,6 +53,8 @@ const Route = () => {
             name="DriverNotifications"
             component={DriverNotifications}
           />
+          <Stack.Screen name="DriverNotice" component={DriverNotice} />
+
           <Stack.Screen
             name="ClearMyDuePayment"
             component={ClearMyDuePayment}
@@ -72,14 +76,14 @@ const Route = () => {
               headerBackTitle: 'Back',
             }}
           />
-          {/* <Stack.Screen
+          <Stack.Screen
             name="NoticeBoardDetail"
             component={NoticeBoardDetailScreen}
             options={{
               title: 'NoticeBoard',
               headerBackTitle: 'Back',
             }}
-          /> */}
+          />
 
           <Stack.Screen name="AgentLogin" component={AgentLogin} />
           <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />

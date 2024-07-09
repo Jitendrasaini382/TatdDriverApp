@@ -1,0 +1,1 @@
+export const API_PATH = "https://www.tatd.in/app-api/driver/"

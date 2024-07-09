@@ -16,7 +16,6 @@ import Modal from 'react-native-modal';
 import {AppColors} from '../assets/Colors';
 import Header from '../components/Header';
 import OtrModal from '../components/modal/OtrModal';
-import ToggleButton from '../components/ToggleButton';
 import RatingModal from '../components/modal/RatingModal';
 import BookingModal from '../components/modal/BookingModal';
 import MainToggleModal from '../components/modal/MainToggleModal';
@@ -34,6 +33,7 @@ import {
   setMyBookingAgencyModal,
 } from '../redux/slices/trustedDriverSlice';
 import {AppFont} from '../assets/FontsFamily';
+import ToggleButton from '../components/modal/ToggleButton';
 
 const {width} = Dimensions.get('window');
 

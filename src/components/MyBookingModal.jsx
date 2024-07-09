@@ -4,15 +4,19 @@ import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {RightArrow} from '../assets/images';
 import {AppColors} from '../assets/Colors';
+import { useDispatch } from 'react-redux';
+import { setMyBookingModal } from '../redux/slices/trustedDriverSlice';
 
-const MyBookingModal = ({setMyBookingModal}) => {
+const MyBookingModal = ({}) => {
   const [myBookingStyle, setMyBookingStyle] = useState(true);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
-      onPress={()=> setMyBookingModal(false)}
+      onPress={()=> dispatch(setMyBookingModal(false))}
       >
         <View style={styles.closeButtonContainer}>
           <Text style={styles.closeButtonText}>x</Text>

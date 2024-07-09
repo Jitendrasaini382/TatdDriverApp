@@ -8,12 +8,16 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { AppColors } from '../../assets/Colors';
+import { useDispatch } from 'react-redux';
+import { setMainToggleModal } from '../../redux/slices/trustedDriverSlice';
 
 const {width} = Dimensions.get('window');
 
-const MainToggleModal = ({setMainToggleModal}) => {
+const MainToggleModal = () => {
+  const dispatch = useDispatch();
+
   return (
-    <TouchableWithoutFeedback onPress={() => setMainToggleModal(false)}>
+    <TouchableWithoutFeedback onPress={() => dispatch(setMainToggleModal(false))}>
          <View style={styles.mainContainer}>
         <View style={styles.contentContainer}>
           <View style={styles.mainView}>

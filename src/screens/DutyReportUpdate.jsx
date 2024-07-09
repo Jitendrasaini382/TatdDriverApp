@@ -88,24 +88,23 @@ const CancelBooking = () => {
 };
 
 const AcceptBooking = () => {
-
   const [packageDetailsDutyReportUpdate, setPackageDetailsDutyReportUpdate] =
-  useState(false);
+    useState(false);
 
-const handleSwipe = () => {
-  Alert.alert('Booking Accepted', 'You have accepted the booking.');
-};
+  const handleSwipe = () => {
+    Alert.alert('Booking Accepted', 'You have accepted the booking.');
+  };
 
-const openPhoneDialer = () => {
-  const phoneNumber = '9810360792';
-  let url = `tel:${phoneNumber}`;
+  const openPhoneDialer = () => {
+    const phoneNumber = '9810360792';
+    let url = `tel:${phoneNumber}`;
 
-  Linking.openURL(url)
-    .then(() => console.log('Phone dialer opened successfully'))
-    .catch(err => {
-      console.error('Error opening phone dialer:', err);
-    });
-};
+    Linking.openURL(url)
+      .then(() => console.log('Phone dialer opened successfully'))
+      .catch(err => {
+        console.error('Error opening phone dialer:', err);
+      });
+  };
 
   return (
     <ScrollView>
@@ -201,24 +200,6 @@ const openPhoneDialer = () => {
 
 const DutyReportUpdate = () => {
   const [cancel, setCancel] = useState(false);
-
-  // const [packageDetailsDutyReportUpdate, setPackageDetailsDutyReportUpdate] =
-  //   useState(false);
-
-  // const handleSwipe = () => {
-  //   Alert.alert('Booking Accepted', 'You have accepted the booking.');
-  // };
-
-  // const openPhoneDialer = () => {
-  //   const phoneNumber = '9810360792';
-  //   let url = `tel:${phoneNumber}`;
-
-  //   Linking.openURL(url)
-  //     .then(() => console.log('Phone dialer opened successfully'))
-  //     .catch(err => {
-  //       console.error('Error opening phone dialer:', err);
-  //     });
-  // };
 
   return (
     <SafeAreaView

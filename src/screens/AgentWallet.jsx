@@ -199,13 +199,13 @@ const AgentWallet = ({navigation}) => {
           </Text>
         </View>
 
-        {/* {data.map((item, index) => (
+        {data.map((item, index) => (
           <TouchableOpacity
             onPress={() => navigation.navigate('AgentCommisionAdded', item)}
             key={index.toString()}>
             {renderTripItem({item})}
           </TouchableOpacity>
-        ))} */}
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
@@ -261,158 +261,3 @@ const styles = StyleSheet.create({
 });
 
 export default AgentWallet;
-
-// import {Image, SafeAreaView, StyleSheet, Text, View, FlatList, ScrollView} from 'react-native';
-// import React from 'react';
-// import Header from '../components/Header';
-// import {AppColors} from '../assets/Colors';
-// import {Wallet_Icon} from '../assets/images';
-
-// const AgentWallet = () => {
-//   return (
-//     <SafeAreaView style={styles.safeArea}>
-//       <Header backButton={true} />
-
-// <View>
-//   <View
-//     style={{
-//       alignItems: 'flex-end',
-//       paddingRight: '4%',
-//       paddingTop: '5%',
-//       paddingBottom: '2%',
-//     }}>
-//     <Text
-//       style={{
-//         fontSize: 15,
-//         fontWeight: 'bold',
-//         color: AppColors.black,
-//       }}>
-//       My Lifetime Earning ₹0
-//     </Text>
-//     <View
-//       style={{
-//         borderBottomWidth: 1,
-//         borderBottomColor: AppColors.black,
-//         height: 1,
-//         width: 110,
-//         marginTop: 5,
-//         marginRight: 20,
-//       }}></View>
-//   </View>
-//   <View style={styles.container}>
-//     <View style={styles.leftContent}>
-//       <Image
-//         source={Wallet_Icon}
-//         style={{width: 20, height: 20, marginRight: 8}}
-//       />
-//       <Text style={styles.balanceText}>tat d balance</Text>
-//     </View>
-//     <Text style={styles.amountText}>₹0</Text>
-//   </View>
-
-//         <CommissionList />
-//       </View>
-//     </SafeAreaView>
-//   );
-// };
-
-// export default AgentWallet;
-
-// const data = [
-//   { type: 'Agent Commission', amount: 880, date: '23 Jun, 2024', paidDate: '26 Jun, 2024' },
-//   { type: 'Customer Commission', amount: 53, date: '17 Jun, 2024', paidDate: '19 Jun, 2024' },
-//   { type: 'Customer Commission', amount: 35, date: '23 Apr, 2024', paidDate: '25 Apr, 2024' },
-//   { type: 'Agent Commission', amount: 110, date: '03 Apr, 2024', paidDate: '10 Apr, 2024' },
-//   { type: 'Agent Commission', amount: 36, date: '10 Jan, 2024', paidDate: '17 Jan, 2024' },
-// ];
-
-// const CommissionItem = ({ type, amount, date, paidDate }) => {
-//   return (
-//     <ScrollView contentContainerStyle={{flex: 1, marginTop:30}} >
-
-//     <View style={{ padding: 20 ,borderBottomWidth:1, borderColor:"#ccc"}}>
-
-//     </View>
-//     </ScrollView>
-//   );
-// };
-
-// const CommissionList = () => {
-//   return (
-//     <FlatList
-//       data={data}
-//       renderItem={({ item }) => (
-//         <CommissionItem
-//           type={item.type}
-//           amount={item.amount}
-//           date={item.date}
-//           paidDate={item.paidDate}
-//         />
-//       )}
-//       keyExtractor={(item, index) => index.toString()}
-//     />
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   itemContainer: {
-//     flexDirection: 'row',
-//     padding: 10,
-//     borderBottomWidth: 1,
-//     borderBottomColor: '#ccc',
-//     justifyContent:"space-between"
-//   },
-//   plusText: {
-//     fontSize: 20,
-//     color: '#007BFF',
-//     marginRight: 10,
-//   },
-//   textContainer: {
-//     flex: 1,
-//     flexDirection: "row"
-//   },
-//   typeText: {
-//     fontSize: 16,
-//     fontWeight: 'bold',
-//     marginBottom: 5,
-//     color:"black"
-//   },
-//   amountText: {
-//     fontSize: 16,
-//     color: '#000',
-//     marginBottom: 5,
-//   },
-//   dateText: {
-//     fontSize: 14,
-//     color: '#888',
-//   },
-// // });
-
-// // const styles = StyleSheet.create({
-//   safeArea: {
-//     flex: 1,
-//     backgroundColor: 'white',
-//   },
-//   container: {
-// flexDirection: 'row',
-// justifyContent: 'space-between',
-// alignItems: 'center',
-// padding: 16,
-
-//   },
-//   leftContent: {
-//     flexDirection: 'row',
-//     // alignItems: 'center',
-//   },
-//   balanceText: {
-//     // marginLeft: 8,
-//     alignItems: 'flex-start',
-//     fontSize: 16,
-//     color: '#333',
-//   },
-//   amountText: {
-// fontSize: 18,
-// fontWeight: 'bold',
-// color: '#333',
-//   },
-// });

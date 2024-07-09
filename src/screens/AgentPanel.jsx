@@ -215,7 +215,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto',
   },
   middleContainer: {
-    // margin: '4%',
     marginTop: 0,
     backgroundColor: AppColors.white,
     borderWidth: 1,

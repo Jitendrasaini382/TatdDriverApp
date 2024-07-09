@@ -2,9 +2,14 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {AppColors} from '../assets/Colors';
+import { useDispatch } from 'react-redux';
+import { setMyBookingModal } from '../redux/slices/trustedDriverSlice';
 
-const ExtraButtons = ({OpenMyBookingModal}) => {
+const ExtraButtons = () => {
+
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   return (
     <View style={styles.mainView}>
       <View style={styles.leftView}>
@@ -13,7 +18,7 @@ const ExtraButtons = ({OpenMyBookingModal}) => {
         </TouchableOpacity>
       </View>
       <View style={styles.rightView}>
-        <TouchableOpacity onPress={() => OpenMyBookingModal(true)}>
+        <TouchableOpacity onPress={() => dispatch(setMyBookingModal(true))}>
           <Text style={styles.rightText}>My Bookings</Text>
         </TouchableOpacity>
       </View>

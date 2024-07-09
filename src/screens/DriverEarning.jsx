@@ -165,17 +165,6 @@ const DriverEarning = () => {
         <View style={styles.underLineView}></View>
       </View>
 
-      {/* <View style={styles.headlineContainer}>
-        {[7, 30, 90,50].map(days => (
-          <View key={days} style={styles.headlineContent}>
-            <Text style={styles.headlineAmount}>
-              <Icon name="rupee" /> 0
-            </Text>
-            <Text style={styles.headlineDays}>{days} days</Text>
-          </View>
-        ))}
-      </View> */}
-
       <View style={styles.headlineContainer}>
         <View style={styles.headlineContent}>
           <Text style={styles.headlineAmount}>

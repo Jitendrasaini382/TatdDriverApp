@@ -11,11 +11,16 @@ import {
 } from 'react-native';
 import React from 'react';
 import {AppColors} from '../../assets/Colors';
+import { useDispatch } from 'react-redux';
+import { setMyBookingAgencyModal } from '../../redux/slices/trustedDriverSlice';
 
-const MyBookingAgencyModal = ({setMyBookingAgencyModal, setModalVisible}) => {
+const MyBookingAgencyModal = ({ setModalVisible}) => {
+
+  const dispatch = useDispatch();
+
   return (
-    // <TouchableWithoutFeedback onPress={() => setMyBookingAgencyModal(false)}>
-    // <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+    <TouchableWithoutFeedback onPress={() => dispatch(setMyBookingAgencyModal(false))}>
+    {/* // <TouchableWithoutFeedback onPress={() => setModalVisible(false)}> */}
       <SafeAreaView style={{flex: 1, }}>
         <View
           style={{
@@ -126,7 +131,7 @@ const MyBookingAgencyModal = ({setMyBookingAgencyModal, setModalVisible}) => {
           </View>
         </View>
       </SafeAreaView>
-    // </TouchableWithoutFeedback>
+     </TouchableWithoutFeedback>
   );
 };
 

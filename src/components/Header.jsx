@@ -6,7 +6,7 @@ import BackButton from './BackButton';
 import ExtraButtons from './ExtraButtons';
 import {AppColors} from '../assets/Colors';
 import {useNavigation} from '@react-navigation/native';
-const Header = ({backButton, extraButton, OpenMyBookingModal}) => {
+const Header = ({backButton, extraButton,}) => {
   const navigation = useNavigation();
 
   return (
@@ -29,7 +29,7 @@ const Header = ({backButton, extraButton, OpenMyBookingModal}) => {
       {backButton ? (
         <BackButton />
       ) : extraButton ? (
-        <ExtraButtons OpenMyBookingModal={OpenMyBookingModal} />
+        <ExtraButtons  />
       ) : null}
     </View>
   );

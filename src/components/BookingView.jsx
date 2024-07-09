@@ -16,17 +16,24 @@ import MyBookingAgencyModal from './modal/MyBookingAgencyModal';
 import RoundTripBookingView from './bookingsView/RoundTripBookingView';
 import PermanentBookingView from './bookingsView/PermanentBookingView';
 import FlexibleBookingView from './bookingsView/FlexibleBookingView';
+import { useDispatch } from 'react-redux';
+import { setMyBookingAgencyModal } from '../redux/slices/trustedDriverSlice';
 
 const {width} = Dimensions.get('window');
 
-const BookingView = ({setMyBookingAgencyModal}) => {
+const BookingView = () => {
+  const dispatch = useDispatch();
+
   <Modal
     backdropOpacity={0}
-    onBackdropPress={() => setMyBookingAgencyModal(false)}
+    onBackdropPress={() => dispatch(setMyBookingAgencyModal(false))}
     animationIn={'fadeInDown'}
     animationOut={'fadeOutUp'}
     isVisible={true}>
-    <MyBookingAgencyModal setMyBookingAgencyModal={setMyBookingAgencyModal} />
+    <MyBookingAgencyModal 
+    // setMyBookingAgencyModal={setMyBookingAgencyModal}
+    
+    />
   </Modal>;
 
   return (
@@ -34,7 +41,7 @@ const BookingView = ({setMyBookingAgencyModal}) => {
       <View style={styles.connectContainer}>
         <TouchableOpacity
           onPress={() => {
-            setMyBookingAgencyModal(true);
+           dispatch( setMyBookingAgencyModal(true));
           }}
           style={styles.connectButton}>
           <Icon color={'white'} size={15} name="plus" />

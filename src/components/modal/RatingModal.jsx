@@ -8,11 +8,17 @@ import {
 } from 'react-native';
 import {Dimensions} from 'react-native';
 import { AppColors } from '../../assets/Colors';
+import { useDispatch } from 'react-redux';
+import { setRatingModal } from '../../redux/slices/trustedDriverSlice';
 const {width, height} = Dimensions.get('window');
 
-const RatingModal = ({setRatingModal}) => {
+
+const RatingModal = () => {
+  const dispatch = useDispatch();
+ 
+ 
   return (
-    <TouchableWithoutFeedback onPress={() => setRatingModal(false)}>
+    <TouchableWithoutFeedback onPress={() => dispatch(setRatingModal(false))}>
       <View style={styles.mainContainer}>
         <View style={styles.contentContainer}>
           <Text style={styles.topHeading}>Rating </Text>
@@ -36,7 +42,7 @@ const RatingModal = ({setRatingModal}) => {
           </Text>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => setRatingModal(false)}>
+            onPress={() =>  dispatch(setRatingModal(false))}>
             <Text style={styles.buttonText}>close</Text>
           </TouchableOpacity>
         </View>

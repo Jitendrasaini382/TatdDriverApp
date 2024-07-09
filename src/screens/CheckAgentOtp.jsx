@@ -30,8 +30,6 @@ const CheckAgentOtp = ({navigation}) => {
         <View style={styles.contentContainer}>
           <View style={styles.card}>
             <View style={styles.cardHeader}>
-
-              
               <View style={styles.mainTopContent}>
                 <View style={styles.headingView}>
                   <Text style={styles.headingText}>
@@ -106,16 +104,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: AppColors.white,
     justifyContent: 'flex-start',
-    // alignItems: 'center',
-    // marginTop: 10
-    // flex: 1,
-    // backgroundColor: 'white',
-    // justifyContent: 'flex-start',
-    // alignItems: 'center',
-    // paddingVertical: verticalScale(10),
-    // padding: moderateScale(15),
-
-    // padding: 10
   },
   card: {
     margin: moderateScale(15),
@@ -123,12 +111,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: moderateScale(10),
     borderColor: AppColors.mainColor,
-    // width: '92%',
-    // padding: 15
   },
   cardHeader: {
     backgroundColor: AppColors.mainColor,
-    // width: '100%',
     borderRadius: moderateScale(6),
     marginBottom: verticalScale(12),
   },
@@ -171,11 +156,10 @@ const styles = StyleSheet.create({
 
   cardHeader: {
     backgroundColor: AppColors.mainColor,
-    // width: '100%',
     borderRadius: moderateScale(6),
     marginBottom: verticalScale(12),
   },
-titleContainer: {
+  titleContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: verticalScale(15),

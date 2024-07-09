@@ -204,18 +204,18 @@ const styles = StyleSheet.create({
   content: {
     padding: 15,
     minHeight: 100,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
   },
   accordionItem: {
     elevation: 2,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     marginBottom: 1,
   },
   itemHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     padding: 10,
   },
   headerText: {
@@ -223,14 +223,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemContent: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     borderBottomColor: '#ccc',
   },
   contentText: {
-    color: 'black',
+    color: AppColors.black,
     padding: 10,
   },
 });
 
 export default AccordionData;
-

@@ -106,7 +106,7 @@ const CheckDriverOtp = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
   },
   scrollViewContent: {
     flexGrow: 1,
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     borderRightWidth: moderateScale(12),
     borderTopWidth: moderateScale(12),
     borderRightColor: 'transparent',
-    borderTopColor: 'white',
+    borderTopColor: AppColors.white,
   },
   rotatedTriangle: {
     transform: [{rotate: '270deg'}],
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     borderRightWidth: moderateScale(12),
     borderTopWidth: moderateScale(12),
     borderRightColor: 'transparent',
-    borderTopColor: 'white',
+    borderTopColor: AppColors.white,
   },
   triangleBottom: {
     width: 0,
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     borderRightWidth: moderateScale(12),
     borderTopWidth: moderateScale(12),
     borderRightColor: 'transparent',
-    borderTopColor: 'white',
+    borderTopColor: AppColors.white,
     transform: [{rotate: '270deg'}],
   },
   titleContainer: {

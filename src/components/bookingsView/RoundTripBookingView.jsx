@@ -131,7 +131,7 @@ const RoundTripBookingView = () => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     borderRadius: 10,
     padding: 15,
     marginTop: 10,
@@ -143,12 +143,12 @@ const styles = StyleSheet.create({
   },
   time: {
     fontSize: 20,
-    color: 'white',
+    color: AppColors.white,
     marginRight: 10,
   },
   vehicleType: {
     fontSize: 14,
-    color: 'white',
+    color: AppColors.white,
     marginLeft: 10,
   },
   contentWrapper: {
@@ -159,14 +159,14 @@ const styles = StyleSheet.create({
     flex: 0.7,
     justifyContent: 'center',
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
     marginLeft: 8,
-    color: '#16588e',
+    color: AppColors.mainColor,
     fontFamily: 'Roboto',
   },
   address: {
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   acceptText: {
-    color: '#16588e',
+    color: AppColors.mainColor,
     fontSize: 15,
     fontWeight: '600',
     paddingHorizontal: 5,
@@ -198,23 +198,23 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   incentiveText: {
-    color: 'white',
+    color: AppColors.white,
     fontSize: 12,
   },
   package: {
     fontSize: 12,
-    color: 'white',
+    color: AppColors.white,
     marginBottom: 5,
   },
   price: {
     fontSize: 30,
     fontWeight: 'bold',
     alignSelf: 'baseline',
-    color: 'white',
+    color: AppColors.white,
     marginBottom: 5,
   },
   acceptButton: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     padding: 5,
     borderRadius: 8,
     alignItems: 'center',

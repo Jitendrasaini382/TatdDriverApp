@@ -8,6 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
+import { AppFont } from '../../assets/FontsFamily';
 
 const FlexibleBookingAcceptModal = ({setOpenModal}) => {
   return (
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
   warningText: {
     color: 'red',
     fontWeight: 'bold',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
   },
   highlightText: {
     color: AppColors.mainColor,
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   applyButton: {
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     paddingHorizontal: 20,
     paddingVertical: 8,
     borderRadius: 5,

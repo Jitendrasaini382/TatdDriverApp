@@ -33,6 +33,7 @@ import {
   mainToggleHandle,
   setMyBookingAgencyModal,
 } from '../redux/slices/trustedDriverSlice';
+import {AppFont} from '../assets/FontsFamily';
 
 const {width} = Dimensions.get('window');
 
@@ -80,9 +81,7 @@ const TrustedDriver = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header
-        extraButton={true}
-      />
+      <Header extraButton={true} />
       {myBookingModal && <MyBookingModal />}
 
       <ScrollView>
@@ -184,14 +183,14 @@ const TrustedDriver = ({navigation}) => {
                   <Text
                     style={[
                       styles.bottamContent1Text,
-                      videosContent && {color: 'white'},
+                      videosContent && {color: AppColors.white},
                     ]}>
                     Training
                   </Text>
                   <Text
                     style={[
                       styles.bottamContent1Text,
-                      videosContent && {color: 'white'},
+                      videosContent && {color: AppColors.white},
                     ]}>
                     Videos
                   </Text>
@@ -299,7 +298,7 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     marginVertical: responsiveSize(20),
   },
   marqueeView: {
@@ -345,13 +344,13 @@ const styles = StyleSheet.create({
     color: AppColors.mainColor,
     fontSize: responsiveSize(25),
     fontWeight: '700',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
   },
   bottamLeftText: {
     color: AppColors.mainColor,
     fontSize: responsiveSize(9),
     fontWeight: '300',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
   },
   topRight: {
     flexDirection: 'row',
@@ -413,7 +412,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.mainColor,
     borderWidth: 2,
     borderRadius: responsiveSize(7),
-    borderColor: 'white',
+    borderColor: AppColors.white,
     alignItems: 'center',
     paddingHorizontal: responsiveSize(8),
     paddingVertical: responsiveSize(4),
@@ -422,13 +421,13 @@ const styles = StyleSheet.create({
   bottamRightText: {
     fontSize: responsiveSize(8),
     fontWeight: '500',
-    color: 'white',
+    color: AppColors.white,
   },
   ratingView: {
     backgroundColor: 'green',
     borderWidth: 2,
     borderRadius: responsiveSize(7),
-    borderColor: 'white',
+    borderColor: AppColors.white,
     alignItems: 'center',
     margin: responsiveSize(2),
     paddingHorizontal: responsiveSize(12),
@@ -438,7 +437,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     borderWidth: 2,
     borderRadius: responsiveSize(7),
-    borderColor: 'white',
+    borderColor: AppColors.white,
     alignItems: 'center',
     paddingHorizontal: responsiveSize(8),
     margin: responsiveSize(2),
@@ -449,7 +448,7 @@ const styles = StyleSheet.create({
     margin: responsiveSize(3),
   },
   bottamContent1: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     flex: 1,
     borderWidth: 1,
     borderColor: AppColors.mainColor,
@@ -459,7 +458,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   absoulteText: {
-    color: 'white',
+    color: AppColors.white,
     backgroundColor: 'rgb(195, 31, 31)',
     fontSize: 8,
     alignSelf: 'flex-start',
@@ -478,7 +477,7 @@ const styles = StyleSheet.create({
   },
 
   bottamContent2: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     paddingBottom: 3,
     flex: 1,
     borderWidth: 1,
@@ -488,7 +487,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   bottamContent3: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     flex: 1,
     borderWidth: 1,
     borderColor: AppColors.mainColor,
@@ -710,14 +709,14 @@ const styles = StyleSheet.create({
 //                   <Text
 //                     style={[
 //                       styles.bottamContent1Text,
-//                       videosContent && {color: 'white'},
+//                       videosContent && {color: AppColors.white},
 //                     ]}>
 //                     Training
 //                   </Text>
 //                   <Text
 //                     style={[
 //                       styles.bottamContent1Text,
-//                       videosContent && {color: 'white'},
+//                       videosContent && {color: AppColors.white},
 //                     ]}>
 //                     Videos
 //                   </Text>
@@ -825,7 +824,7 @@ const styles = StyleSheet.create({
 //   },
 //   mainContainer: {
 //     flex: 1,
-//     backgroundColor: 'white',
+//     backgroundColor: AppColors.white,
 //     marginVertical: responsiveSize(20),
 //   },
 //   marqueeView: {
@@ -871,13 +870,13 @@ const styles = StyleSheet.create({
 //     color: AppColors.mainColor,
 //     fontSize: responsiveSize(25),
 //     fontWeight: '700',
-//     fontFamily: 'Roboto-Regular',
+//     fontFamily: AppFont.regularFont,
 //   },
 //   bottamLeftText: {
 //     color: AppColors.mainColor,
 //     fontSize: responsiveSize(9),
 //     fontWeight: '300',
-//     fontFamily: 'Roboto-Regular',
+//     fontFamily: AppFont.regularFont,
 //   },
 //   topRight: {
 //     flexDirection: 'row',
@@ -939,7 +938,7 @@ const styles = StyleSheet.create({
 //     backgroundColor: AppColors.mainColor,
 //     borderWidth: 2,
 //     borderRadius: responsiveSize(7),
-//     borderColor: 'white',
+//     borderColor: AppColors.white,
 //     alignItems: 'center',
 //     paddingHorizontal: responsiveSize(8),
 //     paddingVertical: responsiveSize(4),
@@ -948,13 +947,13 @@ const styles = StyleSheet.create({
 //   bottamRightText: {
 //     fontSize: responsiveSize(8),
 //     fontWeight: '500',
-//     color: 'white',
+//     color: AppColors.white,
 //   },
 //   ratingView: {
 //     backgroundColor: 'green',
 //     borderWidth: 2,
 //     borderRadius: responsiveSize(7),
-//     borderColor: 'white',
+//     borderColor: AppColors.white,
 //     alignItems: 'center',
 //     margin: responsiveSize(2),
 //     paddingHorizontal: responsiveSize(12),
@@ -964,7 +963,7 @@ const styles = StyleSheet.create({
 //     backgroundColor: 'green',
 //     borderWidth: 2,
 //     borderRadius: responsiveSize(7),
-//     borderColor: 'white',
+//     borderColor: AppColors.white,
 //     alignItems: 'center',
 //     paddingHorizontal: responsiveSize(8),
 //     margin: responsiveSize(2),
@@ -975,7 +974,7 @@ const styles = StyleSheet.create({
 //     margin: responsiveSize(3),
 //   },
 //   bottamContent1: {
-//     backgroundColor: 'white',
+//     backgroundColor: AppColors.white,
 //     flex: 1,
 //     borderWidth: 1,
 //     borderColor: AppColors.mainColor,
@@ -985,7 +984,7 @@ const styles = StyleSheet.create({
 //     flexDirection: 'row',
 //   },
 //   absoulteText: {
-//     color: 'white',
+//     color: AppColors.white,
 //     backgroundColor: 'rgb(195, 31, 31)',
 //     fontSize: 8,
 //     alignSelf: 'flex-start',
@@ -1004,7 +1003,7 @@ const styles = StyleSheet.create({
 //   },
 
 //   bottamContent2: {
-//     backgroundColor: 'white',
+//     backgroundColor: AppColors.white,
 //     paddingBottom: 3,
 //     flex: 1,
 //     borderWidth: 1,
@@ -1014,7 +1013,7 @@ const styles = StyleSheet.create({
 //     flexDirection: 'column',
 //   },
 //   bottamContent3: {
-//     backgroundColor: 'white',
+//     backgroundColor: AppColors.white,
 //     flex: 1,
 //     borderWidth: 1,
 //     borderColor: AppColors.mainColor,

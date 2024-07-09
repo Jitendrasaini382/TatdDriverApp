@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import {AppColors} from '../../assets/Colors';
+import { AppFont } from '../../assets/FontsFamily';
 
 const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
   return (
@@ -37,7 +38,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
                 color: AppColors.black,
                 fontSize: 17,
                 fontWeight: 'bold',
-                fontFamily: 'Roboto-Regular',
+                fontFamily: AppFont.regularFont,
               }}>
               Package Details
             </Text>
@@ -69,7 +70,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Trip Type:
@@ -78,7 +79,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 {tripDetails.type}
@@ -94,7 +95,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Package:
@@ -103,7 +104,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 {tripDetails.duration}
@@ -119,7 +120,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Package Price : Cash
@@ -128,7 +129,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                {tripDetails.amount}
@@ -144,7 +145,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 GST : 5%
@@ -153,7 +154,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Rs 61
@@ -169,7 +170,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Commission : 20%
@@ -178,7 +179,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Rs 246
@@ -197,7 +198,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Net Earning:
@@ -206,7 +207,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Rs 985
@@ -237,7 +238,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
                   style={{
                     color: AppColors.black,
                     marginLeft: 10,
-                    fontFamily: 'Roboto-Regular',
+                    fontFamily: AppFont.regularFont,
                     fontWeight: 'bold',
                   }}>
                   Overtime Charges- Rs 2 Per Minute
@@ -272,7 +273,7 @@ const DriverEarnIngModal = ({setPackageDetailsDriverEarning, tripDetails}) => {
                   style={{
                     color: AppColors.black,
                     marginLeft: 10,
-                    fontFamily: 'Roboto-Regular',
+                    fontFamily: AppFont.regularFont,
                     fontWeight: 'bold',
                   }}>
                   Return to TAT D- Rs. 307
@@ -314,11 +315,11 @@ const styles = StyleSheet.create({
   },
   text: {
     color: AppColors.mainColor,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
     fontWeight: 'bold',
   },
   payButton: {
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     paddingHorizontal: 35,
     paddingVertical: 10,
     borderRadius: 5,

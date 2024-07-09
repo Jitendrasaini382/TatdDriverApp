@@ -10,6 +10,7 @@ import {Dimensions} from 'react-native';
 import { AppColors } from '../../assets/Colors';
 import { useDispatch } from 'react-redux';
 import { setRatingModal } from '../../redux/slices/trustedDriverSlice';
+import { AppFont } from '../../assets/FontsFamily';
 const {width, height} = Dimensions.get('window');
 
 
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     elevation: 13,
     padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     borderRadius: 12,
     paddingHorizontal: 15,
   },
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     fontSize: 20,
     fontWeight: "600",
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
   },
   topText: {
     marginVertical: 10,

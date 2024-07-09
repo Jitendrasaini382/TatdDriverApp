@@ -13,6 +13,7 @@ import React from 'react';
 import {AppColors} from '../../assets/Colors';
 import {useDispatch} from 'react-redux';
 import {setMyBookingAgencyModal} from '../../redux/slices/trustedDriverSlice';
+import { AppFont } from '../../assets/FontsFamily';
 
 const MyBookingAgencyModal = ({setModalVisible}) => {
   const dispatch = useDispatch();
@@ -202,7 +203,7 @@ const styles = StyleSheet.create({
   },
   mainText: {
     marginBottom: 10,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
     fontSize: 15,
     letterSpacing: 0.3,
     color: '#333',

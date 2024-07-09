@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: 'white',
+    color: AppColors.white,
     fontSize: 16,
     fontWeight: 'bold',
   },

@@ -7,9 +7,10 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { AppColors } from '../../assets/Colors';
-import { useDispatch } from 'react-redux';
-import { setMainToggleModal } from '../../redux/slices/trustedDriverSlice';
+import {AppColors} from '../../assets/Colors';
+import {useDispatch} from 'react-redux';
+import {setMainToggleModal} from '../../redux/slices/trustedDriverSlice';
+import {AppFont} from '../../assets/FontsFamily';
 
 const {width} = Dimensions.get('window');
 
@@ -17,8 +18,9 @@ const MainToggleModal = () => {
   const dispatch = useDispatch();
 
   return (
-    <TouchableWithoutFeedback onPress={() => dispatch(setMainToggleModal(false))}>
-         <View style={styles.mainContainer}>
+    <TouchableWithoutFeedback
+      onPress={() => dispatch(setMainToggleModal(false))}>
+      <View style={styles.mainContainer}>
         <View style={styles.contentContainer}>
           <View style={styles.mainView}>
             <View style={styles.mainTopView}>
@@ -43,10 +45,16 @@ const MainToggleModal = () => {
             <View style={{padding: 5}}>
               <Text style={{color: AppColors.black, fontSize: 15}}>
                 Are you available for any booking in the entire{' '}
-                <Text style={{color: AppColors.mainColor,fontWeight: '500' }}> South Delhi </Text>
-                 area in the next
-                <Text style={{color: AppColors.mainColor,fontWeight: '500'}}> 30 minutes</Text> ?
-                If yes, you will be notified by SMS as soon as an Express
+                <Text style={{color: AppColors.mainColor, fontWeight: '500'}}>
+                  {' '}
+                  South Delhi{' '}
+                </Text>
+                area in the next
+                <Text style={{color: AppColors.mainColor, fontWeight: '500'}}>
+                  {' '}
+                  30 minutes
+                </Text>{' '}
+                ? If yes, you will be notified by SMS as soon as an Express
                 booking comes in.
               </Text>
             </View>
@@ -108,7 +116,7 @@ const styles = StyleSheet.create({
     // margin: 15,
     backgroundColor: AppColors.white,
     borderRadius: 8,
-    borderColor: '#16588e',
+    borderColor: AppColors.mainColor,
     width: '100%',
   },
   mainTopView: {
@@ -150,7 +158,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
     color: 'rgb(255, 255, 255)',
     // lineHeight: 24.2,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
   },
   mainMiddleView: {
     margin: 30,
@@ -188,7 +196,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   btnView: {
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     alignItems: 'center',
     borderRadius: 5,
     justifyContent: 'center',
@@ -205,9 +213,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: AppColors.white,
     fontWeight: '400',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
   },
 });
-  
 
 export default MainToggleModal;

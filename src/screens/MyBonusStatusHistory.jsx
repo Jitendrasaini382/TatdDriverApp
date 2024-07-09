@@ -149,9 +149,9 @@ const MyBonusStatusHistory = () => {
 };
 
 const styles = StyleSheet.create({
-  mainContainer: {flex: 1, flexDirection: 'column', backgroundColor: 'white'},
+  mainContainer: {flex: 1, flexDirection: 'column', backgroundColor: AppColors.white},
   container: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     borderRadius: 10,
     padding: 20,
     shadowColor: AppColors.black,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   content: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
   },
   title: {
     fontSize: 24,
@@ -184,11 +184,11 @@ const styles = StyleSheet.create({
   },
   headerCell: {
     padding: 10,
-    color: 'white',
+    color: AppColors.white,
     fontWeight: 'bold',
     textAlign: 'center',
     borderRightWidth: 1,
-    borderRightColor: 'white',
+    borderRightColor: AppColors.white,
   },
   dataRow: {
     flexDirection: 'row',
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
   },
   oddRow: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
   },
   dataCell: {
     padding: 10,

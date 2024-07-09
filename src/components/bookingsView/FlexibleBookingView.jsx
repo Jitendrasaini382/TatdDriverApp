@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Modal from 'react-native-modal';
 import {AppColors} from '../../assets/Colors';
 import FlexibleBookingAcceptModal from '../modal/FlexibleBookingAcceptModal';
+import { AppFont } from '../../assets/FontsFamily';
 
 const BookingCard = ({booking, index, total}) => {
   const [openModal, setOpenModal] = useState(false);
@@ -24,7 +25,7 @@ const BookingCard = ({booking, index, total}) => {
           </Text>
         </View>
         <View style={styles.vehicleType}>
-          <Icon color={'#16588e'} name="car" />
+          <Icon color={AppColors.mainColor} name="car" />
           <Text style={styles.vehicleText}>{booking.vehicleType}</Text>
         </View>
       </View>
@@ -201,13 +202,13 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     borderRadius: 10,
     padding: 10,
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     marginBottom: 10,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     padding: 5,
     borderRadius: 5,
     marginBottom: 10,
@@ -219,7 +220,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   price: {
-    color: '#16588e',
+    color: AppColors.mainColor,
     fontWeight: 'bold',
   },
   vehicleType: {
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   vehicleText: {
-    color: '#16588e',
+    color: AppColors.mainColor,
     marginLeft: 5,
   },
   title: {

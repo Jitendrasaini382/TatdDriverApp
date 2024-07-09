@@ -16,6 +16,7 @@ import {AppColors} from '../assets/Colors';
 import {ArrowFadeBlue} from '../assets/images';
 import AgentPanelModal from '../components/modal/AgentPanelModal';
 import ShowDataList from '../components/ShowDataList';
+import { AppFont } from '../assets/FontsFamily';
 
 const {width, height} = Dimensions.get('window');
 
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     marginVertical: responsiveSize(20),
   },
 
@@ -247,7 +248,7 @@ const styles = StyleSheet.create({
     color: AppColors.white,
     fontSize: responsiveSize(15),
     fontWeight: '500',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
     borderBottomWidth: 1,
     borderBottomColor: AppColors.white,
   },
@@ -305,7 +306,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.mainColor,
     borderWidth: 2,
     borderRadius: responsiveSize(7),
-    borderColor: 'white',
+    borderColor: AppColors.white,
     alignItems: 'center',
     paddingHorizontal: responsiveSize(8),
     paddingVertical: responsiveSize(4),
@@ -314,13 +315,13 @@ const styles = StyleSheet.create({
   bottamRightText: {
     fontSize: responsiveSize(8),
     fontWeight: '500',
-    color: 'white',
+    color: AppColors.white,
   },
   ratingView: {
     backgroundColor: 'green',
     borderWidth: 2,
     borderRadius: responsiveSize(7),
-    borderColor: 'white',
+    borderColor: AppColors.white,
     alignItems: 'center',
     margin: responsiveSize(2),
     paddingHorizontal: responsiveSize(12),
@@ -330,7 +331,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     borderWidth: 2,
     borderRadius: responsiveSize(7),
-    borderColor: 'white',
+    borderColor: AppColors.white,
     alignItems: 'center',
     paddingHorizontal: responsiveSize(8),
     margin: responsiveSize(2),
@@ -341,7 +342,7 @@ const styles = StyleSheet.create({
     margin: responsiveSize(3),
   },
   bottamContent1: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     flex: 1,
     borderWidth: 1,
     borderColor: AppColors.mainColor,
@@ -351,7 +352,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   absoulteText: {
-    color: 'white',
+    color: AppColors.white,
     backgroundColor: 'rgb(195, 31, 31)',
     fontSize: 8,
     alignSelf: 'flex-start',
@@ -370,7 +371,7 @@ const styles = StyleSheet.create({
   },
 
   bottamContent2: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     paddingBottom: 3,
     flex: 1,
     borderWidth: 1,
@@ -380,7 +381,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   bottamContent3: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     flex: 1,
     borderWidth: 1,
     borderColor: AppColors.mainColor,

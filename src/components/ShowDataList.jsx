@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,

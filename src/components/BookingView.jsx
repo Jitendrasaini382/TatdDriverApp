@@ -44,7 +44,7 @@ const BookingView = () => {
            dispatch( setMyBookingAgencyModal(true));
           }}
           style={styles.connectButton}>
-          <Icon color={'white'} size={15} name="plus" />
+          <Icon color={AppColors.white} size={15} name="plus" />
           <Image style={styles.rightArrow} source={RightArrow} />
         </TouchableOpacity>
         <Text style={styles.connectText}>

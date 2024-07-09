@@ -69,7 +69,7 @@ const PermanentBookingAcceptModal = ({setOpenModal}) => {
 const styles = StyleSheet.create({
   card: {
     // flex:1,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     borderRadius: 10,
     padding: 20,
     shadowColor: '#000',
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   applyButton: {
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     paddingHorizontal: 20,
     paddingVertical: 8,
     borderRadius: 5,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     color: AppColors.black,
   },
   applyButtonText: {
-    color: 'white',
+    color: AppColors.white,
   },
 });
 

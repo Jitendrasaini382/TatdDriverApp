@@ -10,7 +10,7 @@ const AgentCommisionAdded = ({route}) => {
   const {amount, date, agentName, invoiceValue} = route.params;
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: AppColors.white}}>
       <Header backButton={true} />
       <View style={styles.container}>
         <View style={styles.amountContainer}>

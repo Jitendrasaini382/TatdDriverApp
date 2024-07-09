@@ -12,6 +12,7 @@ import {
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AppColors} from '../assets/Colors';
+import { AppFont } from '../assets/FontsFamily';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -89,11 +90,11 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
   },
   contentContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     justifyContent: 'flex-start',
     alignItems: 'center',
     padding: moderateScale(15),
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
     borderRightWidth: moderateScale(12),
     borderTopWidth: moderateScale(12),
     borderRightColor: 'transparent',
-    borderTopColor: 'white',
+    borderTopColor: AppColors.white,
   },
   rotatedTriangle: {
     transform: [{rotate: '270deg'}],
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   btnView: {
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     alignItems: 'center',
     borderRadius: moderateScale(5),
     justifyContent: 'center',
@@ -193,7 +194,7 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(14),
     color: AppColors.white,
     fontWeight: '400',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
   },
 });
 

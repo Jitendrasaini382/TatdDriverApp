@@ -13,6 +13,7 @@ import {OneWayIcon} from '../assets/images';
 import Header from '../components/Header';
 import AllNotificationComponent from '../components/AllNotificationsDetails';
 import AllNoticeBoardDetails from '../components/AllNoticeBoardDetails';
+import { AppColors } from '../assets/Colors';
 
 const DriverNotifications = ({navigation}) => {
   const [currentView, setCurrentView] = useState('NOTIFICATIONS');
@@ -52,7 +53,7 @@ export default DriverNotifications;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
   },
   scrollView: {
     flexGrow: 1,
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   clearButtonText: {
-    color: 'white',
+    color: AppColors.white,
     fontSize: 16,
     fontWeight: '600',
     marginRight: 10,

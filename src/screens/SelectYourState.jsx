@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     paddingBottom: 10,
-    color: '#16588e',
+    color: AppColors.mainColor,
     fontFamily: AppFont.regularFont,
     fontWeight: '500',
   },
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: AppFont.regularFont,
     borderBottomWidth: 0.5,
-    borderBottomColor: 'white',
+    borderBottomColor: AppColors.white,
   },
   arrowImage: {width: 18, height: 18},
 });

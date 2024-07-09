@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
+import { AppFont } from '../../assets/FontsFamily';
 
 const DetailRow = ({label, value}) => (
   <View style={styles.detailRow}>
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     color: AppColors.black,
     fontSize: 17,
     fontWeight: 'bold',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
   },
   closeIcon: {
     backgroundColor: AppColors.mainColor,
@@ -104,12 +105,12 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     color: AppColors.black,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
     fontSize: 13,
   },
   detailValue: {
     color: AppColors.black,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
     fontSize: 13,
   },
   divider: {
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
   bulletText: {
     color: AppColors.black,
     marginLeft: 10,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
     fontWeight: 'bold',
     flex: 1,
   },
@@ -149,9 +150,10 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   closeButtonText: {
-    color: 'white',
+    color: AppColors.white,
     fontWeight: 'bold',
   },
 });
+
 
 export default ClearMyDuePaymentModal;

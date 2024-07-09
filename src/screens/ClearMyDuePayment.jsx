@@ -166,10 +166,10 @@ const styles = StyleSheet.create({
   },
   tableHeader: {
     flexDirection: 'row',
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
   },
   headerText: {
-    color: 'white',
+    color: AppColors.white,
     fontWeight: 'bold',
     flex: 1,
     textAlign: 'center',
@@ -198,20 +198,20 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
   },
   payButton: {
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     padding: 10,
     borderRadius: 5,
     alignSelf: 'center',
     marginTop: 20,
   },
   payButtonText: {
-    color: 'white',
+    color: AppColors.white,
     fontWeight: 'bold',
   },
 
   mainView: {
     borderColor: 'rgb(128,128,128)',
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     borderWidth: 1,
     borderStyle: 'solid',
     borderRadius: 8,
@@ -228,3 +228,5 @@ const styles = StyleSheet.create({
 });
 
 export default ClearMyDuePayment;
+
+AppFont

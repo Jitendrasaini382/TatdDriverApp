@@ -11,6 +11,7 @@ import {
 import React, {useState} from 'react';
 import {AppColors} from '../assets/Colors';
 import {OpenEnvelop} from '../assets/images';
+import { AppFont } from '../assets/FontsFamily';
 
 const noticeBoardData = [
   'Necessary changes in night charges....................',
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
     color: AppColors.black,
     marginBottom: 10,
   },
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
   },
   indexText: {
     fontSize: 15,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
     color: AppColors.black,
   },
   fullScreenContainer: {
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 20,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
     color: AppColors.black,
     textAlign: 'center',
     padding: 20,

@@ -223,12 +223,12 @@ const styles = StyleSheet.create({
   },
   headlineAmount: {
     fontWeight: '600',
-    color: 'white',
+    color: AppColors.white,
     fontSize: SCREEN_WIDTH * 0.035,
   },
   headlineDays: {
     fontWeight: '600',
-    color: 'white',
+    color: AppColors.white,
     fontSize: SCREEN_WIDTH * 0.025,
   },
   earningHeaderText: {

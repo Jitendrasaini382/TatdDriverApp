@@ -14,6 +14,7 @@ import {OpenEnvelop} from '../assets/images';
 import {useNavigation} from '@react-navigation/native';
 import Header from './Header';
 import {AppColors} from '../assets/Colors';
+import { AppFont } from '../assets/FontsFamily';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -147,7 +148,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: moderateScale(20),
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
     color: AppColors.black,
     marginBottom: verticalScale(10),
   },
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
   },
   indexText: {
     fontSize: moderateScale(15),
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
     color: AppColors.black,
   },
   largeIcon: {
@@ -187,3 +188,4 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(20),
   },
 });
+

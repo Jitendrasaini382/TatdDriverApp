@@ -22,13 +22,13 @@ const AgentLeadsModal = ({setAgentLeadsModal}) => {
           width: 30,
           height: 30,
           borderRadius: 15,
-          backgroundColor: '#16588e',
+          backgroundColor: AppColors.mainColor,
           justifyContent: 'center',
           alignItems: 'center',
           alignSelf: 'flex-end',
           margin: 10,
           borderWidth: 2,
-          borderColor: 'white',
+          borderColor: AppColors.white,
         }}
         onPress={() => setAgentLeadsModal(false)}>
         <Text
@@ -50,7 +50,7 @@ const AgentLeadsModal = ({setAgentLeadsModal}) => {
           paddingBottom: 20,
           letterSpacing: 0.5,
           fontSize: 18,
-          fontFamily: 'Roboto-Regular',
+          fontFamily: AppFont.regularFont,
           lineHeight: 25,
           fontWeight: '400',
         }}>
@@ -63,7 +63,7 @@ const AgentLeadsModal = ({setAgentLeadsModal}) => {
       <TouchableOpacity
         onPress={() => setAgentLeadsModal(false)}
         style={{
-          backgroundColor: '#16588e',
+          backgroundColor: AppColors.mainColor,
           justifyContent: 'center',
           alignSelf: 'center',
           padding: 5,

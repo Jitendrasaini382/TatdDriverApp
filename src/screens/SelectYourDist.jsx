@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     paddingBottom: 10,
-    color: '#16588e',
+    color: AppColors.mainColor,
     fontFamily: AppFont.regularFont,
     fontWeight: '500',
   },

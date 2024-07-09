@@ -1,6 +1,7 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import { AppColors } from '../../assets/Colors';
+import { AppFont } from '../../assets/FontsFamily';
 
 const AgentPanelModal = ({setAgentPanelModal}) => {
   return (
@@ -24,7 +25,7 @@ const AgentPanelModal = ({setAgentPanelModal}) => {
                 color: AppColors.black,
                 fontSize: 14,
                 fontWeight: '500',
-                fontFamily: 'Roboto-Regular',
+                fontFamily: AppFont.regularFont,
                 letterSpacing: 0.3,
                 marginBottom: 10,
                 lineHeight: 20,
@@ -39,7 +40,7 @@ const AgentPanelModal = ({setAgentPanelModal}) => {
                 color: AppColors.black,
                 fontSize: 14,
                 fontWeight: '500',
-                fontFamily: 'Roboto-Regular',
+                fontFamily: AppFont.regularFont,
                 letterSpacing: 0.3,
                 marginBottom: 10,
                 lineHeight: 20,
@@ -53,7 +54,7 @@ const AgentPanelModal = ({setAgentPanelModal}) => {
                 color: AppColors.black,
                 fontSize: 14,
                 fontWeight: '500',
-                fontFamily: 'Roboto-Regular',
+                fontFamily: AppFont.regularFont,
                 letterSpacing: 0.3,
                 marginBottom: 10,
                 lineHeight: 20,
@@ -88,7 +89,7 @@ const AgentPanelModal = ({setAgentPanelModal}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     borderWidth: 1,
     borderColor: '#d9d9d9',
   },
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#195788',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
   },
   closeButton: {
     backgroundColor: '#d9d9d9',

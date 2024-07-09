@@ -57,7 +57,7 @@ const CancelBooking = () => {
       <View
         style={{
           borderColor: 'rgb(128,128,128)',
-          backgroundColor: 'white',
+          backgroundColor: AppColors.white,
           borderWidth: 1,
           borderStyle: 'solid',
           borderRadius: 8,
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
   },
   mainView: {
     borderColor: '#808080',
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     borderWidth: 1.5,
     borderStyle: 'solid',
     margin: 10,
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
   packageDetailsButton: {
     padding: 10,
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     elevation: 10,
   },
   packageDetailsText: {
@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
 // const styles = StyleSheet.create({
 //   mainView: {
 //     borderColor: 'rgb(128,128,128)',
-//     backgroundColor: 'white',
+//     backgroundColor: AppColors.white,
 //     borderWidth: 1,
 //     borderStyle: 'solid',
 //     borderRadius: 8,

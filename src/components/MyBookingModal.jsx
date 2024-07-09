@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   },
   closeButtonContainer: {
     alignItems: 'flex-end',
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     alignSelf: 'flex-end',
     padding: 5,
   },
@@ -142,17 +142,17 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
   },
   activeTab: {
-    borderBottomColor: '#16588e',
+    borderBottomColor: AppColors.mainColor,
   },
   tabText: {
     color: AppColors.black,
     paddingBottom: 3,
   },
   activeTabText: {
-    color: '#16588e',
+    color: AppColors.mainColor,
   },
   closeButtonText: {
-    color: 'white',
+    color: AppColors.white,
     paddingHorizontal: 10,
   },
   headerContainer: {
@@ -176,20 +176,20 @@ const styles = StyleSheet.create({
   },
   bookingCard: {
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
     justifyContent: 'space-between',
   },
   activeBookingCard: {
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
   },
   bookingText: {
-    color: '#16588e',
+    color: AppColors.mainColor,
   },
   activeBookingText: {
-    color: 'white',
+    color: AppColors.white,
   },
   arrowIcon: {
     height: 20,

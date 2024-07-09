@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import {AppColors} from '../../assets/Colors';
+import { AppFont } from '../../assets/FontsFamily';
 
 const PackageDetailsDutyReportUpdate = ({
   setPackageDetailsDutyReportUpdate,
@@ -39,7 +40,7 @@ const PackageDetailsDutyReportUpdate = ({
                 color: AppColors.black,
                 fontSize: 17,
                 fontWeight: 'bold',
-                fontFamily: 'Roboto-Regular',
+                fontFamily: AppFont.regularFont,
               }}>
               Package Details
             </Text>
@@ -71,7 +72,7 @@ const PackageDetailsDutyReportUpdate = ({
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Trip Type:
@@ -80,7 +81,7 @@ const PackageDetailsDutyReportUpdate = ({
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 {/* {tripDetails.type} */}
@@ -97,7 +98,7 @@ const PackageDetailsDutyReportUpdate = ({
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Package:
@@ -106,7 +107,7 @@ const PackageDetailsDutyReportUpdate = ({
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 10 Hours
@@ -122,7 +123,7 @@ const PackageDetailsDutyReportUpdate = ({
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Package Price : Cash
@@ -131,7 +132,7 @@ const PackageDetailsDutyReportUpdate = ({
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 100
@@ -147,7 +148,7 @@ const PackageDetailsDutyReportUpdate = ({
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 GST : 5%
@@ -156,7 +157,7 @@ const PackageDetailsDutyReportUpdate = ({
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Rs 61
@@ -172,7 +173,7 @@ const PackageDetailsDutyReportUpdate = ({
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Commission : 20%
@@ -181,7 +182,7 @@ const PackageDetailsDutyReportUpdate = ({
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Rs 246
@@ -200,7 +201,7 @@ const PackageDetailsDutyReportUpdate = ({
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Net Earning:
@@ -209,7 +210,7 @@ const PackageDetailsDutyReportUpdate = ({
                 style={{
                   color: AppColors.black,
                   marginBottom: 10,
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
                 Rs 985
@@ -240,7 +241,7 @@ const PackageDetailsDutyReportUpdate = ({
                   style={{
                     color: AppColors.black,
                     marginLeft: 10,
-                    fontFamily: 'Roboto-Regular',
+                    fontFamily: AppFont.regularFont,
                     fontWeight: 'bold',
                   }}>
                   Overtime Charges- Rs 2 Per Minute
@@ -275,7 +276,7 @@ const PackageDetailsDutyReportUpdate = ({
                   style={{
                     color: AppColors.black,
                     marginLeft: 10,
-                    fontFamily: 'Roboto-Regular',
+                    fontFamily: AppFont.regularFont,
                     fontWeight: 'bold',
                   }}>
                   Return to TAT D- Rs. 307
@@ -317,11 +318,11 @@ const styles = StyleSheet.create({
   },
   text: {
     color: AppColors.mainColor,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
     fontWeight: 'bold',
   },
   payButton: {
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     paddingHorizontal: 35,
     paddingVertical: 10,
     borderRadius: 5,

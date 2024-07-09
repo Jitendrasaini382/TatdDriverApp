@@ -17,9 +17,9 @@ const RoundTripBookingAceeptModal = ({setOpenModal}) => {
         <View
           style={{
             borderWidth: 1,
-            borderColor: '#16588e',
+            borderColor: AppColors.mainColor,
             // flex: 1,
-            // backgroundColor: 'white',
+            // backgroundColor: AppColors.white,
           }}>
           <View style={{backgroundColor: '#e5e5e5'}}>
             <TouchableOpacity onPress={() => setOpenModal(false)}>
@@ -37,7 +37,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal}) => {
           </View>
           <View
             style={{
-              backgroundColor: '#16588e',
+              backgroundColor: AppColors.mainColor,
               paddingHorizontal: 10,
               paddingTop: 40,
               paddingBottom: 20,
@@ -46,7 +46,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal}) => {
             }}>
             <Text
               style={{
-                color: 'white',
+                color: AppColors.white,
                 fontSize: 40,
                 fontFamily: 'Roboto-Medium',
               }}>
@@ -63,7 +63,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal}) => {
             <Text
               style={{
                 fontSize: 25,
-                color: '#16588e',
+                color: AppColors.mainColor,
                 fontFamily: 'Roboto-Medium',
               }}>
               {'\n'}
@@ -87,7 +87,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal}) => {
                 Alert.alert('Are You Confirm');
               }}
               style={{
-                backgroundColor: '#16588e',
+                backgroundColor: AppColors.mainColor,
                 padding: 10,
                 borderWidth: 1,
                 borderColor: AppColors.black,
@@ -97,7 +97,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal}) => {
               <Text
                 style={{
                   fontSize: 15,
-                  color: 'white',
+                  color: AppColors.white,
                   fontFamily: 'Roboto-Medium',
                 }}>
                 Accept
@@ -112,7 +112,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal}) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#ccc',
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   headerText: {
-    color: 'white',
+    color: AppColors.white,
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
-    color: 'white',
+    color: AppColors.white,
     fontSize: 16,
     fontWeight: 'bold',
   },

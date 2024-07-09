@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   container: {
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     // paddingTop: 20,
   },
   closeButton: {
@@ -81,16 +81,16 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: 'white',
+    borderColor: AppColors.white,
     zIndex: 1,
   },
   content: {
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     borderRadius: 20,
     shadowColor: AppColors.white,
     elevation: 5,
@@ -103,14 +103,14 @@ const styles = StyleSheet.create({
     fontSize: 15
   },
   referSection: {
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     padding: 20,
   },
   sectionTitle: {
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 15,
-    color: 'white',
+    color: AppColors.white,
   },
   input: {
     borderWidth: 1,
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: AppColors.black,
     marginBottom: 15,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
   },
   referButton: {
     backgroundColor: '#ddd',

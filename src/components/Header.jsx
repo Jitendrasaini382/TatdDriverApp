@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     marginBottom: -5,
   },
   logoText: {
-    color: '#16588e',
+    color: AppColors.mainColor,
     marginLeft: 7,
     marginTop: 8,
     fontSize: 39,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     marginLeft: 27,
   },
   logoBottomText: {
-    color: '#16588e',
+    color: AppColors.mainColor,
     fontSize: 10,
     fontFamily: AppFont.mainFont,
   },

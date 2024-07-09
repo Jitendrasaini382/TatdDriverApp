@@ -13,6 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Header from '../components/Header';
 import {Wallet_Icon} from '../assets/images';
 import {AppColors} from '../assets/Colors';
+import { AppFont } from '../assets/FontsFamily';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 const data = [
@@ -244,7 +245,7 @@ const styles = StyleSheet.create({
     fontSize: SCREEN_WIDTH * 0.042,
     paddingBottom: 5,
     color: '#000',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: AppFont.regularFont,
   },
   tripDate: {
     fontSize: SCREEN_WIDTH * 0.03,

@@ -18,7 +18,7 @@ const AgentKyc = () => {
   const [ifscCode, setIfscCode] = useState('');
 
   return (
-    <SafeAreaView style={{backgroundColor: 'white', flex: 1}}>
+    <SafeAreaView style={{backgroundColor: AppColors.white, flex: 1}}>
       <Header backButton={true} />
       <View style={styles.container}>
         <Text style={styles.title}>Bank Details</Text>
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     borderRadius: 8,
     padding: 16,
     borderWidth: 0.5,
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   buttonText: {
-    color: 'white',
+    color: AppColors.white,
     fontSize: 16,
     fontWeight: 'bold',
   },

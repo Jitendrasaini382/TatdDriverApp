@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
-import TrainingVideo from '../components/TrainingVideos';
 import { AppFont } from '../assets/FontsFamily';
+import TrainingVideo from '../components/TrainingVideos';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -31,7 +31,7 @@ const verticalScale = size => (height / designHeight) * size;
 const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;
 
-const AgentTrainig = ({navigation}) => {
+const AgentTrainig = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header backButton={true} />

@@ -7,16 +7,19 @@ import {
   Text,
   TouchableOpacity,
   View,
+  FlatList,
   Dimensions,
 } from 'react-native';
+
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Header from '../components/Header';
 import Modal from 'react-native-modal';
 import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
 import {ArrowFadeBlue} from '../assets/images';
+import {Linking} from 'react-native';
+
 import AgentPanelModal from '../components/modal/AgentPanelModal';
-import ShowDataList from '../components/ShowDataList';
 
 const {width, height} = Dimensions.get('window');
 
@@ -174,7 +177,7 @@ const AgentPanel = ({navigation}) => {
 
         {/* showing Data View */}
         <View style={styles.bottamContainer}>
-          {/* <ShowDataList data={myNetworkData ? MyNetworkDATA : MyLeadsDATA} /> */}
+          <ShowDataList data={myNetworkData ? MyNetworkDATA : MyLeadsDATA} />
         </View>
 
         {/* Modals */}
@@ -189,6 +192,46 @@ const AgentPanel = ({navigation}) => {
         </Modal>
       </View>
     </SafeAreaView>
+  );
+};
+
+const ListItem = ({phone, date, amount}) => (
+  <View style={styles.containerList}>
+    <View style={styles.leftView}>
+      <Text style={styles.phoneText}>{phone}</Text>
+      <Text style={styles.dateText}>{date}</Text>
+    </View>
+    <View style={styles.rightView}>
+      <Text style={styles.amountText}>{amount}</Text>
+      <TouchableOpacity onPress={openWhatsApp}>
+        <Icon color={AppColors.whatsAppIconColor} name="whatsapp" />
+      </TouchableOpacity>
+    </View>
+  </View>
+);
+
+const openWhatsApp = () => {
+  // let url = 'whatsapp://send?text=Hello'; // You can customize the text or add a phone number like: 'whatsapp://send?phone=+123456789&text=Hello'
+  let url = 'whatsapp://send?phone=+919810360792&text=Hello'; // You can customize the text or add a phone number like: 'whatsapp://send?phone=+123456789&text=Hello'
+  Linking.openURL(url)
+    .then(data => {
+      console.log('WhatsApp Opened');
+    })
+    .catch(() => {
+      console.log('Make sure WhatsApp is installed on your device');
+    });
+};
+
+const ShowDataList = ({data}) => {
+  return (
+    <FlatList
+      data={data}
+      renderItem={({item}) => <ListItem {...item} />}
+      keyExtractor={item => item.phone}
+      contentContainerStyle={{
+        paddingVertical: 5,
+      }}
+    />
   );
 };
 
@@ -427,6 +470,39 @@ const styles = StyleSheet.create({
     marginTop: 30,
     borderColor: AppColors.mainColor,
     borderRadius: 8,
+  },
+  containerList: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: AppColors.white,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 5,
+  },
+  leftView: {flexDirection: 'row'},
+  phoneText: {
+    fontSize: 15,
+    color: '#878787',
+    fontWeight: 'bold',
+    marginHorizontal: 1,
+  },
+  dateText: {
+    fontSize: 14,
+    color: '#a5a5a5',
+    marginHorizontal: 8,
+  },
+  rightView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  amountText: {
+    fontSize: 14,
+    color: '#a5a5a5',
+    marginRight: 15,
   },
 });
 

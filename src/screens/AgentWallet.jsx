@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Header from '../components/Header';
 import {Wallet_Icon} from '../assets/images';
 import {AppColors} from '../assets/Colors';
-import { AppFont } from '../assets/FontsFamily';
+import {AppFont} from '../assets/FontsFamily';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 const data = [
@@ -141,63 +141,16 @@ const AgentWallet = ({navigation}) => {
       <Header backButton={true} />
 
       <ScrollView>
-        <View
-          style={{
-            alignItems: 'flex-end',
-            paddingRight: '4%',
-            paddingTop: '5%',
-            paddingBottom: '2%',
-          }}>
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: 'bold',
-              color: AppColors.black,
-            }}>
-            My Lifetime Earning ₹0
-          </Text>
-          <View
-            style={{
-              borderBottomWidth: 1,
-              borderBottomColor: AppColors.black,
-              height: 1,
-              backgroundColor: 'red',
-              width: 110,
-              marginTop: 5,
-              marginRight: 20,
-            }}></View>
+        <View style={styles.topContent}>
+          <Text style={styles.mainHeadingText}>My Lifetime Earning ₹0</Text>
+          <View style={styles.underlineView}></View>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: 16,
-          }}>
-          <View style={{flexDirection: 'row'}}>
-            <Image
-              source={Wallet_Icon}
-              style={{width: 30, height: 30, marginRight: 8}}
-            />
-            <Text
-              style={{
-                alignItems: 'flex-start',
-
-                fontSize: 16,
-
-                color: '#333',
-              }}>
-              tat d balance
-            </Text>
+        <View style={styles.middleContainer}>
+          <View style={styles.middleContent}>
+            <Image source={Wallet_Icon} style={styles.walletIcon} />
+            <Text style={styles.balanceHeadingText}>tat d balance</Text>
           </View>
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: 'bold',
-              color: '#333',
-            }}>
-            ₹0
-          </Text>
+          <Text style={styles.totalBalance}>₹0</Text>
         </View>
 
         {data.map((item, index) => (
@@ -258,6 +211,46 @@ const styles = StyleSheet.create({
   tripAmount: {
     fontSize: SCREEN_WIDTH * 0.04,
     color: '#000',
+  },
+  topContent: {
+    alignItems: 'flex-end',
+    paddingRight: '4%',
+    paddingTop: '5%',
+    paddingBottom: '2%',
+  },
+  mainHeadingText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: AppColors.black,
+  },
+  underlineView: {
+    borderBottomWidth: 1,
+    borderBottomColor: AppColors.black,
+    height: 1,
+    backgroundColor: 'red',
+    width: 110,
+    marginTop: 5,
+    marginRight: 20,
+  },
+  middleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+  },
+  middleContent: {flexDirection: 'row'},
+  walletIcon: {width: 30, height: 30, marginRight: 8},
+  balanceHeadingText: {
+    alignItems: 'flex-start',
+
+    fontSize: 16,
+
+    color: '#333',
+  },
+  totalBalance: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
   },
 });
 

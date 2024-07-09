@@ -46,7 +46,6 @@ const Route = () => {
             headerShown: false,
           }}>
           <Stack.Screen name="DriverLogin" component={DriverLogin} />
-          <Stack.Screen name="TrustedDriver" component={TrustedDriver} />
           <Stack.Screen name="CheckDriverOtp" component={CheckDriverOtp} />
           <Stack.Screen
             name="DriverNotifications"
@@ -56,6 +55,7 @@ const Route = () => {
             name="ClearMyDuePayment"
             component={ClearMyDuePayment}
           />
+          <Stack.Screen name="TrustedDriver" component={TrustedDriver} />
           <Stack.Screen name="DriverEarning" component={DriverEarning} />
           <Stack.Screen
             name="MyBonusStatusHistory"

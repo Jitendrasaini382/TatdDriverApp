@@ -25,14 +25,14 @@ import {
 } from '../assets/images';
 import {AppFont} from '../assets/FontsFamily';
 import Header from '../components/Header';
-import { AppColors } from '../assets/Colors';
+import {AppColors} from '../assets/Colors';
 
 const AgentLeads = () => {
   const [agentLeadsModal, setAgentLeadsModal] = useState(false);
 
-    useEffect(() => {
-      setAgentLeadsModal(true);
-    }, []);
+  useEffect(() => {
+    setAgentLeadsModal(true);
+  }, []);
 
   const textToCopy =
     "Hi! I'm inviting you to use this referral link - https://tatd.in/driver-interface.php?referrer=ODExODgxMzE0OA%3D%3D";
@@ -142,27 +142,14 @@ const AgentLeads = () => {
         </View>
         <View style={styles.middleView}>
           <View style={styles.middleLeftView}>
-            <Text style={{color: AppColors.black, fontFamily: AppFont.regularFont}}>
-              OR
-            </Text>
+            <Text style={styles.middleLeftText}>OR</Text>
           </View>
           <View>
             <TouchableOpacity onPress={copyToClipboard}>
-              <Image
-                style={{width: 35, height: 35, marginLeft: 10}}
-                source={Copy_Icon}
-              />
+              <Image style={styles.imageCopyIcon} source={Copy_Icon} />
             </TouchableOpacity>
 
-            <Text
-              style={{
-                paddingTop: 5,
-                color: AppColors.black,
-                fontFamily: AppFont.regularFont,
-                marginLeft: 10,
-              }}>
-              Copy
-            </Text>
+            <Text style={styles.middleRightText}>Copy</Text>
           </View>
         </View>
         <View style={styles.bottamView}>
@@ -258,6 +245,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: AppColors.black,
     marginRight: 10,
+  },
+  middleLeftText: {color: AppColors.black, fontFamily: AppFont.regularFont},
+  imageCopyIcon: {width: 35, height: 35, marginLeft: 10},
+  middleRightText: {
+    paddingTop: 5,
+    color: AppColors.black,
+    fontFamily: AppFont.regularFont,
+    marginLeft: 10,
   },
   bottamView: {
     borderRadius: 10,

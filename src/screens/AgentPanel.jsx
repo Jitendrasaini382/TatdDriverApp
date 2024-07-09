@@ -13,10 +13,10 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Header from '../components/Header';
 import Modal from 'react-native-modal';
 import {AppColors} from '../assets/Colors';
+import {AppFont} from '../assets/FontsFamily';
 import {ArrowFadeBlue} from '../assets/images';
 import AgentPanelModal from '../components/modal/AgentPanelModal';
 import ShowDataList from '../components/ShowDataList';
-import { AppFont } from '../assets/FontsFamily';
 
 const {width, height} = Dimensions.get('window');
 
@@ -62,25 +62,24 @@ const AgentPanel = ({navigation}) => {
                 onPress={() => navigation.navigate('AgentWallet')}
                 style={styles.topLeft}>
                 <Text style={styles.topLeftText}>
-                  <Icon name="rupee" color={AppColors.white} size={15} style={{}} />0
+                  <Icon
+                    name="rupee"
+                    color={AppColors.white}
+                    size={15}
+                    style={{}}
+                  />
+                  0
                 </Text>
               </TouchableOpacity>
               <View style={styles.topRight}>
                 <TouchableOpacity
                   onPress={() => navigation.navigate('SelectYourState')}
-                  style={{
-                    backgroundColor: AppColors.mainColor,
-                    borderRadius: 8,
-                    paddingHorizontal: 15,
-                    paddingVertical: 7,
-                    flexDirection: 'row',
-                    justifyContent: 'space-evenly',
-                  }}>
+                  style={styles.btnView}>
                   <Icon
                     name="plus"
                     color={AppColors.white}
                     size={10}
-                    style={{margin: 5}}
+                    style={styles.iconStyle}
                   />
                   <Image source={ArrowFadeBlue} style={styles.arrowImage} />
                 </TouchableOpacity>
@@ -94,12 +93,7 @@ const AgentPanel = ({navigation}) => {
               </View>
               <View style={styles.bottamRightView}>
                 <TouchableOpacity
-                  style={{
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginHorizontal: 10,
-                  }}
+                  style={styles.rightBottam}
                   onPress={() => setMyNetworkData(true)}>
                   <Text
                     style={{
@@ -119,12 +113,7 @@ const AgentPanel = ({navigation}) => {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={{
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginHorizontal: 10,
-                  }}
+                  style={styles.rightBottam}
                   onPress={() => setMyNetworkData(false)}>
                   <Text
                     style={{
@@ -182,7 +171,14 @@ const AgentPanel = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
-        <ShowDataList data={myNetworkData ? MyNetworkDATA : MyLeadsDATA} />
+
+        {/* showing Data View */}
+        <View style={styles.bottamContainer}>
+          {/* <ShowDataList data={myNetworkData ? MyNetworkDATA : MyLeadsDATA} /> */}
+        </View>
+
+        {/* Modals */}
+
         <Modal
           backdropOpacity={0}
           onBackdropPress={() => setAgentPanelModal(false)}
@@ -208,13 +204,6 @@ const styles = StyleSheet.create({
     marginVertical: responsiveSize(20),
   },
 
-  marqueeText: {
-    color: AppColors.black,
-    fontSize: responsiveSize(15),
-    fontWeight: '400',
-    lineHeight: responsiveSize(21),
-    fontFamily: 'Roboto',
-  },
   middleContainer: {
     marginTop: 0,
     backgroundColor: AppColors.white,
@@ -222,6 +211,12 @@ const styles = StyleSheet.create({
     borderRadius: responsiveSize(10),
     borderColor: AppColors.mainColor,
     position: 'relative',
+  },
+  rightBottam: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 10,
   },
   middleContent: {
     paddingHorizontal: '3%',
@@ -256,6 +251,15 @@ const styles = StyleSheet.create({
   topRight: {
     alignItems: 'center',
   },
+  btnView: {
+    backgroundColor: AppColors.mainColor,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 7,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  iconStyle: {margin: 5, marginRight: 10},
   earningView: {
     paddingHorizontal: responsiveSize(6),
     paddingVertical: responsiveSize(4),
@@ -416,6 +420,13 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     transform: [{rotate: '180deg'}],
+  },
+  bottamContainer: {
+    padding: 10,
+    borderWidth: 2,
+    marginTop: 30,
+    borderColor: AppColors.mainColor,
+    borderRadius: 8,
   },
 });
 

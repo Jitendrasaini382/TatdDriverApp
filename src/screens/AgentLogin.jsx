@@ -63,7 +63,7 @@ const AgentLogin = ({navigation}) => {
                     style={styles.inputText}
                     keyboardType="numeric"
                     placeholder="Enter Driver Mobile Number"
-                    placeholderTextColor="rgb(42, 42, 42)"
+                    placeholderTextColor={AppColors.black}
                   />
                 </View>
               </View>

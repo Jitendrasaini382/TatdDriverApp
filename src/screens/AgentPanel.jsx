@@ -62,7 +62,7 @@ const AgentPanel = ({navigation}) => {
                 onPress={() => navigation.navigate('AgentWallet')}
                 style={styles.topLeft}>
                 <Text style={styles.topLeftText}>
-                  <Icon name="rupee" color="white" size={15} style={{}} />0
+                  <Icon name="rupee" color={AppColors.white} size={15} style={{}} />0
                 </Text>
               </TouchableOpacity>
               <View style={styles.topRight}>
@@ -78,7 +78,7 @@ const AgentPanel = ({navigation}) => {
                   }}>
                   <Icon
                     name="plus"
-                    color="white"
+                    color={AppColors.white}
                     size={10}
                     style={{margin: 5}}
                   />

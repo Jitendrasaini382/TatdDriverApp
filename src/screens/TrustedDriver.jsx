@@ -120,7 +120,7 @@ const TrustedDriver = ({navigation}) => {
                     onPress={() => navigation.navigate('DriverNotifications')}>
                     <View style={styles.notification}>
                       <Icon
-                        color="white"
+                        color={AppColors.white}
                         size={responsiveSize(22.5)}
                         name="bell"
                       />
@@ -649,7 +649,7 @@ const styles = StyleSheet.create({
 //                     onPress={() => navigation.navigate('DriverNotifications')}>
 //                     <View style={styles.notification}>
 //                       <Icon
-//                         color="white"
+//                         color={AppColors.white}
 //                         size={responsiveSize(22.5)}
 //                         name="bell"
 //                       />

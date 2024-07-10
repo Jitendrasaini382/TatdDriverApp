@@ -17,7 +17,6 @@ const DetailRow = ({label, value}) => (
 );
 
 const ClearMyDuePaymentModal = ({setMyDuePaymentModal, tripDetails}) => {
-  console.log(tripDetails,'ddddd');
   if (!tripDetails) return null;
 
   return (

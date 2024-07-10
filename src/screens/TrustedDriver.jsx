@@ -51,7 +51,7 @@ const TrustedDriver = ({navigation}) => {
       console.log(refreshToken, 'refresh_token');
       console.log(jwtToken, 'jwt_token');
 
-      return {refreshToken, jwtToken};
+      // return {refreshToken, jwtToken};
     } catch (error) {
       console.error('Error retrieving tokens:', error);
       return null;

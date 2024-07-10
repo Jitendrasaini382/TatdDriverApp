@@ -37,7 +37,7 @@ const CheckDriverOtp = ({navigation}) => {
   };
   const verifyOtp = () => {
     if (!otp) {
-      Alert.alert('Error', 'Please Enter The OTP');
+      Alert.alert("Error", "Please Enter The OTP");
     } else if (otp.length !== 4) {
       Alert.alert('Error', 'Please enter a 4-digit OTP');
     } else {
@@ -45,41 +45,124 @@ const CheckDriverOtp = ({navigation}) => {
         mobile: mobile,
         otp: otp,
       })
-        .then(async response => {
-          if (response.status_code === '200') {
-            await AsyncStorage.setItem('refresh_token', response.refresh_token);
-            await AsyncStorage.setItem('jwt', response.jwt);
-            navigation.navigate('TrustedDriver');
-          } else {
-            throw new Error(
-              response.message || 'Invalid OTP. Please try again.',
-            );
+      .then(async (response) => {
+        if (response.status_code === "200") {
+          await AsyncStorage.setItem('refresh_token', response.refresh_token);
+          await AsyncStorage.setItem('jwt', response.jwt);
+          navigation.navigate('TrustedDriver');
+        } else {
+          throw new Error(response.message || 'Invalid OTP. Please try again.');
+        }
+      })
+      .catch((error) => {
+        let errorMessage = error.message;
+        
+        // Check if the error is from the API response
+        if (error.response && error.response.data && error.response.data.message) {
+          errorMessage = error.response.data.message;
+        } else {
+          // Try to parse the error message if it's a JSON string
+          try {
+            const parsedMessage = JSON.parse(errorMessage);
+            errorMessage = parsedMessage.message || errorMessage;
+          } catch (e) {
+            // If parsing fails, use the original error message
           }
-        })
-        .catch(error => {
-          let errorMessage = error.message;
-
-          // Check if the error is from the API response
-          if (
-            error.response &&
-            error.response.data &&
-            error.response.data.message
-          ) {
-            errorMessage = error.response.data.message;
-          } else {
-            // Try to parse the error message if it's a JSON string
-            try {
-              const parsedMessage = JSON.parse(errorMessage);
-              errorMessage = parsedMessage.message || errorMessage;
-            } catch (e) {
-              // If parsing fails, use the original error message
-            }
-          }
-
-          Alert.alert(errorMessage);
-        });
+        }
+        
+        Alert.alert( errorMessage);
+      })
     }
   };
+
+
+  // const verifyOtp = () => {
+  //   if (!otp) {
+  //     Alert.alert('Please Enter The OTP');
+  //   } else if (otp.length !== 4) {
+  //     Alert.alert('Error', 'Please enter a 4-digit OTP');
+  //   } else {
+  //     VERIFY_OTP_LOGIN({
+  //       mobile: mobile,
+  //       otp: otp,
+  //     })
+  //       .then(async response => {
+  //         if (response.status_code === '200') {
+  //           await AsyncStorage.setItem('refresh_token', response.refresh_token);
+  //           await AsyncStorage.setItem('jwt', response.jwt);
+  //           navigation.navigate('TrustedDriver');
+  //         } else {
+  //           let errorMessage = 'Invalid OTP. Please try again.';
+  //           if (response.message) {
+  //             try {
+  //               const parsedMessage = JSON.parse(response.message);
+  //               errorMessage = parsedMessage.message || errorMessage;
+  //             } catch (e) {
+  //               errorMessage = response.message;
+  //             }
+  //           }
+  //           Alert.alert('Attempt Failed', errorMessage);
+  //         }
+  //       })
+  //       .catch(error => {
+  //         console.error('Error verifying OTP:', error);
+  //         let errorMessage = 'An unexpected error occurred. Please try again.';
+  //         if (
+  //           error.response &&
+  //           error.response.data &&
+  //           error.response.data.message
+  //         ) {
+  //           errorMessage = error.response.data.message;
+  //         }
+  //         Alert.alert('Error', errorMessage);
+  //       });
+  //   }
+  // };
+
+  //  ////////////////////////////////////
+
+  // const verifyOtp = async () => {
+  //   try {
+  // if (otp.length !== 4) {
+  //   Alert.alert('Error', 'Please enter a 4-digit OTP');
+  //       return;
+  //     }
+  //     //  else {
+  // const response = await VERIFY_OTP_LOGIN({
+  //   mobile: mobile,
+  //   otp: otp,
+  // });
+  //       console.log(otp, "Enter The Otp");
+  //     if (response.status_code == 200) {
+  //       await AsyncStorage.setItem('refresh_token', response.refresh_token);
+  //       await AsyncStorage.setItem('jwt', response.jwt);
+  //       navigation.navigate('TrustedDriver');
+  //     } else {
+  //       let errorMessage = 'Invalid OTP. Please try again.';
+  //       if (response.message) {
+  //         try {
+  //           const parsedMessage = JSON.parse(response.message);
+  //           errorMessage = parsedMessage.message || errorMessage;
+  //         } catch (e) {
+  //           errorMessage = response.message;
+  //         }
+  //       }
+  //       Alert.alert('Attempt Failed', errorMessage);
+  //     // }
+  //   }
+  // } catch (error) {
+  //   console.error('Error verifying OTP:', error);
+  //   let errorMessage = 'An unexpected error occurred. Please try again.';
+  //   if (
+  //     error.response &&
+  //     error.response.data &&
+  //     error.response.data.message
+  //   ) {
+  //     errorMessage = error.response.data.message;
+  //   }
+  //   Alert.alert('Error', errorMessage);
+  // }
+  // };
 
   return (
     <SafeAreaView style={styles.container}>

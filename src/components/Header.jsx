@@ -6,31 +6,23 @@ import BackButton from './BackButton';
 import ExtraButtons from './ExtraButtons';
 import {AppColors} from '../assets/Colors';
 import {useNavigation} from '@react-navigation/native';
-const Header = ({backButton, extraButton,}) => {
+const Header = ({backButton, extraButton}) => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.mainContainer}>
       <View style={styles.leftContent}>
-        <TouchableOpacity 
-        onPress={()=>navigation.navigate('DriverLogin')}
-        >
-          <View style={styles.logoView}>
-            <Image source={AppLogo} />
-            <Text style={styles.logoText}>tat d</Text>
-          </View>
-        </TouchableOpacity>
+        <View style={styles.logoView}>
+          <Image source={AppLogo} />
+          <Text style={styles.logoText}>tat d</Text>
+        </View>
 
         <View style={styles.logoBottom}>
           <Text style={styles.logoBottomText}>trusted & trained driver</Text>
         </View>
       </View>
 
-      {backButton ? (
-        <BackButton />
-      ) : extraButton ? (
-        <ExtraButtons  />
-      ) : null}
+      {backButton ? <BackButton /> : extraButton ? <ExtraButtons /> : null}
     </View>
   );
 };

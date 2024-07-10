@@ -49,7 +49,7 @@ const TrustedDriver = ({navigation}) => {
       const jwtToken = await AsyncStorage.getItem('jwt');
 
       console.log(refreshToken, 'refresh_token');
-      console.log(jwtToken, 'jwt_token');
+      // console.log(jwtToken, 'jwt_token');
 
       // return {refreshToken, jwtToken};
     } catch (error) {

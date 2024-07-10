@@ -13,7 +13,7 @@ import {
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AppColors} from '../assets/Colors';
-import {useRoute} from '@react-navigation/native';
+import {CommonActions, useRoute} from '@react-navigation/native';
 import {VERIFY_OTP_LOGIN} from '../apis/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -49,7 +49,15 @@ const CheckDriverOtp = ({navigation}) => {
           if (response.status_code === '200') {
             await AsyncStorage.setItem('refresh_token', response.refresh_token);
             await AsyncStorage.setItem('jwt', response.jwt);
-            navigation.navigate('TrustedDriver');
+
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{name: 'TrustedDriver'}],
+              }),
+            );
+
+            // navigation.navigate('TrustedDriver');
           } else {
             throw new Error(
               response.message || 'Invalid OTP. Please try again.',

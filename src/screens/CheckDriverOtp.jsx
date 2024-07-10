@@ -65,17 +65,6 @@ const CheckDriverOtp = ({navigation}) => {
         <View style={styles.contentContainer}>
           <View style={styles.card}>
             <View style={styles.cardHeader}>
-              {/* <View style={styles.headerTextContainer}>
-                <View style={styles.whiteBackground}>
-                  <Text style={styles.headerText}>
-                    Verified & Experienced Driver
-                  </Text>
-                </View>
-                <View style={styles.triangleContainer}>
-                  <View style={styles.triangleTop} />
-                  <View style={styles.triangleBottom} />
-                </View>
-              </View> */}
               <View style={styles.mainTopContent}>
                 <View style={styles.headingView}>
                   <Text style={styles.headingText}>

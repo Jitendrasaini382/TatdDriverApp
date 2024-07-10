@@ -29,7 +29,6 @@ const moderateScale = (size, factor = 0.5) =>
 const CheckDriverOtp = ({navigation}) => {
   const route = useRoute();
   const {mobile} = route.params;
-  console.log(mobile, 'mmmmmmmmmmmmmmmm');
 
   const [otp, setOtp] = useState('');
 
@@ -49,11 +48,15 @@ const CheckDriverOtp = ({navigation}) => {
       });
       console.log(response.status_code);
       if (response.status_code == 200) {
-        console.log(response, 'hjhjhjh');
-        await AsyncStorage.setItem('jwt-token', response.refresh_token);
+        // console.log(response.refresh_token, 'refresh_token');
+        // console.log(response.jwt, 'jwt_token');
+        await AsyncStorage.setItem('refresh_token', response.refresh_token);
+        await AsyncStorage.setItem('jwt', response.jwt);
         navigation.navigate('TrustedDriver');
       }
     } catch (error) {
+      // Alert.alert('Please Enter Valid OTP' ,error);
+
       console.error('Error verifying OTP:', error);
     }
   };

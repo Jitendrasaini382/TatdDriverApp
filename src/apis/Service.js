@@ -6,7 +6,7 @@ const _Fetch = (method, path, body, header) => {
   return new Promise((resolve, reject) => {
     return _handleMethod(method, path, body, header)
       .then(e => {
-        console.log(e.message, 'APICALL');
+        console.log(e.data.message, 'APICALL');
         if (e.status == 200) {
           resolve(e.data);
         } else {

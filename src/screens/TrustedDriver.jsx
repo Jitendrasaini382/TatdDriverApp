@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   SafeAreaView,
@@ -34,6 +34,7 @@ import {
 } from '../redux/slices/trustedDriverSlice';
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width} = Dimensions.get('window');
 
@@ -42,6 +43,25 @@ const responsiveSize = size => {
 };
 
 const TrustedDriver = ({navigation}) => {
+  const getTokens = async () => {
+    try {
+      const refreshToken = await AsyncStorage.getItem('refresh_token');
+      const jwtToken = await AsyncStorage.getItem('jwt');
+
+      console.log(refreshToken, 'refresh_token');
+      console.log(jwtToken, 'jwt_token');
+
+      return {refreshToken, jwtToken};
+    } catch (error) {
+      console.error('Error retrieving tokens:', error);
+      return null;
+    }
+  };
+
+  useEffect(()=>{
+    getTokens()
+  } , [])
+
   const dispatch = useDispatch();
   const {
     currentView,

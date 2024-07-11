@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -16,6 +16,7 @@ import {AppColors} from '../assets/Colors';
 import {CommonActions, useRoute} from '@react-navigation/native';
 import {VERIFY_OTP_LOGIN} from '../apis/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TokenConstextApi } from '../context/GlobalContext';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -29,6 +30,10 @@ const moderateScale = (size, factor = 0.5) =>
 const CheckDriverOtp = ({navigation}) => {
   const route = useRoute();
   const {mobile} = route.params;
+
+  
+  const { setJwtToken } = useContext(TokenConstextApi);
+  const { setRefreshToken } = useContext(TokenConstextApi);
 
   const [otp, setOtp] = useState('');
 
@@ -50,6 +55,8 @@ const CheckDriverOtp = ({navigation}) => {
             await AsyncStorage.setItem('refresh_token', response.refresh_token);
             await AsyncStorage.setItem('jwt', response.jwt);
 
+            setJwtToken(response.refresh_token)
+            setRefreshToken(response.jwt)
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,

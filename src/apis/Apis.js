@@ -15,8 +15,44 @@ export const VERIFY_OTP_LOGIN = data => {
 
 // tickets-driver-api.php
 
+// https://www.tatd.in/app-api/driver/driver-faq-api.php
+
+export const DRIVER_FAQ = data => {
+  return _Fetch(
+    'POST',
+    'driver-faq-api.php',
+    {
+      action: 'driver_faq',
+    },
+    {},
+  );
+};
+
 export const CREATE_TICKRT_DRIVER = data => {
   return _Fetch('POST', 'tickets-driver-api.php', data, {});
 };
 
-// export const
+export const CHECK_BOOKING_NUMBER = data => {
+  return _Fetch('POST', 'tickets-driver-api.php', data, {});
+};
+
+export const SHOW_DRIVER_TICKET = data => {
+  return _Fetch(
+    'POST',
+    'tickets-driver-api.php',
+    {
+      action: 'show_driver_ticket',
+    },
+    {},
+  );
+};
+
+export const SHOW_SINGLE_TICKET_DATA = data => {
+  return _Fetch('POST', 'tickets-driver-api.php', data, {});
+};
+
+// {
+//   "action":"show_single_ticket_data",
+//   "ticket_id" : "120001"
+
+//   }

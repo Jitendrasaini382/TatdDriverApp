@@ -8,8 +8,15 @@ export const DRIVER_LOGIN = data => {
 };
 
 export const VERIFY_OTP_LOGIN = data => {
-    //  For registration
-    // console.log(data, "Send dataaa");
+  //  For registration
+  // console.log(data, "Send dataaa");
   return _Fetch('POST', 'verify-otp-login.php', data, {});
 };
 
+// tickets-driver-api.php
+
+export const CREATE_TICKRT_DRIVER = data => {
+  return _Fetch('POST', 'tickets-driver-api.php', data, {});
+};
+
+// export const

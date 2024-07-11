@@ -17,7 +17,7 @@ export const VERIFY_OTP_LOGIN = data => {
 
 // https://www.tatd.in/app-api/driver/driver-faq-api.php
 
-export const DRIVER_FAQ = data => {
+export const DRIVER_FAQ = () => {
   return _Fetch(
     'POST',
     'driver-faq-api.php',
@@ -49,6 +49,17 @@ export const SHOW_DRIVER_TICKET = data => {
 
 export const SHOW_SINGLE_TICKET_DATA = data => {
   return _Fetch('POST', 'tickets-driver-api.php', data, {});
+};
+
+export const CHECK_OPEN_TICKET = () => {
+  return _Fetch(
+    'POST',
+    'tickets-driver-api.php',
+    {
+      action: 'open_ticket',
+    },
+    {},
+  );
 };
 
 // {

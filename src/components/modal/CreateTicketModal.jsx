@@ -12,9 +12,13 @@ import {
 } from 'react-native';
 
 import React, {useEffect, useState} from 'react';
-import { AppColors } from '../../assets/Colors';
-import { CHECK_BOOKING_NUMBER, CREATE_TICKRT_DRIVER } from '../../apis/Apis';
-
+import {AppColors} from '../../assets/Colors';
+import {
+  CHECK_BOOKING_NUMBER,
+  CHECK_OPEN_TICKET,
+  CREATE_TICKRT_DRIVER,
+  SHOW_DRIVER_TICKET,
+} from '../../apis/Apis';
 
 const CreateTicketModal = ({setCreateTicketModal}) => {
   const [field, setField] = useState({
@@ -27,49 +31,90 @@ const CreateTicketModal = ({setCreateTicketModal}) => {
     tbooking_id: '',
   });
 
+  const checkBookingNumber = () => {
+    return new Promise((resolve, reject) => {
+      CHECK_BOOKING_NUMBER(checkField)
+        .then(response => {
+          if (response.status_code == 400) {
+            Alert.alert(response.message);
+            reject(response.message);
+          } else {
+            resolve(response);
+          }
+        })
+        .catch(err => {
+          console.log(err, 'booking number error');
+          reject('Network Error');
+        });
+    });
+  };
+
+  const createDriverTicket = () => {
+    return new Promise((resolve, reject) => {
+      CREATE_TICKRT_DRIVER(field)
+        .then(response => {
+          if (response.status_code == 200) {
+            Alert.alert(response.message);
+            setCreateTicketModal(false);
+            resolve(response);
+          } else {
+            reject(response.message);
+          }
+        })
+        .catch(error => {
+          console.log(error, 'create ticket error');
+          reject('Network Error');
+        });
+    });
+  };
+
+  const checkOpenTicket = () => {
+    return new Promise((resolve, reject) => {
+      CHECK_OPEN_TICKET()
+        .then(response => {
+          if (response.status_code == 200) {
+            console.log(response.message);
+            setCreateTicketModal(false);
+
+            resolve(response);
+          } else {
+            reject(response.message);
+          }
+        })
+        .catch(err => {
+          console.log(err, 'check open ticket error');
+          reject('Network Error');
+        });
+    });
+  };
 
   const handleChange = (name, value) => {
     setField({...field, [name]: value});
     setCheckField({...checkField, [name]: value});
   };
 
-  const checkBookingNumber = () => {
-    CHECK_BOOKING_NUMBER(checkField)
-      .then(e => {
-        if (e.status_code == 200) {
-          console.log(e, 'booking Number');
-          Alert.alert(e.message);
-          createDriverTicket();
+  const handleCreateTicket = () => {
+    if (!field.remarks || !field.tbooking_id) {
+      Alert.alert('Please enter the value');
+      return;
+    }
+
+    checkOpenTicket()
+      .then(response => {
+        if (response.status_code == 200) {
+          Alert.alert(response.message);
         } else {
-         Alert.alert(e.message)
-         
-          console.log(e.message, 'else message');
+          return checkBookingNumber();
         }
       })
-      .catch(err => {
-        console.log(err, 'booking number errrr');
-      });
-  };
-
-  const createDriverTicket = () => {
-    CREATE_TICKRT_DRIVER(field)
       .then(response => {
-        Alert.alert(response.message);
+        if (response && response.status_code !== 400) {
+          return createDriverTicket();
+        }
       })
-      .then(() => {
-        setCreateTicketModal(false);
-      })
-      .then()
       .catch(error => {
-        console.log(error);
-        console.log(error, 'errrrrrrrrrrrrrrrrr');
         Alert.alert(error);
       });
-  };
-
-  const submitTicketCreate = () => {
-    checkBookingNumber();
-    SHOW_DRIVER_TICKET()
   };
 
   return (
@@ -107,7 +152,7 @@ const CreateTicketModal = ({setCreateTicketModal}) => {
             />
 
             <TouchableOpacity
-              onPress={submitTicketCreate}
+              onPress={handleCreateTicket}
               style={ticketModalStyles.button}>
               <Text style={ticketModalStyles.buttonText}>Create</Text>
             </TouchableOpacity>
@@ -191,21 +236,7 @@ const ticketModalStyles = StyleSheet.create({
   },
 });
 
-export default CreateTicketModal
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default CreateTicketModal;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -253,7 +284,6 @@ export default CreateTicketModal
 //     .catch((err)=>{
 //       console.log(err , "booking number errrr");
 //     })
-
 
 //     // CREATE_TICKRT_DRIVER(field)
 //     //   .then(response => {

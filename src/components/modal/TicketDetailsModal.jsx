@@ -1,44 +1,55 @@
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 import {SHOW_SINGLE_TICKET_DATA} from '../../apis/Apis';
 
-const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
-  const [ticketDetails, setTicketDetails] = useState({});
-
-  const [field, setField] = useState({
-    action: 'show_single_ticket_data',
-    ticket_id: '128159',
-  });
-
-
-  useEffect(() => {
-    setField(field => ({
-      ...field,
-      ticket_id: ticketId,
-    }));
-    getSingleTicketData();
-  }, [ticketId]);
-
-  const getSingleTicketData = () => {
-    SHOW_SINGLE_TICKET_DATA(field)
-      .then(e => {
-        if (e.status_code == 200) {
-        //   console.log(e.ticket_data, 'SHOW_SINGLE_TICKET_DATA');
-          setTicketDetails(e.ticket_data);
-        } else if(e.status_code == 500) {
-          Alert.alert(e.message)
-        }
-      })
-      .catch(err => {
-        console.log(err, 'Error SHOW_SINGLE_TICKET_DATA');
-      });
-  };
-
+const TicketDetailsModal = ({ setTicketDetailsModal, ticketId }) => {
+    const [ticketDetails, setTicketDetails] = useState({});
+    const [field, setField] = useState({
+      action: 'show_single_ticket_data',
+      ticket_id: '',
+    });
+    const [isLoading, setIsLoading] = useState(true);
   
-
+    useEffect(() => {
+      setField(prevField => ({
+        ...prevField,
+        ticket_id: ticketId,
+      }));
+    }, [ticketId]);
+  
+    useEffect(() => {
+      if (field.ticket_id) {
+        getSingleTicketData();
+      }
+    }, [field]);
+  
+    const getSingleTicketData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await SHOW_SINGLE_TICKET_DATA(field);
+        console.log(response, "API response");
+        
+        if (response.status_code === 200) {
+          setTicketDetails(response.ticket_data);
+          console.log(response.ticket_data, 'SHOW_SINGLE_TICKET_DATA');
+        } else if (response.status_code === 500) {
+          Alert.alert("No Data Available");
+        }
+      } catch (err) {
+        console.error(err, 'Error in SHOW_SINGLE_TICKET_DATA');
+        Alert.alert("Error", "Failed to fetch ticket data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    if (isLoading) {
+      return <ActivityIndicator size="large" color="#0000ff" />;
+    }
+  
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -53,20 +64,18 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
           <View style={styles.detailsInnerContainer}>
             <View style={styles.contentView}>
               <Text style={styles.leftSectionText}>Ticket ID : </Text>
-              <Text style={styles.rightSectionText}>
-                {ticketDetails.id }
-              </Text>
+              <Text style={styles.rightSectionText}>{ticketDetails.id}</Text>
             </View>
             <View style={styles.contentView}>
               <Text style={styles.leftSectionText}>Created Date</Text>
               <Text style={styles.rightSectionText}>
-                {ticketDetails.timestamp }
+                {ticketDetails.timestamp}
               </Text>
             </View>
             <View style={styles.contentView}>
               <Text style={styles.leftSectionText}>Booking Number :</Text>
               <Text style={styles.rightSectionText}>
-                {ticketDetails.booking_id }
+                {ticketDetails.booking_id}
               </Text>
             </View>
             <View style={styles.contentView}>
@@ -89,7 +98,7 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
             <View style={styles.contentView}>
               <Text style={styles.leftSectionText}>Closure Date</Text>
               <Text style={styles.rightSectionText}>
-                {ticketDetails.closure_timestamp }
+                {ticketDetails.closure_timestamp}
               </Text>
             </View>
           </View>
@@ -99,16 +108,15 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
   );
 };
 
-export default TicketDetailsModal;
 
 const styles = StyleSheet.create({
-  container: {
+    container: {
     flex: 1,
     backgroundColor: 'white',
     borderRadius: 5,
     elevation: 3,
-  },
-  closeButton: {
+},
+closeButton: {
     backgroundColor: AppColors.silverGrey,
     height: 20,
     width: 20,
@@ -118,36 +126,36 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-end',
-  },
-  title: {
+},
+title: {
     fontWeight: 'bold',
     fontSize: 30,
     color: AppColors.black,
     marginLeft: 20,
     fontFamily: AppFont.regularFont,
-  },
-  contentContainer: {
+},
+contentContainer: {
     margin: 20,
     flexDirection: 'row',
-    flex: 1,
+    // flex: 1,
   },
   detailsContainer: {
     flex: 1,
     elevation: 1,
   },
   detailsInnerContainer: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    elevation: 3,
-    shadowColor: 'white',
-    backgroundColor: '#f7f7f7',
-  },
-  contentView: {
+      borderWidth: 1,
+      borderColor: '#ccc',
+      elevation: 3,
+      shadowColor: 'white',
+      backgroundColor: '#f7f7f7',
+    },
+    contentView: {
     borderBottomWidth: 1,
     borderColor: '#ccc',
     flexDirection: 'row',
-  },
-  leftSectionText: {
+},
+leftSectionText: {
     color: 'black',
     justifyContent: 'center',
     marginLeft: 7,
@@ -160,8 +168,8 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     fontFamily: AppFont.regularFont,
-  },
-  rightSectionText: {
+},
+rightSectionText: {
     flex: 2,
     color: 'black',
     justifyContent: 'center',
@@ -176,8 +184,11 @@ const styles = StyleSheet.create({
     padding: 5,
     paddingVertical: 10,
     paddingLeft: 10,
-  },
+},
 });
+
+
+export default TicketDetailsModal;
 
 // import {StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native';
 // import React, {useContext} from 'react';

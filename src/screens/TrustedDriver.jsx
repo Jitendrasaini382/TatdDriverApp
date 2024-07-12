@@ -48,7 +48,7 @@ const TrustedDriver = ({navigation}) => {
       const refreshToken = await AsyncStorage.getItem('refresh_token');
       const jwtToken = await AsyncStorage.getItem('jwt');
 
-      console.log(refreshToken, 'refresh_token');
+      console.log(refreshToken, 'refresh_token trusted');
       // console.log(jwtToken, 'jwt_token');
 
       // return {refreshToken, jwtToken};

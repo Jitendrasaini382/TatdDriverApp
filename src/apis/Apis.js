@@ -61,9 +61,3 @@ export const CHECK_OPEN_TICKET = () => {
     {},
   );
 };
-
-// {
-//   "action":"show_single_ticket_data",
-//   "ticket_id" : "120001"
-
-//   }

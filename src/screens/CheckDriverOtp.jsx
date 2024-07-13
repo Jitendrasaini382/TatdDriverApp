@@ -14,9 +14,9 @@ import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AppColors} from '../assets/Colors';
 import {CommonActions, useRoute} from '@react-navigation/native';
-import {VERIFY_OTP_LOGIN} from '../apis/Apis';
+import {DRIVER_LOGIN, VERIFY_OTP_LOGIN} from '../apis/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { TokenConstextApi } from '../context/GlobalContext';
+import {TokenConstextApi} from '../context/GlobalContext';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -31,15 +31,33 @@ const CheckDriverOtp = ({navigation}) => {
   const route = useRoute();
   const {mobile} = route.params;
 
-  
-  const { setJwtToken } = useContext(TokenConstextApi);
-  const { setRefreshToken } = useContext(TokenConstextApi);
+  const {setJwtToken} = useContext(TokenConstextApi);
+  const {setRefreshToken} = useContext(TokenConstextApi);
 
   const [otp, setOtp] = useState('');
+  const [field, setField] = useState({
+    mobile: mobile,
+  });
 
   const handleChange = text => {
     setOtp(text);
   };
+
+  const resendOtp = async () => {
+    await DRIVER_LOGIN(field)
+      .then(e => {
+        console.log(e, 'resend Otp Response');
+        if (e.status_code == 200) {
+          Alert.alert(`OTP is Resend to +91${mobile} `);
+        } else {
+          Alert.alert('Failed to resend OTP');
+        }
+      })
+      .catch(err => {
+        Alert.alert('Network Error');
+      });
+  };
+
   const verifyOtp = () => {
     if (!otp) {
       Alert.alert('Error', 'Please Enter The OTP');
@@ -55,8 +73,8 @@ const CheckDriverOtp = ({navigation}) => {
             await AsyncStorage.setItem('refresh_token', response.refresh_token);
             await AsyncStorage.setItem('jwt', response.jwt);
 
-            setJwtToken(response.refresh_token)
-            setRefreshToken(response.jwt)
+            setJwtToken(response.refresh_token);
+            setRefreshToken(response.jwt);
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
@@ -127,10 +145,7 @@ const CheckDriverOtp = ({navigation}) => {
               <Text style={styles.otpInfoText}>
                 An OTP is sent to {mobile}{' '}
               </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  console.warn('Resend Otp');
-                }}>
+              <TouchableOpacity onPress={resendOtp}>
                 <Text style={styles.resendText}>Resend OTP ?</Text>
               </TouchableOpacity>
             </View>

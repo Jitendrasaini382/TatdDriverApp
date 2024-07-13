@@ -34,10 +34,11 @@ async function _handleMethod(method, path, body, header) {
     return axios({
       method: 'GET',
       url: `${API_BASE_URL}${path}`,
-      headers: {
-        ...header,
-        Authorization: `Bearer ${token}`,
-      },
+      headers:header
+      //  {
+      //   ...header,
+      //   Authorization: `Bearer ${token}`,
+      // },
     });
   } else {
     return axios({

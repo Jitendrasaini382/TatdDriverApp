@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   SafeAreaView,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  Alert,
 } from 'react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -35,6 +36,8 @@ import {
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {LOGIN_BUTTON, REFRESH_TOKEN} from '../apis/Apis';
+import {TokenConstextApi} from '../context/GlobalContext';
 
 const {width} = Dimensions.get('window');
 
@@ -43,6 +46,35 @@ const responsiveSize = size => {
 };
 
 const TrustedDriver = ({navigation}) => {
+  const [tokenData, setTokenData] = useState([]);
+
+  // const {refreshToken} = useContext(TokenConstextApi);
+  const {setJwtToken} = useContext(TokenConstextApi);
+  const {jwtToken} = useContext(TokenConstextApi);
+
+  const refreshTheToken = async () => {
+    const rtoken = await AsyncStorage.getItem('refresh_token');
+    console.log(rtoken, 'tttttttttttttttttttttttttttttt');
+
+    REFRESH_TOKEN(rtoken)
+      .then(e => {
+        if (e.status_code == 200) {
+          AsyncStorage.setItem('jwt', e.jwt);
+          setJwtToken(e.jwt);
+          console.log('refresh token APi running');
+        }
+      })
+      .catch(err => {
+        console.log('refresh token APi Fail');
+
+        console.log(err, 'resfresh Token Error');
+      });
+  };
+
+  useEffect(() => {
+    refreshTheToken();
+  }, []);
+
   const getTokens = async () => {
     try {
       const refreshToken = await AsyncStorage.getItem('refresh_token');
@@ -58,10 +90,45 @@ const TrustedDriver = ({navigation}) => {
     }
   };
 
-  useEffect(()=>{
-    getTokens()
-  } , [])
-  
+  const [isRfdOn, setIsRfdOn] = useState(false);
+  const [loginButton, setLoginButton] = useState({
+    action: 'login_button',
+    submitR: '1',
+    rfd: '0',
+  });
+
+  const handleToggleButton = () => {
+    const newRfdValue = isRfdOn ? '0' : '1';
+    setIsRfdOn(!isRfdOn);
+    setLoginButton(prevState => ({...prevState, rfd: newRfdValue}));
+
+    if (newRfdValue === '1') {
+      LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
+        .then(response => {
+          console.log(response, 'LOGIN API RESPONSE');
+
+          if (
+            response.data.status_code === '200' &&
+            response.data.redirect === 'trusted-driver'
+          ) {
+            // Handle successful login, e.g., redirect or update UI
+
+            // navigation.navigate("AgentLogin")
+
+            Alert.alert(response.data.message);
+            console.log('RFD Logged in successfully');
+          }
+        })
+        .catch(err => {
+          console.log(err, 'LOGIN API ERROR');
+          // Handle error, e.g., show error message to user
+        });
+    }
+  };
+
+  useEffect(() => {
+    getTokens();
+  }, []);
 
   const dispatch = useDispatch();
   const {
@@ -149,12 +216,20 @@ const TrustedDriver = ({navigation}) => {
                     </View>
                   </TouchableOpacity>
                   <View style={styles.toggleView}>
-                    <ToggleSwitch
+                    {/* <ToggleSwitch
                       isOn={toggleButton}
                       onColor={AppColors.mainColor}
                       offColor={AppColors.greyColor}
                       size="medium"
                       onToggle={() => dispatch(mainToggleHandle())}
+                    /> */}
+
+                    <ToggleSwitch
+                      isOn={isRfdOn}
+                      onColor={AppColors.mainColor}
+                      offColor={AppColors.greyColor}
+                      size="medium"
+                      onToggle={handleToggleButton}
                     />
                   </View>
                 </View>

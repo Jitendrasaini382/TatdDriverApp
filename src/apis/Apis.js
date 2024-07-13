@@ -10,6 +10,20 @@ export const VERIFY_OTP_LOGIN = data => {
   return _Fetch('POST', 'verify-otp-login.php', data, {});
 };
 
+// https://www.tatd.in/app-api/driver/refresh_token.php
+
+export const REFRESH_TOKEN = data => {
+  console.log(data, ' daataaaaaaaaaaaaa');
+  return _Fetch(
+    'GET',
+    'refresh_token.php',
+    {
+      "refresh_token":data,
+    },
+    {},
+  );
+};
+
 export const DRIVER_FAQ = () => {
   return _Fetch(
     'POST',
@@ -56,4 +70,34 @@ export const CHECK_OPEN_TICKET = () => {
   );
 };
 
+// https://www.tatd.in/app-api/driver/login-button-trusted.php
 
+export const LOGIN_BUTTON = data => {
+  return _Fetch('POST', 'login-button-trusted.php', data, {});
+};
+
+// https://www.tatd.in/app-api/driver/my-bonus-history-api.php
+
+export const MY_BONUS_HISTORY = () => {
+  return _Fetch(
+    'POST',
+    'my-bonus-history-api.php',
+    {
+      action: 'get_bonus_history',
+    },
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/driver-notification-api.php
+
+export const DRIVER_NOTIFICATION = () => {
+  return _Fetch(
+    'POST',
+    'driver-notification-api.php',
+    {
+      action: 'view_all_notifications',
+    },
+    {},
+  );
+};

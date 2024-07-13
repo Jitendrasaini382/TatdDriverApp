@@ -23,7 +23,7 @@ export const GlobalContextApi = ({children}) => {
       const jwtToken = await AsyncStorage.getItem('jwt');
 
       console.log(refreshToken, 'refresh_token context');
-      // console.log(jwtToken, 'jwt_tokenmmmmmmmmmmmmmm');
+      //   console.log(jwtToken, 'jwt_token context');
       setJwtToken(jwtToken);
       setRefreshToken(refreshToken);
 

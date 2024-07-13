@@ -7,15 +7,50 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import ToggleButton from '../components/ToggleButton';
 import {OneWayIcon} from '../assets/images';
 import Header from '../components/Header';
 import AllNotificationComponent from '../components/AllNotificationsDetails';
 import {AppColors} from '../assets/Colors';
+import {DRIVER_NOTIFICATION} from '../apis/Apis';
+import {TokenConstextApi} from '../context/GlobalContext';
 
 const DriverNotifications = ({navigation}) => {
   const [currentView, setCurrentView] = useState('NOTIFICATIONS');
+  const [notificationData, setNotificationData] = useState([]);
+
+  const {jwtToken} = useContext(TokenConstextApi);
+
+  const getAllNotification = () => {
+    DRIVER_NOTIFICATION()
+      .then(e => {
+        console.log(e, 'DRIVER NOTIFICATION data');
+      })
+      .catch(err => {
+        console.log(err, 'DRIVER NOTIFICATION error');
+      });
+  };
+
+  // useEffect(() => {
+  //   getAllNotification();
+  //   decodeJWTToArray()
+  // }, []);
+
+  function decodeJWTToArray(jwtToken) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join(''),
+    );
+
+    return JSON.parse(jsonPayload);
+  }
 
   const handleToggle = label => {
     setCurrentView(label);

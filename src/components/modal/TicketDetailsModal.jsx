@@ -1,55 +1,62 @@
-import {ActivityIndicator, Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 import {SHOW_SINGLE_TICKET_DATA} from '../../apis/Apis';
 
-const TicketDetailsModal = ({ setTicketDetailsModal, ticketId }) => {
-    const [ticketDetails, setTicketDetails] = useState({});
-    const [field, setField] = useState({
-      action: 'show_single_ticket_data',
-      ticket_id: '',
-    });
-    const [isLoading, setIsLoading] = useState(true);
-  
-    useEffect(() => {
-      setField(prevField => ({
-        ...prevField,
-        ticket_id: ticketId,
-      }));
-    }, [ticketId]);
-  
-    useEffect(() => {
-      if (field.ticket_id) {
-        getSingleTicketData();
-      }
-    }, [field]);
-  
-    const getSingleTicketData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await SHOW_SINGLE_TICKET_DATA(field);
-        console.log(response, "API response");
-        
-        if (response.status_code === 200) {
-          setTicketDetails(response.ticket_data);
-          console.log(response.ticket_data, 'SHOW_SINGLE_TICKET_DATA');
-        } else if (response.status_code === 500) {
-          Alert.alert("No Data Available");
-        }
-      } catch (err) {
-        console.error(err, 'Error in SHOW_SINGLE_TICKET_DATA');
-        Alert.alert("Error", "Failed to fetch ticket data");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-  
-    if (isLoading) {
-      return <ActivityIndicator size="large" color="#0000ff" />;
+const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
+  const [ticketDetails, setTicketDetails] = useState({});
+  const [field, setField] = useState({
+    action: 'show_single_ticket_data',
+    ticket_id: '',
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setField(prevField => ({
+      ...prevField,
+      ticket_id: ticketId,
+    }));
+  }, [ticketId]);
+
+  useEffect(() => {
+    if (field.ticket_id) {
+      getSingleTicketData();
     }
-  
+  }, [field]);
+
+  const getSingleTicketData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await SHOW_SINGLE_TICKET_DATA(field);
+      // console.log(response, "API response");
+
+      if (response.status_code === 200) {
+        setTicketDetails(response.ticket_data);
+        //   console.log(response.ticket_data, 'SHOW_SINGLE_TICKET_DATA');
+      } else if (response.status_code === 500) {
+        Alert.alert('No Data Available');
+      }
+    } catch (err) {
+      console.error(err, 'Error in SHOW_SINGLE_TICKET_DATA');
+      Alert.alert('Error', 'Failed to fetch ticket data');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -108,15 +115,14 @@ const TicketDetailsModal = ({ setTicketDetailsModal, ticketId }) => {
   );
 };
 
-
 const styles = StyleSheet.create({
-    container: {
+  container: {
     flex: 1,
     backgroundColor: 'white',
     borderRadius: 5,
-    elevation: 3,
-},
-closeButton: {
+    elevation: 1,
+  },
+  closeButton: {
     backgroundColor: AppColors.silverGrey,
     height: 20,
     width: 20,
@@ -126,15 +132,15 @@ closeButton: {
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-end',
-},
-title: {
+  },
+  title: {
     fontWeight: 'bold',
     fontSize: 30,
     color: AppColors.black,
     marginLeft: 20,
     fontFamily: AppFont.regularFont,
-},
-contentContainer: {
+  },
+  contentContainer: {
     margin: 20,
     flexDirection: 'row',
     // flex: 1,
@@ -144,18 +150,18 @@ contentContainer: {
     elevation: 1,
   },
   detailsInnerContainer: {
-      borderWidth: 1,
-      borderColor: '#ccc',
-      elevation: 3,
-      shadowColor: 'white',
-      backgroundColor: '#f7f7f7',
-    },
-    contentView: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    elevation: 3,
+    shadowColor: 'white',
+    backgroundColor: '#f7f7f7',
+  },
+  contentView: {
     borderBottomWidth: 1,
     borderColor: '#ccc',
     flexDirection: 'row',
-},
-leftSectionText: {
+  },
+  leftSectionText: {
     color: 'black',
     justifyContent: 'center',
     marginLeft: 7,
@@ -168,8 +174,8 @@ leftSectionText: {
     flex: 1,
     paddingVertical: 10,
     fontFamily: AppFont.regularFont,
-},
-rightSectionText: {
+  },
+  rightSectionText: {
     flex: 2,
     color: 'black',
     justifyContent: 'center',
@@ -184,9 +190,8 @@ rightSectionText: {
     padding: 5,
     paddingVertical: 10,
     paddingLeft: 10,
-},
+  },
 });
-
 
 export default TicketDetailsModal;
 

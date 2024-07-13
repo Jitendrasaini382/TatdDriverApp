@@ -1,414 +1,414 @@
-import React, {useState} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Dimensions,
-  Alert,
-} from 'react-native';
-import Header from '../components/Header';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {AppColors} from '../assets/Colors';
-import {useRoute} from '@react-navigation/native';
-import {VERIFY_OTP_LOGIN} from '../apis/Apis';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import React, {useState} from 'react';
+// import {
+//   SafeAreaView,
+//   ScrollView,
+//   StyleSheet,
+//   Text,
+//   TextInput,
+//   TouchableOpacity,
+//   View,
+//   Dimensions,
+//   Alert,
+// } from 'react-native';
+// import Header from '../components/Header';
+// import Icon from 'react-native-vector-icons/FontAwesome';
+// import {AppColors} from '../assets/Colors';
+// import {useRoute} from '@react-navigation/native';
+// import {VERIFY_OTP_LOGIN} from '../apis/Apis';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const {width, height} = Dimensions.get('window');
-const designWidth = width;
-const designHeight = height;
+// const {width, height} = Dimensions.get('window');
+// const designWidth = width;
+// const designHeight = height;
 
-const scale = size => (width / designWidth) * size;
-const verticalScale = size => (height / designHeight) * size;
-const moderateScale = (size, factor = 0.5) =>
-  size + (scale(size) - size) * factor;
+// const scale = size => (width / designWidth) * size;
+// const verticalScale = size => (height / designHeight) * size;
+// const moderateScale = (size, factor = 0.5) =>
+//   size + (scale(size) - size) * factor;
 
-const CheckDriverOtp = ({navigation}) => {
-  const route = useRoute();
-  const {mobile} = route.params;
+// const CheckDriverOtp = ({navigation}) => {
+//   const route = useRoute();
+//   const {mobile} = route.params;
 
-  const [otp, setOtp] = useState('');
+//   const [otp, setOtp] = useState('');
 
-  const handleChange = text => {
-    setOtp(text);
-  };
-  const verifyOtp = () => {
-    if (!otp) {
-      Alert.alert("Error", "Please Enter The OTP");
-    } else if (otp.length !== 4) {
-      Alert.alert('Error', 'Please enter a 4-digit OTP');
-    } else {
-      VERIFY_OTP_LOGIN({
-        mobile: mobile,
-        otp: otp,
-      })
-      .then(async (response) => {
-        if (response.status_code === "200") {
-          await AsyncStorage.setItem('refresh_token', response.refresh_token);
-          await AsyncStorage.setItem('jwt', response.jwt);
-          navigation.navigate('TrustedDriver');
-        } else {
-          throw new Error(response.message || 'Invalid OTP. Please try again.');
-        }
-      })
-      .catch((error) => {
-        let errorMessage = error.message;
+//   const handleChange = text => {
+//     setOtp(text);
+//   };
+//   const verifyOtp = () => {
+//     if (!otp) {
+//       Alert.alert("Error", "Please Enter The OTP");
+//     } else if (otp.length !== 4) {
+//       Alert.alert('Error', 'Please enter a 4-digit OTP');
+//     } else {
+//       VERIFY_OTP_LOGIN({
+//         mobile: mobile,
+//         otp: otp,
+//       })
+//       .then(async (response) => {
+//         if (response.status_code === "200") {
+//           await AsyncStorage.setItem('refresh_token', response.refresh_token);
+//           await AsyncStorage.setItem('jwt', response.jwt);
+//           navigation.navigate('TrustedDriver');
+//         } else {
+//           throw new Error(response.message || 'Invalid OTP. Please try again.');
+//         }
+//       })
+//       .catch((error) => {
+//         let errorMessage = error.message;
         
-        // Check if the error is from the API response
-        if (error.response && error.response.data && error.response.data.message) {
-          errorMessage = error.response.data.message;
-        } else {
-          // Try to parse the error message if it's a JSON string
-          try {
-            const parsedMessage = JSON.parse(errorMessage);
-            errorMessage = parsedMessage.message || errorMessage;
-          } catch (e) {
-            // If parsing fails, use the original error message
-          }
-        }
+//         // Check if the error is from the API response
+//         if (error.response && error.response.data && error.response.data.message) {
+//           errorMessage = error.response.data.message;
+//         } else {
+//           // Try to parse the error message if it's a JSON string
+//           try {
+//             const parsedMessage = JSON.parse(errorMessage);
+//             errorMessage = parsedMessage.message || errorMessage;
+//           } catch (e) {
+//             // If parsing fails, use the original error message
+//           }
+//         }
         
-        Alert.alert( errorMessage);
-      })
-    }
-  };
+//         Alert.alert( errorMessage);
+//       })
+//     }
+//   };
 
 
-  // const verifyOtp = () => {
-  //   if (!otp) {
-  //     Alert.alert('Please Enter The OTP');
-  //   } else if (otp.length !== 4) {
-  //     Alert.alert('Error', 'Please enter a 4-digit OTP');
-  //   } else {
-  //     VERIFY_OTP_LOGIN({
-  //       mobile: mobile,
-  //       otp: otp,
-  //     })
-  //       .then(async response => {
-  //         if (response.status_code === '200') {
-  //           await AsyncStorage.setItem('refresh_token', response.refresh_token);
-  //           await AsyncStorage.setItem('jwt', response.jwt);
-  //           navigation.navigate('TrustedDriver');
-  //         } else {
-  //           let errorMessage = 'Invalid OTP. Please try again.';
-  //           if (response.message) {
-  //             try {
-  //               const parsedMessage = JSON.parse(response.message);
-  //               errorMessage = parsedMessage.message || errorMessage;
-  //             } catch (e) {
-  //               errorMessage = response.message;
-  //             }
-  //           }
-  //           Alert.alert('Attempt Failed', errorMessage);
-  //         }
-  //       })
-  //       .catch(error => {
-  //         console.error('Error verifying OTP:', error);
-  //         let errorMessage = 'An unexpected error occurred. Please try again.';
-  //         if (
-  //           error.response &&
-  //           error.response.data &&
-  //           error.response.data.message
-  //         ) {
-  //           errorMessage = error.response.data.message;
-  //         }
-  //         Alert.alert('Error', errorMessage);
-  //       });
-  //   }
-  // };
+//   // const verifyOtp = () => {
+//   //   if (!otp) {
+//   //     Alert.alert('Please Enter The OTP');
+//   //   } else if (otp.length !== 4) {
+//   //     Alert.alert('Error', 'Please enter a 4-digit OTP');
+//   //   } else {
+//   //     VERIFY_OTP_LOGIN({
+//   //       mobile: mobile,
+//   //       otp: otp,
+//   //     })
+//   //       .then(async response => {
+//   //         if (response.status_code === '200') {
+//   //           await AsyncStorage.setItem('refresh_token', response.refresh_token);
+//   //           await AsyncStorage.setItem('jwt', response.jwt);
+//   //           navigation.navigate('TrustedDriver');
+//   //         } else {
+//   //           let errorMessage = 'Invalid OTP. Please try again.';
+//   //           if (response.message) {
+//   //             try {
+//   //               const parsedMessage = JSON.parse(response.message);
+//   //               errorMessage = parsedMessage.message || errorMessage;
+//   //             } catch (e) {
+//   //               errorMessage = response.message;
+//   //             }
+//   //           }
+//   //           Alert.alert('Attempt Failed', errorMessage);
+//   //         }
+//   //       })
+//   //       .catch(error => {
+//   //         console.error('Error verifying OTP:', error);
+//   //         let errorMessage = 'An unexpected error occurred. Please try again.';
+//   //         if (
+//   //           error.response &&
+//   //           error.response.data &&
+//   //           error.response.data.message
+//   //         ) {
+//   //           errorMessage = error.response.data.message;
+//   //         }
+//   //         Alert.alert('Error', errorMessage);
+//   //       });
+//   //   }
+//   // };
 
-  //  ////////////////////////////////////
+//   //  ////////////////////////////////////
 
-  // const verifyOtp = async () => {
-  //   try {
-  // if (otp.length !== 4) {
-  //   Alert.alert('Error', 'Please enter a 4-digit OTP');
-  //       return;
-  //     }
-  //     //  else {
-  // const response = await VERIFY_OTP_LOGIN({
-  //   mobile: mobile,
-  //   otp: otp,
-  // });
-  //       console.log(otp, "Enter The Otp");
-  //     if (response.status_code == 200) {
-  //       await AsyncStorage.setItem('refresh_token', response.refresh_token);
-  //       await AsyncStorage.setItem('jwt', response.jwt);
-  //       navigation.navigate('TrustedDriver');
-  //     } else {
-  //       let errorMessage = 'Invalid OTP. Please try again.';
-  //       if (response.message) {
-  //         try {
-  //           const parsedMessage = JSON.parse(response.message);
-  //           errorMessage = parsedMessage.message || errorMessage;
-  //         } catch (e) {
-  //           errorMessage = response.message;
-  //         }
-  //       }
-  //       Alert.alert('Attempt Failed', errorMessage);
-  //     // }
-  //   }
-  // } catch (error) {
-  //   console.error('Error verifying OTP:', error);
-  //   let errorMessage = 'An unexpected error occurred. Please try again.';
-  //   if (
-  //     error.response &&
-  //     error.response.data &&
-  //     error.response.data.message
-  //   ) {
-  //     errorMessage = error.response.data.message;
-  //   }
-  //   Alert.alert('Error', errorMessage);
-  // }
-  // };
+//   // const verifyOtp = async () => {
+//   //   try {
+//   // if (otp.length !== 4) {
+//   //   Alert.alert('Error', 'Please enter a 4-digit OTP');
+//   //       return;
+//   //     }
+//   //     //  else {
+//   // const response = await VERIFY_OTP_LOGIN({
+//   //   mobile: mobile,
+//   //   otp: otp,
+//   // });
+//   //       console.log(otp, "Enter The Otp");
+//   //     if (response.status_code == 200) {
+//   //       await AsyncStorage.setItem('refresh_token', response.refresh_token);
+//   //       await AsyncStorage.setItem('jwt', response.jwt);
+//   //       navigation.navigate('TrustedDriver');
+//   //     } else {
+//   //       let errorMessage = 'Invalid OTP. Please try again.';
+//   //       if (response.message) {
+//   //         try {
+//   //           const parsedMessage = JSON.parse(response.message);
+//   //           errorMessage = parsedMessage.message || errorMessage;
+//   //         } catch (e) {
+//   //           errorMessage = response.message;
+//   //         }
+//   //       }
+//   //       Alert.alert('Attempt Failed', errorMessage);
+//   //     // }
+//   //   }
+//   // } catch (error) {
+//   //   console.error('Error verifying OTP:', error);
+//   //   let errorMessage = 'An unexpected error occurred. Please try again.';
+//   //   if (
+//   //     error.response &&
+//   //     error.response.data &&
+//   //     error.response.data.message
+//   //   ) {
+//   //     errorMessage = error.response.data.message;
+//   //   }
+//   //   Alert.alert('Error', errorMessage);
+//   // }
+//   // };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <Header />
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <View style={styles.contentContainer}>
-          <View style={styles.card}>
-            <View style={styles.cardHeader}>
-              <View style={styles.mainTopContent}>
-                <View style={styles.headingView}>
-                  <Text style={styles.headingText}>
-                    Trusted & Trained Driver
-                  </Text>
-                </View>
-                <View style={styles.triangleMainView}>
-                  <View style={styles.triangleView}></View>
-                  <View
-                    style={[
-                      styles.triangleView,
-                      styles.rotatedTriangle,
-                    ]}></View>
-                </View>
-              </View>
-              <View style={styles.titleContainer}>
-                <Text style={styles.title}>Submit OTP</Text>
-              </View>
-            </View>
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <Header />
+//       <ScrollView contentContainerStyle={styles.scrollViewContent}>
+//         <View style={styles.contentContainer}>
+//           <View style={styles.card}>
+//             <View style={styles.cardHeader}>
+//               <View style={styles.mainTopContent}>
+//                 <View style={styles.headingView}>
+//                   <Text style={styles.headingText}>
+//                     Trusted & Trained Driver
+//                   </Text>
+//                 </View>
+//                 <View style={styles.triangleMainView}>
+//                   <View style={styles.triangleView}></View>
+//                   <View
+//                     style={[
+//                       styles.triangleView,
+//                       styles.rotatedTriangle,
+//                     ]}></View>
+//                 </View>
+//               </View>
+//               <View style={styles.titleContainer}>
+//                 <Text style={styles.title}>Submit OTP</Text>
+//               </View>
+//             </View>
 
-            <View style={styles.otpInfoContainer}>
-              <Text style={styles.otpInfoText}>
-                An OTP is sent to {mobile}{' '}
-              </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  console.warn('Resend Otp');
-                }}>
-                <Text style={styles.resendText}>Resend OTP ?</Text>
-              </TouchableOpacity>
-            </View>
+//             <View style={styles.otpInfoContainer}>
+//               <Text style={styles.otpInfoText}>
+//                 An OTP is sent to {mobile}{' '}
+//               </Text>
+//               <TouchableOpacity
+//                 onPress={() => {
+//                   console.warn('Resend Otp');
+//                 }}>
+//                 <Text style={styles.resendText}>Resend OTP ?</Text>
+//               </TouchableOpacity>
+//             </View>
 
-            <View style={styles.inputContainer}>
-              <View style={styles.iconContainer}>
-                <Icon
-                  name="sign-in"
-                  size={moderateScale(16)}
-                  color="rgb(183, 183, 183)"
-                />
-              </View>
-              <View style={styles.textInputContainer}>
-                <TextInput
-                  style={styles.textInput}
-                  onChangeText={handleChange}
-                  value={otp}
-                  keyboardType="numeric"
-                  placeholder="Enter OTP or Password"
-                  placeholderTextColor="rgb(42, 42, 42)"
-                />
-              </View>
-            </View>
+//             <View style={styles.inputContainer}>
+//               <View style={styles.iconContainer}>
+//                 <Icon
+//                   name="sign-in"
+//                   size={moderateScale(16)}
+//                   color="rgb(183, 183, 183)"
+//                 />
+//               </View>
+//               <View style={styles.textInputContainer}>
+//                 <TextInput
+//                   style={styles.textInput}
+//                   onChangeText={handleChange}
+//                   value={otp}
+//                   keyboardType="numeric"
+//                   placeholder="Enter OTP or Password"
+//                   placeholderTextColor="rgb(42, 42, 42)"
+//                 />
+//               </View>
+//             </View>
 
-            <TouchableOpacity style={styles.verifyButton} onPress={verifyOtp}>
-              <Text style={styles.verifyButtonText}>Verify</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
+//             <TouchableOpacity style={styles.verifyButton} onPress={verifyOtp}>
+//               <Text style={styles.verifyButtonText}>Verify</Text>
+//             </TouchableOpacity>
+//           </View>
+//         </View>
+//       </ScrollView>
+//     </SafeAreaView>
+//   );
+// };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: AppColors.white,
-  },
-  scrollViewContent: {
-    flexGrow: 1,
-  },
-  contentContainer: {
-    flex: 1,
-    backgroundColor: AppColors.white,
-    justifyContent: 'flex-start',
-  },
-  card: {
-    margin: moderateScale(15),
-    backgroundColor: AppColors.white,
-    borderWidth: 1,
-    borderRadius: moderateScale(10),
-    borderColor: AppColors.mainColor,
-  },
-  cardHeader: {
-    backgroundColor: AppColors.mainColor,
-    // width: '100%',
-    borderRadius: moderateScale(6),
-    marginBottom: verticalScale(12),
-  },
-  headerTextContainer: {
-    flexDirection: 'row',
-    paddingVertical: verticalScale(10),
-    marginBottom: verticalScale(12),
-  },
-  mainTopContent: {
-    flexDirection: 'row',
-    paddingRight: moderateScale(6),
-    paddingVertical: verticalScale(10),
-    marginBottom: verticalScale(12),
-  },
-  headingView: {
-    backgroundColor: AppColors.white,
-    width: '80%',
-  },
-  headingText: {
-    color: AppColors.mainColor,
-    fontSize: moderateScale(14),
-    paddingLeft: moderateScale(4),
-  },
-  triangleMainView: {
-    flexDirection: 'column',
-  },
-  triangleView: {
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderRightWidth: moderateScale(12),
-    borderTopWidth: moderateScale(12),
-    borderRightColor: 'transparent',
-    borderTopColor: AppColors.white,
-  },
-  rotatedTriangle: {
-    transform: [{rotate: '270deg'}],
-  },
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: AppColors.white,
+//   },
+//   scrollViewContent: {
+//     flexGrow: 1,
+//   },
+//   contentContainer: {
+//     flex: 1,
+//     backgroundColor: AppColors.white,
+//     justifyContent: 'flex-start',
+//   },
+//   card: {
+//     margin: moderateScale(15),
+//     backgroundColor: AppColors.white,
+//     borderWidth: 1,
+//     borderRadius: moderateScale(10),
+//     borderColor: AppColors.mainColor,
+//   },
+//   cardHeader: {
+//     backgroundColor: AppColors.mainColor,
+//     // width: '100%',
+//     borderRadius: moderateScale(6),
+//     marginBottom: verticalScale(12),
+//   },
+//   headerTextContainer: {
+//     flexDirection: 'row',
+//     paddingVertical: verticalScale(10),
+//     marginBottom: verticalScale(12),
+//   },
+//   mainTopContent: {
+//     flexDirection: 'row',
+//     paddingRight: moderateScale(6),
+//     paddingVertical: verticalScale(10),
+//     marginBottom: verticalScale(12),
+//   },
+//   headingView: {
+//     backgroundColor: AppColors.white,
+//     width: '80%',
+//   },
+//   headingText: {
+//     color: AppColors.mainColor,
+//     fontSize: moderateScale(14),
+//     paddingLeft: moderateScale(4),
+//   },
+//   triangleMainView: {
+//     flexDirection: 'column',
+//   },
+//   triangleView: {
+//     width: 0,
+//     height: 0,
+//     backgroundColor: 'transparent',
+//     borderStyle: 'solid',
+//     borderRightWidth: moderateScale(12),
+//     borderTopWidth: moderateScale(12),
+//     borderRightColor: 'transparent',
+//     borderTopColor: AppColors.white,
+//   },
+//   rotatedTriangle: {
+//     transform: [{rotate: '270deg'}],
+//   },
 
-  whiteBackground: {
-    backgroundColor: AppColors.white,
-    width: '80%',
-  },
-  headerText: {
-    color: AppColors.mainColor,
-    fontSize: moderateScale(14),
-    paddingLeft: moderateScale(4),
-  },
-  triangleContainer: {
-    flexDirection: 'column',
-  },
-  triangleTop: {
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderRightWidth: moderateScale(12),
-    borderTopWidth: moderateScale(12),
-    borderRightColor: 'transparent',
-    borderTopColor: AppColors.white,
-  },
-  triangleBottom: {
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderRightWidth: moderateScale(12),
-    borderTopWidth: moderateScale(12),
-    borderRightColor: 'transparent',
-    borderTopColor: AppColors.white,
-    transform: [{rotate: '270deg'}],
-  },
-  titleContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: verticalScale(15),
-  },
-  title: {
-    fontSize: moderateScale(22),
-    marginTop: verticalScale(20),
-    fontWeight: '500',
-    textAlign: 'center',
-    letterSpacing: 0.3,
-    fontFamily: 'Roboto-Black',
-    color: 'rgb(255,255,255)',
-    lineHeight: verticalScale(24.2),
-  },
-  otpInfoContainer: {
-    margin: moderateScale(10),
-    marginTop: 0,
-    alignItems: 'flex-start',
-    paddingLeft: moderateScale(8),
-  },
-  otpInfoText: {
-    color: 'rgb(146,146,146)',
-    fontWeight: '400',
-    fontSize: moderateScale(14),
-  },
-  resendText: {
-    color: 'rgb(146,146,146)',
-    fontWeight: '400',
-    borderBottomWidth: 0.5,
-    fontSize: moderateScale(14),
-    borderColor: '#888',
-    marginTop: verticalScale(5),
-  },
-  inputContainer: {
-    marginBottom: verticalScale(30),
-    marginTop: verticalScale(25),
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    marginLeft: moderateScale(30),
-  },
-  iconContainer: {
-    borderWidth: 1,
-    borderColor: 'rgb(183,183,183)',
-    height: verticalScale(36),
-    padding: moderateScale(10),
-    paddingTop: verticalScale(5),
-  },
-  textInputContainer: {
-    borderTopWidth: 1,
-    borderRightWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: 'rgb(183,183,183)',
-    width: '80%',
-    height: verticalScale(36),
-  },
-  textInput: {
-    color: AppColors.black,
-    justifyContent: 'center',
-    textAlign: 'left',
-    height: verticalScale(36),
-    fontSize: moderateScale(14),
-  },
-  verifyButton: {
-    backgroundColor: AppColors.mainColor,
-    alignItems: 'center',
-    borderRadius: moderateScale(5),
-    justifyContent: 'center',
-    paddingVertical: verticalScale(8),
-    paddingHorizontal: moderateScale(10),
-    alignSelf: 'center',
-    marginBottom: verticalScale(40),
-    width: '40%',
-  },
-  verifyButtonText: {
-    fontSize: moderateScale(14),
-    color: AppColors.white,
-    fontWeight: '400',
-  },
-});
+//   whiteBackground: {
+//     backgroundColor: AppColors.white,
+//     width: '80%',
+//   },
+//   headerText: {
+//     color: AppColors.mainColor,
+//     fontSize: moderateScale(14),
+//     paddingLeft: moderateScale(4),
+//   },
+//   triangleContainer: {
+//     flexDirection: 'column',
+//   },
+//   triangleTop: {
+//     width: 0,
+//     height: 0,
+//     backgroundColor: 'transparent',
+//     borderStyle: 'solid',
+//     borderRightWidth: moderateScale(12),
+//     borderTopWidth: moderateScale(12),
+//     borderRightColor: 'transparent',
+//     borderTopColor: AppColors.white,
+//   },
+//   triangleBottom: {
+//     width: 0,
+//     height: 0,
+//     backgroundColor: 'transparent',
+//     borderStyle: 'solid',
+//     borderRightWidth: moderateScale(12),
+//     borderTopWidth: moderateScale(12),
+//     borderRightColor: 'transparent',
+//     borderTopColor: AppColors.white,
+//     transform: [{rotate: '270deg'}],
+//   },
+//   titleContainer: {
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     marginBottom: verticalScale(15),
+//   },
+//   title: {
+//     fontSize: moderateScale(22),
+//     marginTop: verticalScale(20),
+//     fontWeight: '500',
+//     textAlign: 'center',
+//     letterSpacing: 0.3,
+//     fontFamily: 'Roboto-Black',
+//     color: 'rgb(255,255,255)',
+//     lineHeight: verticalScale(24.2),
+//   },
+//   otpInfoContainer: {
+//     margin: moderateScale(10),
+//     marginTop: 0,
+//     alignItems: 'flex-start',
+//     paddingLeft: moderateScale(8),
+//   },
+//   otpInfoText: {
+//     color: 'rgb(146,146,146)',
+//     fontWeight: '400',
+//     fontSize: moderateScale(14),
+//   },
+//   resendText: {
+//     color: 'rgb(146,146,146)',
+//     fontWeight: '400',
+//     borderBottomWidth: 0.5,
+//     fontSize: moderateScale(14),
+//     borderColor: '#888',
+//     marginTop: verticalScale(5),
+//   },
+//   inputContainer: {
+//     marginBottom: verticalScale(30),
+//     marginTop: verticalScale(25),
+//     justifyContent: 'flex-start',
+//     alignItems: 'flex-start',
+//     flexDirection: 'row',
+//     marginLeft: moderateScale(30),
+//   },
+//   iconContainer: {
+//     borderWidth: 1,
+//     borderColor: 'rgb(183,183,183)',
+//     height: verticalScale(36),
+//     padding: moderateScale(10),
+//     paddingTop: verticalScale(5),
+//   },
+//   textInputContainer: {
+//     borderTopWidth: 1,
+//     borderRightWidth: 1,
+//     borderBottomWidth: 1,
+//     borderColor: 'rgb(183,183,183)',
+//     width: '80%',
+//     height: verticalScale(36),
+//   },
+//   textInput: {
+//     color: AppColors.black,
+//     justifyContent: 'center',
+//     textAlign: 'left',
+//     height: verticalScale(36),
+//     fontSize: moderateScale(14),
+//   },
+//   verifyButton: {
+//     backgroundColor: AppColors.mainColor,
+//     alignItems: 'center',
+//     borderRadius: moderateScale(5),
+//     justifyContent: 'center',
+//     paddingVertical: verticalScale(8),
+//     paddingHorizontal: moderateScale(10),
+//     alignSelf: 'center',
+//     marginBottom: verticalScale(40),
+//     width: '40%',
+//   },
+//   verifyButtonText: {
+//     fontSize: moderateScale(14),
+//     color: AppColors.white,
+//     fontWeight: '400',
+//   },
+// });
 
-export default CheckDriverOtp;
+// export default CheckDriverOtp;

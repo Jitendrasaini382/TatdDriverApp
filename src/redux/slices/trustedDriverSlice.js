@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  currentView: 'NOTIFICATIONS',
+  currentView: 'Hindi',
   toggleButton: false,
   mainToggleModal: false,
   mainToggleContent: false,

@@ -9,14 +9,15 @@ import {
   Alert,
 } from 'react-native';
 
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {AppColors} from '../../assets/Colors';
 import {
   CHECK_BOOKING_NUMBER,
   CHECK_OPEN_TICKET,
-  CREATE_TICKRT_DRIVER,
+  CREATE_TICKET_DRIVER,
   SHOW_DRIVER_TICKET,
 } from '../../apis/Apis';
+import {TokenConstextApi} from '../../context/GlobalContext';
 
 const CreateTicketModal = ({setCreateTicketModal}) => {
   const [field, setField] = useState({
@@ -29,91 +30,213 @@ const CreateTicketModal = ({setCreateTicketModal}) => {
     tbooking_id: '',
   });
 
-  const checkBookingNumber = () => {
-    return new Promise((resolve, reject) => {
-      CHECK_BOOKING_NUMBER(checkField)
-        .then(response => {
-          if (response.status_code == 400) {
-            Alert.alert(response.message);
-            reject(response.message);
-          } else {
-            resolve(response);
-          }
-        })
-        .catch(err => {
-          console.log(err, 'booking number error');
-          reject('Network Error');
-        });
-    });
-  };
-
-  const createDriverTicket = () => {
-    return new Promise((resolve, reject) => {
-      CREATE_TICKRT_DRIVER(field)
-        .then(response => {
-          if (response.status_code == 200) {
-            Alert.alert(response.message);
-            setCreateTicketModal(false);
-            resolve(response);
-          } else {
-            reject(response.message);
-          }
-        })
-        .catch(error => {
-          console.log(error, 'create ticket error');
-          reject('Network Error');
-        });
-    });
-  };
-
-  const checkOpenTicket = () => {
-    return new Promise((resolve, reject) => {
-      CHECK_OPEN_TICKET()
-        .then(response => {
-          if (response.status_code == 200) {
-            console.log(response.message);
-            setCreateTicketModal(false);
-
-            resolve(response);
-          } else {
-            reject(response.message);
-          }
-        })
-        .catch(err => {
-          console.log(err, 'check open ticket error');
-          reject('Network Error');
-        });
-    });
-  };
+  const {setTicketData} = useContext(TokenConstextApi);
+  const {setButtonShow} = useContext(TokenConstextApi);
+  const {setShowButtonText} = useContext(TokenConstextApi);
 
   const handleChange = (name, value) => {
     setField({...field, [name]: value});
     setCheckField({...checkField, [name]: value});
   };
 
-  const handleCreateTicket = () => {
-    if (!field.remarks || !field.tbooking_id) {
-      Alert.alert('Please enter the value');
-      return;
-    }
-
-    checkOpenTicket()
+  const checkOpenTicket = () => {
+    CHECK_OPEN_TICKET()
       .then(response => {
-        if (response.status_code == 200) {
-          Alert.alert(response.message);
+        if (
+          response.status_code == 200 &&
+          response.message == 'no_open_ticket_found'
+        ) {
+          setButtonShow(true);
+          setShowButtonText('');
         } else {
-          return checkBookingNumber();
+          setButtonShow(false);
+          setShowButtonText(response.message);
         }
       })
-      .then(response => {
-        if (response && response.status_code !== 400) {
-          return createDriverTicket();
-        }
-      })
-      .catch(error => {
-        Alert.alert(error);
+      .catch(err => {
+        console.log(err, ' Network Error');
       });
   };
+
+  const showDriverTicket = () => {
+    SHOW_DRIVER_TICKET()
+      .then(e => {
+        if (e.message == 'Success') {
+          console.log(e.tickets, 'aaaaaaaaaaaaaaaaaaaaa');
+          setTicketData(e.tickets);
+        }
+      })
+      .catch(err => {
+        console.log(err, 'show Driver Ticket Error');
+      });
+  };
+
+  // const checkBookingNumber = () => {
+  //   CHECK_BOOKING_NUMBER(checkField)
+  //     .then(async e => {
+  //       console.log(e, 'runnnnnnnnnnnnnnn');
+
+  //       if (e.status_code == 200) {
+  //         await CREATE_TICKET_DRIVER(field)
+  //           .then(e => {
+  //             if (e.status_code == 200) {
+  //               console.log('runnnnnnnnnnnnnnnnn1');
+  //               setCreateTicketModal(false);
+  //               checkOpenTicket(), showDriverTicket();
+  //               Alert.alert(e.message);
+  //               console.log('runnnnnnnnnnnnnnnnn2');
+  //             } else {
+  //               Alert.alert('Network Error');
+  //             }
+  //           })
+  //           .catch(err => {
+  //             console.log(err, 'Create Ticket Catch');
+  //           });
+  //       } else if (e.status_code == 400) {
+  //         Alert.alert(e.message);
+  //       }
+  //     })
+  //     .catch(err => {
+  //       Alert.alert('Please Check the Ticket Booking No.');
+  //     });
+  // };
+
+  const checkBookingNumber = () => {
+    CHECK_BOOKING_NUMBER(checkField)
+      .then(async e => {
+        console.log(e, 'runnnnnnnnnnnnnnn');
+
+        if (e.status_code == 200) {
+          try {
+            const result = await CREATE_TICKET_DRIVER(field);
+            if (result.status_code == 200) {
+              console.log('runnnnnnnnnnnnnnnnn1');
+              setCreateTicketModal(false);
+              Alert.alert('Success', result.message, [
+                {
+                  text: 'OK',
+                  onPress: async () => {
+                    await checkOpenTicket();
+                    await showDriverTicket();
+                    console.log('runnnnnnnnnnnnnnnnn2');
+                  },
+                },
+              ]);
+            } else {
+              Alert.alert('Network Error');
+            }
+          } catch (err) {
+            console.log(err, 'Create Ticket Catch');
+            Alert.alert(
+              'Error',
+              'An error occurred while creating the ticket.',
+            );
+          }
+        } else if (e.status_code == 400) {
+          Alert.alert(e.message);
+        }
+      })
+      .catch(err => {
+        Alert.alert('Please Check the Ticket Booking No.');
+      });
+  };
+
+  const handleCreateTicket = () => {
+    if (!field.remarks || !field.tbooking_id) {
+      Alert.alert('Please enter all required values');
+      return;
+    }
+    checkBookingNumber();
+  };
+
+  // const handleCreateTicket = () => {};
+
+  // const checkBookingNumber = () => {
+  //   console.log(checkField, 'checkField Data');
+  //   return new Promise((resolve, reject) => {
+  //     CHECK_BOOKING_NUMBER(checkField)
+  //       .then(response => {
+  //         console.log(response, 'Booking Number Response');
+  //         if (response.status_code === 200) {
+  //           resolve(response); // Booking number check is successful
+  //         } else {
+  //           reject(response.message);
+  //         }
+  //       })
+  //       .catch(err => {
+  //         console.error('Booking number error:', err);
+  //         reject('Network Error Booking No. Error');
+  //       });
+  //   });
+  // };
+
+  // const createDriverTicket = () => {
+  //   console.log(field, 'field Data');
+  //   return new Promise((resolve, reject) => {
+  //     CREATE_TICKET_DRIVER(field)
+  //       .then(response => {
+  //         console.log(response, 'Create Ticket Response');
+  //         if (response.status_code === 200) {
+  //           resolve(response);
+  //           Alert.alert(
+  //             'Success',
+  //             typeof response.message === 'string'
+  //               ? response.message
+  //               : 'Driver ticket created successfully',
+  //           );
+  //         } else {
+  //           reject(response.message);
+  //         }
+  //       })
+  //       .catch(error => {
+  //         console.error('Create ticket error:', error);
+  //         reject('Network Error');
+  //       });
+  //   });
+  // };
+
+  // const handleCreateTicket = () => {
+  //   if (!field.remarks || !field.tbooking_id) {
+  //     Alert.alert('Please enter all required values');
+  //     return;
+  //   }
+
+  //   checkBookingNumber()
+  //     .then(response => {
+  //       // console.log(,"ttttttttttttttttttttt");
+  //       // Booking check successful, proceed to create driver ticket
+  //       if (response.status_code == 200) {
+  //         createDriverTicket();
+  //       } else {
+  //         Alert.alert('Please Check Booking No.');
+  //       }
+  //     })
+  //     .then(response => {
+  //       // Driver ticket creation successful
+  //       Alert.alert(
+  //         'Success',
+  //         typeof response.message === 'string'
+  //           ? response.message
+  //           : 'Driver ticket created successfully',
+  //       );
+  //     })
+  //     .catch(error => {
+  //       // Handle errors from both APIs
+  //       if (
+  //         error === 'Network Error Booking No. Error' ||
+  //         error === 'Network Error'
+  //       ) {
+  //         Alert.alert('Error', 'Network error occurred. Please try again.');
+  //       } else {
+  //         Alert.alert(
+  //           'Error',
+  //           typeof error === 'string'
+  //             ? error
+  //             : 'Failed to create driver ticket',
+  //         );
+  //       }
+  //     });
+  // };
 
   return (
     <ScrollView>
@@ -249,7 +372,7 @@ export default CreateTicketModal;
 //   Alert,
 // } from 'react-native';
 // import {AppColors} from '../../assets/Colors';
-// import {CHECK_BOOKING_NUMBER, CREATE_TICKRT_DRIVER} from '../../apis/Apis';
+// import {CHECK_BOOKING_NUMBER, CREATE_TICKET_DRIVER} from '../../apis/Apis';
 
 // const CreateTicketModal = ({setCreateTicketModal}) => {
 //   const [field, setField] = useState({
@@ -283,7 +406,7 @@ export default CreateTicketModal;
 //       console.log(err , "booking number errrr");
 //     })
 
-//     // CREATE_TICKRT_DRIVER(field)
+//     // CREATE_TICKET_DRIVER(field)
 //     //   .then(response => {
 //     //     Alert.alert(response.message);
 //     //   })

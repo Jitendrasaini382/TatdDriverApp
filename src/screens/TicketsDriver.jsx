@@ -19,16 +19,26 @@ import {TokenConstextApi} from '../context/GlobalContext';
 import AccordionData from '../components/AccordianData';
 import CreateTicketModal from '../components/modal/CreateTicketModal';
 
-//  {/* Show Ticket data component start*/}
 
-const TicketList = ({setTicketDetailsModal}) => {
+
+const TicketsDriver = () => {
+  const [createTicketModal, setCreateTicketModal] = useState(false);
+  const [ticketDetailsModal, setTicketDetailsModal] = useState(false);
+  const {selectedTicketId} = useContext(TokenConstextApi);
+
+  const {setButtonShow} = useContext(TokenConstextApi);
+  const {buttonShow} = useContext(TokenConstextApi);
+  const {setShowButtonText} = useContext(TokenConstextApi);
+  const {showButtonText} = useContext(TokenConstextApi);
   const {ticketsData} = useContext(TokenConstextApi);
   const {setTicketData} = useContext(TokenConstextApi);
 
   const {setSelectedTicketId} = useContext(TokenConstextApi);
 
   const showDriverTicket = () => {
-    SHOW_DRIVER_TICKET()
+    SHOW_DRIVER_TICKET({
+      action: 'show_driver_ticket',
+    })
       .then(e => {
         if (e.message == 'Success') {
           setTicketData(e.tickets);
@@ -41,6 +51,29 @@ const TicketList = ({setTicketDetailsModal}) => {
 
   useEffect(() => {
     showDriverTicket();
+  }, []);
+
+  const checkOpenTicket = () => {
+    CHECK_OPEN_TICKET({action: 'open_ticket'})
+      .then(response => {
+        if (
+          response.status_code == 200 &&
+          response.message == 'no_open_ticket_found'
+        ) {
+          setButtonShow(true);
+          setShowButtonText('');
+        } else {
+          setButtonShow(false);
+          setShowButtonText(response.message);
+        }
+      })
+      .catch(err => {
+        console.log(err, ' Network Error');
+      });
+  };
+
+  useEffect(() => {
+    checkOpenTicket();
   }, []);
 
   const renderItem = (item, index) => (
@@ -69,61 +102,6 @@ const TicketList = ({setTicketDetailsModal}) => {
       </View>
     </View>
   );
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.headerCell1}>
-          <Text style={styles.headerText}>Ticket ID</Text>
-        </View>
-        <View style={[styles.headerCell2, styles.middleHeaderCell]}>
-          <Text style={styles.headerText}>Created Date</Text>
-        </View>
-        <View style={styles.headerCell3}>
-          <Text style={styles.headerText}>Status</Text>
-        </View>
-      </View>
-      {ticketsData && ticketsData.map((item, index) => renderItem(item, index))}
-    </View>
-  );
-};
-
-// {/* Show Ticket data component end */}
-
-// {/* Main Component Start */}
-
-const TicketsDriver = () => {
-  const [createTicketModal, setCreateTicketModal] = useState(false);
-  const [ticketDetailsModal, setTicketDetailsModal] = useState(false);
-  const {selectedTicketId} = useContext(TokenConstextApi);
-
-  const {setButtonShow} = useContext(TokenConstextApi);
-  const {buttonShow} = useContext(TokenConstextApi);
-  const {setShowButtonText} = useContext(TokenConstextApi);
-  const {showButtonText} = useContext(TokenConstextApi);
-
-  const checkOpenTicket = () => {
-    CHECK_OPEN_TICKET()
-      .then(response => {
-        if (
-          response.status_code == 200 &&
-          response.message == 'no_open_ticket_found'
-        ) {
-          setButtonShow(true);
-          setShowButtonText('');
-        } else {
-          setButtonShow(false);
-          setShowButtonText(response.message);
-        }
-      })
-      .catch(err => {
-        console.log(err, ' Network Error');
-      });
-  };
-
-  useEffect(() => {
-    checkOpenTicket();
-  }, []);
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -179,7 +157,22 @@ const TicketsDriver = () => {
           />
         </Modal>
 
-        <TicketList setTicketDetailsModal={setTicketDetailsModal} />
+        {/* <TicketList setTicketDetailsModal={setTicketDetailsModal} /> */}
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <View style={styles.headerCell1}>
+              <Text style={styles.headerText}>Ticket ID</Text>
+            </View>
+            <View style={[styles.headerCell2, styles.middleHeaderCell]}>
+              <Text style={styles.headerText}>Created Date</Text>
+            </View>
+            <View style={styles.headerCell3}>
+              <Text style={styles.headerText}>Status</Text>
+            </View>
+          </View>
+          {ticketsData &&
+            ticketsData.map((item, index) => renderItem(item, index))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

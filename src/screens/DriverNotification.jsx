@@ -23,34 +23,21 @@ const DriverNotifications = ({navigation}) => {
   const {jwtToken} = useContext(TokenConstextApi);
 
   const getAllNotification = () => {
-    DRIVER_NOTIFICATION()
+    DRIVER_NOTIFICATION({
+      action: 'view_all_notifications',
+    })
       .then(e => {
-        console.log(e, 'DRIVER NOTIFICATION data');
+        console.log(e.notifications, 'DRIVER NOTIFICATION data');
+        setNotificationData(e.notifications)
       })
       .catch(err => {
         console.log(err, 'DRIVER NOTIFICATION error');
       });
   };
 
-  // useEffect(() => {
-  //   getAllNotification();
-  //   decodeJWTToArray()
-  // }, []);
-
-  function decodeJWTToArray(jwtToken) {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map(function (c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        })
-        .join(''),
-    );
-
-    return JSON.parse(jsonPayload);
-  }
+  useEffect(() => {
+    getAllNotification();
+  }, []);
 
   const handleToggle = label => {
     setCurrentView(label);

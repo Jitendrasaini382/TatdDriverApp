@@ -31,8 +31,12 @@ const MyBonusStatusHistory = () => {
   //   },
   // ];
 
-  const getAllNotification = () => {
-    MY_BONUS_HISTORY()
+  const getAllBonusData = () => {
+    MY_BONUS_HISTORY(
+      {
+        action: 'get_bonus_history',
+      }
+    )
       .then(e => {
         // console.log(e,"eeeeeee");
         if (e.status_code == 200 && e.message == 'success') {
@@ -48,7 +52,7 @@ const MyBonusStatusHistory = () => {
   };
 
   useEffect(() => {
-    getAllNotification();
+    getAllBonusData();
   }, []);
 
   return (

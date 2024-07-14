@@ -12,8 +12,9 @@ const _Fetch = (method, path, body, header) => {
   return new Promise((resolve, reject) => {
     _handleMethod(method, path, body, header)
       .then(e => {
-        console.log(e.data.status_code, 'APICALL SUCCESFUL');
+        console.log(e.status, 'APICALL SUCCESFUL');
         if (e.status == 200) {
+          // if (e.data.status_code == 200) {
           resolve(e.data);
         } else {
           reject(e.data.message);
@@ -27,8 +28,6 @@ const _Fetch = (method, path, body, header) => {
 
 async function _handleMethod(method, path, body, header) {
   console.log(method, path, body, header, 'fetchHandle Data');
-  const token = await getToken();
-  // console.log(token,"llllllllllllll");
   
   if (method == 'GET') {
     return axios({

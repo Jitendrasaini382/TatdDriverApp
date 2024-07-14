@@ -63,7 +63,9 @@ const AccordionData = () => {
   const [faqData, setFaqData] = useState([]);
 
   const getFaqData = () => {
-    DRIVER_FAQ()
+    DRIVER_FAQ( {
+            action: 'driver_faq',
+          })
       .then(e => {
         if (e.status_code == '200') {
           setFaqData(e.faq_data);

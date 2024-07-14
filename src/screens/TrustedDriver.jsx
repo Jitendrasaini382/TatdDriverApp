@@ -52,28 +52,7 @@ const TrustedDriver = ({navigation}) => {
   const {setJwtToken} = useContext(TokenConstextApi);
   const {jwtToken} = useContext(TokenConstextApi);
 
-  const refreshTheToken = async () => {
-    const rtoken = await AsyncStorage.getItem('refresh_token');
-    console.log(rtoken, 'tttttttttttttttttttttttttttttt');
-
-    REFRESH_TOKEN(rtoken)
-      .then(e => {
-        if (e.status_code == 200) {
-          AsyncStorage.setItem('jwt', e.jwt);
-          setJwtToken(e.jwt);
-          console.log('refresh token APi running');
-        }
-      })
-      .catch(err => {
-        console.log('refresh token APi Fail');
-
-        console.log(err, 'resfresh Token Error');
-      });
-  };
-
-  useEffect(() => {
-    refreshTheToken();
-  }, []);
+  console.log(jwtToken,"trusted context jwt");
 
   const getTokens = async () => {
     try {
@@ -108,8 +87,7 @@ const TrustedDriver = ({navigation}) => {
           console.log(response, 'LOGIN API RESPONSE');
 
           if (
-            response.data.status_code === '200' &&
-            response.data.redirect === 'trusted-driver'
+            response.data.status_code === '200'
           ) {
             // Handle successful login, e.g., redirect or update UI
 

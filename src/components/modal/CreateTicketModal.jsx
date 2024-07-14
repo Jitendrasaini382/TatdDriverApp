@@ -40,7 +40,11 @@ const CreateTicketModal = ({setCreateTicketModal}) => {
   };
 
   const checkOpenTicket = () => {
-    CHECK_OPEN_TICKET()
+    CHECK_OPEN_TICKET(
+      {
+        action: 'open_ticket',
+      }
+    )
       .then(response => {
         if (
           response.status_code == 200 &&
@@ -59,7 +63,11 @@ const CreateTicketModal = ({setCreateTicketModal}) => {
   };
 
   const showDriverTicket = () => {
-    SHOW_DRIVER_TICKET()
+    SHOW_DRIVER_TICKET(
+      {
+        action: 'show_driver_ticket',
+      }
+    )
       .then(e => {
         if (e.message == 'Success') {
           console.log(e.tickets, 'aaaaaaaaaaaaaaaaaaaaa');

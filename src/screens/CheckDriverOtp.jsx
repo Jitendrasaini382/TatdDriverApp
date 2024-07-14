@@ -70,19 +70,12 @@ const CheckDriverOtp = ({navigation}) => {
       })
         .then(async response => {
           if (response.status_code === '200') {
+            await  setJwtToken(response.refresh_token);
+            await setRefreshToken(response.jwt);
             await AsyncStorage.setItem('refresh_token', response.refresh_token);
             await AsyncStorage.setItem('jwt', response.jwt);
 
-            setJwtToken(response.refresh_token);
-            setRefreshToken(response.jwt);
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{name: 'TrustedDriver'}],
-              }),
-            );
 
-            // navigation.navigate('TrustedDriver');
           } else {
             throw new Error(
               response.message || 'Invalid OTP. Please try again.',

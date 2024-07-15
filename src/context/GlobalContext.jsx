@@ -17,26 +17,26 @@ export const GlobalContextApi = ({children}) => {
   const [buttonShow, setButtonShow] = useState(false);
   const [showButtonText, setShowButtonText] = useState('');
 
-  const getTokens = async () => {
-    try {
-      const refreshToken = await AsyncStorage.getItem('refresh_token');
-      const jwtToken = await AsyncStorage.getItem('jwt');
+  // const getTokens = async () => {
+  //   try {
+  //     const refreshToken = await AsyncStorage.getItem('refresh_token');
+  //     const jwtToken = await AsyncStorage.getItem('jwt');
 
-      console.log(refreshToken, 'refresh_token context');
-      //   console.log(jwtToken, 'jwt_token context');
-      setJwtToken(jwtToken);
-      setRefreshToken(refreshToken);
+  //     console.log(refreshToken, 'refresh_token context');
+  //     //   console.log(jwtToken, 'jwt_token context');
+  //     setJwtToken(jwtToken);
+  //     setRefreshToken(refreshToken);
 
-      return {refreshToken, jwtToken};
-    } catch (error) {
-      console.error('Error retrieving tokens:', error);
-      return null;
-    }
-  };
+  //     return {refreshToken, jwtToken};
+  //   } catch (error) {
+  //     console.error('Error retrieving tokens:', error);
+  //     return null;
+  //   }
+  // };
 
-  useEffect(() => {
-    getTokens();
-  }, []);
+  // useEffect(() => {
+  //   getTokens();
+  // }, []);
 
   const values = {
     data,

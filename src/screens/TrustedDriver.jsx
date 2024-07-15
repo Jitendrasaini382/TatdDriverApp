@@ -54,20 +54,24 @@ const TrustedDriver = ({navigation}) => {
 
   console.log(jwtToken,"trusted context jwt");
 
-  const getTokens = async () => {
-    try {
-      const refreshToken = await AsyncStorage.getItem('refresh_token');
-      const jwtToken = await AsyncStorage.getItem('jwt');
+  // const getTokens = async () => {
+  //   try {
+  //     const refreshToken = await AsyncStorage.getItem('refresh_token');
+  //     const jwtToken = await AsyncStorage.getItem('jwt');
 
-      console.log(refreshToken, 'refresh_token trusted');
-      // console.log(jwtToken, 'jwt_token trusted');
+  //     console.log(refreshToken, 'refresh_token trusted');
+  //     // console.log(jwtToken, 'jwt_token trusted');
 
-      // return {refreshToken, jwtToken};
-    } catch (error) {
-      console.error('Error retrieving tokens:', error);
-      return null;
-    }
-  };
+  //     // return {refreshToken, jwtToken};
+  //   } catch (error) {
+  //     console.error('Error retrieving tokens:', error);
+  //     return null;
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getTokens();
+  // }, []);
 
   const [isRfdOn, setIsRfdOn] = useState(false);
   const [loginButton, setLoginButton] = useState({
@@ -104,9 +108,7 @@ const TrustedDriver = ({navigation}) => {
     }
   };
 
-  useEffect(() => {
-    getTokens();
-  }, []);
+ 
 
   const dispatch = useDispatch();
   const {

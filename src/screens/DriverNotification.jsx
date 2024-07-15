@@ -13,31 +13,28 @@ import {OneWayIcon} from '../assets/images';
 import Header from '../components/Header';
 import AllNotificationComponent from '../components/AllNotificationsDetails';
 import {AppColors} from '../assets/Colors';
-import {DRIVER_NOTIFICATION} from '../apis/Apis';
-import {TokenConstextApi} from '../context/GlobalContext';
+import { DRIVER_NOTIFICATION } from '../apis/Apis';
 
 const DriverNotifications = ({navigation}) => {
   const [currentView, setCurrentView] = useState('NOTIFICATIONS');
   const [notificationData, setNotificationData] = useState([]);
 
-  const {jwtToken} = useContext(TokenConstextApi);
+  // const getAllNotification = () => {
+  //   DRIVER_NOTIFICATION({
+  //     action: 'view_all_notifications',
+  //   })
+  //     .then(e => {
+  //       console.log(e.notifications, 'DRIVER NOTIFICATION data');
+  //       setNotificationData(e.notifications);
+  //     })
+  //     .catch(err => {
+  //       console.log(err, 'DRIVER NOTIFICATION error');
+  //     });
+  // };
 
-  const getAllNotification = () => {
-    DRIVER_NOTIFICATION({
-      action: 'view_all_notifications',
-    })
-      .then(e => {
-        console.log(e.notifications, 'DRIVER NOTIFICATION data');
-        setNotificationData(e.notifications)
-      })
-      .catch(err => {
-        console.log(err, 'DRIVER NOTIFICATION error');
-      });
-  };
-
-  useEffect(() => {
-    getAllNotification();
-  }, []);
+  // useEffect(() => {
+  //   getAllNotification();
+  // }, []);
 
   const handleToggle = label => {
     setCurrentView(label);

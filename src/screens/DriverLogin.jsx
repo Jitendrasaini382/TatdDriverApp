@@ -28,7 +28,8 @@ const moderateScale = (size, factor = 0.5) =>
 
 const DriverLogin = () => {
   const navigation = useNavigation();
-  const [field, setField] = useState("");
+  const [field, setField] = useState('');
+  const [error, setError] = useState(null);
 
   const handleChange = text => {
     setField({mobile: text});
@@ -37,21 +38,18 @@ const DriverLogin = () => {
   const sendOtp = async () => {
     try {
       if (!field.mobile) {
-        Alert.alert('Please Enter Mobile No.');
+        // Alert.alert('Please Enter Mobile No.');
+        setError('Please Enter Mobile No.');
         return;
       } else if (field.mobile.length !== 10) {
-        Alert.alert('Please Enter Valid Mobile No.');
+        setError('Please Enter Valid Mobile No.');
+        // Alert.alert('Please Enter Valid Mobile No.');
         return;
       }
-
+      setError(null);
       const response = await DRIVER_LOGIN(field);
-      console.log(response.status_code);
-      if (response.status_code == 200) {
-        console.log(response);
-        navigation.navigate('CheckDriverOtp', {mobile: field.mobile});
-      } else {
-        console.log('Failed to retrieve OTP');
-      }
+      console.log(response);
+      navigation.navigate('CheckDriverOtp', {mobile: field.mobile});
     } catch (err) {
       console.log(err, 'err');
     }
@@ -101,6 +99,11 @@ const DriverLogin = () => {
                     placeholderTextColor="rgb(42, 42, 42)"
                   />
                 </View>
+              </View>
+              <View style={{marginHorizontal: moderateScale(30)}}>
+                <Text style={{color: 'red', fontSize: 10, marginTop: 10}}>
+                  {error}
+                </Text>
               </View>
 
               <TouchableOpacity style={styles.btnView} onPress={sendOtp}>

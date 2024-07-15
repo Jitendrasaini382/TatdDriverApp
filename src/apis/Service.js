@@ -1,3 +1,209 @@
+// import axios from 'axios';
+// import { API_BASE_URL } from '../constant/path';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// axios.interceptors.request.use(async (config) => {
+//   try {
+//     const token = await getToken();
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
+//     return config;
+//   } catch (error) {
+//     console.error('Error in request interceptor:', error);
+//     return Promise.reject(error);
+//   }
+// }, (error) => {
+//   return Promise.reject(error);
+// });
+
+// const getToken = async () => {
+//   try {
+//     return await AsyncStorage.getItem('jwt');
+//   } catch (error) {
+//     console.error('Error getting token:', error);
+//     return null;
+//   }
+// };
+
+// const _Fetch = (method, path, body, headers = {}) => {
+//   return new Promise((resolve, reject) => {
+//     _handleMethod(method, path, body, headers)
+//       .then(response => {
+//         console.log(response.status, 'API CALL SUCCESSFUL');
+//         if (response.data.status_code === 200) {
+//           resolve(response.data);
+//         } else {
+//           reject(new Error(response.data.message || 'Unknown error occurred'));
+//         }
+//       })
+//       .catch(err => {
+//         console.error(`API call failed for ${method} ${path}:`, err);
+//         reject(err);
+//       });
+//   });
+// };
+
+// async function _handleMethod(method, path, body, headers) {
+//   console.log(method, path, body, headers, 'fetchHandle Data');
+
+//   const config = {
+//     method: method,
+//     url: `${API_BASE_URL}${path}`,
+//     headers: {
+//       'Content-Type': 'application/json',
+//       ...headers
+//     }
+//   };
+
+//   if (method !== 'GET' && body) {
+//     config.data = body;
+//   } else if (method === 'GET' && body) {
+//     config.params = body;
+//   }
+
+//   try {
+//     return await axios(config);
+//   } catch (error) {
+//     console.error(`Error in _handleMethod for ${method} ${path}:`, error);
+//     throw error;
+//   }
+// }
+
+// export default _Fetch;
+
+
+
+
+
+
+
+
+
+
+
+
+// // import axios from 'axios';
+// // import { API_BASE_URL } from '../constant/path';
+// // import AsyncStorage from '@react-native-async-storage/async-storage';
+// // import { Alert } from 'react-native';
+
+// // axios.interceptors.request.use(async (config) => {
+// //   try {
+// //     if (await shouldRefreshToken()) {
+// //       await refreshToken();
+// //     }
+// //     const token = await getToken();
+// //     if (token) {
+// //       config.headers.Authorization = `Bearer ${token}`;
+// //     }
+// //     return config;
+// //   } catch (error) {
+// //     console.error('Error in request interceptor:', error);
+// //     return Promise.reject(error);
+// //   }
+// // }, (error) => {
+// //   return Promise.reject(error);
+// // });
+
+// // const getToken = async () => {
+// //   try {
+// //     return await AsyncStorage.getItem('jwt');
+// //   } catch (error) {
+// //     console.error('Error getting token:', error);
+// //     return null;
+// //   }
+// // };
+
+// // async function shouldRefreshToken() {
+// //   try {
+// //     const expirationTime = await AsyncStorage.getItem('tokenExpiration');
+// //     return expirationTime && Date.now() >= parseInt(expirationTime) - (5 * 60 * 1000);
+// //   } catch (error) {
+// //     console.error('Error checking token expiration:', error);
+// //     return true; // Refresh token on error to be safe
+// //   }
+// // }
+
+// // async function refreshToken() {
+// //   Alert.alert('jj')
+// //   try {
+// //     const refreshToken = await AsyncStorage.getItem('refreshToken');
+// //     if (!refreshToken) {
+// //       throw new Error('No refresh token available');
+// //     }
+// //     const response = await axios.get(`${API_BASE_URL}refresh_token.php`, {
+// //       params: { refreshToken: refreshToken }
+// //     });
+// //     console.log(response,'hhhhhhhhhhhhhhhhhhhhhhh');
+// //     if (response.data && response.data.jwt) {
+// //       await AsyncStorage.setItem('jwt', response.data.jwt);
+// //       // Set new expiration time (e.g., 50 minutes from now)
+// //       await AsyncStorage.setItem('tokenExpiration', (Date.now() + 50 * 60 * 1000).toString());
+// //     } else {
+// //       throw new Error('Invalid response from refresh token endpoint');
+// //     }
+// //   } catch (error) {
+// //     console.error('Error in Token Refresh:', error);
+// //     throw error;
+// //   }
+// // }
+
+// // const _Fetch = (method, path, body, headers = {}) => {
+// //   return new Promise((resolve, reject) => {
+// //     _handleMethod(method, path, body, headers)
+// //       .then(response => {
+// //         console.log(response.status, 'API CALL SUCCESSFUL');
+// //         if (response.data.status_code == 200) {
+// //           resolve(response.data);
+// //         } else {
+// //           reject(new Error(response.data.message || 'Unknown error occurred'));
+// //         }
+// //       })
+// //       .catch(err => {
+// //         console.error(`API call failed for ${method} ${path}:`, err);
+// //         reject(err);
+// //       });
+// //   });
+// // };
+
+// // async function _handleMethod(method, path, body, headers) {
+// //   console.log(method, path, body, headers, 'fetchHandle Data');
+
+// //   const config = {
+// //     method: method,
+// //     url: `${API_BASE_URL}${path}`,
+// //     headers: {
+// //       'Content-Type': 'application/json',
+// //       ...headers
+// //     }
+// //   };
+
+// //   if (method !== 'GET' && body) {
+// //     config.data = body;
+// //   } else if (method === 'GET' && body) {
+// //     config.params = body;
+// //   }
+
+// //   try {
+// //     return await axios(config);
+// //   } catch (error) {
+// //     console.error(`Error in _handleMethod for ${method} ${path}:`, error);
+// //     throw error;
+// //   }
+// // }
+
+// // export default _Fetch;
+
+
+
+
+
+
+
+
+
+
 import axios from 'axios';
 import {API_BASE_URL} from '../constant/path';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,14 +213,13 @@ const getToken = async () => {
   return token;
 };
 
-
 const _Fetch = (method, path, body, header) => {
   return new Promise((resolve, reject) => {
     _handleMethod(method, path, body, header)
       .then(e => {
         console.log(e.status, 'APICALL SUCCESFUL');
-        if (e.status == 200) {
-          // if (e.data.status_code == 200) {
+        // if (e.status == 200) {
+        if (e.data.status_code == 200) {
           resolve(e.data);
         } else {
           reject(e.data.message);
@@ -28,16 +233,15 @@ const _Fetch = (method, path, body, header) => {
 
 async function _handleMethod(method, path, body, header) {
   console.log(method, path, body, header, 'fetchHandle Data');
-  
+
   if (method == 'GET') {
     return axios({
       method: 'GET',
       url: `${API_BASE_URL}${path}`,
-      headers:header
-      //  {
-      //   ...header,
-      //   Authorization: `Bearer ${token}`,
-      // },
+      headers: {
+        ...header,
+        'Content-Type': 'text/plain',
+      },
     });
   } else {
     return axios({
@@ -60,13 +264,7 @@ async function changeHeaders(header) {
 
 export default _Fetch;
 
-
-
-
-
-
-
-
+// /////////////////////////////////////////////////////////////
 
 
 // import axios from 'axios';

@@ -19,8 +19,6 @@ import {TokenConstextApi} from '../context/GlobalContext';
 import AccordionData from '../components/AccordianData';
 import CreateTicketModal from '../components/modal/CreateTicketModal';
 
-
-
 const TicketsDriver = () => {
   const [createTicketModal, setCreateTicketModal] = useState(false);
   const [ticketDetailsModal, setTicketDetailsModal] = useState(false);
@@ -40,9 +38,7 @@ const TicketsDriver = () => {
       action: 'show_driver_ticket',
     })
       .then(e => {
-        if (e.message == 'Success') {
-          setTicketData(e.tickets);
-        }
+        setTicketData(e.tickets);
       })
       .catch(err => {
         console.log(err, 'show Driver Ticket Error');
@@ -50,6 +46,7 @@ const TicketsDriver = () => {
   };
 
   useEffect(() => {
+    checkOpenTicket();
     showDriverTicket();
   }, []);
 
@@ -72,9 +69,7 @@ const TicketsDriver = () => {
       });
   };
 
-  useEffect(() => {
-    checkOpenTicket();
-  }, []);
+ 
 
   const renderItem = (item, index) => (
     <View key={item.id} style={[styles.row, index === 0 && styles.firstRow]}>

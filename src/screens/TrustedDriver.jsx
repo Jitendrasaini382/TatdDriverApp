@@ -36,8 +36,9 @@ import {
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {LOGIN_BUTTON, REFRESH_TOKEN} from '../apis/Apis';
+import {LOGIN_BUTTON} from '../apis/Apis';
 import {TokenConstextApi} from '../context/GlobalContext';
+import {jwtDecode} from 'jwt-decode';
 
 const {width} = Dimensions.get('window');
 
@@ -47,31 +48,23 @@ const responsiveSize = size => {
 
 const TrustedDriver = ({navigation}) => {
   const [tokenData, setTokenData] = useState([]);
-
-  // const {refreshToken} = useContext(TokenConstextApi);
   const {setJwtToken} = useContext(TokenConstextApi);
   const {jwtToken} = useContext(TokenConstextApi);
 
-  console.log(jwtToken,"trusted context jwt");
+  // const {refreshToken} = useContext(TokenConstextApi);
 
-  // const getTokens = async () => {
-  //   try {
-  //     const refreshToken = await AsyncStorage.getItem('refresh_token');
-  //     const jwtToken = await AsyncStorage.getItem('jwt');
+  // console.log(jwtToken, 'trusted context jwttt');
+ const decodeData = ()=>{
+  const token = jwtToken;
+  const decoded = jwtDecode(token);
+  setTokenData(decoded.data)
+ }
 
-  //     console.log(refreshToken, 'refresh_token trusted');
-  //     // console.log(jwtToken, 'jwt_token trusted');
 
-  //     // return {refreshToken, jwtToken};
-  //   } catch (error) {
-  //     console.error('Error retrieving tokens:', error);
-  //     return null;
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getTokens();
-  // }, []);
+ useEffect(()=>{
+   decodeData()
+  },[jwtToken])
+  console.log(tokenData.driver_name);
 
   const [isRfdOn, setIsRfdOn] = useState(false);
   const [loginButton, setLoginButton] = useState({
@@ -90,25 +83,23 @@ const TrustedDriver = ({navigation}) => {
         .then(response => {
           console.log(response, 'LOGIN API RESPONSE');
 
-          if (
-            response.data.status_code === '200'
-          ) {
+          // if (response.data.status_code === '200') {
             // Handle successful login, e.g., redirect or update UI
 
             // navigation.navigate("AgentLogin")
 
             Alert.alert(response.data.message);
             console.log('RFD Logged in successfully');
-          }
+          // }
         })
         .catch(err => {
           console.log(err, 'LOGIN API ERROR');
+          // Alert.alert('qq')
+
           // Handle error, e.g., show error message to user
         });
     }
   };
-
- 
 
   const dispatch = useDispatch();
   const {
@@ -185,7 +176,8 @@ const TrustedDriver = ({navigation}) => {
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('DriverNotifications')}>
+                    onPress={() => navigation.navigate('DriverNotifications')}
+                    >
                     <View style={styles.notification}>
                       <Icon
                         color={AppColors.white}
@@ -218,7 +210,7 @@ const TrustedDriver = ({navigation}) => {
               {/* Bottom div */}
               <View style={styles.bottamView}>
                 <View style={styles.driverNameView}>
-                  <Text style={styles.driverNameText}>MOHIT DHANAWAT</Text>
+                  <Text style={styles.driverNameText}>{tokenData.driver_name}</Text>
                 </View>
                 <View style={styles.bottamRightView}>
                   <TouchableOpacity

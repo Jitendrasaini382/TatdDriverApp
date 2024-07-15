@@ -35,6 +35,8 @@ const CheckDriverOtp = ({navigation}) => {
   const {setRefreshToken} = useContext(TokenConstextApi);
 
   const [otp, setOtp] = useState('');
+
+  const [error, setError] = useState(null);
   const [field, setField] = useState({
     mobile: mobile,
   });
@@ -43,8 +45,8 @@ const CheckDriverOtp = ({navigation}) => {
     setOtp(text);
   };
 
-  const resendOtp = async () => {
-    await DRIVER_LOGIN(field)
+  const resendOtp = () => {
+    DRIVER_LOGIN(field)
       .then(e => {
         console.log(e, 'resend Otp Response');
         if (e.status_code == 200) {
@@ -58,50 +60,27 @@ const CheckDriverOtp = ({navigation}) => {
       });
   };
 
-  const verifyOtp = () => {
-    if (!otp) {
-      Alert.alert('Error', 'Please Enter The OTP');
-    } else if (otp.length !== 4) {
-      Alert.alert('Error', 'Please enter a 4-digit OTP');
-    } else {
-      VERIFY_OTP_LOGIN({
+  const verifyOtp = async () => {
+    try {
+      if (!otp) {
+        setError('Please Enter The OTP');
+
+        // Alert.alert('Error', 'Please Enter The OTP');
+      } else if (otp.length !== 4) {
+        setError('Please enter a 4-digit OTP');
+        // Alert.alert('Error', 'Please enter a 4-digit OTP');
+      }
+      const response = await VERIFY_OTP_LOGIN({
         mobile: mobile,
         otp: otp,
-      })
-        .then(async response => {
-          if (response.status_code === '200') {
-            await setRefreshToken(response.refresh_token);
-            await setJwtToken(response.jwt);
-            await AsyncStorage.setItem('refresh_token', response.refresh_token);
-            await AsyncStorage.setItem('jwt', response.jwt);
-          } else {
-            throw new Error(
-              response.message || 'Invalid OTP. Please try again.',
-            );
-          }
-        })
-        .catch(error => {
-          let errorMessage = error.message;
-
-          // Check if the error is from the API response
-          if (
-            error.response &&
-            error.response.data &&
-            error.response.data.message
-          ) {
-            errorMessage = error.response.data.message;
-          } else {
-            // Try to parse the error message if it's a JSON string
-            try {
-              const parsedMessage = JSON.parse(errorMessage);
-              errorMessage = parsedMessage.message || errorMessage;
-            } catch (e) {
-              // If parsing fails, use the original error message
-            }
-          }
-
-          Alert.alert(errorMessage);
-        });
+      });
+      // console.log(response);
+      await setRefreshToken(response.refresh_token);
+      await setJwtToken(response.jwt);
+      await AsyncStorage.setItem('refresh_token', response.refresh_token);
+      await AsyncStorage.setItem('jwt', response.jwt);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -159,6 +138,11 @@ const CheckDriverOtp = ({navigation}) => {
                   placeholderTextColor="rgb(42, 42, 42)"
                 />
               </View>
+            </View>
+            <View style={{marginHorizontal: moderateScale(30)}}>
+              <Text style={{color: 'red', fontSize: 10, marginTop: 10}}>
+                {error}
+              </Text>
             </View>
 
             <TouchableOpacity style={styles.verifyButton} onPress={verifyOtp}>

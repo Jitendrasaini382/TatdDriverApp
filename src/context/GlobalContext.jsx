@@ -16,7 +16,6 @@ export const GlobalContextApi = ({children}) => {
   const [selectedTicketId, setSelectedTicketId] = useState(null);
   const [faqData, setFaqData] = useState([]);
 
-
   const [buttonShow, setButtonShow] = useState(false);
   const [showButtonText, setShowButtonText] = useState('');
   // console.log(jwtToken, 'jjjjjjjjjjjjjjjjjjjjkkkkkkkkkkkkkkkkkkkk');
@@ -27,7 +26,7 @@ export const GlobalContextApi = ({children}) => {
       const jwtToken = await AsyncStorage.getItem('jwt');
 
       console.log(refreshToken, 'refresh_token context');
-        console.log(jwtToken, 'jwt_token context');
+      // console.log(jwtToken, 'jwt_token context');
       setJwtToken(jwtToken);
       setRefreshToken(refreshToken);
 
@@ -69,7 +68,9 @@ export const GlobalContextApi = ({children}) => {
     setButtonShow,
     showButtonText,
     setShowButtonText,
-    setTicketData,faqData, setFaqData,
+    setTicketData,
+    faqData,
+    setFaqData,
     setJwtToken,
     selectedTicketId,
     setSelectedTicketId,

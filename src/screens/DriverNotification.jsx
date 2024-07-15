@@ -14,16 +14,14 @@ import {OneWayIcon} from '../assets/images';
 import Header from '../components/Header';
 import AllNotificationComponent from '../components/AllNotificationsDetails';
 import {AppColors} from '../assets/Colors';
-import {CLEAR_ALL_NOTIFICATION} from '../apis/Apis';
+import {DRIVER_NOTIFICATION} from '../apis/Apis';
 
 const DriverNotifications = ({navigation}) => {
   const [currentView, setCurrentView] = useState('NOTIFICATIONS');
   const [notificationData, setNotificationData] = useState([]);
 
-  const cleaeAllNotification = () => {
-    CLEAR_ALL_NOTIFICATION({
-      action: 'clear_all_notifications',
-    })
+  const clearAllNotification = data => {
+    DRIVER_NOTIFICATION(data)
       .then(e => {
         Alert.alert(e.message);
         console.log(e.message, 'clear notification     data');
@@ -32,23 +30,6 @@ const DriverNotifications = ({navigation}) => {
         console.log(err, 'err clear Notification');
       });
   };
-
-  // const getAllNotification = () => {
-  //   DRIVER_NOTIFICATION({
-  //     action: 'view_all_notifications',
-  //   })
-  //     .then(e => {
-  //       console.log(e.notifications, 'DRIVER NOTIFICATION data');
-  //       setNotificationData(e.notifications);
-  //     })
-  //     .catch(err => {
-  //       console.log(err, 'DRIVER NOTIFICATION error');
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   getAllNotification();
-  // }, []);
 
   const handleToggle = label => {
     setCurrentView(label);
@@ -77,7 +58,11 @@ const DriverNotifications = ({navigation}) => {
 
       <TouchableOpacity
         style={styles.clearButton}
-        onPress={cleaeAllNotification}>
+        onPress={() =>
+          clearAllNotification({
+            action: 'clear_all_notifications',
+          })
+        }>
         <Text style={styles.clearButtonText}>CLEAR ALL NOTIFICATIONS</Text>
         <Image style={styles.clearButtonIcon} source={OneWayIcon} />
       </TouchableOpacity>

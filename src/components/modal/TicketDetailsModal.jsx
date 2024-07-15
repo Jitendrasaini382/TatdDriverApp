@@ -10,7 +10,7 @@ import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
-import {SHOW_SINGLE_TICKET_DATA} from '../../apis/Apis';
+import {TICKETS_DRIVER} from '../../apis/Apis';
 
 const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
   const [ticketDetails, setTicketDetails] = useState({});
@@ -36,7 +36,7 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
   const getSingleTicketData = async () => {
     setIsLoading(true);
     try {
-      const response = await SHOW_SINGLE_TICKET_DATA(field);
+      const response = await TICKETS_DRIVER(field);
       // console.log(response, "API response");
 
       if (response.status_code === 200) {

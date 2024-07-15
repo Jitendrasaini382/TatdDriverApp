@@ -53,17 +53,16 @@ const TrustedDriver = ({navigation}) => {
 
   // const {refreshToken} = useContext(TokenConstextApi);
 
-  console.log(jwtToken, 'trusted context jwttt');
- const decodeData = ()=>{
-  const token = jwtToken;
-  const decoded = jwtDecode(token);
-  setTokenData(decoded.data)
- }
+  // console.log(jwtToken, 'trusted context jwttt');
+  const decodeData = () => {
+    const token = jwtToken;
+    const decoded = jwtDecode(token);
+    setTokenData(decoded.data);
+  };
 
-
- useEffect(()=>{
-   decodeData()
-  },[jwtToken])
+  useEffect(() => {
+    decodeData();
+  }, [jwtToken]);
   console.log(tokenData.driver_name);
 
   const [isRfdOn, setIsRfdOn] = useState(false);
@@ -84,12 +83,12 @@ const TrustedDriver = ({navigation}) => {
           console.log(response, 'LOGIN API RESPONSE');
 
           // if (response.data.status_code === '200') {
-            // Handle successful login, e.g., redirect or update UI
+          // Handle successful login, e.g., redirect or update UI
 
-            // navigation.navigate("AgentLogin")
+          // navigation.navigate("AgentLogin")
 
-            Alert.alert(response.data.message);
-            console.log('RFD Logged in successfully');
+          Alert.alert(response.data.message);
+          console.log('RFD Logged in successfully');
           // }
         })
         .catch(err => {
@@ -176,8 +175,7 @@ const TrustedDriver = ({navigation}) => {
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('DriverNotifications')}
-                    >
+                    onPress={() => navigation.navigate('DriverNotifications')}>
                     <View style={styles.notification}>
                       <Icon
                         color={AppColors.white}
@@ -210,7 +208,9 @@ const TrustedDriver = ({navigation}) => {
               {/* Bottom div */}
               <View style={styles.bottamView}>
                 <View style={styles.driverNameView}>
-                  <Text style={styles.driverNameText}>{tokenData.driver_name}</Text>
+                  <Text style={styles.driverNameText}>
+                    {tokenData.driver_name}
+                  </Text>
                 </View>
                 <View style={styles.bottamRightView}>
                   <TouchableOpacity

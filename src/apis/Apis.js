@@ -37,7 +37,6 @@ export const TICKETS_DRIVER = body => {
 
 // https://www.tatd.in/app-api/driver/tickets-driver-api.php
 
-
 // export const CREATE_TICKET_DRIVER = body => {
 //   console.log(body, 'CREATE_TICKET_DRIVER Body');
 //   return _Fetch('POST', 'tickets-driver-api.php', {...body}, {});
@@ -92,7 +91,6 @@ export const DRIVER_NOTIFICATION = body => {
   return _Fetch('POST', 'driver-notification-api.php', {...body}, {});
 };
 
-
 // export const CLEAR_ALL_NOTIFICATION = body => {
 //   console.log(body, 'CLEAR_ALL_NOTIFICATION Body');
 //   return _Fetch('POST', 'driver-notification-api.php', {...body}, {});
@@ -119,4 +117,3 @@ export const MY_BOOKING_TOP_NAVBAR = body => {
   console.log(body, 'MY BOOKING TOP NAV BAR Body');
   return _Fetch('POST', 'my-booking-top-navbar-api.php', {...body}, {});
 };
-

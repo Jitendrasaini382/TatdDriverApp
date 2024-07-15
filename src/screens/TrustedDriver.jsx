@@ -53,7 +53,7 @@ const TrustedDriver = ({navigation}) => {
 
   // const {refreshToken} = useContext(TokenConstextApi);
 
-  // console.log(jwtToken, 'trusted context jwttt');
+  console.log(jwtToken, 'trusted context jwttt');
  const decodeData = ()=>{
   const token = jwtToken;
   const decoded = jwtDecode(token);
@@ -176,7 +176,7 @@ const TrustedDriver = ({navigation}) => {
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('DriverNotifications')}
+                    // onPress={() => navigation.navigate('DriverNotifications')}
                     >
                     <View style={styles.notification}>
                       <Icon

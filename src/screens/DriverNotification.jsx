@@ -6,6 +6,7 @@ import {
   View,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect, useContext} from 'react';
 import ToggleButton from '../components/ToggleButton';
@@ -13,10 +14,24 @@ import {OneWayIcon} from '../assets/images';
 import Header from '../components/Header';
 import AllNotificationComponent from '../components/AllNotificationsDetails';
 import {AppColors} from '../assets/Colors';
+import {CLEAR_ALL_NOTIFICATION} from '../apis/Apis';
 
 const DriverNotifications = ({navigation}) => {
   const [currentView, setCurrentView] = useState('NOTIFICATIONS');
   const [notificationData, setNotificationData] = useState([]);
+
+  const cleaeAllNotification = () => {
+    CLEAR_ALL_NOTIFICATION({
+      action: 'clear_all_notifications',
+    })
+      .then(e => {
+        Alert.alert(e.message);
+        console.log(e.message, 'clear notification     data');
+      })
+      .catch(err => {
+        console.log(err, 'err clear Notification');
+      });
+  };
 
   // const getAllNotification = () => {
   //   DRIVER_NOTIFICATION({
@@ -62,7 +77,7 @@ const DriverNotifications = ({navigation}) => {
 
       <TouchableOpacity
         style={styles.clearButton}
-        onPress={() => console.warn('Clear All Notification')}>
+        onPress={cleaeAllNotification}>
         <Text style={styles.clearButtonText}>CLEAR ALL NOTIFICATIONS</Text>
         <Image style={styles.clearButtonIcon} source={OneWayIcon} />
       </TouchableOpacity>

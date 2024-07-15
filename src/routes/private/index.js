@@ -47,26 +47,26 @@ const PrivateRoute = () => {
             name="DriverNotifications"
             component={DriverNotifications}
           />
-          <Stack.Screen name="DriverNotice" component={DriverNotice} />
           <Stack.Screen
-            name="ClearMyDuePayment"
-            component={ClearMyDuePayment}
-          />
-          <Stack.Screen name="DriverEarning" component={DriverEarning} />
-          <Stack.Screen
-            name="MyBonusStatusHistory"
-            component={MyBonusStatusHistory}
-          />
-          <Stack.Screen name="TicketsDriver" component={TicketsDriver} />
-          <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
-          <Stack.Screen
-            name="NotificationDetail"
+            name="NotificationDetail"  
             component={NotificationDetailScreen}
             options={{
               title: 'Notification',
               headerBackTitle: 'Back',
             }}
           />
+            <Stack.Screen name="DriverNotice" component={DriverNotice} />
+            <Stack.Screen
+              name="ClearMyDuePayment"
+              component={ClearMyDuePayment}
+            />
+            <Stack.Screen name="DriverEarning" component={DriverEarning} />
+            <Stack.Screen
+              name="MyBonusStatusHistory"
+              component={MyBonusStatusHistory}
+            />
+            <Stack.Screen name="TicketsDriver" component={TicketsDriver} />
+            <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
           <Stack.Screen
             name="NoticeBoardDetail"
             component={NoticeBoardDetailScreen}

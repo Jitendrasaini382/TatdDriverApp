@@ -11,16 +11,11 @@ import {
   Alert,
 } from 'react-native';
 
-import React, {useEffect, useState} from 'react';
-import { AppColors } from '../assets/Colors';
-import { DRIVER_FAQ } from '../apis/Apis';
+import React, {useContext, useEffect, useState} from 'react';
+import {AppColors} from '../assets/Colors';
+import {DRIVER_FAQ} from '../apis/Apis';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-
-
-
-
-
-
+import {TokenConstextApi} from '../context/GlobalContext';
 
 const AccordionItem = ({title, content, onPress, expanded, isInner}) => (
   <View
@@ -60,12 +55,14 @@ const AccordionData = () => {
   const [expandedParentIndexes, setExpandedParentIndexes] = useState([]);
   const [expandedChildIndexes, setExpandedChildIndexes] = useState({});
 
-  const [faqData, setFaqData] = useState([]);
+  // const [faqData, setFaqData] = useState([]);
+  const {faqData} = useContext(TokenConstextApi);
+  const {setFaqData} = useContext(TokenConstextApi);
 
   const getFaqData = () => {
-    DRIVER_FAQ( {
-            action: 'driver_faq',
-          })
+    DRIVER_FAQ({
+      action: 'driver_faq',
+    })
       .then(e => {
         if (e.status_code == '200') {
           setFaqData(e.faq_data);
@@ -190,23 +187,7 @@ const accordianStyles = StyleSheet.create({
   },
 });
 
-
-
-
-
-
-
-
-
-export default AccordionData
-
-
-
-
-
-
-
-
+export default AccordionData;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

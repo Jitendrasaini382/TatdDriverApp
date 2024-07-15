@@ -14,6 +14,8 @@ export const GlobalContextApi = ({children}) => {
   const [refreshToken, setRefreshToken] = useState('');
   const [ticketsData, setTicketData] = useState([]);
   const [selectedTicketId, setSelectedTicketId] = useState(null);
+  const [faqData, setFaqData] = useState([]);
+
 
   const [buttonShow, setButtonShow] = useState(false);
   const [showButtonText, setShowButtonText] = useState('');
@@ -67,7 +69,7 @@ export const GlobalContextApi = ({children}) => {
     setButtonShow,
     showButtonText,
     setShowButtonText,
-    setTicketData,
+    setTicketData,faqData, setFaqData,
     setJwtToken,
     selectedTicketId,
     setSelectedTicketId,

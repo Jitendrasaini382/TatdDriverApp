@@ -139,10 +139,8 @@ const CheckDriverOtp = ({navigation}) => {
                 />
               </View>
             </View>
-            <View style={{marginHorizontal: moderateScale(30)}}>
-              <Text style={{color: 'red', fontSize: 10, marginTop: 10}}>
-                {error}
-              </Text>
+            <View style={styles.errorView}>
+              <Text style={styles.errorText}>{error}</Text>
             </View>
 
             <TouchableOpacity style={styles.verifyButton} onPress={verifyOtp}>
@@ -286,7 +284,7 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(5),
   },
   inputContainer: {
-    marginBottom: verticalScale(30),
+    // marginBottom: verticalScale(30),
     marginTop: verticalScale(25),
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
@@ -315,6 +313,11 @@ const styles = StyleSheet.create({
     height: verticalScale(36),
     fontSize: moderateScale(14),
   },
+  errorView: {
+    marginHorizontal: moderateScale(30),
+    marginBottom: verticalScale(30),
+  },
+  errorText: {color: 'red', fontSize: 15, marginTop: 10},
   verifyButton: {
     backgroundColor: AppColors.mainColor,
     alignItems: 'center',

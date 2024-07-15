@@ -176,7 +176,7 @@ const TrustedDriver = ({navigation}) => {
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('DriverNotifications')}
+                    // onPress={() => navigation.navigate('DriverNotifications')}
                     >
                     <View style={styles.notification}>
                       <Icon

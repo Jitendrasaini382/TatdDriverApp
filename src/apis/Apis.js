@@ -90,3 +90,25 @@ export const MY_BOOKING_TOP_NAVBAR = body => {
   console.log(body, 'MY BOOKING TOP NAV BAR Body');
   return _Fetch('POST', 'my-booking-top-navbar-api.php', {...body}, {});
 };
+
+// https://www.tatd.in/app-api/driver/driver-notification-api.php
+
+export const CLEAR_ALL_NOTIFICATION = body => {
+  console.log(body, 'CLEAR_ALL_NOTIFICATION Body');
+  return _Fetch('POST', 'driver-notification-api.php', {...body}, {});
+};
+
+export const SAVE_BOOKING_EXPERIENCE = body => {
+  console.log(body, 'SAVE_BOOKING_EXPERIENCE Body');
+  return _Fetch('POST', 'driver-notification-api.php', {...body}, {});
+};
+
+export const SAVE_BOOKING_REMARKS = body => {
+  console.log(body, 'SAVE_BOOKING_REMARKS Body');
+  return _Fetch('POST', 'driver-notification-api.php', {...body}, {});
+};
+
+export const VIEW_HEADLINE = body => {
+  console.log(body, 'VIEW_HEADLINE Body');
+  return _Fetch('POST', 'driver-notification-api.php', {...body}, {});
+};

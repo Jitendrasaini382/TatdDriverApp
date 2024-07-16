@@ -186,6 +186,7 @@ export const NotificationDetailScreen = ({route}) => {
       console.log(err, 'save_booking_experience_remarks, error');
     }
   };
+  // console.log(notification.message, 'kkkkkkkkkkkkkkkkkk');
 
   return (
     <SafeAreaView style={styles.fullScreenContainer}>
@@ -194,7 +195,7 @@ export const NotificationDetailScreen = ({route}) => {
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
         <View style={{flex: 1}}>
-          <Text style={styles.detailText}>{notification.message}</Text>
+          <Text style={styles.detailText}>{notification.message_preview}</Text>
         </View>
 
         {/* {console.log(shouldShowRating(),"kkkkkkkkkkkkkkkkkk")} */}

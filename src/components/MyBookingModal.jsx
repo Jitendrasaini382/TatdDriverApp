@@ -13,7 +13,6 @@ const MyBookingModal = ({}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [myBookingData, setMyBookingData] = useState({});
-  const [total, setTotal] = useState('');
 
   const getMyAllBookings = () => {
     MY_BOOKING_TOP_NAVBAR({
@@ -22,12 +21,7 @@ const MyBookingModal = ({}) => {
       .then(e => {
         // console.log(e.bookings, 'MY_BOOKING_TOP_NAVBAR data');
         setMyBookingData(e);
-        setTotal(
-          e.total
-            .replace(/<\/?[^>]+(>|$)/g, '')
-            .trim()
-            .replace('₹', ' ₹ '),
-        );
+       
       })
       .catch(err => {
         console.log(err, 'MY_BOOKING_TOP_NAVBAR error');
@@ -36,26 +30,7 @@ const MyBookingModal = ({}) => {
 
   useEffect(() => {
     getMyAllBookings();
-    // FormattedPrice()
   }, []);
-
-  // const extractTotal = totalString => {
-  //   const numericValue = totalString.replace(/[^0-9]/g, '');
-  //   return `₹ ${numericValue}`;
-  // };
-
-  // const FormattedPrice =  price => {
-  //   const formattedPrice = price.replace(/<\/?[^>]+(>|$)/g, '').trim();
-
-  //   const finalPrice = formattedPrice.replace('₹', ' ₹ ');
-
-  //   // "₹<b>0</b>",
-  //   return <Text>{finalPrice}</Text>;
-  // };
-
-  // const price = myBookingData.total;
-  // const formattedPrice = price.replace(/<\/?[^>]+(>|$)/g, "").trim().replace("₹", " ₹ ");
-  // console.log(formattedPrice);
 
   return (
     <View style={styles.container}>
@@ -79,8 +54,7 @@ const MyBookingModal = ({}) => {
             <Text
               style={[styles.tabText, !myBookingStyle && styles.activeTabText]}>
               {myBookingData.due_txt}
-              {/* {(myBookingData.total)} */}
-              {total}
+              {myBookingData.total}
             </Text>
           </View>
         </TouchableOpacity>

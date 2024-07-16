@@ -53,7 +53,7 @@ const TrustedDriver = ({navigation}) => {
 
   // const {refreshToken} = useContext(TokenConstextApi);
 
-  // console.log(jwtToken, 'trusted context jwttt');
+  console.log(jwtToken, 'trusted context jwttt');
   const decodeData = () => {
     const token = jwtToken;
     const decoded = jwtDecode(token);

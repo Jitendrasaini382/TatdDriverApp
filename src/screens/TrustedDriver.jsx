@@ -36,7 +36,7 @@ import {
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {LOGIN_BUTTON} from '../apis/Apis';
+import {LOGIN_BUTTON, REFRESH_TOKEN} from '../apis/Apis';
 import {TokenConstextApi} from '../context/GlobalContext';
 import {jwtDecode} from 'jwt-decode';
 
@@ -51,16 +51,48 @@ const TrustedDriver = ({navigation}) => {
   const {setJwtToken} = useContext(TokenConstextApi);
   const {jwtToken} = useContext(TokenConstextApi);
 
-  // const {refreshToken} = useContext(TokenConstextApi);
+  const {refreshToken} = useContext(TokenConstextApi);
 
-  console.log(jwtToken, 'trusted context jwttt');
+  // console.log(jwtToken, 'trusted context jwttt');
   const decodeData = () => {
     const token = jwtToken;
     const decoded = jwtDecode(token);
     setTokenData(decoded.data);
   };
 
-  
+  const regenrateToken = async () => {
+    console.log(refreshToken, 'mmmmmmmm');
+    try {
+      await REFRESH_TOKEN({
+        refresh_token: refreshToken,
+      })
+        .then(e => {
+          Alert.alert('p');
+          console.log(e, 'Refresh token, Data saved');
+          // setFeedback(null);
+          setJwtToken(e.jwt);
+        })
+        .catch(err => {
+          Alert.alert('q');
+
+          console.log(err, 'Refresh Token Err');
+        });
+    } catch (error) {
+      Alert.alert('qq');
+
+      console.log(error, 'Refresh Token Error');
+    }
+  };
+
+  useEffect(() => {
+    regenrateToken();
+
+    const intervalId = setInterval(() => {
+      regenrateToken();
+    }, 25 * 60 * 1000); // 25 minutes in milliseconds
+
+    return () => clearInterval(intervalId);
+  }, []); // Empty dependency array means this effect runs once on mount
 
   useEffect(() => {
     decodeData();
@@ -177,8 +209,7 @@ const TrustedDriver = ({navigation}) => {
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('DriverNotifications')}
-                    >
+                    onPress={() => navigation.navigate('DriverNotifications')}>
                     <View style={styles.notification}>
                       <Icon
                         color={AppColors.white}

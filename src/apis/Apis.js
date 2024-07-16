@@ -145,3 +145,16 @@ export const MY_BOOKING_TOP_NAVBAR = body => {
     {},
   );
 };
+
+  
+// https://www.tatd.in/app-api/driver/trusted-driver/driver-notice-api.php
+
+export  const DRIVER_NOTICE = body => {
+  console.log(body, 'DRIVER NOTICE Body');
+  return _Fetch(
+    'POST',
+    'trusted-driver/driver-notice-api.php',
+    {...body},
+    {},
+  );
+};

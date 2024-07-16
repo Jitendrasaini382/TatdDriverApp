@@ -60,6 +60,8 @@ const TrustedDriver = ({navigation}) => {
     setTokenData(decoded.data);
   };
 
+  
+
   useEffect(() => {
     decodeData();
   }, [jwtToken]);

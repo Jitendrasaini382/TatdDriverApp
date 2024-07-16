@@ -18,10 +18,10 @@ export const VERIFY_OTP_LOGIN = body => {
 
 // https://www.tatd.in/app-api/driver/login/refresh_token.php
 
-// export const REFRESH_TOKEN = body => {
-//   console.log(body, 'REFRESH_TOKEN Body');
-//   return _Fetch('GET', 'login/refresh_token.php', {...body}, {});
-// };
+export const REFRESH_TOKEN = body => {
+  console.log(body, 'REFRESH_TOKEN Body');
+  return _Fetch('GET', 'login/refresh_token.php', {...body}, {});
+};
 
 // https://www.tatd.in/app-api/driver/driver-faq-api.php
 // https://www.tatd.in/app-api/driver/faq/driver-faq-api.php

@@ -11,7 +11,6 @@ export const DRIVER_LOGIN = body => {
 // https://www.tatd.in/app-api/driver/verify-otp-login.php
 // https://www.tatd.in/app-api/driver/login/verify-otp-login.php
 
-
 export const VERIFY_OTP_LOGIN = body => {
   console.log(body, 'Driver Otp Body');
   return _Fetch('POST', 'login/verify-otp-login.php', {...body}, {});
@@ -39,9 +38,7 @@ export const TICKETS_DRIVER = body => {
   return _Fetch('POST', 'tickets/tickets-driver-api.php', {...body}, {});
 };
 
-
 // https://www.tatd.in/app-api/driver/tickets/tickets-driver-api.php
-
 
 // export const CREATE_TICKET_DRIVER = body => {
 //   console.log(body, 'CREATE_TICKET_DRIVER Body');
@@ -76,32 +73,40 @@ export const TICKETS_DRIVER = body => {
 //   return _Fetch('POST', 'tickets/tickets-driver-api.php', {...body}, {});
 // };
 
-
-
-
-
-
 // https://www.tatd.in/app-api/driver/trusted-driver/login-button-trusted.php
-
-
 
 export const LOGIN_BUTTON = body => {
   console.log(body, 'LOGIN_BUTTON Body');
-  return _Fetch('POST', 'trusted-driver/login-button-trusted.php', {...body}, {});
+  return _Fetch(
+    'POST',
+    'trusted-driver/login-button-trusted.php',
+    {...body},
+    {},
+  );
 };
 
 // https://www.tatd.in/app-api/driver/trusted-driver/my-bonus-history-api.php
 
 export const MY_BONUS_HISTORY = body => {
   console.log(body, 'MY_BONUS_HISTORY Body');
-  return _Fetch('POST', 'trusted-driver/my-bonus-history-api.php', {...body}, {});
+  return _Fetch(
+    'POST',
+    'trusted-driver/my-bonus-history-api.php',
+    {...body},
+    {},
+  );
 };
 
 // https://www.tatd.in/app-api/driver/trusted-driver/driver-notification-api.php
 
 export const DRIVER_NOTIFICATION = body => {
   console.log(body, 'DRIVER_NOTIFICATION Body');
-  return _Fetch('POST', 'trusted-driver/driver-notification-api.php', {...body}, {});
+  return _Fetch(
+    'POST',
+    'trusted-driver/driver-notification-api.php',
+    {...body},
+    {},
+  );
 };
 
 // export const CLEAR_ALL_NOTIFICATION = body => {
@@ -109,15 +114,20 @@ export const DRIVER_NOTIFICATION = body => {
 //   return _Fetch('POST', 'trusted-driver/driver-notification-api.php', {...body}, {});
 // };
 
-export const SAVE_BOOKING_EXPERIENCE = body => {
-  console.log(body, 'SAVE_BOOKING_EXPERIENCE Body');
-  return _Fetch('POST', 'trusted-driver/driver-notification-api.php', {...body}, {});
-};
+// export const SAVE_BOOKING_EXPERIENCE = body => {
+//   console.log(body, 'SAVE_BOOKING_EXPERIENCE Body');
+//   return _Fetch('POST', 'trusted-driver/driver-notification-api.php', {...body}, {});
+// };
 
-export const SAVE_BOOKING_REMARKS = body => {
-  console.log(body, 'SAVE_BOOKING_REMARKS Body');
-  return _Fetch('POST', 'trusted-driver/driver-notification-api.php', {...body}, {});
-};
+// export const SAVE_BOOKING_REMARKS = body => {
+//   console.log(body, 'SAVE_BOOKING_REMARKS Body');
+//   return _Fetch(
+//     'POST',
+//     'trusted-driver/driver-notification-api.php',
+//     {...body},
+//     {},
+//   );
+// };
 
 // export const VIEW_HEADLINE = body => {
 //   console.log(body, 'VIEW_HEADLINE Body');
@@ -128,5 +138,10 @@ export const SAVE_BOOKING_REMARKS = body => {
 
 export const MY_BOOKING_TOP_NAVBAR = body => {
   console.log(body, 'MY BOOKING TOP NAV BAR Body');
-  return _Fetch('POST', 'trusted-driver/my-booking-top-navbar-api.php', {...body}, {});
+  return _Fetch(
+    'POST',
+    'trusted-driver/my-booking-top-navbar-api.php',
+    {...body},
+    {},
+  );
 };

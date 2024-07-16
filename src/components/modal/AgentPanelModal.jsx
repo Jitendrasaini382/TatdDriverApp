@@ -1,7 +1,7 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import { AppColors } from '../../assets/Colors';
-import { AppFont } from '../../assets/FontsFamily';
+import {AppColors} from '../../assets/Colors';
+import {AppFont} from '../../assets/FontsFamily';
 
 const AgentPanelModal = ({setAgentPanelModal}) => {
   return (
@@ -11,9 +11,9 @@ const AgentPanelModal = ({setAgentPanelModal}) => {
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Important Alert</Text>
           </View>
-          <TouchableOpacity 
-          onPress={()=>setAgentPanelModal(false)}
-          style={styles.closeButton}>
+          <TouchableOpacity
+            onPress={() => setAgentPanelModal(false)}
+            style={styles.closeButton}>
             <Text style={styles.closeButtonText}>X</Text>
           </TouchableOpacity>
         </View>
@@ -64,9 +64,9 @@ const AgentPanelModal = ({setAgentPanelModal}) => {
               the company exceed Rs 50.
             </Text>
             <TouchableOpacity
-          onPress={()=>setAgentPanelModal(false)}
+              onPress={() => setAgentPanelModal(false)}
               style={{
-                backgroundColor: '#d9d9d9',
+                backgroundColor: AppColors.gray,
                 alignSelf: 'flex-start',
                 borderRadius: 5,
               }}>
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: AppColors.white,
     borderWidth: 1,
-    borderColor: '#d9d9d9',
+    borderColor: AppColors.gray,
   },
   header: {
     flexDirection: 'row',
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     fontFamily: AppFont.regularFont,
   },
   closeButton: {
-    backgroundColor: '#d9d9d9',
+    backgroundColor: AppColors.gray,
     padding: 5,
     paddingHorizontal: 10,
     marginHorizontal: 10,

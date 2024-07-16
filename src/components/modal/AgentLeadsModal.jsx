@@ -8,14 +8,14 @@ const AgentLeadsModal = ({setAgentLeadsModal}) => {
   return (
     <View
       style={{
-        backgroundColor: '#d9d9d9',
+        backgroundColor: AppColors.gray,
         margin: 20,
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 3,shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         
-        shadowColor: '#d9d9d9',
+        shadowColor: AppColors.gray,
       }}>
       <TouchableOpacity
         style={{

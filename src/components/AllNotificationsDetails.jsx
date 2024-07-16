@@ -33,14 +33,18 @@ const AllNotificationComponent = () => {
     });
   };
 
-  const getAllNotification = data => {
-    DRIVER_NOTIFICATION(data)
-      .then(response => {
-        setNotificationData(response.notifications);
-      })
-      .catch(err => {
-        console.log(err, 'DRIVER NOTIFICATION error');
-      });
+  const getAllNotification = async data => {
+    try {
+      await DRIVER_NOTIFICATION(data)
+        .then(response => {
+          setNotificationData(response.notifications);
+        })
+        .catch(err => {
+          console.log(err, 'DRIVER NOTIFICATION err');
+        });
+    } catch (error) {
+      console.log(error, 'DRIVER NOTIFICATION error');
+    }
   };
 
   useEffect(() => {
@@ -83,6 +87,40 @@ export const NotificationDetailScreen = ({route}) => {
   const {rating} = useContext(TokenConstextApi);
   const {setRating} = useContext(TokenConstextApi);
   const [feedback, setFeedback] = useState('');
+  const [currentDateTime, setCurrentDateTime] = useState('');
+
+  useEffect(() => {
+    const updateDateTime = () => {
+      const now = new Date();
+      const formattedDateTime =
+        now.getFullYear() +
+        '-' +
+        String(now.getMonth() + 1).padStart(2, '0') +
+        '-' +
+        String(now.getDate()).padStart(2, '0') +
+        ' ' +
+        String(now.getHours()).padStart(2, '0') +
+        ':' +
+        String(now.getMinutes()).padStart(2, '0') +
+        ':' +
+        String(now.getSeconds()).padStart(2, '0');
+
+      setCurrentDateTime(formattedDateTime);
+    };
+
+    updateDateTime(); // Initial update
+    const timer = setInterval(updateDateTime, 1000); // Update every second
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const shouldShowRating = () => {
+    return (
+      notification.headline_type === 'Driver Ticket' &&
+      notification.support_id > 0 &&
+      currentDateTime < notification.end_date
+    );
+  };
 
   const viewHeadline = async () => {
     try {
@@ -90,7 +128,7 @@ export const NotificationDetailScreen = ({route}) => {
         action: 'view_headline',
         id: notificationId,
       });
-      console.log(response.headline.rate, 'VIEW_HEADLINE DATA');
+      console.log(response.headline, 'VIEW_HEADLINE DATA');
       setNotification(response.headline);
 
       setRating(response.headline.rate);
@@ -129,6 +167,26 @@ export const NotificationDetailScreen = ({route}) => {
     await saveBookingExperience(selectedRating);
   };
 
+  const saveBookingRemarks = async () => {
+    try {
+      await DRIVER_NOTIFICATION({
+        action: 'save_booking_experience_remarks',
+        headline_id: notificationId,
+        remarks: feedback,
+      })
+        .then(e => {
+          Alert.alert(e.message);
+          console.log(e, 'save_booking_experience_remarks, Data saved');
+          setFeedback(null);
+        })
+        .catch(err => {
+          console.log(err, 'save_booking_experience_remarks Error');
+        });
+    } catch (err) {
+      console.log(err, 'save_booking_experience_remarks, error');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.fullScreenContainer}>
       <Header backButton={true} />
@@ -139,164 +197,81 @@ export const NotificationDetailScreen = ({route}) => {
           <Text style={styles.detailText}>{notification.message}</Text>
         </View>
 
-        <Text
-          style={{
-            fontSize: 20,
-            color: 'black',
-            alignSelf: 'center',
-            margin: 20,
-            marginTop: 50,
-          }}>
-          Rate Our Response ?
-        </Text>
+        {/* {console.log(shouldShowRating(),"kkkkkkkkkkkkkkkkkk")} */}
 
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          {[1, 2, 3, 4, 5].map(star => (
-            <TouchableOpacity
-              key={star}
-              onPress={() => handleStarPress(star)}
+        {shouldShowRating() && (
+          <>
+            <Text
               style={{
-                padding: 5,
+                fontSize: 20,
+                color: 'black',
+                alignSelf: 'center',
+                margin: 20,
+                marginTop: 50,
               }}>
-              <Icon
-                name={star <= rating ? 'star' : 'star-o'}
-                size={30}
-                color={AppColors.mainColor}
-              />
-            </TouchableOpacity>
-          ))}
-        </View>
+              Rate Our Response ?
+            </Text>
 
-        {/* <Text
-          style={{
-            marginTop: 20,
-            fontSize: 16,
-            color: 'red',
-          }}>
-          Current Rating: {rating}
-        </Text> */}
-
-        <View
-          style={{
-            padding: 20,
-            marginVertical: 50,
-            marginHorizontal: 5,
-            borderRadius: 15,
-            paddingBottom: 15,
-            backgroundColor: AppColors.silverGrey,
-          }}>
-          <View style={{}}>
-            <View style={{flexDirection: 'row'}}>
-              <View
-                style={{
-                  padding: 10,
-                  paddingTop: 5,
-                  width: '90%',
-                  borderWidth: 1,
-                  borderColor: '#ccc',
-                  borderRadius: 10,
-                  backgroundColor: 'white',
-                }}>
-                <TextInput
-                  style={{
-                    fontFamily: AppFont.regularFont,
-                    alignSelf: 'flex-start',
-                    color: AppColors.black,
-                  }}
-                  placeholder="Type your feedback here..."
-                  // value={feedback}
-                  // onChangeText={setFeedback}
-                  placeholderTextColor={AppColors.black}
-                  multiline
-                />
-              </View>
-              </View>
-
-              <TouchableOpacity
-                style={{
-                  // alignSelf: 'flex-end',
-                  alignSelf:"flex-end",
-                  marginLeft: 5,
-                  height: 40,
-                  width: 40,
-                  borderRadius: 20,
-                  backgroundColor: AppColors.white,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  elevation: 2, 
-                  shadowOffset: {width: 0, height: 1},
-                  shadowOpacity: 0.22,
-                  shadowRadius: 2.22,
-                }}>
-                <Icon
-                  size={20}
-                  color={AppColors.mainColor}
-                  name="paper-plane"
-                  style={{
-                    alignSelf: 'center',
-                  }}
-                />
-              </TouchableOpacity>
-            {/* </View> */}
-          </View>
-          {/* </View> */}
-
-          {/* <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'center',
-              borderRadius: 5,
-              padding: 10,
-              marginTop: 10,
-              marginBottom: 30,
-            }}>
             <View
               style={{
-                // alignItems:"center",
-                flex: 3,
-                borderWidth: 1,
-                backgroundColor: AppColors.white,
-                borderColor: '#ccc',
-                borderRadius: 10,
-              }}>
-              <TextInput
-                style={{
-                  fontSize: 16,
-                  color: AppColors.black,
-                }}
-                placeholder="Type your feedback here..."
-                value={feedback}
-                placeholderTextColor={AppColors.black}
-                placeholderStyle={{
-                  fontStyle: AppFont.regularFont,
-                }}
-                onChangeText={setFeedback}
-                multiline
-              />
-            </View>
-            <View
-              style={{
-                height: 40,
-                width: 40,
-                borderRadius: 20,
-                backgroundColor: AppColors.white,
+                flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                alignSelf: 'flex-end',
               }}>
-              <TouchableOpacity
-                onPress={() => console.log('Send feedback:', feedback)}>
-                <Icon name="send" size={20} color={AppColors.mainColor} />
-              </TouchableOpacity>
+              {[1, 2, 3, 4, 5].map(star => (
+                <TouchableOpacity
+                  key={star}
+                  onPress={() => handleStarPress(star)}
+                  style={{
+                    padding: 5,
+                  }}>
+                  <Icon
+                    name={star <= rating ? 'star' : 'star-o'}
+                    size={30}
+                    color={AppColors.mainColor}
+                  />
+                </TouchableOpacity>
+              ))}
             </View>
-          </View> */}
-        </View>
+
+            {/* <Text
+                  style={{
+                    marginTop: 20,
+                    fontSize: 16,
+                    color: 'red',
+                  }}>
+                  Current Rating: {rating}
+                  </Text> */}
+
+            <View style={styles.extraView}>
+              <View>
+                <View style={{flexDirection: 'row'}}>
+                  <View style={styles.feedbackInput}>
+                    <TextInput
+                      style={styles.inputType}
+                      placeholder="Type your feedback here..."
+                      value={feedback}
+                      onChangeText={setFeedback}
+                      placeholderTextColor={AppColors.black}
+                      multiline
+                    />
+                  </View>
+                </View>
+
+                <TouchableOpacity
+                  style={styles.btnView}
+                  onPress={saveBookingRemarks}>
+                  <Icon
+                    size={20}
+                    color={AppColors.mainColor}
+                    name="paper-plane"
+                    style={styles.IconType}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -343,16 +318,50 @@ const styles = StyleSheet.create({
     margin: 20,
     justifyContent: 'center',
   },
-  // detailIdText: {
-  //   fontSize: 16,
-  //   fontWeight: 'bold',
-  //   color: '#333333',
-  //   marginBottom: 10,
-  // },
+
   detailText: {
     fontSize: 16,
     color: '#333333',
     lineHeight: 24,
+  },
+  extraView: {
+    padding: 20,
+    marginVertical: 50,
+    marginHorizontal: 5,
+    borderRadius: 15,
+    paddingBottom: 15,
+    backgroundColor: AppColors.gray,
+  },
+  feedbackInput: {
+    padding: 10,
+    paddingTop: 5,
+    width: '90%',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    backgroundColor: 'white',
+  },
+  inputType: {
+    fontFamily: AppFont.regularFont,
+    alignSelf: 'flex-start',
+    color: AppColors.black,
+  },
+  btnView: {
+    alignSelf: 'flex-end',
+    marginLeft: 5,
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    backgroundColor: AppColors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 2,
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+  },
+  IconType: {
+    alignSelf: 'center',
   },
 });
 

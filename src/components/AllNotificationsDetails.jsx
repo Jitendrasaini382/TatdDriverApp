@@ -9,6 +9,7 @@ import {
   ScrollView,
   Dimensions,
   Alert,
+  TextInput,
 } from 'react-native';
 import {CloseEnvelop, OpenEnvelop} from '../assets/images';
 import {useNavigation} from '@react-navigation/native';
@@ -18,6 +19,7 @@ import Header from './Header';
 import {DRIVER_NOTIFICATION} from '../apis/Apis';
 import {AppColors} from '../assets/Colors';
 import {TokenConstextApi} from '../context/GlobalContext';
+import {AppFont} from '../assets/FontsFamily';
 
 const {width, height} = Dimensions.get('window');
 
@@ -80,6 +82,7 @@ export const NotificationDetailScreen = ({route}) => {
   const [notification, setNotification] = useState({});
   const {rating} = useContext(TokenConstextApi);
   const {setRating} = useContext(TokenConstextApi);
+  const [feedback, setFeedback] = useState('');
 
   const viewHeadline = async () => {
     try {
@@ -169,14 +172,131 @@ export const NotificationDetailScreen = ({route}) => {
           ))}
         </View>
 
-        <Text
+        {/* <Text
           style={{
             marginTop: 20,
             fontSize: 16,
             color: 'red',
           }}>
           Current Rating: {rating}
-        </Text>
+        </Text> */}
+
+        <View
+          style={{
+            padding: 20,
+            marginVertical: 50,
+            marginHorizontal: 5,
+            borderRadius: 15,
+            paddingBottom: 15,
+            backgroundColor: AppColors.silverGrey,
+          }}>
+          <View style={{}}>
+            <View style={{flexDirection: 'row'}}>
+              <View
+                style={{
+                  padding: 10,
+                  paddingTop: 5,
+                  width: '90%',
+                  borderWidth: 1,
+                  borderColor: '#ccc',
+                  borderRadius: 10,
+                  backgroundColor: 'white',
+                }}>
+                <TextInput
+                  style={{
+                    fontFamily: AppFont.regularFont,
+                    alignSelf: 'flex-start',
+                    color: AppColors.black,
+                  }}
+                  placeholder="Type your feedback here..."
+                  // value={feedback}
+                  // onChangeText={setFeedback}
+                  placeholderTextColor={AppColors.black}
+                  multiline
+                />
+              </View>
+              </View>
+
+              <TouchableOpacity
+                style={{
+                  // alignSelf: 'flex-end',
+                  alignSelf:"flex-end",
+                  marginLeft: 5,
+                  height: 40,
+                  width: 40,
+                  borderRadius: 20,
+                  backgroundColor: AppColors.white,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  elevation: 2, 
+                  shadowOffset: {width: 0, height: 1},
+                  shadowOpacity: 0.22,
+                  shadowRadius: 2.22,
+                }}>
+                <Icon
+                  size={20}
+                  color={AppColors.mainColor}
+                  name="paper-plane"
+                  style={{
+                    alignSelf: 'center',
+                  }}
+                />
+              </TouchableOpacity>
+            {/* </View> */}
+          </View>
+          {/* </View> */}
+
+          {/* <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              borderRadius: 5,
+              padding: 10,
+              marginTop: 10,
+              marginBottom: 30,
+            }}>
+            <View
+              style={{
+                // alignItems:"center",
+                flex: 3,
+                borderWidth: 1,
+                backgroundColor: AppColors.white,
+                borderColor: '#ccc',
+                borderRadius: 10,
+              }}>
+              <TextInput
+                style={{
+                  fontSize: 16,
+                  color: AppColors.black,
+                }}
+                placeholder="Type your feedback here..."
+                value={feedback}
+                placeholderTextColor={AppColors.black}
+                placeholderStyle={{
+                  fontStyle: AppFont.regularFont,
+                }}
+                onChangeText={setFeedback}
+                multiline
+              />
+            </View>
+            <View
+              style={{
+                height: 40,
+                width: 40,
+                borderRadius: 20,
+                backgroundColor: AppColors.white,
+                justifyContent: 'center',
+                alignItems: 'center',
+                alignSelf: 'flex-end',
+              }}>
+              <TouchableOpacity
+                onPress={() => console.log('Send feedback:', feedback)}>
+                <Icon name="send" size={20} color={AppColors.mainColor} />
+              </TouchableOpacity>
+            </View>
+          </View> */}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

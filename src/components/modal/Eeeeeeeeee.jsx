@@ -12,7 +12,7 @@ const notifications = [
     end_date: '2024-07-16 21:30:00',
     created_by: 'Vaishali Verma',
     message:
-      "Booking Number - 429612<br>आपकी टिकट ID 129447 का समाधान हो गया है। अभी पढ़ें। \n\n<b>आपका प्रश्न{"\n"} -  Internal purpose testing team  <br><span style='font-size: 12px;'> - 15 Jul, 11:53:AM </span> \n\n<b>हमारा उत्तर {"\n"}-   <br><span style='font-size: 12px;'> - 15 Jul, 11:54:AM </span> \n\n ",
+      "Booking Number - 429612<br>आपकी टिकट ID 129447 का समाधान हो गया है। अभी पढ़ें। \n\n<b>आपका प्रश्न</b> -  Internal purpose testing team  <br><span style='font-size: 12px;'> - 15 Jul, 11:53:AM </span> \n\n<b>हमारा उत्तर </b>-   <br><span style='font-size: 12px;'> - 15 Jul, 11:54:AM </span> \n\n ",
     clicks: 1,
     support_id: 129447,
     closure_by: 'Vaishali Verma',
@@ -49,25 +49,25 @@ const notifications = [
   },
 ];
 
-const headline = {
-  id: 1978314,
-  notification_bucket: '',
-  headline_type: 'Driver Ticket',
-  category: 'Private Driver',
-  timestamp: '2024-07-15 11:54:18',
-  booking_id: '',
-  driver_name: 'MOHIT DHANAWAT',
-  driver_mobile_number: '8118813148',
-  start_date: '2024-07-15 11:54:18',
-  end_date: '2024-07-16 21:30:00',
-  created_by: 'Vaishali Verma',
-  message:
-    "Booking Number - 429612<br>आपकी टिकट ID 129447 का समाधान हो गया है। अभी पढ़ें। \n\n<b>आपका प्रश्न {"\n"} -  Internal purpose testing team  <br><span style='font-size: 12px;'> - 15 Jul, 11:53:AM </span> \n\n<b>हमारा उत्तर {"\n"}-   <br><span style='font-size: 12px;'> - 15 Jul, 11:54:AM </span> \n\n ",
-  clicks: 1,
-  support_id: 129447,
-  closure_by: 'Vaishali Verma',
-  tag_ticket: '',
-  rate: 3,
-  remarks: '',
-  closure_timestamp: '2024-07-15 17:57:37',
-};
+
+const  headline = {
+  "id": 1978314,
+  "notification_bucket": "",
+  "headline_type": "Driver Ticket",
+  "category": "Private Driver",
+  "timestamp": "2024-07-15 11:54:18",
+  "booking_id": "",
+  "driver_name": "MOHIT DHANAWAT",
+  "driver_mobile_number": "8118813148",
+  "start_date": "2024-07-15 11:54:18",
+  "end_date": "2024-07-16 21:30:00",
+  "created_by": "Vaishali Verma",
+  "message": "Booking Number - 429612<br>आपकी टिकट ID 129447 का समाधान हो गया है। अभी पढ़ें। \n\n<b>आपका प्रश्न</b> -  Internal purpose testing team  <br><span style='font-size: 12px;'> - 15 Jul, 11:53:AM </span> \n\n<b>हमारा उत्तर </b>-   <br><span style='font-size: 12px;'> - 15 Jul, 11:54:AM </span> \n\n ",
+  "clicks": 1,
+  "support_id": 129447,
+  "closure_by": "Vaishali Verma",
+  "tag_ticket": "",
+  "rate": 3,
+  "remarks": "",
+  "closure_timestamp": "2024-07-15 17:57:37"
+}

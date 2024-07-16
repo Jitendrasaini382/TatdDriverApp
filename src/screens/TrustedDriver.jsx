@@ -60,39 +60,33 @@ const TrustedDriver = ({navigation}) => {
     setTokenData(decoded.data);
   };
 
-  const regenrateToken = async () => {
+  useEffect(() => {
+    regenerateToken();
+  
+    const intervalId = setInterval(() => {
+      regenerateToken();
+    }, 25 * 60 * 1000); // 25 minutes in milliseconds
+  
+    return () => clearInterval(intervalId);
+  }, []);
+  
+  const regenerateToken = async () => {
     console.log(refreshToken, 'mmmmmmmm');
     try {
-      await REFRESH_TOKEN({
+      const response = await REFRESH_TOKEN({
         refresh_token: refreshToken,
-      })
-        .then(e => {
-          Alert.alert('p');
-          console.log(e, 'Refresh token, Data saved');
-          // setFeedback(null);
-          setJwtToken(e.jwt);
-        })
-        .catch(err => {
-          Alert.alert('q');
+      });
+      console.log(response.jwt, 'Refresh token, Data received');
+      // Token received, but not set
+      setJwtToken(response.jwt)
+      await AsyncStorage.setItem('jwt', response.jwt);
 
-          console.log(err, 'Refresh Token Err');
-        });
+      // You can do something else with the new token here if needed
     } catch (error) {
-      Alert.alert('qq');
-
-      console.log(error, 'Refresh Token Error');
+      console.log('Refresh Token Error:', error);
     }
   };
 
-  useEffect(() => {
-    regenrateToken();
-
-    const intervalId = setInterval(() => {
-      regenrateToken();
-    }, 25 * 60 * 1000); // 25 minutes in milliseconds
-
-    return () => clearInterval(intervalId);
-  }, []); // Empty dependency array means this effect runs once on mount
 
   useEffect(() => {
     decodeData();

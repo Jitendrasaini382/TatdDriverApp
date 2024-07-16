@@ -72,17 +72,6 @@
 
 // export default _Fetch;
 
-
-
-
-
-
-
-
-
-
-
-
 // // import axios from 'axios';
 // // import { API_BASE_URL } from '../constant/path';
 // // import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -195,15 +184,6 @@
 
 // // export default _Fetch;
 
-
-
-
-
-
-
-
-
-
 import axios from 'axios';
 import {API_BASE_URL} from '../constant/path';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -255,6 +235,7 @@ async function _handleMethod(method, path, body, header) {
 
 async function changeHeaders(header) {
   const token = await getToken();
+  // console.log(token, "ppppppppppppppppppppppppppppppppp");
   return {
     ...header,
     'Content-Type': 'text/plain',
@@ -265,7 +246,6 @@ async function changeHeaders(header) {
 export default _Fetch;
 
 // /////////////////////////////////////////////////////////////
-
 
 // import axios from 'axios';
 // import {API_BASE_URL} from '../constant/path';

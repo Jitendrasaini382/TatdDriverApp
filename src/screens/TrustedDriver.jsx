@@ -53,6 +53,8 @@ const TrustedDriver = ({navigation}) => {
 
   const {refreshToken} = useContext(TokenConstextApi);
 
+  console.log(refreshToken, 'contest trusted REFRESH');
+
   // console.log(jwtToken, 'trusted context jwttt');
   const decodeData = () => {
     const token = jwtToken;
@@ -60,33 +62,31 @@ const TrustedDriver = ({navigation}) => {
     setTokenData(decoded.data);
   };
 
-  useEffect(() => {
-    regenerateToken();
-  
-    const intervalId = setInterval(() => {
-      regenerateToken();
-    }, 25 * 60 * 1000); // 25 minutes in milliseconds
-  
-    return () => clearInterval(intervalId);
-  }, []);
-  
-  const regenerateToken = async () => {
-    console.log(refreshToken, 'mmmmmmmm');
+  const regenerateToken = async (refreshToken) => {
+    // console.log(refreshToken, 'mmmmmmmm');
     try {
       const response = await REFRESH_TOKEN({
         refresh_token: refreshToken,
       });
       console.log(response.jwt, 'Refresh token, Data received');
-      // Token received, but not set
-      setJwtToken(response.jwt)
+      Alert.alert('p');
+      setJwtToken(response.jwt);
       await AsyncStorage.setItem('jwt', response.jwt);
-
-      // You can do something else with the new token here if needed
     } catch (error) {
+      Alert.alert('q');
+
       console.log('Refresh Token Error:', error);
     }
   };
+  useEffect(() => {
+    regenerateToken(refreshToken);
 
+    const intervalId = setInterval(() => {
+      regenerateToken();
+    }, 25 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     decodeData();

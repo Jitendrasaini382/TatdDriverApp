@@ -118,7 +118,7 @@ const AllNoticeBoardComponent = () => {
   }, []);
 
   const handleNoticePress = noticeBoard => {
-    navigation.navigate('NotificationDetail', {
+    navigation.navigate('NoticeBoardDetail', {
       noticeId: noticeBoard.id,
     });
   };

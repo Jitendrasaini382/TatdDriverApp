@@ -152,3 +152,16 @@ export const DRIVER_NOTICE = body => {
   console.log(body, 'DRIVER NOTICE Body');
   return _Fetch('POST', 'trusted-driver/driver-notice-api.php', {...body}, {});
 };
+
+export const DRIVER_NOTICE_ONE_VIEW = () => {
+  // console.log(body, 'DRIVER NOTICE Body');
+  return _Fetch(
+    'POST',
+    'trusted-driver/driver-notice-api.php',
+    {
+      action: 'view_one_awareness',
+      id: 2,
+    },
+    {},
+  );
+};

@@ -20,78 +20,6 @@ const {width, height} = Dimensions.get('window');
 const designWidth = width;
 const designHeight = height;
 
-const scale = size => (width / designWidth) * size;
-const verticalScale = size => (height / designHeight) * size;
-const moderateScale = (size, factor = 0.5) =>
-  size + (scale(size) - size) * factor;
-
-// const noticeBoardData = [
-//   'Necessary changes in night charges....................',
-//   'Commission on Overtime and Night Charge',
-//   'Important Update: On Daily Incentive...................',
-//   'Mohitt Update: On Daily Incentive...................',
-// ];
-const showNoticeBoardData = [
-  {
-    texts: [
-      'Necessary changes in night charges. From now on, if you drive for 50 minutes or more at night, you will receive a night charge of Rs 150. If you drive for less than 50 minutes, you will receive a night charge of Rs 3 per minute. This change has been made because sometimes a night charge of Rs 150 was applied for just 2 minutes of driving, causing dispute in between customers & drivers. Our goal is to minimize inconvenience for customers & drivers and ensure you get as much work as possible.',
-      'Night Time 10:00 PM to 06:00 AM',
-    ],
-  },
-  {
-    texts: [
-      'Please note that starting from June 26, 2024, a commission will be applied to night charges and overtime. You will not incur any losses due to this change, as customers will be charged Rs 2 per minute for overtime instead of Rs 1.5 and Rs 200 for night charges instead of Rs 150.',
-      'You previously earned (without commission):',
-      '* Earnings from overtime: ₹1.5 per minute',
-      '* Earnings from night driving: ₹150 per ride',
-      'You will now earn (with commission):',
-      '* Earnings from overtime: ₹1.5 per minute',
-      '* Earnings from night driving: ₹152',
-      'If you drive for 50 minutes or more at night, a Rs 200 night charge will be added to the bill. If the driving time is less than 50 minutes, a night charge of Rs 4 per minute will be added to the bill.',
-      'Night time: 10:00 PM to 06:00 AM',
-    ],
-  },
-  {
-    texts: [
-      '* Earnings from overtime: ₹1.5 per minute',
-      '* Earnings from night driving: ₹150 per ride',
-      'You will now earn (with commission):',
-      'Please note that starting from June 26, 2024, a commission will be applied to night charges and overtime. You will not incur any losses due to this change, as customers will be charged Rs 2 per minute for overtime instead of Rs 1.5 and Rs 200 for night charges instead of Rs 150.',
-      'You previously earned (without commission):',
-
-      '* Earnings from overtime: ₹1.5 per minute',
-      '* Earnings from night driving: ₹152',
-      'If you drive for 50 minutes or more at night, a Rs 200 night charge will be added to the bill. If the driving time is less than 50 minutes, a night charge of Rs 4 per minute will be added to the bill.',
-      'Night time: 10:00 PM to 06:00 AM',
-    ],
-  },
-  {
-    texts: [
-      '* Earnings from overtime: ₹1.5 per minute',
-      '* Earnings from night driving: ₹150 per ride',
-      'You will now earn (with commission):',
-      '* Earnings from overtime: ₹1.5 per minute',
-      '* Earnings from night driving: ₹152',
-      'If you drive for 50 minutes or more at night, a Rs 200 night charge will be added to the bill. If the driving time is less than 50 minutes, a night charge of Rs 4 per minute will be added to the bill.',
-      'Night time: 10:00 PM to 06:00 AM',
-      'Please note that starting from June 26, 2024, a commission will be applied to night charges and overtime. You will not incur any losses due to this change, as customers will be charged Rs 2 per minute for overtime instead of Rs 1.5 and Rs 200 for night charges instead of Rs 150.',
-      'You previously earned (without commission):',
-    ],
-  },
-];
-
-const NoticeBoardDetail = ({index}) => {
-  return (
-    <View style={styles.detailContainer}>
-      {showNoticeBoardData[index].texts.map((text, i) => (
-        <Text key={i} style={styles.detailText}>
-          {text}
-        </Text>
-      ))}
-    </View>
-  );
-};
-
 const AllNoticeBoardComponent = () => {
   const navigation = useNavigation();
   const [noticeBoardData, setNotificationData] = useState([]);
@@ -160,19 +88,21 @@ const AllNoticeBoardComponent = () => {
 
 export const NoticeBoardDetailScreen = ({route}) => {
   const {noticeId} = route.params;
+  const [notice, setNotice] = useState({});
+
+  console.log(noticeId, 'nnnnnnnnnnnnnn');
+  console.log(notice, 'noooooooTTice');
 
   const viewOneAwarness = async () => {
     try {
-      const response = await DRIVER_NOTIFICATION({
+      const response = await DRIVER_NOTICE({
         action: 'view_one_awareness',
         id: noticeId,
       });
-      console.log(response, 'viewOneAwarness DATA');
-      setNotification(response.headline);
-
-      setRating(response.headline.rate);
+      // console.log(response.awareness, 'viewOneAwarness DATA');
+      setNotice(response.awareness);
     } catch (err) {
-      console.log(err, 'viewOneAwarness error');
+      console.log(err, 'viewOneAwarness err');
     }
   };
   useEffect(() => {
@@ -181,23 +111,19 @@ export const NoticeBoardDetailScreen = ({route}) => {
     viewOneAwarness();
   }, [noticeId]);
 
-  const [currentIndex, setCurrentIndex] = useState(initialIndex);
-  const navigation = useNavigation();
-
-  const handleNoticeBoardPress = index => {
-    setCurrentIndex(index);
-  };
+  const handleNoticeBoardPress = () => {};
 
   return (
     <SafeAreaView style={styles.fullScreenContainer}>
       <Header backButton={true} />
-      {/* <ScrollView style={styles.scrollView}>
-        <NoticeBoardDetail index={currentIndex} />
-        <NoticeBoardList
-          onNoticeBoardPress={handleNoticeBoardPress}
-          excludeIndex={currentIndex}
-        />
-      </ScrollView> */}
+      <ScrollView style={styles.scrollView}>
+        {notice && (
+          <View style={styles.detailContainer}>
+            <Text style={styles.detailSubject}>{notice.subject}</Text>
+            <Text style={styles.detailDescription}>{notice.description}</Text>
+          </View>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -212,15 +138,24 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  contentContainer: {
-    padding: 20,
-    alignItems: 'flex-start',
-  },
+
   detailContainer: {
-    padding: 15,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
     marginBottom: 15,
+    padding: 20,
+  },
+  detailSubject: {
+    color: AppColors.black,
+    fontFamily: AppFont.regularFont,
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  detailDescription: {
+    color: AppColors.black,
+    fontSize: 15,
+    marginTop: 15,
+    fontWeight: '400',
+    fontFamily: AppFont.regularFont,
   },
   detailText: {
     fontSize: 16,
@@ -230,7 +165,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 10,
-    margin: 10,
+    // margin: 10,
     backgroundColor: AppColors.white,
   },
   touchable: {
@@ -264,14 +199,7 @@ const styles = StyleSheet.create({
     fontFamily: AppFont.regularFont,
     color: AppColors.black,
   },
-  fullScreenContainer: {
-    flex: 1,
-    backgroundColor: AppColors.white,
-  },
-  detailContainer: {
-    padding: 20,
-    alignItems: 'center',
-  },
+
   largeIcon: {
     width: 60,
     height: 60,

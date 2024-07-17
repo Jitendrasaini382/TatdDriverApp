@@ -62,31 +62,31 @@ const TrustedDriver = ({navigation}) => {
     setTokenData(decoded.data);
   };
 
-  const regenerateToken = async (refreshToken) => {
-    // console.log(refreshToken, 'mmmmmmmm');
-    try {
-      const response = await REFRESH_TOKEN({
-        refresh_token: refreshToken,
-      });
-      console.log(response.jwt, 'Refresh token, Data received');
-      Alert.alert('p');
-      setJwtToken(response.jwt);
-      await AsyncStorage.setItem('jwt', response.jwt);
-    } catch (error) {
-      Alert.alert('q');
+  // const regenerateToken = async (refreshToken) => {
+  //   // console.log(refreshToken, 'mmmmmmmm');
+  //   try {
+  //     const response = await REFRESH_TOKEN({
+  //       refresh_token: refreshToken,
+  //     });
+  //     console.log(response.jwt, 'Refresh token, Data received');
+  //     Alert.alert('p');
+  //     setJwtToken(response.jwt);
+  //     await AsyncStorage.setItem('jwt', response.jwt);
+  //   } catch (error) {
+  //     Alert.alert('q');
 
-      console.log('Refresh Token Error:', error);
-    }
-  };
-  useEffect(() => {
-    regenerateToken(refreshToken);
+  //     console.log('Refresh Token Error:', error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   regenerateToken(refreshToken);
 
-    const intervalId = setInterval(() => {
-      regenerateToken();
-    }, 25 * 60 * 1000);
+  //   const intervalId = setInterval(() => {
+  //     regenerateToken();
+  //   }, 25 * 60 * 1000);
 
-    return () => clearInterval(intervalId);
-  }, []);
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   useEffect(() => {
     decodeData();

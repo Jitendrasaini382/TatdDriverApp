@@ -1,4 +1,4 @@
-import {StyleSheet, View, SafeAreaView, ScrollView} from 'react-native';
+import {StyleSheet, View, SafeAreaView, ScrollView, Text} from 'react-native';
 import React, {useState} from 'react';
 import ToggleButton from '../components/ToggleButton';
 import Header from '../components/Header';
@@ -29,6 +29,7 @@ const DriverNotice = ({navigation}) => {
         </View>
 
         <View style={styles.contentContainer}>
+          <Text style={styles.headingHindi}>जरूरी जानकारी।</Text>
           <AllNoticeBoardDetails />
         </View>
       </ScrollView>
@@ -53,6 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
   },
+  headingHindi: {color: AppColors.black, fontSize: 15, paddingLeft: 10},
 });
 
 // import {

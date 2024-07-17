@@ -33,10 +33,8 @@ const TicketsDriver = () => {
 
   const {setSelectedTicketId} = useContext(TokenConstextApi);
 
-  const showDriverTicket = () => {
-    TICKETS_DRIVER({
-      action: 'show_driver_ticket',
-    })
+  const showDriverTicket = async data => {
+    TICKETS_DRIVER(data)
       .then(e => {
         setTicketData(e.tickets);
       })
@@ -47,7 +45,9 @@ const TicketsDriver = () => {
 
   useEffect(() => {
     checkOpenTicket();
-    showDriverTicket();
+    showDriverTicket({
+      action: 'show_driver_ticket',
+    });
   }, []);
 
   const checkOpenTicket = () => {

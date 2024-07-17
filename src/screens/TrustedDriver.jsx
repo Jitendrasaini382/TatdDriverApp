@@ -36,7 +36,7 @@ import {
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {LOGIN_BUTTON, REFRESH_TOKEN} from '../apis/Apis';
+import {LOGIN_BUTTON} from '../apis/Apis';
 import {TokenConstextApi} from '../context/GlobalContext';
 import {jwtDecode} from 'jwt-decode';
 
@@ -55,7 +55,7 @@ const TrustedDriver = ({navigation}) => {
 
   console.log(refreshToken, 'contest trusted REFRESH');
 
-  console.log(jwtToken, 'trusted context jwttt');
+  // console.log(jwtToken, 'trusted context jwttt');
   const decodeData = () => {
     const token = jwtToken;
     const decoded = jwtDecode(token);

@@ -31,24 +31,18 @@ const MyBonusStatusHistory = () => {
   //   },
   // ];
 
-  const getAllBonusData = () => {
-    MY_BONUS_HISTORY(
-      {
+  const getAllBonusData = async () => {
+    try {
+      const response = await MY_BONUS_HISTORY({
         action: 'get_bonus_history',
-      }
-    )
-      .then(e => {
-        // console.log(e,"eeeeeee");
-        if (e.status_code == 200 && e.message == 'success') {
-          setBonusData(e.bonuses);
-          console.log(e.bonuses, 'My Bonus History Data');
-        } else {
-          Alert.alert('NO Data Found');
-        }
-      })
-      .catch(err => {
-        console.log(err, 'My Bonus History Error');
       });
+
+      setBonusData(response.bonuses);
+      console.log(response.bonuses, 'My Bonus History Data');
+    } catch (error) {
+      console.log(error, 'My Bonus History Error');
+      Alert.alert('Error', 'Failed to fetch bonus history. Please try again.');
+    }
   };
 
   useEffect(() => {

@@ -128,7 +128,7 @@ export const NotificationDetailScreen = ({route}) => {
         action: 'view_headline',
         id: notificationId,
       });
-      console.log(response.headline, 'VIEW_HEADLINE DATA');
+      // console.log(response.headline, 'VIEW_HEADLINE DATA');
       setNotification(response.headline);
 
       setRating(response.headline.rate);

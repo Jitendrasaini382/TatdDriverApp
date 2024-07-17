@@ -102,7 +102,7 @@ export const NoticeBoardDetailScreen = ({route, navigation}) => {
 
   const [footerData, setFooterData] = useState([]);
 
-  console.log(noticeId, 'nnnnnnnnnnnnnn');
+  // console.log(noticeId, 'nnnnnnnnnnnnnn');
   // console.log(notice, 'noooooooTTice');
   // console.log(footerData, 'footerdatataaaaa');
 
@@ -112,7 +112,7 @@ export const NoticeBoardDetailScreen = ({route, navigation}) => {
         action: 'view_one_awareness',
         id: noticeId,
       });
-      console.log(response.awareness.subject, 'viewOneAwarness DATA');
+      // console.log(response.awareness.subject, 'viewOneAwarness DATA');
       setNotice(response.awareness);
       setFooterInput(e => ({
         ...e,
@@ -131,7 +131,7 @@ export const NoticeBoardDetailScreen = ({route, navigation}) => {
     try {
       const response = await DRIVER_NOTICE(recordClick);
       console.log(response.message, 'recordViewOneClick data');
-      Alert.alert(response.message);
+      // Alert.alert(response.message);
     } catch (error) {
       // Alert.alert("q")
       console.log(err, ' recordViewOneClick err');
@@ -142,7 +142,7 @@ export const NoticeBoardDetailScreen = ({route, navigation}) => {
     try {
       const response = await DRIVER_NOTICE(awarenessUpdate);
       console.log(response.message, 'viewOneAwarnessUpdate data');
-      Alert.alert(response.message);
+      // Alert.alert(response.message);
     } catch (error) {
       console.log(err, ' viewOneAwarnessUpdate err');
     }
@@ -193,9 +193,12 @@ export const NoticeBoardDetailScreen = ({route, navigation}) => {
     navigation.navigate('NoticeBoardDetail', {
       noticeId: footerNotice.id,
     });
+  };
+
+  useEffect(() => {
     recordViewOneClick();
     viewOneAwarnessUpdate();
-  };
+  }, []);
 
   return (
     <SafeAreaView style={styles.fullScreenContainer}>
@@ -233,7 +236,7 @@ export const NoticeBoardDetailScreen = ({route, navigation}) => {
                     //     ? OpenEnvelop
                     //     : CloseEnvelop
                     // }
-                    source={OpenEnvelop}
+                    source={CloseEnvelop}
                   />
                 </View>
                 <View style={styles.textContainer}>

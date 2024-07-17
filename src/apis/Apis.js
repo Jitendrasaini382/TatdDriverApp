@@ -90,6 +90,8 @@ export const DRIVER_NOTICE = body => {
   return _Fetch('POST', 'trusted-driver/driver-notice-api.php', {...body}, {});
 };
 
+// https://www.tatd.in/app-api/driver/trusted-driver/driver-earning-api.php
+
 export const DRIVER_EARNING = () => {
   return _Fetch(
     'POST',

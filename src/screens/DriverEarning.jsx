@@ -124,7 +124,7 @@ const DriverEarning = () => {
   };
 
   useEffect(()=>{
-    lifeTimeEarning()
+    // lifeTimeEarning()
   }, [])
 
   const renderTripItem = ({item}) => (

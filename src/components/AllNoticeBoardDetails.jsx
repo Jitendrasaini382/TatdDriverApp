@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   ScrollView,
   Dimensions,
+  Alert,
 } from 'react-native';
 import {CloseEnvelop, OpenEnvelop} from '../assets/images';
 import {useNavigation} from '@react-navigation/native';
@@ -84,7 +85,7 @@ const AllNoticeBoardComponent = () => {
   );
 };
 
-export const NoticeBoardDetailScreen = ({route}) => {
+export const NoticeBoardDetailScreen = ({route, navigation}) => {
   const {noticeId} = route.params;
   const [notice, setNotice] = useState({});
   const [footerInput, setFooterInput] = useState({
@@ -93,11 +94,22 @@ export const NoticeBoardDetailScreen = ({route}) => {
     bucket: 'Awareness',
   });
 
-  const[footerData, setFooterData] = useState([])
+  const [recordClick, setRecordClick] = useState({
+    action: 'record_view_one_awareness_click',
+    id: noticeId,
+    subject: '',
+  });
+
+  const [awarenessUpdate, setAwarenessUpdate] = useState({
+    action: 'view_one_awareness_update_sort_order',
+    id: noticeId,
+  });
+
+  const [footerData, setFooterData] = useState([]);
 
   console.log(noticeId, 'nnnnnnnnnnnnnn');
   // console.log(notice, 'noooooooTTice');
-  console.log(footerData , "footerdatataaaaa");
+  // console.log(footerData, 'footerdatataaaaa');
 
   const viewOneAwarness = async () => {
     try {
@@ -105,18 +117,43 @@ export const NoticeBoardDetailScreen = ({route}) => {
         action: 'view_one_awareness',
         id: noticeId,
       });
-      console.log(response.awareness.id, 'viewOneAwarness DATA');
+      console.log(response.awareness.subject, 'viewOneAwarness DATA');
       setNotice(response.awareness);
       setFooterInput(e => ({
         ...e,
         bucket: response.awareness.bucket,
+      }));
+      setRecordClick(e => ({
+        ...e,
+        subject: response.awareness.subject,
       }));
     } catch (err) {
       console.log(err, 'viewOneAwarness err');
     }
   };
 
-  const ViewFooterLinks = async data => {
+  const recordViewOneClick = async () => {
+    try {
+      const response = await DRIVER_NOTICE(recordClick);
+      console.log(response.message, 'recordViewOneClick data');
+      Alert.alert(response.message);
+    } catch (error) {
+      // Alert.alert("q")
+      console.log(err, ' recordViewOneClick err');
+    }
+  };
+
+  const viewOneAwarnessUpdate = async () => {
+    try {
+      const response = await DRIVER_NOTICE(awarenessUpdate);
+      console.log(response.message, 'viewOneAwarnessUpdate data');
+      Alert.alert(response.message);
+    } catch (error) {
+      console.log(err, ' viewOneAwarnessUpdate err');
+    }
+  };
+
+  const viewFooterLinks = async data => {
     try {
       const response = await DRIVER_NOTICE(footerInput);
       console.log(response.viewed, 'view_one_awareness_footer_links DATA');
@@ -129,10 +166,41 @@ export const NoticeBoardDetailScreen = ({route}) => {
     console.log('Notice ID:', noticeId);
 
     viewOneAwarness();
-    ViewFooterLinks(noticeId);
+    viewFooterLinks(noticeId);
   }, [noticeId]);
 
-  const handleNoticeBoardPress = () => {};
+  const formatDate = dateString => {
+    const [datePart, timePart] = dateString.split(' ');
+
+    const [year, month, day] = datePart.split('-');
+
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+
+    const monthName = months[parseInt(month) - 1];
+
+    return `${parseInt(day)} ${monthName} ${year}`;
+  };
+
+  const handleNoticeFooterPress = footerNotice => {
+    navigation.navigate('NoticeBoardDetail', {
+      noticeId: footerNotice.id,
+    });
+    recordViewOneClick();
+    viewOneAwarnessUpdate();
+  };
 
   return (
     <SafeAreaView style={styles.fullScreenContainer}>
@@ -144,6 +212,46 @@ export const NoticeBoardDetailScreen = ({route}) => {
             <Text style={styles.detailDescription}>{notice.description}</Text>
           </View>
         )}
+
+        {footerData &&
+          footerData.map((footerNotice, index) => (
+            <View
+              style={{
+                paddingHorizontal: 20,
+              }}>
+              <TouchableOpacity
+                key={footerNotice.id}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'flex-start',
+                  paddingVertical: 5,
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#E0E0E0',
+                }}
+                onPress={() => handleNoticeFooterPress(footerNotice)}>
+                <View style={styles.iconContainer}>
+                  <Image
+                    style={styles.icon}
+                    resizeMode="contain"
+                    // source={
+                    //   footerNotice.status_image === 'open_envlop.png'
+                    //     ? OpenEnvelop
+                    //     : CloseEnvelop
+                    // }
+                    source={OpenEnvelop}
+                  />
+                </View>
+                <View style={styles.textContainer}>
+                  <Text style={styles.subjectText}>{footerNotice.subject}</Text>
+                </View>
+                <View style={{alignSelf: 'flex-end'}}>
+                  <Text style={{color: AppColors.black}}>
+                    {formatDate(footerNotice.timestamp)}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          ))}
       </ScrollView>
     </SafeAreaView>
   );

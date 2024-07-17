@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -13,6 +13,7 @@ import Modal from 'react-native-modal';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import DriverEarnIngModal from '../components/modal/DriverEarnIngModal';
+import {DRIVER_EARNING} from '../apis/Apis';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 const tripData = [
@@ -113,14 +114,18 @@ const DriverEarning = () => {
     useState(false);
   const [selectedTrip, setSelectedTrip] = useState(null);
 
-  const lifeTimeEarning  = async ()=>{
+  const lifeTimeEarning = async () => {
     try {
-      
+      const response = await DRIVER_EARNING();
+      console.log(response, 'DRIVER_EARNING Data');
     } catch (error) {
-      
+      console.log(error, 'DRIVER_EARNING errror');
     }
-  } 
+  };
 
+  useEffect(()=>{
+    lifeTimeEarning()
+  }, [])
 
   const renderTripItem = ({item}) => (
     <View style={styles.tripItem}>

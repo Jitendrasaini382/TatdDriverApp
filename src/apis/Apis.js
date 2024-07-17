@@ -172,6 +172,17 @@ export const DRIVER_NOTICE = body => {
 //       "action": "view_one_awareness_footer_links",
 //       "id":"107" ,
 //       "bucket":"bucket_field_value"
-//       }
+//       }, {}
 //   )
 // }
+
+export const DRIVER_EARNING = () => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/driver-earning-api.php',
+    {
+      action: 'fetch_life_time_earning',
+    },
+    {},
+  );
+};

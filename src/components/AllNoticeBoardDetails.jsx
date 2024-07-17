@@ -71,9 +71,7 @@ const AllNoticeBoardComponent = () => {
               />
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.subjectText} numberOfLines={2}>
-                {noticeBoard.subject}
-              </Text>
+              <Text style={styles.subjectText}>{noticeBoard.subject}</Text>
             </View>
             <View style={{alignSelf: 'flex-end'}}>
               <Text style={{color: AppColors.black}}>
@@ -89,9 +87,17 @@ const AllNoticeBoardComponent = () => {
 export const NoticeBoardDetailScreen = ({route}) => {
   const {noticeId} = route.params;
   const [notice, setNotice] = useState({});
+  const [footerInput, setFooterInput] = useState({
+    action: 'view_one_awareness_footer_links',
+    id: noticeId,
+    bucket: 'Awareness',
+  });
+
+  const[footerData, setFooterData] = useState([])
 
   console.log(noticeId, 'nnnnnnnnnnnnnn');
-  console.log(notice, 'noooooooTTice');
+  // console.log(notice, 'noooooooTTice');
+  console.log(footerData , "footerdatataaaaa");
 
   const viewOneAwarness = async () => {
     try {
@@ -99,16 +105,31 @@ export const NoticeBoardDetailScreen = ({route}) => {
         action: 'view_one_awareness',
         id: noticeId,
       });
-      // console.log(response.awareness, 'viewOneAwarness DATA');
+      console.log(response.awareness.id, 'viewOneAwarness DATA');
       setNotice(response.awareness);
+      setFooterInput(e => ({
+        ...e,
+        bucket: response.awareness.bucket,
+      }));
     } catch (err) {
       console.log(err, 'viewOneAwarness err');
+    }
+  };
+
+  const ViewFooterLinks = async data => {
+    try {
+      const response = await DRIVER_NOTICE(footerInput);
+      console.log(response.viewed, 'view_one_awareness_footer_links DATA');
+      setFooterData(response.viewed);
+    } catch (err) {
+      console.log(err, 'view_one_awareness_footer_links err');
     }
   };
   useEffect(() => {
     console.log('Notice ID:', noticeId);
 
     viewOneAwarness();
+    ViewFooterLinks(noticeId);
   }, [noticeId]);
 
   const handleNoticeBoardPress = () => {};
@@ -153,7 +174,7 @@ const styles = StyleSheet.create({
   detailDescription: {
     color: AppColors.black,
     fontSize: 15,
-    marginTop: 15,
+    paddingTop: 15,
     fontWeight: '400',
     fontFamily: AppFont.regularFont,
   },

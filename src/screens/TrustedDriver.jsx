@@ -55,7 +55,7 @@ const TrustedDriver = ({navigation}) => {
 
   console.log(refreshToken, 'contest trusted REFRESH');
 
-  // console.log(jwtToken, 'trusted context jwttt');
+  console.log(jwtToken, 'trusted context jwttt');
   const decodeData = () => {
     const token = jwtToken;
     const decoded = jwtDecode(token);

@@ -209,7 +209,7 @@ export const NoticeBoardDetailScreen = ({route, navigation}) => {
         )}
 
         {footerData &&
-          footerData.map((footerNotice, index) => (
+          footerData.map(footerNotice => (
             <View
               style={{
                 paddingHorizontal: 20,

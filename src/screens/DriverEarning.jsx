@@ -113,6 +113,15 @@ const DriverEarning = () => {
     useState(false);
   const [selectedTrip, setSelectedTrip] = useState(null);
 
+  const lifeTimeEarning  = async ()=>{
+    try {
+      
+    } catch (error) {
+      
+    }
+  } 
+
+
   const renderTripItem = ({item}) => (
     <View style={styles.tripItem}>
       <View style={styles.tripHeader}>

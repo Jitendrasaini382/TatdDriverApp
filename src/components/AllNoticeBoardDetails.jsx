@@ -27,16 +27,11 @@ const AllNoticeBoardComponent = () => {
 
   const getAllDriverNotice = async () => {
     try {
-      await DRIVER_NOTICE({
+      const response = await DRIVER_NOTICE({
         action: 'view_all_notice',
-      })
-        .then(e => {
-          console.log(e.awareness_data, 'Driver Notice Data');
-          setNotificationData(e.awareness_data);
-        })
-        .catch(err => {
-          console.log(err, 'Driver Notice err');
-        });
+      });
+      console.log(response.awareness_data, 'Driver Notice Data');
+      setNotificationData(response.awareness_data);
     } catch (error) {
       console.log(error, 'Driver Notice error');
     }
@@ -55,7 +50,7 @@ const AllNoticeBoardComponent = () => {
   return (
     <ScrollView style={styles.container}>
       {noticeBoardData &&
-        noticeBoardData.map((noticeBoard, index) => (
+        noticeBoardData.map(noticeBoard => (
           <TouchableOpacity
             key={noticeBoard.id}
             style={styles.touchable}

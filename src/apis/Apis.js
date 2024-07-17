@@ -153,25 +153,25 @@ export const DRIVER_NOTICE = body => {
   return _Fetch('POST', 'trusted-driver/driver-notice-api.php', {...body}, {});
 };
 
-export const DRIVER_NOTICE_ONE_VIEW = () => {
-  // console.log(body, 'DRIVER NOTICE Body');
-  return _Fetch(
-    'POST',
-    'trusted-driver/driver-notice-api.php',
-    {
-      action: 'view_one_awareness',
-      id: 2,
-    },
-    {},
-  );
-};
+// export const DRIVER_NOTICE_ONE_VIEW = () => {
+//   // console.log(body, 'DRIVER NOTICE Body');
+//   return _Fetch(
+//     'POST',
+//     'trusted-driver/driver-notice-api.php',
+//     {
+//       action: 'view_one_awareness',
+//       id: 2,
+//     },
+//     {},
+//   );
+// };
 
-export const VIEW_ONE_AWARNESS_FOOTER = ()=>{
-  return _Fetch (
-    'POST', '', {
-      "action": "view_one_awareness_footer_links",
-      "id":"107" ,
-      "bucket":"bucket_field_value"
-      }
-  )
-}
+// export const VIEW_ONE_AWARNESS_FOOTER = ()=>{
+//   return _Fetch (
+//     'POST', '', {
+//       "action": "view_one_awareness_footer_links",
+//       "id":"107" ,
+//       "bucket":"bucket_field_value"
+//       }
+//   )
+// }

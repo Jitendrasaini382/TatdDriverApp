@@ -11,10 +11,7 @@ import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 import {DRIVER_EARNING} from '../../apis/Apis';
 
-const DriverEarningModal = ({
-  setIsModalVisible,
-  bookingNumber,
-}) => {
+const DriverEarningModal = ({setIsModalVisible, bookingNumber}) => {
   const [tripDetails, setTripDetails] = useState({});
 
   useEffect(() => {
@@ -35,7 +32,7 @@ const DriverEarningModal = ({
     }
   };
 
-  // const closeModal = () => setIsModalVisible(false);
+  const closeModal = () => setIsModalVisible(false);
 
   return (
     <ScrollView>

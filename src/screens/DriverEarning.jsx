@@ -14,6 +14,7 @@ import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import DriverEarningModal from '../components/modal/DriverEarnIngModal';
 import {DRIVER_EARNING} from '../apis/Apis';
+import {TouchableNativeFeedback} from 'react-native';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 

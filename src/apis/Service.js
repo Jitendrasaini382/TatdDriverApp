@@ -110,9 +110,7 @@
 
 // export default _Fetch;
 
-
 // ///////////////////////////////////////////////////////
-
 
 import axios from 'axios';
 import {API_BASE_URL} from '../constant/path';
@@ -123,8 +121,8 @@ const api = axios.create({
 });
 
 api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
+  response => response,
+  async error => {
     const originalRequest = error.config;
 
     if (error.response.status === 401 && !originalRequest._retry) {
@@ -132,13 +130,13 @@ api.interceptors.response.use(
 
       try {
         const refreshToken = await AsyncStorage.getItem('refresh_token');
-        
+
         // रिफ्रेश टोकन API कॉल (आपके बैकएंड के अनुसार URL और पैरामीटर्स अपडेट करें)
         const response = await axios.get(`${API_BASE_URL}/refresh-token`, {
-          refresh_token: refreshToken
+          refresh_token: refreshToken,
         });
 
-        const { jwt_token } = response.jwt;
+        const {jwt_token} = response.jwt;
 
         await AsyncStorage.setItem('jwt', jwt_token);
 
@@ -153,16 +151,12 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 const getToken = async () => {
   return await AsyncStorage.getItem('jwt');
 };
-
-
-
-
 
 // const _Fetch = (method, path, body, header) => {
 //   return new Promise((resolve, reject) => {
@@ -181,9 +175,7 @@ const getToken = async () => {
 //   });
 // };
 
-
 // ///////////////
-
 
 // const _Fetch = async (method, path, body, header) => {
 //   try {
@@ -216,12 +208,12 @@ const _Fetch = (method, path, body, header) => {
   });
 };
 
-
-async function _handleMethod(method, path, body, header) {
+const _handleMethod = async (method, path, body, header) => {
   console.log(method, path, body, header, 'fetchHandle Data');
-  const headers = method === 'GET'
-    ? {...header, 'Content-Type': 'text/plain'}
-    : await changeHeaders(header);
+  const headers =
+    method === 'GET'
+      ? {...header, 'Content-Type': 'text/plain'}
+      : await changeHeaders(header);
 
   return api({
     method,
@@ -229,15 +221,15 @@ async function _handleMethod(method, path, body, header) {
     data: method !== 'GET' ? body : undefined,
     headers,
   });
-}
+};
 
-async function changeHeaders(header) {
+const changeHeaders = async header => {
   const token = await getToken();
   return {
     ...header,
     'Content-Type': 'text/plain',
     Authorization: `Bearer ${token}`,
   };
-}
+};
 
 export default _Fetch;

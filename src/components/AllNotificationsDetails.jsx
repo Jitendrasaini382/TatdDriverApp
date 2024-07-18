@@ -226,7 +226,6 @@ export const NotificationDetailScreen = ({route}) => {
   );
 };
 
-export default AllNotificationComponent;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -312,3 +311,5 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 });
+
+export default AllNotificationComponent;

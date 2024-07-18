@@ -1,174 +1,130 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Image,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
   SafeAreaView,
   ScrollView,
-  Dimensions,
   Alert,
+  StyleSheet,
 } from 'react-native';
 import {CloseEnvelop, OpenEnvelop} from '../assets/images';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import Header from './Header';
 import {AppColors} from '../assets/Colors';
-import {AppFont} from '../assets/FontsFamily';
 import {DRIVER_NOTICE} from '../apis/Apis';
-
-const {width, height} = Dimensions.get('window');
-const designWidth = width;
-const designHeight = height;
+import {AppFont} from '../assets/FontsFamily';
 
 const AllNoticeBoardComponent = () => {
   const navigation = useNavigation();
-  const [noticeBoardData, setNotificationData] = useState([]);
+  const [noticeBoardData, setNoticeBoardData] = useState([]);
 
-  const getAllDriverNotice = async () => {
+  const getAllDriverNotice = useCallback(async () => {
     try {
       const response = await DRIVER_NOTICE({
         action: 'view_all_notice',
       });
-      // console.log(response.awareness_data, 'Driver Notice Data');
-      setNotificationData(response.awareness_data);
+      setNoticeBoardData(response.awareness_data);
     } catch (error) {
-      console.log(error, 'Driver Notice error');
+      console.error('Driver Notice error:', error);
+      Alert.alert('Error', 'Failed to fetch notices. Please try again.');
     }
-  };
-
-  useEffect(() => {
-    getAllDriverNotice();
   }, []);
 
-  const handleNoticePress = noticeBoard => {
-    navigation.navigate('NoticeBoardDetail', {
-      noticeId: noticeBoard.id,
-    });
-  };
+  useFocusEffect(
+    useCallback(() => {
+      getAllDriverNotice();
+    }, [getAllDriverNotice]),
+  );
+
+  const handleNoticePress = useCallback(
+    noticeBoard => {
+      navigation.navigate('NoticeBoardDetail', {
+        noticeId: noticeBoard.id,
+      });
+    },
+    [navigation],
+  );
 
   return (
     <ScrollView style={styles.container}>
-      {noticeBoardData &&
-        noticeBoardData.map(noticeBoard => (
-          <TouchableOpacity
-            key={noticeBoard.id}
-            style={styles.touchable}
-            onPress={() => handleNoticePress(noticeBoard)}>
-            <View style={styles.iconContainer}>
-              <Image
-                style={styles.icon}
-                resizeMode="contain"
-                source={
-                  noticeBoard.status_image === 'open_envlop.png'
-                    ? OpenEnvelop
-                    : CloseEnvelop
-                }
-              />
-            </View>
-            <View style={styles.textContainer}>
-              <Text style={styles.subjectText}>{noticeBoard.subject}</Text>
-            </View>
-            <View style={{alignSelf: 'flex-end'}}>
-              <Text style={{color: AppColors.black}}>
-                {noticeBoard.timestamp}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ))}
+      {noticeBoardData.map(noticeBoard => (
+        <TouchableOpacity
+          key={noticeBoard.id}
+          style={styles.touchable}
+          onPress={() => handleNoticePress(noticeBoard)}>
+          <View style={styles.iconContainer}>
+            <Image
+              style={styles.icon}
+              resizeMode="contain"
+              source={
+                noticeBoard.status_image === 'open_envlop.png'
+                  ? OpenEnvelop
+                  : CloseEnvelop
+              }
+            />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.subjectText}>{noticeBoard.subject}</Text>
+          </View>
+          <View style={{alignSelf: 'flex-end'}}>
+            <Text style={{color: AppColors.black}}>
+              {noticeBoard.timestamp}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      ))}
     </ScrollView>
   );
 };
 
-export const NoticeBoardDetailScreen = ({route, navigation}) => {
+export const NoticeBoardDetailScreen = ({route}) => {
   const {noticeId} = route.params;
   const [notice, setNotice] = useState({});
-  const [footerInput, setFooterInput] = useState({
-    action: 'view_one_awareness_footer_links',
-    id: noticeId,
-    bucket: 'Awareness',
-  });
-
-  const [recordClick, setRecordClick] = useState({
-    action: 'record_view_one_awareness_click',
-    id: noticeId,
-    subject: '',
-  });
-
-  const [awarenessUpdate, setAwarenessUpdate] = useState({
-    action: 'view_one_awareness_update_sort_order',
-    id: noticeId,
-  });
-
   const [footerData, setFooterData] = useState([]);
+  const navigation = useNavigation();
 
-  // console.log(noticeId, 'nnnnnnnnnnnnnn');
-  // console.log(notice, 'noooooooTTice');
-  // console.log(footerData, 'footerdatataaaaa');
-
-  const viewOneAwarness = async () => {
+  const fetchNoticeData = useCallback(async () => {
     try {
-      const response = await DRIVER_NOTICE({
-        action: 'view_one_awareness',
-        id: noticeId,
-      });
-      // console.log(response.awareness.subject, 'viewOneAwarness DATA');
-      setNotice(response.awareness);
-      setFooterInput(e => ({
-        ...e,
-        bucket: response.awareness.bucket,
-      }));
-      setRecordClick(e => ({
-        ...e,
-        subject: response.awareness.subject,
-      }));
-    } catch (err) {
-      console.log(err, 'viewOneAwarness err');
-    }
-  };
+      const [noticeResponse, footerResponse] = await Promise.all([
+        DRIVER_NOTICE({action: 'view_one_awareness', id: noticeId}),
+        DRIVER_NOTICE({
+          action: 'view_one_awareness_footer_links',
+          id: noticeId,
+          bucket: 'Awareness',
+        }),
+      ]);
 
-  const recordViewOneClick = async () => {
-    try {
-      const response = await DRIVER_NOTICE(recordClick);
-      console.log(response.message, 'recordViewOneClick data');
-      // Alert.alert(response.message);
+      setNotice(noticeResponse.awareness);
+      setFooterData(footerResponse.viewed);
+
+      await Promise.all([
+        DRIVER_NOTICE({
+          action: 'record_view_one_awareness_click',
+          id: noticeId,
+          subject: noticeResponse.awareness.subject,
+        }),
+        DRIVER_NOTICE({
+          action: 'view_one_awareness_update_sort_order',
+          id: noticeId,
+        }),
+      ]);
     } catch (error) {
-      // Alert.alert("q")
-      console.log(err, ' recordViewOneClick err');
+      console.error('Error fetching notice data:', error);
+      Alert.alert('Error', 'Failed to load notice details. Please try again.');
     }
-  };
-
-  const viewOneAwarnessUpdate = async () => {
-    try {
-      const response = await DRIVER_NOTICE(awarenessUpdate);
-      console.log(response.message, 'viewOneAwarnessUpdate data');
-      // Alert.alert(response.message);
-    } catch (error) {
-      console.log(err, ' viewOneAwarnessUpdate err');
-    }
-  };
-
-  const viewFooterLinks = async data => {
-    try {
-      const response = await DRIVER_NOTICE(footerInput);
-      // console.log(response.viewed, 'view_one_awareness_footer_links DATA');
-      setFooterData(response.viewed);
-    } catch (err) {
-      console.log(err, 'view_one_awareness_footer_links err');
-    }
-  };
-  useEffect(() => {
-    console.log('Notice IDaaaaaaaaaaaaaaaaaaaa:', noticeId);
-
-    viewOneAwarness();
-    viewFooterLinks(noticeId);
   }, [noticeId]);
 
-  const formatDate = dateString => {
-    const [datePart, timePart] = dateString.split(' ');
+  useFocusEffect(
+    useCallback(() => {
+      fetchNoticeData();
+    }, [fetchNoticeData]),
+  );
 
+  const formatDate = useCallback(dateString => {
+    const [datePart] = dateString.split(' ');
     const [year, month, day] = datePart.split('-');
-
     const months = [
       'Jan',
       'Feb',
@@ -183,22 +139,17 @@ export const NoticeBoardDetailScreen = ({route, navigation}) => {
       'Nov',
       'Dec',
     ];
-
-    const monthName = months[parseInt(month) - 1];
-
-    return `${parseInt(day)} ${monthName} ${year}`;
-  };
-
-  const handleNoticeFooterPress = footerNotice => {
-    navigation.navigate('NoticeBoardDetail', {
-      noticeId: footerNotice.id,
-    });
-  };
-
-  useEffect(() => {
-    recordViewOneClick();
-    viewOneAwarnessUpdate();
+    return `${parseInt(day)} ${months[parseInt(month) - 1]} ${year}`;
   }, []);
+
+  const handleNoticeFooterPress = useCallback(
+    footerNotice => {
+      navigation.navigate('NoticeBoardDetail', {
+        noticeId: footerNotice.id,
+      });
+    },
+    [navigation],
+  );
 
   return (
     <SafeAreaView style={styles.fullScreenContainer}>
@@ -210,52 +161,33 @@ export const NoticeBoardDetailScreen = ({route, navigation}) => {
             <Text style={styles.detailDescription}>{notice.description}</Text>
           </View>
         )}
-
-        {footerData &&
-          footerData.map(footerNotice => (
-            <View
-              style={{
-                paddingHorizontal: 20,
-              }}>
-              <TouchableOpacity
-                // key={footerNotice.id}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'flex-start',
-                  paddingVertical: 5,
-                  borderBottomWidth: 1,
-                  borderBottomColor: '#E0E0E0',
-                }}
-                onPress={() => handleNoticeFooterPress(footerNotice)}>
-                <View style={styles.iconContainer}>
-                  <Image
-                    style={styles.icon}
-                    resizeMode="contain"
-                    // source={
-                    //   footerNotice.status_image === 'open_envlop.png'
-                    //     ? OpenEnvelop
-                    //     : CloseEnvelop
-                    // }
-                    source={CloseEnvelop}
-                  />
-                </View>
-                <View style={styles.textContainer}>
-                  <Text style={styles.subjectText}>{footerNotice.subject}</Text>
-                </View>
-                <View style={{alignSelf: 'flex-end'}}>
-                  <Text style={{color: AppColors.black}}>
-                    {formatDate(footerNotice.timestamp)}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          ))}
+        {footerData.map(footerNotice => (
+          <View key={footerNotice.id} style={{paddingHorizontal: 20}}>
+            <TouchableOpacity
+              style={styles.footerNoticeItem}
+              onPress={() => handleNoticeFooterPress(footerNotice)}>
+              <View style={styles.iconContainer}>
+                <Image
+                  style={styles.icon}
+                  resizeMode="contain"
+                  source={CloseEnvelop}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Text style={styles.subjectText}>{footerNotice.subject}</Text>
+              </View>
+              <View style={{alignSelf: 'flex-end'}}>
+                <Text style={{color: AppColors.black}}>
+                  {formatDate(footerNotice.timestamp)}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
 };
-
-export default AllNoticeBoardComponent;
 
 const styles = StyleSheet.create({
   fullScreenContainer: {
@@ -314,6 +246,13 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
+  footerNoticeItem: {
+    flexDirection: 'row',
+    margin: 5,
+    borderBottomWidth: 1,
+    paddingBottom: 2,
+    borderBottomColor: '#E0E0E0',
+  },
   textContainer: {
     flex: 1,
   },
@@ -340,3 +279,5 @@ const styles = StyleSheet.create({
     padding: 20,
   },
 });
+
+export default AllNoticeBoardComponent;

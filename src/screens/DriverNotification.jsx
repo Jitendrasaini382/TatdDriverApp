@@ -1,31 +1,58 @@
+import React, {useState, useCallback} from 'react';
 import {
   Image,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
   SafeAreaView,
   ScrollView,
-  Alert,
+  StyleSheet,
 } from 'react-native';
-import React, {useState, useEffect, useContext} from 'react';
 import ToggleButton from '../components/ToggleButton';
 import {OneWayIcon} from '../assets/images';
 import Header from '../components/Header';
 import AllNotificationComponent from '../components/AllNotificationsDetails';
 import {AppColors} from '../assets/Colors';
-import {DRIVER_NOTIFICATION} from '../apis/Apis';
+import {clearAllNotification, DRIVER_NOTIFICATION} from '../apis/Apis'; // Assuming this function exists
 
 const DriverNotifications = ({navigation}) => {
   const [currentView, setCurrentView] = useState('NOTIFICATIONS');
 
+  const handleToggle = useCallback(
+    label => {
+      setCurrentView(label);
+      if (label === 'NOTICE BOARD') {
+        navigation.navigate('DriverNotice');
+      }
+    },
+    [navigation],
+  );
 
-  const handleToggle = label => {
-    setCurrentView(label);
-    if (label === 'NOTICE BOARD') {
-      navigation.navigate('DriverNotice');
+  // const getAllNotification = useCallback(async data => {
+  //   try {
+  //     await DRIVER_NOTIFICATION(data)
+  //       .then(response => {
+  //         setNotificationData(response.notifications);
+  //       })
+  //       .catch(err => {
+  //         console.log(err, 'DRIVER NOTIFICATION err');
+  //       });
+  //   } catch (error) {
+  //     console.log(error, 'DRIVER NOTIFICATION error');
+  //   }
+  // }, []);
+
+  const handleClearAllNotifications = useCallback(async () => {
+    try {
+      await clearAllNotification({
+        action: 'clear_all_notifications',
+      });
+      // getAllNotification();
+    } catch (error) {
+      console.error('Error clearing notifications:', error);
+      // Handle error (e.g., show an alert to the user)
     }
-  };
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -47,11 +74,7 @@ const DriverNotifications = ({navigation}) => {
 
       <TouchableOpacity
         style={styles.clearButton}
-        onPress={() =>
-          clearAllNotification({
-            action: 'clear_all_notifications',
-          })
-        }>
+        onPress={handleClearAllNotifications}>
         <Text style={styles.clearButtonText}>CLEAR ALL NOTIFICATIONS</Text>
         <Image style={styles.clearButtonIcon} source={OneWayIcon} />
       </TouchableOpacity>

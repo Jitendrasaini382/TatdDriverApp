@@ -1,60 +1,54 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useCallback} from 'react';
 import {
   Image,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  StyleSheet,
   SafeAreaView,
   ScrollView,
-  Dimensions,
   Alert,
   TextInput,
 } from 'react-native';
 import {CloseEnvelop, OpenEnvelop} from '../assets/images';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from './Header';
 import {DRIVER_NOTIFICATION} from '../apis/Apis';
 import {AppColors} from '../assets/Colors';
 import {TokenConstextApi} from '../context/GlobalContext';
 import {AppFont} from '../assets/FontsFamily';
 
-const {width, height} = Dimensions.get('window');
-
 const AllNotificationComponent = () => {
-  // const [notificationData, setNotificationData] = useState([]);
   const navigation = useNavigation();
-  const{notificationData} = useContext(TokenConstextApi)
-  const {setNotificationData} = useContext(TokenConstextApi)
+  const {notificationData, setNotificationData} = useContext(TokenConstextApi);
 
+  const handleNotificationPress = useCallback(
+    notification => {
+      navigation.navigate('NotificationDetail', {
+        notificationId: notification.id,
+      });
+    },
+    [navigation],
+  );
 
-  const handleNotificationPress = notification => {
-    navigation.navigate('NotificationDetail', {
-      notificationId: notification.id,
-    });
-  };
-
-  const getAllNotification = async data => {
-    try {
-      await DRIVER_NOTIFICATION(data)
-        .then(response => {
-          setNotificationData(response.notifications);
-        })
-        .catch(err => {
-          console.log(err, 'DRIVER NOTIFICATION err');
-        });
-    } catch (error) {
-      console.log(error, 'DRIVER NOTIFICATION error');
-    }
-  };
+  const getAllNotification = useCallback(
+    async data => {
+      try {
+        const response = await DRIVER_NOTIFICATION(data);
+        setNotificationData(response.notifications);
+      } catch (error) {
+        console.error('DRIVER NOTIFICATION error:', error);
+      }
+    },
+    [setNotificationData],
+  );
 
   useEffect(() => {
     getAllNotification({
       action: 'view_all_notifications',
     });
-  }, []);
+  }, [getAllNotification]);
 
   return (
     <ScrollView style={styles.container}>
@@ -87,110 +81,89 @@ const AllNotificationComponent = () => {
 export const NotificationDetailScreen = ({route}) => {
   const {notificationId} = route.params;
   const [notification, setNotification] = useState({});
-  const {rating} = useContext(TokenConstextApi);
-  const {setRating} = useContext(TokenConstextApi);
+  const {rating, setRating} = useContext(TokenConstextApi);
   const [feedback, setFeedback] = useState('');
   const [currentDateTime, setCurrentDateTime] = useState('');
 
   useEffect(() => {
     const updateDateTime = () => {
       const now = new Date();
-      const formattedDateTime =
-        now.getFullYear() +
-        '-' +
-        String(now.getMonth() + 1).padStart(2, '0') +
-        '-' +
-        String(now.getDate()).padStart(2, '0') +
-        ' ' +
-        String(now.getHours()).padStart(2, '0') +
-        ':' +
-        String(now.getMinutes()).padStart(2, '0') +
-        ':' +
-        String(now.getSeconds()).padStart(2, '0');
-
-      setCurrentDateTime(formattedDateTime);
+      setCurrentDateTime(now.toISOString().slice(0, 19).replace('T', ' '));
     };
 
-    updateDateTime(); // Initial update
-    const timer = setInterval(updateDateTime, 1000); // Update every second
-
+    updateDateTime();
+    const timer = setInterval(updateDateTime, 1000);
     return () => clearInterval(timer);
   }, []);
 
-  const shouldShowRating = () => {
+  const shouldShowRating = useCallback(() => {
     return (
       notification.headline_type === 'Driver Ticket' &&
       notification.support_id > 0 &&
       currentDateTime < notification.end_date
     );
-  };
+  }, [notification, currentDateTime]);
 
-  const viewHeadline = async () => {
+  const viewHeadline = useCallback(async () => {
     try {
       const response = await DRIVER_NOTIFICATION({
         action: 'view_headline',
         id: notificationId,
       });
-      // console.log(response.headline, 'VIEW_HEADLINE DATA');
       setNotification(response.headline);
-
       setRating(response.headline.rate);
     } catch (err) {
-      console.log(err, 'VIEW_HEADLINE error');
+      console.error('VIEW_HEADLINE error:', err);
     }
-  };
+  }, [notificationId, setRating]);
 
-  const saveBookingExperience = async newRating => {
-    try {
-      const response = await DRIVER_NOTIFICATION({
-        action: 'save_booking_experience',
-        headline_id: notificationId,
-        rate: newRating,
-      });
-      Alert.alert('Success', response.message);
-      setRating(response.rate);
-      console.log(response, 'saveBookingExperience, Data saved');
-    } catch (error) {
-      console.log(error, 'saveBookingExperience Error');
-      Alert.alert(
-        'Error',
-        'Failed to save booking experience. Please try again.',
-      );
-    } finally {
-      Alert.alert(
-        'Error',
-        'Failed to save booking experience. Please try again.',
-      );
-    }
-  };
+  const saveBookingExperience = useCallback(
+    async newRating => {
+      try {
+        const response = await DRIVER_NOTIFICATION({
+          action: 'save_booking_experience',
+          headline_id: notificationId,
+          rate: newRating,
+        });
+        Alert.alert('Success', response.message);
+        setRating(response.rate);
+      } catch (error) {
+        console.error('saveBookingExperience Error:', error);
+        Alert.alert(
+          'Error',
+          'Failed to save booking experience. Please try again.',
+        );
+      }
+    },
+    [notificationId, setRating],
+  );
 
   useEffect(() => {
-    console.log('Notification ID:', notificationId);
     viewHeadline();
-  }, [notificationId]);
+  }, [viewHeadline]);
 
-  const handleStarPress = async selectedRating => {
-    setRating(selectedRating);
-    await saveBookingExperience(selectedRating);
-  };
+  const handleStarPress = useCallback(
+    selectedRating => {
+      setRating(selectedRating);
+      saveBookingExperience(selectedRating);
+    },
+    [saveBookingExperience, setRating],
+  );
 
-  const saveBookingRemarks = async () => {
+  const saveBookingRemarks = useCallback(async () => {
     try {
       const response = await DRIVER_NOTIFICATION({
         action: 'save_booking_experience_remarks',
         headline_id: notificationId,
         remarks: feedback,
       });
-
       Alert.alert(response.message);
-      console.log(response, 'save_booking_experience_remarks, Data saved');
-      setFeedback(null);
+      setFeedback('');
     } catch (error) {
-      console.log(error, 'save_booking_experience_remarks Error');
+      console.error('save_booking_experience_remarks Error:', error);
       Alert.alert('Error', 'Failed to save booking remarks. Please try again.');
     }
-  };
-  // console.log(notification.message, 'kkkkkkkkkkkkkkkkkk');
+  }, [notificationId, feedback]);
 
   return (
     <SafeAreaView style={styles.fullScreenContainer}>
@@ -202,34 +175,16 @@ export const NotificationDetailScreen = ({route}) => {
           <Text style={styles.detailText}>{notification.message_preview}</Text>
         </View>
 
-        {/* {console.log(shouldShowRating(),"kkkkkkkkkkkkkkkkkk")} */}
-
         {shouldShowRating() && (
           <>
-            <Text
-              style={{
-                fontSize: 20,
-                color: 'black',
-                alignSelf: 'center',
-                margin: 20,
-                marginTop: 50,
-              }}>
-              Rate Our Response ?
-            </Text>
+            <Text style={styles.rateResponseText}>Rate Our Response ?</Text>
 
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+            <View style={styles.starContainer}>
               {[1, 2, 3, 4, 5].map(star => (
                 <TouchableOpacity
                   key={star}
                   onPress={() => handleStarPress(star)}
-                  style={{
-                    padding: 5,
-                  }}>
+                  style={styles.starButton}>
                   <Icon
                     name={star <= rating ? 'star' : 'star-o'}
                     size={30}
@@ -239,28 +194,17 @@ export const NotificationDetailScreen = ({route}) => {
               ))}
             </View>
 
-            {/* <Text
-                  style={{
-                    marginTop: 20,
-                    fontSize: 16,
-                    color: 'red',
-                  }}>
-                  Current Rating: {rating}
-                  </Text> */}
-
             <View style={styles.extraView}>
               <View>
-                <View style={{flexDirection: 'row'}}>
-                  <View style={styles.feedbackInput}>
-                    <TextInput
-                      style={styles.inputType}
-                      placeholder="Type your feedback here..."
-                      value={feedback}
-                      onChangeText={setFeedback}
-                      placeholderTextColor={AppColors.black}
-                      multiline
-                    />
-                  </View>
+                <View style={styles.feedbackInputContainer}>
+                  <TextInput
+                    style={styles.inputType}
+                    placeholder="Type your feedback here..."
+                    value={feedback}
+                    onChangeText={setFeedback}
+                    placeholderTextColor={AppColors.black}
+                    multiline
+                  />
                 </View>
 
                 <TouchableOpacity
@@ -283,7 +227,6 @@ export const NotificationDetailScreen = ({route}) => {
 };
 
 export default AllNotificationComponent;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

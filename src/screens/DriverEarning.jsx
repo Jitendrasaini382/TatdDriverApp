@@ -12,20 +12,19 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
-import DriverEarnIngModal from '../components/modal/DriverEarnIngModal';
+import DriverEarningModal from '../components/modal/DriverEarnIngModal';
 import {DRIVER_EARNING} from '../apis/Apis';
 
-const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
+const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
 const DriverEarning = () => {
-  const [packageDetailsDriverEarning, setPackageDetailsDriverEarning] =
-    useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [lifeTimeEarn, setLifeTimeEarn] = useState('');
   const [earnData, setEarnData] = useState({});
   const [bookingsData, setBookingsData] = useState([]);
   const [selectedBookingNumber, setSelectedBookingNumber] = useState(null);
 
-  const getEarningData = async () => {
+  const fetchEarningData = useCallback(async () => {
     try {
       const response = await DRIVER_EARNING({
         action: 'fetch_life_time_earning',
@@ -33,58 +32,72 @@ const DriverEarning = () => {
       setLifeTimeEarn(response.lifetime_earning);
       setEarnData(response.commission_data);
     } catch (err) {
-      console.log(err, 'Earning err');
+      console.error('Error fetching earning data:', err);
     }
-  };
+  }, []);
 
-  const viewAllEarning = async () => {
+  const fetchAllEarnings = useCallback(async () => {
     try {
       const response = await DRIVER_EARNING({
         action: 'view_all_earnings',
       });
-      // setBookingsData(response.bookings);
+      setBookingsData(response.bookings);
     } catch (error) {
-      console.log(error, ' View All Earning error');
+      console.error('Error fetching all earnings:', error);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    getEarningData();
-    viewAllEarning();
+    fetchEarningData();
+    fetchAllEarnings();
+  }, [fetchEarningData, fetchAllEarnings]);
+
+  const handleEyeIconPress = useCallback(bookingNumber => {
+    setSelectedBookingNumber(bookingNumber);
+    setIsModalVisible(true);
   }, []);
 
-  const handleEyeIconPress = useCallback(booking_number => {
-    setSelectedBookingNumber(booking_number);
-    setPackageDetailsDriverEarning(true);
-  }, []);
-
-  const renderTripItem = ({item}) => (
-    <TouchableOpacity
-      style={styles.tripItem}
-      onPress={() => handleEyeIconPress(item.booking_number)}>
-      <View style={styles.tripHeader}>
-        <Icon
-          name="eye"
-          size={20}
-          color={AppColors.mainColor}
-          style={styles.eyeIcon}
-        />
-
-        <View style={styles.contentContainer}>
-          <View style={styles.tripInfo}>
-            <Text style={styles.tripType}>
-              {item.package_detail} - {item.payment_mode}
-            </Text>
-            <Text style={styles.tripDate}>
-              {item.booking_date} -{' '}
-              <Text style={styles.settlementType}>{item.payment_status}</Text>{' '}
-              {item.settle_date}
-            </Text>
+  const renderTripItem = useCallback(
+    ({item}) => (
+      <TouchableOpacity
+        style={styles.tripItem}
+        onPress={() => handleEyeIconPress(item.booking_number)}>
+        <View style={styles.tripHeader}>
+          <Icon
+            name="eye"
+            size={20}
+            color={AppColors.mainColor}
+            style={styles.eyeIcon}
+          />
+          <View style={styles.contentContainer}>
+            <View style={styles.tripInfo}>
+              <Text style={styles.tripType}>
+                {item.package_detail} - {item.payment_mode}
+              </Text>
+              <Text style={styles.tripDate}>
+                {item.booking_date} -{' '}
+                <Text style={styles.settlementType}>{item.payment_status}</Text>{' '}
+                {item.settle_date}
+              </Text>
+            </View>
+            <Text style={styles.tripAmount}>₹{item.revised_supply_cost}</Text>
           </View>
-          <Text style={styles.tripAmount}>₹{item.revised_supply_cost}</Text>
         </View>
+      </TouchableOpacity>
+    ),
+    [handleEyeIconPress],
+  );
+
+  const renderEarningHeadline = useCallback(
+    ({amount, days}) => (
+      <View style={styles.headlineContent}>
+        <Text style={styles.headlineAmount}>
+          <Icon name="rupee" /> {amount}
+        </Text>
+        <Text style={styles.headlineDays}>{days} days</Text>
       </View>
-    </TouchableOpacity>
+    ),
+    [],
   );
 
   return (
@@ -92,42 +105,27 @@ const DriverEarning = () => {
       <Header backButton={true} />
       <Modal
         backdropOpacity={0}
-        onBackdropPress={() => setPackageDetailsDriverEarning(false)}
+        onBackdropPress={() => setIsModalVisible(false)}
         animationIn={'fadeInDown'}
         animationOut={'fadeOutUp'}
-        isVisible={packageDetailsDriverEarning}>
-        <DriverEarnIngModal
-          setPackageDetailsDriverEarning={setPackageDetailsDriverEarning}
+        isVisible={isModalVisible}>
+        <DriverEarningModal
+          setIsModalVisible={setIsModalVisible}
           bookingNumber={selectedBookingNumber}
         />
       </Modal>
       <View style={styles.earningHeader}>
         <View style={styles.EarnMAinView}>
           <Text style={styles.earningHeaderText}>
-            My tatd Earning ₹ {lifeTimeEarn}
+            My Total Earning ₹ {lifeTimeEarn}
           </Text>
         </View>
       </View>
 
       <View style={styles.headlineContainer}>
-        <View style={styles.headlineContent}>
-          <Text style={styles.headlineAmount}>
-            <Icon name="rupee" /> {earnData.earning_7days}
-          </Text>
-          <Text style={styles.headlineDays}>7 days</Text>
-        </View>
-        <View style={styles.headlineContent}>
-          <Text style={styles.headlineAmount}>
-            <Icon name="rupee" /> {earnData.earning_15days}
-          </Text>
-          <Text style={styles.headlineDays}>15 days</Text>
-        </View>
-        <View style={styles.headlineContent}>
-          <Text style={styles.headlineAmount}>
-            <Icon name="rupee" /> {earnData.earning_30days}
-          </Text>
-          <Text style={styles.headlineDays}>30 days</Text>
-        </View>
+        {renderEarningHeadline({amount: earnData.earning_7days, days: 7})}
+        {renderEarningHeadline({amount: earnData.earning_15days, days: 15})}
+        {renderEarningHeadline({amount: earnData.earning_30days, days: 30})}
       </View>
 
       <FlatList
@@ -139,6 +137,8 @@ const DriverEarning = () => {
     </SafeAreaView>
   );
 };
+
+export default DriverEarning;
 
 const styles = StyleSheet.create({
   container: {
@@ -236,5 +236,3 @@ const styles = StyleSheet.create({
     color: '#000',
   },
 });
-
-export default DriverEarning;

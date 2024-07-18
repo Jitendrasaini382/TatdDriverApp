@@ -1,5 +1,5 @@
-import {StyleSheet, View, SafeAreaView, ScrollView, Text} from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
+import {View, SafeAreaView, ScrollView, Text, StyleSheet} from 'react-native';
 import ToggleButton from '../components/ToggleButton';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
@@ -8,12 +8,15 @@ import AllNoticeBoardDetails from '../components/AllNoticeBoardDetails';
 const DriverNotice = ({navigation}) => {
   const [currentView, setCurrentView] = useState('NOTICE BOARD');
 
-  const handleToggle = label => {
-    setCurrentView(label);
-    if (label === 'NOTIFICATIONS') {
-      navigation.navigate('DriverNotifications');
-    }
-  };
+  const handleToggle = useCallback(
+    label => {
+      setCurrentView(label);
+      if (label === 'NOTIFICATIONS') {
+        navigation.navigate('DriverNotifications');
+      }
+    },
+    [navigation],
+  );
 
   return (
     <SafeAreaView style={styles.container}>

@@ -55,7 +55,7 @@ const TrustedDriver = ({navigation}) => {
 
   console.log(refreshToken, 'contest trusted REFRESH');
 
-  // console.log(jwtToken, 'trusted context jwttt');
+  console.log(jwtToken, 'trusted context jwttt');
   const decodeData = () => {
     const token = jwtToken;
     const decoded = jwtDecode(token);
@@ -194,7 +194,8 @@ const TrustedDriver = ({navigation}) => {
                 </View>
                 <View style={styles.topRight}>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('DriverEarning')}>
+                    onPress={() => navigation.navigate('DriverEarning')}
+                    >
                     <View style={styles.earningView}>
                       <Text style={styles.rupeeIcon}>
                         <Icon name="rupee" size={responsiveSize(7)} />

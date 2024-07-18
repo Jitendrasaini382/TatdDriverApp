@@ -158,7 +158,7 @@ export const NoticeBoardDetailScreen = ({route, navigation}) => {
     }
   };
   useEffect(() => {
-    console.log('Notice ID:', noticeId);
+    console.log('Notice IDaaaaaaaaaaaaaaaaaaaa:', noticeId);
 
     viewOneAwarness();
     viewFooterLinks(noticeId);
@@ -218,7 +218,7 @@ export const NoticeBoardDetailScreen = ({route, navigation}) => {
                 paddingHorizontal: 20,
               }}>
               <TouchableOpacity
-                key={footerNotice.id}
+                // key={footerNotice.id}
                 style={{
                   flexDirection: 'row',
                   alignItems: 'flex-start',

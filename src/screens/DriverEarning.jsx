@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -16,148 +16,75 @@ import DriverEarnIngModal from '../components/modal/DriverEarnIngModal';
 import {DRIVER_EARNING} from '../apis/Apis';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
-const tripData = [
-  {
-    type: 'Incity Roundtrip',
-    duration: '10 Hours',
-    mode: 'Cash',
-    amount: 985,
-    date: '26 Jun,2024',
-    settlementType: 'Cash With Driver',
-    settlementDate: '25 Jun,2024',
-  },
-  {
-    type: 'Incity Roundtrip',
-    duration: '5 Hours',
-    mode: 'Cash',
-    amount: 1000,
-    date: '28 Jun,2024',
-    settlementType: 'Cash With Driver',
-    settlementDate: '17 Jun,2024',
-  },
-  {
-    type: 'Incity Roundtrip',
-    duration: '15 Hours',
-    mode: 'Cash',
-    amount: 800,
-    date: '14 Jun,2024',
-    settlementType: 'Cash With Driver',
-    settlementDate: '10 Jun,2024',
-  },
-  {
-    type: 'Incity Roundtrip',
-    duration: '1 Hours',
-    mode: 'Cash',
-    amount: 700,
-    date: '71 Jun,2024',
-    settlementType: 'Cash With Driver',
-    settlementDate: '14 Jun,2024',
-  },
-  {
-    type: 'Incity Roundtrip',
-    duration: '6 Hours',
-    mode: 'Cash',
-    amount: 985,
-    date: '17 Jun,2024',
-    settlementType: 'Cash With Driver',
-    settlementDate: '66 Jun,2024',
-  },
-  {
-    type: 'Incity Roundtrip',
-    duration: '10 Hours',
-    mode: 'Cash',
-    amount: 985,
-    date: '26 Jun,2024',
-    settlementType: 'Cash With Driver',
-    settlementDate: '44 Jun,2024',
-  },
-  {
-    type: 'Incity Roundtrip',
-    duration: '10 Hours',
-    mode: 'Cash',
-    amount: 985,
-    date: '26 Jun,2024',
-    settlementType: 'Cash With Driver',
-    settlementDate: '25 Jun,2024',
-  },
-  {
-    type: 'Incity Roundtrip',
-    duration: '10 Hours',
-    mode: 'Cash',
-    amount: 985,
-    date: '26 Jun,2024',
-    settlementType: 'Cash With Driver',
-    settlementDate: '25 Jun,2024',
-  },
-  {
-    type: 'Incity Roundtrip',
-    duration: '10 Hours',
-    mode: 'Cash',
-    amount: 985,
-    date: '26 Jun,2024',
-    settlementType: 'Cash With Driver',
-    settlementDate: '25 Jun,2024',
-  },
-  {
-    type: 'Incity Roundtrip',
-    duration: '10 Hours',
-    mode: 'Cash',
-    amount: 985,
-    date: '26 Jun,2024',
-    settlementType: 'Cash With Driver',
-    settlementDate: '25 Jun,2024',
-  },
-];
 
 const DriverEarning = () => {
   const [packageDetailsDriverEarning, setPackageDetailsDriverEarning] =
     useState(false);
-  const [selectedTrip, setSelectedTrip] = useState(null);
+  const [lifeTimeEarn, setLifeTimeEarn] = useState('');
+  const [earnData, setEarnData] = useState({});
+  const [bookingsData, setBookingsData] = useState([]);
+  const [selectedBookingNumber, setSelectedBookingNumber] = useState(null);
 
-  const lifeTimeEarning = async () => {
+  const getEarningData = async () => {
     try {
-      const response = await DRIVER_EARNING();
-      console.log(response, 'DRIVER_EARNING Data');
-    } catch (error) {
-      console.log(error, 'DRIVER_EARNING errror');
+      const response = await DRIVER_EARNING({
+        action: 'fetch_life_time_earning',
+      });
+      setLifeTimeEarn(response.lifetime_earning);
+      setEarnData(response.commission_data);
+    } catch (err) {
+      console.log(err, 'Earning err');
     }
   };
 
-  useEffect(()=>{
-    // lifeTimeEarning()
-  }, [])
+  const viewAllEarning = async () => {
+    try {
+      const response = await DRIVER_EARNING({
+        action: 'view_all_earnings',
+      });
+      // setBookingsData(response.bookings);
+    } catch (error) {
+      console.log(error, ' View All Earning error');
+    }
+  };
+
+  useEffect(() => {
+    getEarningData();
+    viewAllEarning();
+  }, []);
+
+  const handleEyeIconPress = useCallback(booking_number => {
+    setSelectedBookingNumber(booking_number);
+    setPackageDetailsDriverEarning(true);
+  }, []);
 
   const renderTripItem = ({item}) => (
-    <View style={styles.tripItem}>
+    <TouchableOpacity
+      style={styles.tripItem}
+      onPress={() => handleEyeIconPress(item.booking_number)}>
       <View style={styles.tripHeader}>
-        <TouchableOpacity
-          onPress={() => {
-            setSelectedTrip(item);
-            setPackageDetailsDriverEarning(true);
-          }}>
-          <Icon
-            name="eye"
-            size={20}
-            color={AppColors.mainColor}
-            style={styles.eyeIcon}
-          />
-        </TouchableOpacity>
-
+        <Icon
+          name="eye"
+          size={20}
+          color={AppColors.mainColor}
+          style={styles.eyeIcon}
+        />
+  
         <View style={styles.contentContainer}>
           <View style={styles.tripInfo}>
             <Text style={styles.tripType}>
-              {item.type} - {item.duration} - {item.mode}
+              {item.package_detail} - {item.payment_mode}
             </Text>
             <Text style={styles.tripDate}>
-              {item.date} -{' '}
-              <Text style={styles.settlementType}>{item.settlementType}</Text>{' '}
-              {item.settlementDate}
+              {item.booking_date} -{' '}
+              <Text style={styles.settlementType}>{item.payment_status}</Text>{' '}
+              {item.settle_date}
             </Text>
           </View>
-          <Text style={styles.tripAmount}>₹{item.amount}</Text>
+          <Text style={styles.tripAmount}>₹{item.revised_supply_cost}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -171,39 +98,42 @@ const DriverEarning = () => {
         isVisible={packageDetailsDriverEarning}>
         <DriverEarnIngModal
           setPackageDetailsDriverEarning={setPackageDetailsDriverEarning}
-          tripDetails={selectedTrip}
+          bookingNumber={selectedBookingNumber}
         />
       </Modal>
       <View style={styles.earningHeader}>
-        <Text style={styles.earningHeaderText}>My tatd Earning ₹15147</Text>
-        <View style={styles.underLineView}></View>
+        <View style={styles.EarnMAinView}>
+          <Text style={styles.earningHeaderText}>
+            My tatd Earning ₹ {lifeTimeEarn}
+          </Text>
+        </View>
       </View>
 
       <View style={styles.headlineContainer}>
         <View style={styles.headlineContent}>
           <Text style={styles.headlineAmount}>
-            <Icon name="rupee" /> 0
+            <Icon name="rupee" /> {earnData.earning_7days}
           </Text>
           <Text style={styles.headlineDays}>7 days</Text>
         </View>
         <View style={styles.headlineContent}>
           <Text style={styles.headlineAmount}>
-            <Icon name="rupee" /> 0
+            <Icon name="rupee" /> {earnData.earning_15days}
           </Text>
-          <Text style={styles.headlineDays}>30 days</Text>
+          <Text style={styles.headlineDays}>15 days</Text>
         </View>
         <View style={styles.headlineContent}>
           <Text style={styles.headlineAmount}>
-            <Icon name="rupee" /> 0
+            <Icon name="rupee" /> {earnData.earning_30days}
           </Text>
-          <Text style={styles.headlineDays}>90 days</Text>
+          <Text style={styles.headlineDays}>30 days</Text>
         </View>
       </View>
 
       <FlatList
-        data={tripData}
+        data={bookingsData}
         renderItem={renderTripItem}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={item => item.booking_number}
         style={styles.tripList}
       />
     </SafeAreaView>
@@ -220,6 +150,10 @@ const styles = StyleSheet.create({
     paddingRight: '4%',
     paddingTop: '5%',
     paddingBottom: '2%',
+  },
+  EarnMAinView: {
+    borderBottomWidth: 1,
+    alignSelf: 'flex-end',
   },
   headlineContainer: {
     flexDirection: 'row',
@@ -249,14 +183,16 @@ const styles = StyleSheet.create({
     fontSize: SCREEN_WIDTH * 0.04,
     fontWeight: 'bold',
     color: AppColors.black,
+    paddingBottom: 5,
   },
   underLineView: {
     borderBottomWidth: 1,
     borderBottomColor: AppColors.black,
     height: 1,
-    width: SCREEN_WIDTH * 0.3,
+    width: SCREEN_WIDTH * 0.35,
     marginTop: 5,
-    marginRight: 20,
+    marginHorizontal: 10,
+    alignSelf: 'flex-end',
   },
   tripList: {
     flex: 1,

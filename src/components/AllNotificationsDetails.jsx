@@ -24,8 +24,11 @@ import {AppFont} from '../assets/FontsFamily';
 const {width, height} = Dimensions.get('window');
 
 const AllNotificationComponent = () => {
-  const [notificationData, setNotificationData] = useState([]);
+  // const [notificationData, setNotificationData] = useState([]);
   const navigation = useNavigation();
+  const{notificationData} = useContext(TokenConstextApi)
+  const {setNotificationData} = useContext(TokenConstextApi)
+
 
   const handleNotificationPress = notification => {
     navigation.navigate('NotificationDetail', {

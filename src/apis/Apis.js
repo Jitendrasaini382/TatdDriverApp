@@ -92,13 +92,6 @@ export const DRIVER_NOTICE = body => {
 
 // https://www.tatd.in/app-api/driver/trusted-driver/driver-earning-api.php
 
-export const DRIVER_EARNING = () => {
-  return _Fetch(
-    'POST',
-    'trusted-driver/driver-earning-api.php',
-    {
-      action: 'fetch_life_time_earning',
-    },
-    {},
-  );
+export const DRIVER_EARNING = body => {
+  return _Fetch('POST', 'trusted-driver/driver-earning-api.php',{...body}, {});
 };

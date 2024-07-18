@@ -7,30 +7,6 @@ import {MY_BONUS_HISTORY} from '../apis/Apis';
 const MyBonusStatusHistory = () => {
   const [bonusData, setBonusData] = useState([]);
 
-  // const bonusData = [
-  //   {
-  //     create_date: '14 May,2024',
-  //     name: 'Ambuj Tripathi',
-  //     bonus_type: 'Cash Adjustment-392065',
-  //     payment_status: 'Paid 15 May,2024',
-  //     amount: 50,
-  //   },
-  //   {
-  //     create_date: '16 May,2024',
-  //     name: 'Ram kumar',
-  //     bonus_type: 'Cash Adjustment-392065',
-  //     payment_status: 'Paid 18 May,2024',
-  //     amount: 250,
-  //   },
-  //   {
-  //     create_date: '16 May,2024',
-  //     name: 'Ram kumar',
-  //     bonus_type: 'Cash Adjustment-392065',
-  //     payment_status: 'Paid 18 May,2024',
-  //     amount: 250,
-  //   },
-  // ];
-
   const getAllBonusData = async () => {
     try {
       const response = await MY_BONUS_HISTORY({

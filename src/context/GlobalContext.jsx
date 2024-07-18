@@ -19,6 +19,8 @@ export const GlobalContextApi = ({children}) => {
   const [buttonShow, setButtonShow] = useState(false);
   const [showButtonText, setShowButtonText] = useState('');
   const [storedRating, setStoredRating] = useState(null);
+  const [notificationData, setNotificationData] = useState([]);
+
   // console.log(jwtToken, 'jjjjjjjjjjjjjjjjjjjjkkkkkkkkkkkkkkkkkkkk');
 
   const getTokens = async () => {
@@ -74,6 +76,8 @@ export const GlobalContextApi = ({children}) => {
     rating,
     setRating,
     setTicketData,
+    notificationData,
+    setNotificationData,
     faqData,
     setFaqData,
     setJwtToken,

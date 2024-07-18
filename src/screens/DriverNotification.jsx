@@ -18,18 +18,7 @@ import {DRIVER_NOTIFICATION} from '../apis/Apis';
 
 const DriverNotifications = ({navigation}) => {
   const [currentView, setCurrentView] = useState('NOTIFICATIONS');
-  const [notificationData, setNotificationData] = useState([]);
 
-  const clearAllNotification = data => {
-    DRIVER_NOTIFICATION(data)
-      .then(e => {
-        Alert.alert(e.message);
-        console.log(e.message, 'clear notification     data');
-      })
-      .catch(err => {
-        console.log(err, 'err clear Notification');
-      });
-  };
 
   const handleToggle = label => {
     setCurrentView(label);

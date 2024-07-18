@@ -69,7 +69,7 @@ const DriverEarning = () => {
           color={AppColors.mainColor}
           style={styles.eyeIcon}
         />
-  
+
         <View style={styles.contentContainer}>
           <View style={styles.tripInfo}>
             <Text style={styles.tripType}>

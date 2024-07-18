@@ -4,37 +4,40 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
   LayoutAnimation,
   Pressable,
-  TextInput,
-  Alert,
 } from 'react-native';
 
-import React, { useContext, useEffect, useState, useCallback } from 'react';
-import { AppColors } from '../assets/Colors';
-import { DRIVER_FAQ } from '../apis/Apis';
+import React, {useContext, useEffect, useState, useCallback} from 'react';
+import {AppColors} from '../assets/Colors';
+import {DRIVER_FAQ} from '../apis/Apis';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import { TokenConstextApi } from '../context/GlobalContext';
+import {TokenConstextApi} from '../context/GlobalContext';
 
-const AccordionItem = React.memo(({ title, content, onPress, expanded, isInner }) => (
-  <View
-    style={
-      isInner
-        ? accordianStyles.innerAccordionItem
-        : accordianStyles.accordionItem
-    }>
-    <Pressable onPress={onPress}>
-      <View style={accordianStyles.itemHeader}>
-        <Text style={accordianStyles.headerText}>{title}</Text>
-        <Icon name={expanded ? 'minus' : 'plus'} size={12} color={'#007bff'} />
-      </View>
-    </Pressable>
-    {expanded && <View style={accordianStyles.itemContent}>{content}</View>}
-  </View>
-));
+const AccordionItem = React.memo(
+  ({title, content, onPress, expanded, isInner}) => (
+    <View
+      style={
+        isInner
+          ? accordianStyles.innerAccordionItem
+          : accordianStyles.accordionItem
+      }>
+      <Pressable onPress={onPress}>
+        <View style={accordianStyles.itemHeader}>
+          <Text style={accordianStyles.headerText}>{title}</Text>
+          <Icon
+            name={expanded ? 'minus' : 'plus'}
+            size={12}
+            color={'#007bff'}
+          />
+        </View>
+      </Pressable>
+      {expanded && <View style={accordianStyles.itemContent}>{content}</View>}
+    </View>
+  ),
+);
 
-const Accordion = React.memo(({ data, expandedIndexes, toggleIndex }) => (
+const Accordion = React.memo(({data, expandedIndexes, toggleIndex}) => (
   <View style={accordianStyles.innerAccordion}>
     {data.map((item, index) => (
       <AccordionItem
@@ -55,7 +58,7 @@ const AccordionData = () => {
   const [expandedParentIndexes, setExpandedParentIndexes] = useState([]);
   const [expandedChildIndexes, setExpandedChildIndexes] = useState({});
 
-  const { faqData, setFaqData } = useContext(TokenConstextApi);
+  const {faqData, setFaqData} = useContext(TokenConstextApi);
 
   const getFaqData = useCallback(() => {
     DRIVER_FAQ({
@@ -78,13 +81,16 @@ const AccordionData = () => {
   }, [getFaqData]);
 
   const groupedData = React.useMemo(() => {
-    return faqData && faqData.reduce((acc, item) => {
-      if (!acc[item.faq_header]) {
-        acc[item.faq_header] = [];
-      }
-      acc[item.faq_header].push(item);
-      return acc;
-    }, {});
+    return (
+      faqData &&
+      faqData.reduce((acc, item) => {
+        if (!acc[item.faq_header]) {
+          acc[item.faq_header] = [];
+        }
+        acc[item.faq_header].push(item);
+        return acc;
+      }, {})
+    );
   }, [faqData]);
 
   const data = React.useMemo(() => {
@@ -94,7 +100,7 @@ const AccordionData = () => {
     }));
   }, [groupedData]);
 
-  const toggleParentAccordion = useCallback((index) => {
+  const toggleParentAccordion = useCallback(index => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpandedParentIndexes(prev =>
       prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index],
@@ -109,8 +115,8 @@ const AccordionData = () => {
         ? prev[parentIndex].filter(i => i !== childIndex)
         : [...(prev[parentIndex] || []), childIndex],
     }));
-    setExpandedParentIndexes(prev => 
-      prev.includes(parentIndex) ? prev : [...prev, parentIndex]
+    setExpandedParentIndexes(prev =>
+      prev.includes(parentIndex) ? prev : [...prev, parentIndex],
     );
   }, []);
 
@@ -181,21 +187,6 @@ const accordianStyles = StyleSheet.create({
 });
 
 export default AccordionData;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import {
 //   View,

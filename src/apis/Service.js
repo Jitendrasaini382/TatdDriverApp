@@ -10,7 +10,7 @@ const api = axios.create({
 
 // Request interceptor
 api.interceptors.request.use(
-  async (config) => {
+  async config => {
     const token = await AsyncStorage.getItem('jwt');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
@@ -18,9 +18,9 @@ api.interceptors.request.use(
     config.headers['Content-Type'] = 'application/json';
     return config;
   },
-  (error) => {
+  error => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response interceptor
@@ -38,7 +38,7 @@ api.interceptors.response.use(
         const response = await axios.get(
           `${API_BASE_URL}/login/refresh_token.php`,
           {
-            params: { refresh_token: refreshToken },
+            params: {refresh_token: refreshToken},
           },
         );
 
@@ -60,7 +60,7 @@ api.interceptors.response.use(
   },
 );
 
-const _Fetch = (method, path, body, header = {}) => {
+const _Fetch = (method, path, body, header) => {
   return new Promise((resolve, reject) => {
     api({
       method,
@@ -85,27 +85,6 @@ const _Fetch = (method, path, body, header = {}) => {
 };
 
 export default _Fetch;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // // import axios from 'axios';
 // // import {API_BASE_URL} from '../constant/path';

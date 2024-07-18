@@ -1,3 +1,4 @@
+import React, {useContext, useEffect, useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -6,13 +7,11 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-
-import React, {useContext, useEffect, useState} from 'react';
-import Header from '../components/Header';
 import Modal from 'react-native-modal';
+
+import Header from '../components/Header';
 import {AppFont} from '../assets/FontsFamily';
 import {AppColors} from '../assets/Colors';
-
 import {TICKETS_DRIVER} from '../apis/Apis';
 import TicketDetails from '../components/modal/TicketDetailsModal';
 import {TokenConstextApi} from '../context/GlobalContext';
@@ -22,99 +21,93 @@ import CreateTicketModal from '../components/modal/CreateTicketModal';
 const TicketsDriver = () => {
   const [createTicketModal, setCreateTicketModal] = useState(false);
   const [ticketDetailsModal, setTicketDetailsModal] = useState(false);
-  const {selectedTicketId} = useContext(TokenConstextApi);
+  const {
+    selectedTicketId,
+    setSelectedTicketId,
+    buttonShow,
+    setButtonShow,
+    showButtonText,
+    setShowButtonText,
+    ticketsData,
+    setTicketData,
+  } = useContext(TokenConstextApi);
 
-  const {setButtonShow} = useContext(TokenConstextApi);
-  const {buttonShow} = useContext(TokenConstextApi);
-  const {setShowButtonText} = useContext(TokenConstextApi);
-  const {showButtonText} = useContext(TokenConstextApi);
-  const {ticketsData} = useContext(TokenConstextApi);
-  const {setTicketData} = useContext(TokenConstextApi);
+  const showDriverTicket = useCallback(async () => {
+    try {
+      const response = await TICKETS_DRIVER({action: 'show_driver_ticket'});
+      setTicketData(response.tickets);
+    } catch (err) {
+      console.error('Show Driver Ticket Error:', err);
+    }
+  }, [setTicketData]);
 
-  const {setSelectedTicketId} = useContext(TokenConstextApi);
-
-  const showDriverTicket = async data => {
-    TICKETS_DRIVER(data)
-      .then(e => {
-        setTicketData(e.tickets);
-      })
-      .catch(err => {
-        console.log(err, 'show Driver Ticket Error');
-      });
-  };
+  const checkOpenTicket = useCallback(async () => {
+    try {
+      const response = await TICKETS_DRIVER({action: 'open_ticket'});
+      if (
+        response.status_code == 200 &&
+        response.message === 'no_open_ticket_found'
+      ) {
+        setButtonShow(true);
+        setShowButtonText('');
+      } else {
+        setButtonShow(false);
+        setShowButtonText(response.message);
+      }
+    } catch (err) {
+      console.error('Network Error:', err);
+    }
+  }, [setButtonShow, setShowButtonText]);
 
   useEffect(() => {
     checkOpenTicket();
-    showDriverTicket({
-      action: 'show_driver_ticket',
-    });
-  }, []);
+    showDriverTicket();
+  }, [checkOpenTicket, showDriverTicket]);
 
-  const checkOpenTicket = () => {
-    TICKETS_DRIVER({action: 'open_ticket'})
-      .then(response => {
-        if (
-          response.status_code == 200 &&
-          response.message == 'no_open_ticket_found'
-        ) {
-          setButtonShow(true);
-          setShowButtonText('');
-        } else {
-          setButtonShow(false);
-          setShowButtonText(response.message);
-        }
-      })
-      .catch(err => {
-        console.log(err, ' Network Error');
-      });
-  };
+  const handleTicketPress = useCallback(
+    id => {
+      setTicketDetailsModal(true);
+      setSelectedTicketId(id);
+    },
+    [setSelectedTicketId],
+  );
 
-  const renderItem = (item, index) => (
-    <View key={item.id} style={[styles.row, index === 0 && styles.firstRow]}>
-      <TouchableOpacity
-        onPress={() => {
-          setTicketDetailsModal(true), setSelectedTicketId(item.id);
-        }}
-        style={styles.cell}>
-        <Text style={styles.cellText}>{item.id}</Text>
-      </TouchableOpacity>
-      <View style={[styles.cell2, styles.middleCell]}>
-        <Text style={styles.cellText}>{item.timestamp}</Text>
-      </View>
-      <View style={styles.cell}>
-        <View
-          style={[
-            styles.statusButton,
-            index === 0 && styles.firstStatusButton,
-          ]}>
-          <Text
-            style={[styles.statusText, index === 0 && styles.firstStatusText]}>
-            {item.ticket_status}
-          </Text>
+  const renderItem = useCallback(
+    ({id, timestamp, ticket_status}, index) => (
+      <View key={id} style={[styles.row, index === 0 && styles.firstRow]}>
+        <TouchableOpacity
+          onPress={() => handleTicketPress(id)}
+          style={styles.cell}>
+          <Text style={styles.cellText}>{id}</Text>
+        </TouchableOpacity>
+        <View style={[styles.cell2, styles.middleCell]}>
+          <Text style={styles.cellText}>{timestamp}</Text>
+        </View>
+        <View style={styles.cell}>
+          <View
+            style={[
+              styles.statusButton,
+              index === 0 && styles.firstStatusButton,
+            ]}>
+            <Text
+              style={[
+                styles.statusText,
+                index === 0 && styles.firstStatusText,
+              ]}>
+              {ticket_status}
+            </Text>
+          </View>
         </View>
       </View>
-    </View>
+    ),
+    [handleTicketPress],
   );
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <Header backButton={true} />
-
-      <ScrollView style={{margin: 15}}>
+      <ScrollView style={styles.scrollView}>
         <AccordionData />
-
-        {/* {buttonShow ? (
-          <TouchableOpacity
-            onPress={() => setCreateTicketModal(true)}
-            style={styles.button}>
-            <Text style={styles.buttonText}>Create Ticket</Text>
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.showButtonView}>
-            <Text style={styles.showbtnText}>{showButtonText}</Text>
-          </View>
-        )} */}
-
         {buttonShow ? (
           <TouchableOpacity
             onPress={() => setCreateTicketModal(true)}
@@ -130,19 +123,17 @@ const TicketsDriver = () => {
         <Modal
           backdropOpacity={0}
           onBackdropPress={() => setCreateTicketModal(false)}
-          animationIn={'fadeInDown'}
-          animationOut={'fadeOutUp'}
+          animationIn="fadeInDown"
+          animationOut="fadeOutUp"
           isVisible={createTicketModal}>
           <CreateTicketModal setCreateTicketModal={setCreateTicketModal} />
         </Modal>
 
-        {/* TicketDetails modal */}
-
         <Modal
           backdropOpacity={0}
           onBackdropPress={() => setTicketDetailsModal(false)}
-          animationIn={'fadeInDown'}
-          animationOut={'fadeOutUp'}
+          animationIn="fadeInDown"
+          animationOut="fadeOutUp"
           isVisible={ticketDetailsModal}>
           <TicketDetails
             setTicketDetailsModal={setTicketDetailsModal}
@@ -150,7 +141,6 @@ const TicketsDriver = () => {
           />
         </Modal>
 
-        {/* <TicketList setTicketDetailsModal={setTicketDetailsModal} /> */}
         <View style={styles.container}>
           <View style={styles.header}>
             <View style={styles.headerCell1}>
@@ -163,8 +153,7 @@ const TicketsDriver = () => {
               <Text style={styles.headerText}>Status</Text>
             </View>
           </View>
-          {ticketsData &&
-            ticketsData.map((item, index) => renderItem(item, index))}
+          {ticketsData && ticketsData.map(renderItem)}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -172,6 +161,9 @@ const TicketsDriver = () => {
 };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    margin: 15,
+  },
   safeAreaView: {
     display: 'flex',
     flexDirection: 'column',
@@ -294,7 +286,5 @@ const styles = StyleSheet.create({
   },
   showbtnText: {color: AppColors.black, fontWeight: '500', fontSize: 15},
 });
-
-// {/* Main Component end */}
 
 export default TicketsDriver;

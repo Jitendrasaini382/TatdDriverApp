@@ -11,13 +11,13 @@ import {
   Alert,
 } from 'react-native';
 
-import React, {useContext, useEffect, useState} from 'react';
-import {AppColors} from '../assets/Colors';
-import {DRIVER_FAQ} from '../apis/Apis';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
+import { AppColors } from '../assets/Colors';
+import { DRIVER_FAQ } from '../apis/Apis';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import {TokenConstextApi} from '../context/GlobalContext';
+import { TokenConstextApi } from '../context/GlobalContext';
 
-const AccordionItem = ({title, content, onPress, expanded, isInner}) => (
+const AccordionItem = React.memo(({ title, content, onPress, expanded, isInner }) => (
   <View
     style={
       isInner
@@ -32,9 +32,9 @@ const AccordionItem = ({title, content, onPress, expanded, isInner}) => (
     </Pressable>
     {expanded && <View style={accordianStyles.itemContent}>{content}</View>}
   </View>
-);
+));
 
-const Accordion = ({data, expandedIndexes, toggleIndex}) => (
+const Accordion = React.memo(({ data, expandedIndexes, toggleIndex }) => (
   <View style={accordianStyles.innerAccordion}>
     {data.map((item, index) => (
       <AccordionItem
@@ -49,104 +49,99 @@ const Accordion = ({data, expandedIndexes, toggleIndex}) => (
       />
     ))}
   </View>
-);
+));
 
 const AccordionData = () => {
   const [expandedParentIndexes, setExpandedParentIndexes] = useState([]);
   const [expandedChildIndexes, setExpandedChildIndexes] = useState({});
 
-  // const [faqData, setFaqData] = useState([]);
-  const {faqData} = useContext(TokenConstextApi);
-  const {setFaqData} = useContext(TokenConstextApi);
+  const { faqData, setFaqData } = useContext(TokenConstextApi);
 
-  const getFaqData = () => {
+  const getFaqData = useCallback(() => {
     DRIVER_FAQ({
       action: 'driver_faq',
     })
       .then(e => {
-        if (e.status_code == '200') {
+        if (e.status_code === '200') {
           setFaqData(e.faq_data);
         } else {
           console.log('Loading Faq Data');
         }
-
-        // console.log(e, "faq data");
       })
       .catch(err => {
-        console.log(err, 'faq errrtrtr');
+        console.error('FAQ Error:', err);
       });
-  };
+  }, [setFaqData]);
 
   useEffect(() => {
     getFaqData();
-  }, []);
+  }, [getFaqData]);
 
-  // Group the faq_data by faq_header
-  const groupedData =
-    faqData &&
-    faqData.reduce((acc, item) => {
+  const groupedData = React.useMemo(() => {
+    return faqData && faqData.reduce((acc, item) => {
       if (!acc[item.faq_header]) {
         acc[item.faq_header] = [];
       }
       acc[item.faq_header].push(item);
       return acc;
     }, {});
+  }, [faqData]);
 
-  const data = Object.entries(groupedData).map(([header, questions]) => ({
-    title: header,
-    content: questions,
-  }));
+  const data = React.useMemo(() => {
+    return Object.entries(groupedData || {}).map(([header, questions]) => ({
+      title: header,
+      content: questions,
+    }));
+  }, [groupedData]);
 
-  const toggleParentAccordion = index => {
-    animateLayout();
+  const toggleParentAccordion = useCallback((index) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpandedParentIndexes(prev =>
       prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index],
     );
-  };
+  }, []);
 
-  const toggleChildAccordion = (parentIndex, childIndex) => {
-    animateLayout();
+  const toggleChildAccordion = useCallback((parentIndex, childIndex) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpandedChildIndexes(prev => ({
       ...prev,
       [parentIndex]: prev[parentIndex]?.includes(childIndex)
         ? prev[parentIndex].filter(i => i !== childIndex)
         : [...(prev[parentIndex] || []), childIndex],
     }));
-    if (!expandedParentIndexes.includes(parentIndex)) {
-      setExpandedParentIndexes(prev => [...prev, parentIndex]);
-    }
-  };
-
-  const animateLayout = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  };
+    setExpandedParentIndexes(prev => 
+      prev.includes(parentIndex) ? prev : [...prev, parentIndex]
+    );
+  }, []);
 
   return (
     <SafeAreaView style={accordianStyles.content}>
-      {data.map((parentItem, parentIndex) => (
-        <AccordionItem
-          key={parentItem.title}
-          title={parentItem.title}
-          expanded={expandedParentIndexes.includes(parentIndex)}
-          onPress={() => toggleParentAccordion(parentIndex)}
-          content={
-            <Accordion
-              data={parentItem.content}
-              toggleIndex={childIndex =>
-                toggleChildAccordion(parentIndex, childIndex)
-              }
-              expandedIndexes={expandedChildIndexes[parentIndex] || []}
-            />
-          }
-        />
-      ))}
+      <ScrollView>
+        {data.map((parentItem, parentIndex) => (
+          <AccordionItem
+            key={parentItem.title}
+            title={parentItem.title}
+            expanded={expandedParentIndexes.includes(parentIndex)}
+            onPress={() => toggleParentAccordion(parentIndex)}
+            content={
+              <Accordion
+                data={parentItem.content}
+                toggleIndex={childIndex =>
+                  toggleChildAccordion(parentIndex, childIndex)
+                }
+                expandedIndexes={expandedChildIndexes[parentIndex] || []}
+              />
+            }
+          />
+        ))}
+      </ScrollView>
     </SafeAreaView>
   );
 };
+
 const accordianStyles = StyleSheet.create({
   content: {
     backgroundColor: AppColors.white,
-    // padding: 10,
   },
   accordionItem: {
     marginBottom: 10,
@@ -156,11 +151,9 @@ const accordianStyles = StyleSheet.create({
     borderColor: '#e0e0e0',
   },
   innerAccordion: {
-    // borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
   },
   innerAccordionItem: {
-    // borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
   },
   itemHeader: {
@@ -188,6 +181,212 @@ const accordianStyles = StyleSheet.create({
 });
 
 export default AccordionData;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import {
+//   View,
+//   Text,
+//   SafeAreaView,
+//   ScrollView,
+//   StyleSheet,
+//   TouchableOpacity,
+//   LayoutAnimation,
+//   Pressable,
+//   TextInput,
+//   Alert,
+// } from 'react-native';
+
+// import React, {useContext, useEffect, useState} from 'react';
+// import {AppColors} from '../assets/Colors';
+// import {DRIVER_FAQ} from '../apis/Apis';
+// import Icon from 'react-native-vector-icons/dist/FontAwesome';
+// import {TokenConstextApi} from '../context/GlobalContext';
+
+// const AccordionItem = ({title, content, onPress, expanded, isInner}) => (
+//   <View
+//     style={
+//       isInner
+//         ? accordianStyles.innerAccordionItem
+//         : accordianStyles.accordionItem
+//     }>
+//     <Pressable onPress={onPress}>
+//       <View style={accordianStyles.itemHeader}>
+//         <Text style={accordianStyles.headerText}>{title}</Text>
+//         <Icon name={expanded ? 'minus' : 'plus'} size={12} color={'#007bff'} />
+//       </View>
+//     </Pressable>
+//     {expanded && <View style={accordianStyles.itemContent}>{content}</View>}
+//   </View>
+// );
+
+// const Accordion = ({data, expandedIndexes, toggleIndex}) => (
+//   <View style={accordianStyles.innerAccordion}>
+//     {data.map((item, index) => (
+//       <AccordionItem
+//         key={item.faq_question}
+//         title={item.faq_question}
+//         content={
+//           <Text style={accordianStyles.contentText}>{item.faq_answer}</Text>
+//         }
+//         expanded={expandedIndexes.includes(index)}
+//         onPress={() => toggleIndex(index)}
+//         isInner={true}
+//       />
+//     ))}
+//   </View>
+// );
+
+// const AccordionData = () => {
+//   const [expandedParentIndexes, setExpandedParentIndexes] = useState([]);
+//   const [expandedChildIndexes, setExpandedChildIndexes] = useState({});
+
+//   // const [faqData, setFaqData] = useState([]);
+//   const {faqData} = useContext(TokenConstextApi);
+//   const {setFaqData} = useContext(TokenConstextApi);
+
+//   const getFaqData = () => {
+//     DRIVER_FAQ({
+//       action: 'driver_faq',
+//     })
+//       .then(e => {
+//         if (e.status_code == '200') {
+//           setFaqData(e.faq_data);
+//         } else {
+//           console.log('Loading Faq Data');
+//         }
+
+//         // console.log(e, "faq data");
+//       })
+//       .catch(err => {
+//         console.log(err, 'faq errrtrtr');
+//       });
+//   };
+
+//   useEffect(() => {
+//     getFaqData();
+//   }, []);
+
+//   // Group the faq_data by faq_header
+//   const groupedData =
+//     faqData &&
+//     faqData.reduce((acc, item) => {
+//       if (!acc[item.faq_header]) {
+//         acc[item.faq_header] = [];
+//       }
+//       acc[item.faq_header].push(item);
+//       return acc;
+//     }, {});
+
+//   const data = Object.entries(groupedData).map(([header, questions]) => ({
+//     title: header,
+//     content: questions,
+//   }));
+
+//   const toggleParentAccordion = index => {
+//     animateLayout();
+//     setExpandedParentIndexes(prev =>
+//       prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index],
+//     );
+//   };
+
+//   const toggleChildAccordion = (parentIndex, childIndex) => {
+//     animateLayout();
+//     setExpandedChildIndexes(prev => ({
+//       ...prev,
+//       [parentIndex]: prev[parentIndex]?.includes(childIndex)
+//         ? prev[parentIndex].filter(i => i !== childIndex)
+//         : [...(prev[parentIndex] || []), childIndex],
+//     }));
+//     if (!expandedParentIndexes.includes(parentIndex)) {
+//       setExpandedParentIndexes(prev => [...prev, parentIndex]);
+//     }
+//   };
+
+//   const animateLayout = () => {
+//     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+//   };
+
+//   return (
+//     <SafeAreaView style={accordianStyles.content}>
+//       {data.map((parentItem, parentIndex) => (
+//         <AccordionItem
+//           key={parentItem.title}
+//           title={parentItem.title}
+//           expanded={expandedParentIndexes.includes(parentIndex)}
+//           onPress={() => toggleParentAccordion(parentIndex)}
+//           content={
+//             <Accordion
+//               data={parentItem.content}
+//               toggleIndex={childIndex =>
+//                 toggleChildAccordion(parentIndex, childIndex)
+//               }
+//               expandedIndexes={expandedChildIndexes[parentIndex] || []}
+//             />
+//           }
+//         />
+//       ))}
+//     </SafeAreaView>
+//   );
+// };
+// const accordianStyles = StyleSheet.create({
+//   content: {
+//     backgroundColor: AppColors.white,
+//     // padding: 10,
+//   },
+//   accordionItem: {
+//     marginBottom: 10,
+//     borderRadius: 5,
+//     overflow: 'hidden',
+//     borderWidth: 1,
+//     borderColor: '#e0e0e0',
+//   },
+//   innerAccordion: {
+//     // borderTopWidth: 1,
+//     borderTopColor: '#e0e0e0',
+//   },
+//   innerAccordionItem: {
+//     // borderBottomWidth: 1,
+//     borderBottomColor: '#e0e0e0',
+//   },
+//   itemHeader: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'space-between',
+//     backgroundColor: '#f0f0f0',
+//     paddingHorizontal: 15,
+//     paddingVertical: 8,
+//   },
+//   headerText: {
+//     color: AppColors.black,
+//     flex: 1,
+//     fontSize: 13,
+//     fontWeight: 'bold',
+//   },
+//   itemContent: {
+//     backgroundColor: '#f0f0f0',
+//   },
+//   contentText: {
+//     color: AppColors.black,
+//     paddingHorizontal: 15,
+//     fontSize: 13,
+//   },
+// });
+
+// export default AccordionData;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

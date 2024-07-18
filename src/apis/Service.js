@@ -132,8 +132,8 @@ api.interceptors.response.use(
         const refreshToken = await AsyncStorage.getItem('refresh_token');
 
         // रिफ्रेश टोकन API कॉल (आपके बैकएंड के अनुसार URL और पैरामीटर्स अपडेट करें)
-        const response = await axios.get(`${API_BASE_URL}/refresh-token`, {
-          refresh_token: refreshToken,
+        const response = await axios.get(`${API_BASE_URL}/login/refresh_token.php`, {
+          refresh_token: refreshToken
         });
 
         const {jwt_token} = response.jwt;

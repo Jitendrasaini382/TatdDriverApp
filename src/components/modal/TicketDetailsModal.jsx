@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   Alert,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -37,11 +38,8 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
     setIsLoading(true);
     try {
       const response = await TICKETS_DRIVER(field);
-      // console.log(response, "API response");
-
       if (response.status_code === 200) {
         setTicketDetails(response.ticket_data);
-        //   console.log(response.ticket_data, 'SHOW_SINGLE_TICKET_DATA');
       } else if (response.status_code === 500) {
         Alert.alert('No Data Available');
       }
@@ -57,8 +55,18 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
+  const renderDetailItem = (label, value) => {
+    if (!value) return null;
+    return (
+      <View style={styles.contentView}>
+        <Text style={styles.leftSectionText}>{label}</Text>
+        <Text style={styles.rightSectionText}>{value}</Text>
+      </View>
+    );
+  };
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <TouchableOpacity
         onPress={() => setTicketDetailsModal(false)}
         style={styles.closeButton}>
@@ -69,49 +77,20 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
       <View style={styles.contentContainer}>
         <View style={styles.detailsContainer}>
           <View style={styles.detailsInnerContainer}>
-            <View style={styles.contentView}>
-              <Text style={styles.leftSectionText}>Ticket ID : </Text>
-              <Text style={styles.rightSectionText}>{ticketDetails.id}</Text>
-            </View>
-            <View style={styles.contentView}>
-              <Text style={styles.leftSectionText}>Created Date</Text>
-              <Text style={styles.rightSectionText}>
-                {ticketDetails.timestamp}
-              </Text>
-            </View>
-            <View style={styles.contentView}>
-              <Text style={styles.leftSectionText}>Booking Number :</Text>
-              <Text style={styles.rightSectionText}>
-                {ticketDetails.booking_id}
-              </Text>
-            </View>
-            <View style={styles.contentView}>
-              <Text style={styles.leftSectionText}>Status</Text>
-              <Text style={styles.rightSectionText}>Close</Text>
-            </View>
-            <View style={styles.contentView}>
-              <Text style={styles.leftSectionText}>Description:</Text>
-              <Text style={styles.rightSectionText}>
-                {ticketDetails.support_require_for ||
-                  'No description available'}
-              </Text>
-            </View>
-            <View style={styles.contentView}>
-              <Text style={styles.leftSectionText}>Closure Remark:</Text>
-              <Text style={styles.rightSectionText}>
-                {ticketDetails.closure_remarks || 'No closure remark available'}
-              </Text>
-            </View>
-            <View style={styles.contentView}>
-              <Text style={styles.leftSectionText}>Closure Date</Text>
-              <Text style={styles.rightSectionText}>
-                {ticketDetails.closure_timestamp}
-              </Text>
-            </View>
+            {renderDetailItem('Ticket ID :', ticketDetails.id)}
+            {renderDetailItem('Created Date', ticketDetails.timestamp)}
+            {renderDetailItem('Booking Number :', ticketDetails.booking_id)}
+            {renderDetailItem('Status', 'Close')}
+            {renderDetailItem(
+              'Description:',
+              ticketDetails.support_require_for,
+            )}
+            {renderDetailItem('Closure Remark:', ticketDetails.closure_remarks)}
+            {renderDetailItem('Closure Date', ticketDetails.closure_timestamp)}
           </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -195,23 +174,68 @@ const styles = StyleSheet.create({
 
 export default TicketDetailsModal;
 
-// import {StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native';
-// import React, {useContext} from 'react';
+// import {
+//   ActivityIndicator,
+//   Alert,
+//   ScrollView,
+//   StyleSheet,
+//   Text,
+//   TouchableOpacity,
+//   View,
+// } from 'react-native';
+// import React, {useEffect, useState} from 'react';
 // import Icon from 'react-native-vector-icons/dist/FontAwesome';
 // import {AppColors} from '../../assets/Colors';
 // import {AppFont} from '../../assets/FontsFamily';
-// import {TokenConstextApi} from '../../context/GlobalContext';
+// import {TICKETS_DRIVER} from '../../apis/Apis';
 
-// const TicketDetailsModal = ({setTicketDetailsModal}) => {
-//   const {ticketsData} = useContext(TokenConstextApi);
+// const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
+//   const [ticketDetails, setTicketDetails] = useState({});
+//   const [field, setField] = useState({
+//     action: 'show_single_ticket_data',
+//     ticket_id: '',
+//   });
+//   const [isLoading, setIsLoading] = useState(true);
 
-//   // Ensure ticketsData is an array and has at least one item
-//   const ticketDetails = Array.isArray(ticketsData) && ticketsData.length > 0 ? ticketsData[0] : {};
+//   useEffect(() => {
+//     setField(prevField => ({
+//       ...prevField,
+//       ticket_id: ticketId,
+//     }));
+//   }, [ticketId]);
 
-//   console.log(ticketDetails, 'ticketDetails');
+//   useEffect(() => {
+//     if (field.ticket_id) {
+//       getSingleTicketData();
+//     }
+//   }, [field]);
+
+//   const getSingleTicketData = async () => {
+//     setIsLoading(true);
+//     try {
+//       const response = await TICKETS_DRIVER(field);
+//       // console.log(response, "API response");
+
+//       if (response.status_code === 200) {
+//         setTicketDetails(response.ticket_data);
+//         //   console.log(response.ticket_data, 'SHOW_SINGLE_TICKET_DATA');
+//       } else if (response.status_code === 500) {
+//         Alert.alert('No Data Available');
+//       }
+//     } catch (err) {
+//       console.error(err, 'Error in SHOW_SINGLE_TICKET_DATA');
+//       Alert.alert('Error', 'Failed to fetch ticket data');
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//   if (isLoading) {
+//     return <ActivityIndicator size="large" color="#0000ff" />;
+//   }
 
 //   return (
-//     <View style={styles.container}>
+//     <ScrollView style={styles.container}>
 //       <TouchableOpacity
 //         onPress={() => setTicketDetailsModal(false)}
 //         style={styles.closeButton}>
@@ -219,45 +243,61 @@ export default TicketDetailsModal;
 //       </TouchableOpacity>
 //       <Text style={styles.title}>Ticket Details</Text>
 
-//       <ScrollView style={styles.contentContainer}>
+//       <View style={styles.contentContainer}>
 //         <View style={styles.detailsContainer}>
 //           <View style={styles.detailsInnerContainer}>
-//             <DetailRow label="Ticket ID" value={ticketDetails.id} />
-//             <DetailRow label="Created Date" value={ticketDetails.timestamp} />
-//             <DetailRow label="Booking Number" value={ticketDetails.booking_id} />
-//             <DetailRow label="Status" value={ticketDetails.ticket_status} />
-//             <DetailRow label="Description" value={ticketDetails.problem_statement} />
-//             <DetailRow label="Closure Remark" value={ticketDetails.closure_remarks} />
-//             <DetailRow label="Closure Date" value={ticketDetails.closure_timestamp} />
-//             <DetailRow label="Created By" value={ticketDetails.created_by} />
-//             <DetailRow label="Created For" value={ticketDetails.created_for} />
-//             <DetailRow label="Category" value={ticketDetails.category} />
-//             <DetailRow label="Support Owner" value={ticketDetails.support_owner} />
-//             <DetailRow label="Ticket Type" value={ticketDetails.ticket_type} />
-//             <DetailRow label="Name" value={ticketDetails.name} />
-//             <DetailRow label="Mobile Number" value={ticketDetails.mobile_number} />
+//             <View style={styles.contentView}>
+//               <Text style={styles.leftSectionText}>Ticket ID : </Text>
+//               <Text style={styles.rightSectionText}>{ticketDetails.id}</Text>
+//             </View>
+//             <View style={styles.contentView}>
+//               <Text style={styles.leftSectionText}>Created Date</Text>
+//               <Text style={styles.rightSectionText}>
+//                 {ticketDetails.timestamp}
+//               </Text>
+//             </View>
+//             <View style={styles.contentView}>
+//               <Text style={styles.leftSectionText}>Booking Number :</Text>
+//               <Text style={styles.rightSectionText}>
+//                 {ticketDetails.booking_id}
+//               </Text>
+//             </View>
+//             <View style={styles.contentView}>
+//               <Text style={styles.leftSectionText}>Status</Text>
+//               <Text style={styles.rightSectionText}>Close</Text>
+//             </View>
+//             <View style={styles.contentView}>
+//               <Text style={styles.leftSectionText}>Description:</Text>
+//               <Text style={styles.rightSectionText}>
+//                 {ticketDetails.support_require_for ||
+//                   'No description available'}
+//               </Text>
+//             </View>
+//             <View style={styles.contentView}>
+//               <Text style={styles.leftSectionText}>Closure Remark:</Text>
+//               <Text style={styles.rightSectionText}>
+//                 {ticketDetails.closure_remarks || 'No closure remark available'}
+//               </Text>
+//             </View>
+//             <View style={styles.contentView}>
+//               <Text style={styles.leftSectionText}>Closure Date</Text>
+//               <Text style={styles.rightSectionText}>
+//                 {ticketDetails.closure_timestamp}
+//               </Text>
+//             </View>
 //           </View>
 //         </View>
-//       </ScrollView>
-//     </View>
+//       </View>
+//     </ScrollView>
 //   );
 // };
-
-// const DetailRow = ({label, value}) => (
-//   <View style={styles.contentView}>
-//     <Text style={styles.leftSectionText}>{label}:</Text>
-//     <Text style={styles.rightSectionText}>{value || 'N/A'}</Text>
-//   </View>
-// );
-
-// export default TicketDetailsModal;
 
 // const styles = StyleSheet.create({
 //   container: {
 //     flex: 1,
 //     backgroundColor: 'white',
 //     borderRadius: 5,
-//     elevation: 3,
+//     elevation: 1,
 //   },
 //   closeButton: {
 //     backgroundColor: AppColors.silverGrey,
@@ -279,7 +319,8 @@ export default TicketDetailsModal;
 //   },
 //   contentContainer: {
 //     margin: 20,
-//     flex: 1,
+//     flexDirection: 'row',
+//     // flex: 1,
 //   },
 //   detailsContainer: {
 //     flex: 1,
@@ -299,178 +340,34 @@ export default TicketDetailsModal;
 //   },
 //   leftSectionText: {
 //     color: 'black',
+//     justifyContent: 'center',
+//     marginLeft: 7,
+//     alignContent: 'flex-start',
 //     fontSize: 17,
-//     padding: 10,
+//     padding: 5,
+//     alignItems: 'center',
+//     alignSelf: 'center',
+//     paddingLeft: 10,
 //     flex: 1,
+//     paddingVertical: 10,
 //     fontFamily: AppFont.regularFont,
 //   },
 //   rightSectionText: {
 //     flex: 2,
 //     color: 'black',
+//     justifyContent: 'center',
+//     marginLeft: 7,
 //     fontSize: 15,
 //     fontFamily: AppFont.regularFont,
 //     letterSpacing: 0.4,
 //     borderLeftWidth: 1,
 //     borderColor: '#ccc',
 //     backgroundColor: 'white',
-//     padding: 10,
+//     alignContent: 'flex-start',
+//     padding: 5,
+//     paddingVertical: 10,
+//     paddingLeft: 10,
 //   },
 // });
 
-// // // import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-// // // import React, {useContext} from 'react';
-// // // import Icon from 'react-native-vector-icons/dist/FontAwesome';
-// // // import {AppColors} from '../../assets/Colors';
-// // // import {AppFont} from '../../assets/FontsFamily';
-// // // import {TokenConstextApi} from '../../context/GlobalContext';
-
-// // // const TicketDetailsModal = ({setTicketDetailsModal}) => {
-// // //   const {ticketsData} = useContext(TokenConstextApi);
-
-// // //   const ticketDetails = ticketsData || {};
-
-// // //   console.log(ticketDetails, 'ticketDetails');
-
-// // //   return (
-// // //     <View
-// // //       style={{
-// // //         flex: 1,
-// // //         backgroundColor: 'white',
-// // //         borderRadius: 5,
-// // //         elevation: 3,
-// // //       }}>
-// // //       <TouchableOpacity
-// // //         onPress={() => setTicketDetailsModal(false)}
-// // //         style={{
-// // //           backgroundColor: AppColors.silverGrey,
-// // //           height: 20,
-// // //           width: 20,
-// // //           marginRight: 10,
-// // //           marginTop: 10,
-// // //           borderRadius: 10,
-// // //           justifyContent: 'center',
-// // //           alignItems: 'center',
-// // //           alignSelf: 'flex-end',
-// // //         }}>
-// // //         <Icon name="close" size={12} />
-// // //       </TouchableOpacity>
-// // //       <Text
-// // //         style={{
-// // //           fontWeight: 'bold',
-// // //           fontSize: 30,
-// // //           color: AppColors.black,
-// // //           marginLeft: 20,
-// // //           fontFamily: AppFont.regularFont,
-// // //         }}>
-// // //         Ticket Details
-// // //       </Text>
-
-// // //       <View
-// // //         style={{
-// // //           margin: 20,
-// // //           //   borderWidth: 1,
-// // //           //   borderColor: 'black',
-// // //           flexDirection: 'row',
-// // //           flex: 1,
-// // //         }}>
-// // //         <View style={{flex: 1, elevation: 1}}>
-// // //           <View
-// // //             style={{
-// // //               borderWidth: 1,
-// // //               borderColor: '#ccc',
-// // //               elevation: 3,
-// // //               shadowColor: 'white',
-// // //               backgroundColor: '#f7f7f7',
-// // //             }}>
-// // //             <View style={styles.contentView}>
-// // //               <Text style={styles.leftSectionText}>Ticket ID : </Text>
-// // //               <Text style={styles.rightSectionText}>{ticketsData.id}</Text>
-// // //             </View>
-// // //             <View style={styles.contentView}>
-// // //               <Text style={styles.leftSectionText}>Created Date</Text>
-// // //               <Text style={styles.rightSectionText}>
-// // //                 {ticketsData.timestamp}
-// // //               </Text>
-// // //             </View>
-// // //             <View style={styles.contentView}>
-// // //               <Text style={styles.leftSectionText}>Booking Number :</Text>
-// // //               <Text style={styles.rightSectionText}>
-// // //                 {ticketsData.booking_id}
-// // //               </Text>
-// // //             </View>
-// // //             <View style={styles.contentView}>
-// // //               <Text style={styles.leftSectionText}>STatus</Text>
-// // //               <Text style={styles.rightSectionText}>Close</Text>
-// // //             </View>
-// // //             <View style={styles.contentView}>
-// // //               <Text style={styles.leftSectionText}>Description:</Text>
-// // //               <Text style={styles.rightSectionText}>
-// // //                 Is booking par customer ne na to Extra KM ka pay kiya or nahi
-// // //                 Overtime ka Pay kiya Maine total 7:5 HRS duty ki thi jabki ye
-// // //                 one way drop tha kripya customer se baat kare or mere paise
-// // //                 delwaye
-// // //               </Text>
-// // //             </View>
-// // //             <View style={styles.contentView}>
-// // //               <Text style={styles.leftSectionText}>Closure Remark:</Text>
-// // //               <Text style={styles.rightSectionText}>
-// // //                 Is booking par customer ne na to Extra KM ka pay kiya or nahi
-// // //                 Overtime ka Pay kiya Maine total 7:5 HRS duty ki thi jabki ye
-// // //                 one way drop tha kripya customer se baat kare or mere paise
-// // //                 delwaye
-// // //               </Text>
-// // //             </View>
-// // //             <View style={styles.contentView}>
-// // //               <Text style={styles.leftSectionText}>Closure Date</Text>
-// // //               <Text style={styles.rightSectionText}>2024-06-22 11:08:06</Text>
-// // //             </View>
-// // //           </View>
-// // //         </View>
-// // //       </View>
-// // //     </View>
-// // //   );
-// // // };
-
-// // // export default TicketDetailsModal;
-
-// // // const styles = StyleSheet.create({
-// // //   contentView: {
-// // //     borderBottomWidth: 1,
-
-// // //     borderColor: '#ccc',
-// // //     flexDirection: 'row',
-// // //   },
-
-// // //   leftSectionText: {
-// // //     color: 'black',
-// // //     justifyContent: 'center',
-// // //     marginLeft: 7,
-// // //     alignContent: 'flex-start',
-// // //     fontSize: 17,
-// // //     padding: 5,
-// // //     alignItems: 'center',
-// // //     alignSelf: 'center',
-// // //     paddingLeft: 10,
-// // //     flex: 1,
-// // //     paddingVertical: 10,
-
-// // //     fontFamily: AppFont.regularFont,
-// // //     // borderBottomWidth: 1,
-// // //   },
-// // //   rightSectionText: {
-// // //     flex: 2,
-// // //     color: 'black',
-// // //     justifyContent: 'center',
-// // //     marginLeft: 7,
-// // //     fontSize: 15,
-// // //     fontFamily: AppFont.regularFont,
-// // //     letterSpacing: 0.4,
-// // //     borderLeftWidth: 1,
-// // //     borderColor: '#ccc',
-// // //     backgroundColor: 'white',
-// // //     alignContent: 'flex-start',
-// // //     padding: 5,
-// // //     paddingVertical: 10,
-// // //     paddingLeft: 10,
-// // //   },
-// // // });
+// export default TicketDetailsModal;

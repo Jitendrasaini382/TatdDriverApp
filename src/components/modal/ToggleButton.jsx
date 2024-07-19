@@ -11,14 +11,14 @@ const ToggleButton = ({button1Label, button2Label, onToggle}) => {
 
   
   const{languageSwitch, setLanguageSwitch} = useContext(TokenConstextApi)
-  console.log(languageSwitch,"llllllllllllllllsw");
+  // console.log(languageSwitch,"llllllllllllllllsw");
 
   const handlePress = async label => {
     setCurrentState(label);
     onToggle(label);
 
     const language = label.toLowerCase();
-    await switchLanguage(language);
+    // await switchLanguage(language);
   };
 
   const switchLanguage = async language => {

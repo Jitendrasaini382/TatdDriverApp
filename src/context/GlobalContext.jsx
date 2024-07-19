@@ -8,7 +8,7 @@ export const TokenConstextApi = createContext(null);
 
 export const GlobalContextApi = ({children}) => {
 
-  const [languageSwitch, setLanguageSwitch] = useState(null);
+  const [languageSwitch, setLanguageSwitch] = useState("hindi");
   const [jwtToken, setJwtToken] = useState('');
   const [refreshToken, setRefreshToken] = useState('');
   const [ticketsData, setTicketData] = useState([]);

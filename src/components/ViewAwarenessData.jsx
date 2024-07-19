@@ -35,7 +35,7 @@ const ViewAwarenessData = () => {
 
   useEffect(() => {
     getAllAwareness();
-  }, [getAllAwareness]);
+  }, []);
 
   //   const awarenessData = [
   //     {

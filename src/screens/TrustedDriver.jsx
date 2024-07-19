@@ -140,8 +140,8 @@ const TrustedDriver = ({navigation}) => {
 
           // navigation.navigate("AgentLogin")
 
-          Alert.alert(response.data.message);
-          console.log('RFD Logged in successfully');
+          Alert.alert(response.message, 'RFD Logged in successfully');
+          console.log(response, 'RFD Logged in successfully');
           // }
         })
         .catch(err => {

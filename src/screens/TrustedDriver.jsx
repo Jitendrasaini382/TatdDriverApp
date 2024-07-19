@@ -41,6 +41,7 @@ import {HOME_AWARENESS, LOGIN_BUTTON} from '../apis/Apis';
 import {TokenConstextApi} from '../context/GlobalContext';
 import {jwtDecode} from 'jwt-decode';
 import {CloseEnvelop, OpenEnvelop} from '../assets/images';
+import ViewAwarenessData from '../components/ViewAwarenessData';
 
 const {width} = Dimensions.get('window');
 
@@ -51,39 +52,71 @@ const responsiveSize = size => {
 const TrustedDriver = ({navigation}) => {
   const {jwtToken, refreshToken, setJwtToken, tokenData, setTokenData} =
     useContext(TokenConstextApi);
-  const [awarenessData, setAwareness] = useState([]);
+
+  // const [tokenData, setTokenData] = useState([]);
+
+  // const [awarenessData, setAwareness] = useState([]);
 
   console.log(refreshToken, 'contest trusted REFRESH');
 
   console.log(tokenData, 'Token Data Trusted Driver');
 
   console.log(jwtToken, 'trusted context jwttt');
+
   // const decodeData = () => {
+  //   console.log('JWT Token:', jwtToken);
   //   const token = jwtToken;
-  //   const decoded = jwtDecode(token);
-  //   setTokenData(decoded.data);
+  //   try {
+  //     const decoded = jwtDecode(token);
+  //     console.log('Decoded data:', decoded);
+  //     setTokenData(decoded.data);
+  //   } catch (error) {
+  //     console.error('Error decoding token:', error);
+  //   }
   // };
+  // useEffect(() => {
+  //   decodeData();
+  // }, [decodeData]);
 
-  const getHomeAwareness = useCallback(async () => {
-    try {
-      const response = await HOME_AWARENESS({
-        action: 'view_all_awareness',
-      });
-      setAwareness(response.awareness_data);
-      // console.log(response.awareness_data, ' HOME AWARENESS DATA');
-    } catch (err) {
-      console.log(err, ' HOME AWARENESS err');
-    }
-  }, []);
+  // const decodeData = useCallback(() => {
+  //   if (!jwtToken) return;
 
-  useEffect(() => {
-    getHomeAwareness();
-  }, [getHomeAwareness]);
+  //   console.log('JWT Token:', jwtToken);
+  //   try {
+  //     const decoded = jwtDecode(jwtToken);
+  //     console.log('Decoded data:', decoded);
+  //     setTokenData(decoded.data);
+  //   } catch (error) {
+  //     console.error('Error decoding token:', error);
+  //   }
+  // }, [jwtToken]);
 
   // useEffect(() => {
   //   decodeData();
-  // }, [jwtToken]);
-  console.log(tokenData.driver_name);
+  // }, [decodeData]);
+
+  // useEffect(() => {
+  //   console.log('Updated tokenData:', tokenData);
+  // }, [tokenData]);
+
+  const {commission, earning_30days} = tokenData.DriverCommisonData;
+  const {otr, rating, recent_dcr} = tokenData.TrustedDriverData;
+
+  // const getHomeAwareness = useCallback(async () => {
+  //   try {
+  //     const response = await HOME_AWARENESS({
+  //       action: 'view_all_awareness',
+  //     });
+  //     setAwareness(response.awareness_data);
+  //     // console.log(response.awareness_data, ' HOME AWARENESS DATA');
+  //   } catch (err) {
+  //     console.log(err, ' HOME AWARENESS err');
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   getHomeAwareness();
+  // }, [getHomeAwareness]);
 
   const [isRfdOn, setIsRfdOn] = useState(false);
   const [loginButton, setLoginButton] = useState({
@@ -190,7 +223,11 @@ const TrustedDriver = ({navigation}) => {
               {/* Top div */}
               <View style={styles.topView}>
                 <View style={styles.topLeft}>
-                  <Text style={styles.topLeftText}>20%</Text>
+                  <Text style={styles.topLeftText}>
+                    {/* {tokenData  ? (tokenData.DriverCommisonData.commission) : 20} */}
+                    {/* {tokenData ? 20 : <Text style={{}}>...</Text>}% */}
+                    {commission}%
+                  </Text>
                   <Text style={styles.bottamLeftText}>Commission</Text>
                 </View>
                 <View style={styles.topRight}>
@@ -199,8 +236,8 @@ const TrustedDriver = ({navigation}) => {
                     <View style={styles.earningView}>
                       <Text style={styles.rupeeIcon}>
                         <Icon name="rupee" size={responsiveSize(8)} />{' '}
-                        {/* {tokenData &&
-                          tokenData.DriverCommisonData.earning_30days || null} */}
+                        {/* {tokenData ? 20 : <Text style={{}}>...</Text>}% */}
+                        {earning_30days}
                       </Text>
                     </View>
                   </TouchableOpacity>
@@ -247,8 +284,10 @@ const TrustedDriver = ({navigation}) => {
                     onPress={() => dispatch(setModalVisible(true))}>
                     <View style={styles.otrView}>
                       <Text style={styles.bottamRightText}>
+                        {otr}
+                        {/* {tokenData ? 20 : <Text style={{}}>...</Text>}% */}
                         {/* {tokenData && tokenData.TrustedDriverData.otr} % */}
-                        </Text>
+                      </Text>
                       <Text style={styles.bottamRightText}>OTR</Text>
                     </View>
                   </TouchableOpacity>
@@ -256,7 +295,9 @@ const TrustedDriver = ({navigation}) => {
                     onPress={() => dispatch(setRatingModal(true))}>
                     <View style={styles.ratingView}>
                       <Text style={styles.bottamRightText}>
-                        {/* { tokenData && tokenData.TrustedDriverData.rating} */}
+                        {rating}
+                        {/* {tokenData ? 20 : <Text style={{}}>...</Text>}% */}
+                        {/* {tokenData && tokenData.TrustedDriverData.rating} */}
                       </Text>
                       <Text style={styles.bottamRightText}>Rating</Text>
                     </View>
@@ -265,8 +306,10 @@ const TrustedDriver = ({navigation}) => {
                     onPress={() => dispatch(setBookingModal(true))}>
                     <View style={styles.bookingView}>
                       <Text style={styles.bottamRightText}>
-                        {/* {tokenData && tokenData.TrustedDriverData.recent_dcr} */}
-                         %</Text>
+                        {recent_dcr} %
+                        {/* {tokenData ? 20 : <Text style={{}}>...</Text>}% */}
+                        {/* {tokenData && tokenData.TrustedDriverData.recent_dcr}% */}
+                      </Text>
                       <Text style={styles.bottamRightText}>Booking</Text>
                     </View>
                   </TouchableOpacity>
@@ -321,7 +364,8 @@ const TrustedDriver = ({navigation}) => {
                 style={styles.bottamContent4}>
                 <Text style={styles.mainText}>Clear My Due</Text>
                 <Text style={styles.textIcon}>
-                  <Icon name="rupee" size={responsiveSize(9)} /> 0
+                  <Icon name="rupee" size={responsiveSize(9)} />{' '}
+                  {tokenData && tokenData.DRIVER_CLEAR_MY_DUE}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -334,7 +378,7 @@ const TrustedDriver = ({navigation}) => {
             onToggle={label => dispatch(setCurrentView(label))}
           />
 
-          {awarenessData && awarenessData.length > 0
+          {/* {awarenessData && awarenessData.length > 0
             ? awarenessData.map(awareness => (
                 <View
                   style={{
@@ -343,7 +387,7 @@ const TrustedDriver = ({navigation}) => {
                     padding: 8,
                   }}>
                   <TouchableOpacity
-                    key={awareness}
+                    // key={awareness}
                     style={styles.touchable}
                     onPress={() => handleAwarnessPress(awareness)}>
                     <View style={styles.iconContainer}>
@@ -370,7 +414,10 @@ const TrustedDriver = ({navigation}) => {
                   </TouchableOpacity>
                 </View>
               ))
-            : null}
+            : null} */}
+          <View>
+            <ViewAwarenessData />
+          </View>
 
           {/* Main Toggle Content */}
           <View style={styles.toggleContentContainer}>
@@ -667,7 +714,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
     marginBottom: 5,
-    justifyContent:"space-between"
+    justifyContent: 'space-between',
   },
   iconContainer: {
     marginRight: 10,

@@ -17,6 +17,7 @@ import {CommonActions, useRoute} from '@react-navigation/native';
 import {DRIVER_LOGIN, VERIFY_OTP_LOGIN} from '../apis/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TokenConstextApi} from '../context/GlobalContext';
+import {jwtDecode} from 'jwt-decode';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -31,8 +32,8 @@ const CheckDriverOtp = ({navigation}) => {
   const route = useRoute();
   const {mobile} = route.params;
 
-  const {setJwtToken} = useContext(TokenConstextApi);
-  const {setRefreshToken} = useContext(TokenConstextApi);
+  const {setRefreshToken, setJwtToken, setTokenData} =
+    useContext(TokenConstextApi);
 
   const [otp, setOtp] = useState('');
 
@@ -60,6 +61,32 @@ const CheckDriverOtp = ({navigation}) => {
       });
   };
 
+  const decodeData = async data => {
+    console.log(data, '11111111');
+    if (!data) {
+      return;
+    } else {
+      try {
+        console.log(data, '22222222');
+
+        const decoded = jwtDecode(data);
+        console.log('Decoded data:', decoded);
+        await setTokenData(decoded.data);
+        console.log(decodeData, '33333333333');
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+    }
+  };
+
+  // useEffect(() => {
+  //   decodeData();
+  // }, [decodeData]);
+
+  // useEffect(() => {
+  //   console.log('Updated tokenData:', tokenData);
+  // }, [tokenData]);
+
   const verifyOtp = async () => {
     try {
       if (!otp) {
@@ -75,6 +102,7 @@ const CheckDriverOtp = ({navigation}) => {
         otp: otp,
       });
       // console.log(response);
+      decodeData(response.jwt);
       await setRefreshToken(response.refresh_token);
       await setJwtToken(response.jwt);
       await AsyncStorage.setItem('refresh_token', response.refresh_token);

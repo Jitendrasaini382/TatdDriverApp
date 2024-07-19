@@ -7,8 +7,8 @@ import {Alert} from 'react-native';
 export const TokenConstextApi = createContext(null);
 
 export const GlobalContextApi = ({children}) => {
-
-  const [languageSwitch, setLanguageSwitch] = useState("hindi");
+  const [languageSwitch, setLanguageSwitch] = useState('hindi');
+  const [tokenData, setTokenData] = useState([]);
   const [jwtToken, setJwtToken] = useState('');
   const [refreshToken, setRefreshToken] = useState('');
   const [ticketsData, setTicketData] = useState([]);
@@ -64,6 +64,8 @@ export const GlobalContextApi = ({children}) => {
   const values = {
     jwtToken,
     ticketsData,
+    tokenData,
+    setTokenData,
     buttonShow,
     setButtonShow,
     showButtonText,

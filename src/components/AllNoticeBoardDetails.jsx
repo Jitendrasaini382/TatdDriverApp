@@ -49,7 +49,7 @@ const AllNoticeBoardComponent = () => {
 
   return (
     <ScrollView style={styles.container}>
-      {noticeBoardData.map(noticeBoard => (
+      { noticeBoardData &&  noticeBoardData.map(noticeBoard => (
         <TouchableOpacity
           key={noticeBoard.id}
           style={styles.touchable}

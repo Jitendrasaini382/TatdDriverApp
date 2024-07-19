@@ -19,12 +19,12 @@ const MyBookingModal = ({}) => {
       action: 'my_booking',
     })
       .then(e => {
-        // console.log(e.bookings, 'MY_BOOKING_TOP_NAVBAR data');
+        console.log(e.bookings, 'MY_BOOKING_TOP_NAVBAR data');
         setMyBookingData(e);
        
       })
       .catch(err => {
-        console.log(err, 'MY_BOOKING_TOP_NAVBAR error');
+        console.log(err, 'MY_BOOKING_TOP_NAVBAR erroraaaaaaaaa');
       });
   };
 

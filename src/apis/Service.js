@@ -181,7 +181,7 @@ api.interceptors.response.use(
         }
       } catch (refreshError) {
         console.error('Response Interceptor: Token refresh failed', refreshError);
-        // await AsyncStorage.multiRemove(['jwt', 'refresh_token']);
+        await AsyncStorage.multiRemove(['jwt', 'refresh_token']);
         console.log('Response Interceptor: Tokens removed from storage');
         // Here, you might want to redirect to login or dispatch a logout action
         return Promise.reject(refreshError);

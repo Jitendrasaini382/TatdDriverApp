@@ -186,7 +186,8 @@ const TrustedDriver = ({navigation}) => {
                     <View style={styles.earningView}>
                       <Text style={styles.rupeeIcon}>
                         <Icon name="rupee" size={responsiveSize(8)} />{' '}
-                        {tokenData.DriverCommisonData.earning_30days}
+                        {tokenData &&
+                          tokenData.DriverCommisonData.earning_30days}
                       </Text>
                     </View>
                   </TouchableOpacity>

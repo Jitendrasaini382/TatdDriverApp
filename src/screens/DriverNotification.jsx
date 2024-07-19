@@ -13,7 +13,7 @@ import {OneWayIcon} from '../assets/images';
 import Header from '../components/Header';
 import AllNotificationComponent from '../components/AllNotificationsDetails';
 import {AppColors} from '../assets/Colors';
-import {clearAllNotification, DRIVER_NOTIFICATION} from '../apis/Apis'; // Assuming this function exists
+import {DRIVER_NOTIFICATION} from '../apis/Apis'; // Assuming this function exists
 
 const DriverNotifications = ({navigation}) => {
   const [currentView, setCurrentView] = useState('NOTIFICATIONS');
@@ -44,10 +44,11 @@ const DriverNotifications = ({navigation}) => {
 
   const handleClearAllNotifications = useCallback(async () => {
     try {
-      await clearAllNotification({
+      const response = await DRIVER_NOTIFICATION({
         action: 'clear_all_notifications',
       });
       // getAllNotification();
+      console.log(response.message, 'Clear All Notification Response ');
     } catch (error) {
       console.error('Error clearing notifications:', error);
       // Handle error (e.g., show an alert to the user)

@@ -9,6 +9,7 @@ import {
   ScrollView,
   Alert,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import {CloseEnvelop, OpenEnvelop} from '../assets/images';
 import {useNavigation} from '@react-navigation/native';
@@ -22,6 +23,7 @@ import {AppFont} from '../assets/FontsFamily';
 const AllNotificationComponent = () => {
   const navigation = useNavigation();
   const {notificationData, setNotificationData} = useContext(TokenConstextApi);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleNotificationPress = useCallback(
     notification => {
@@ -34,11 +36,14 @@ const AllNotificationComponent = () => {
 
   const getAllNotification = useCallback(
     async data => {
+      setIsLoading(true);
       try {
         const response = await DRIVER_NOTIFICATION(data);
         setNotificationData(response.notifications);
       } catch (error) {
         console.error('DRIVER NOTIFICATION error:', error);
+      } finally {
+        setIsLoading(false);
       }
     },
     [setNotificationData],
@@ -50,30 +55,39 @@ const AllNotificationComponent = () => {
     });
   }, [getAllNotification]);
 
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={AppColors.whatsAppIconColor} />
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
-      {notificationData.map(notification => (
-        <TouchableOpacity
-          key={notification.id}
-          style={styles.touchable}
-          onPress={() => handleNotificationPress(notification)}>
-          <View style={styles.iconContainer}>
-            <Image
-              style={styles.icon}
-              resizeMode="contain"
-              source={
-                notification.status === 'unread' ? CloseEnvelop : OpenEnvelop
-              }
-            />
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.previewText} numberOfLines={2}>
-              {notification.message_preview ||
-                notification.message.substring(0, 100) + '...'}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      ))}
+      {notificationData &&
+        notificationData.map(notification => (
+          <TouchableOpacity
+            key={notification.id}
+            style={styles.touchable}
+            onPress={() => handleNotificationPress(notification)}>
+            <View style={styles.iconContainer}>
+              <Image
+                style={styles.icon}
+                resizeMode="contain"
+                source={
+                  notification.status === 'unread' ? CloseEnvelop : OpenEnvelop
+                }
+              />
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.previewText} numberOfLines={2}>
+                {notification.message_preview ||
+                  notification.message.substring(0, 100) + '...'}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ))}
     </ScrollView>
   );
 };
@@ -233,7 +247,7 @@ const styles = StyleSheet.create({
   },
   touchable: {
     flexDirection: 'row',
-    padding: 15,
+    padding: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
     backgroundColor: '#ffffff',

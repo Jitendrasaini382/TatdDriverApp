@@ -1,5 +1,3 @@
-// ApiService.js
-
 import axios from 'axios';
 import {API_BASE_URL} from '../constant/path';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -29,11 +27,13 @@ api.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
 
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response.status === 400 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
         const refreshToken = await AsyncStorage.getItem('refresh_token');
+
+        console.log(refreshToken,"jjjjjjjjj");
 
         const response = await axios.get(
           `${API_BASE_URL}/login/refresh_token.php`,

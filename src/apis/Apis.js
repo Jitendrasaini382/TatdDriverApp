@@ -93,5 +93,14 @@ export const DRIVER_NOTICE = body => {
 // https://www.tatd.in/app-api/driver/trusted-driver/driver-earning-api.php
 
 export const DRIVER_EARNING = body => {
-  return _Fetch('POST', 'trusted-driver/driver-earning-api.php',{...body}, {});
+  return _Fetch('POST', 'trusted-driver/driver-earning-api.php', {...body}, {});
+};
+
+export const LANGUAGE_SWITCH = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/switch-language-api.php',
+    {...body},
+    {},
+  );
 };

@@ -58,7 +58,7 @@ export default React.memo(RatingModal);
 const styles = StyleSheet.create({
   mainContainer: {flex: 1},
   contentContainer: {
-    elevation: 13,
+    // elevation: 13,
     padding: 10,
     backgroundColor: AppColors.white,
     borderRadius: 12,

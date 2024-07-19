@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   },
 
   contentContainer: {
-    elevation: 3,
+    elevation: 1,
     padding: 10,
     backgroundColor: AppColors.white,
     paddingLeft: 15,

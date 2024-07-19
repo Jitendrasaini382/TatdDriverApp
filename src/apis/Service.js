@@ -160,12 +160,12 @@ api.interceptors.response.use(
         const response = await axios.get(
           `${API_BASE_URL}/login/refresh_token.php`,
           {
-            params: { refresh_token: refreshToken },
+            params: { refresh_token:refreshToken },
           },
         );
 
-        if (response.data && response.data.jwt_token) {
-          const jwt_token = response.data.jwt_token;
+        if (response.data && response.data.jwt) {
+          const jwt_token = response.data.jwt;
           console.log('Response Interceptor: New JWT token received');
 
           await AsyncStorage.setItem('jwt', jwt_token);

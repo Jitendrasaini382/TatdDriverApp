@@ -9,6 +9,7 @@ import {
   View,
   Dimensions,
   Alert,
+  Image,
 } from 'react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -39,6 +40,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {HOME_AWARENESS, LOGIN_BUTTON} from '../apis/Apis';
 import {TokenConstextApi} from '../context/GlobalContext';
 import {jwtDecode} from 'jwt-decode';
+import {CloseEnvelop, OpenEnvelop} from '../assets/images';
 
 const {width} = Dimensions.get('window');
 
@@ -47,38 +49,40 @@ const responsiveSize = size => {
 };
 
 const TrustedDriver = ({navigation}) => {
-  const [tokenData, setTokenData] = useState([]);
-  const {jwtToken, refreshToken, setJwtToken} = useContext(TokenConstextApi);
+  const {jwtToken, refreshToken, setJwtToken, tokenData, setTokenData} =
+    useContext(TokenConstextApi);
+  const [awarenessData, setAwareness] = useState([]);
 
   console.log(refreshToken, 'contest trusted REFRESH');
 
   console.log(tokenData, 'Token Data Trusted Driver');
 
   console.log(jwtToken, 'trusted context jwttt');
-  const decodeData = () => {
-    const token = jwtToken;
-    const decoded = jwtDecode(token);
-    setTokenData(decoded.data);
-  };
+  // const decodeData = () => {
+  //   const token = jwtToken;
+  //   const decoded = jwtDecode(token);
+  //   setTokenData(decoded.data);
+  // };
 
   const getHomeAwareness = useCallback(async () => {
     try {
       const response = await HOME_AWARENESS({
         action: 'view_all_awareness',
       });
-      console.log(response, ' HOME AWARENESS DATA');
+      setAwareness(response.awareness_data);
+      // console.log(response.awareness_data, ' HOME AWARENESS DATA');
     } catch (err) {
       console.log(err, ' HOME AWARENESS err');
     }
   }, []);
 
   useEffect(() => {
-    // getHomeAwareness();
+    getHomeAwareness();
   }, [getHomeAwareness]);
 
-  useEffect(() => {
-    decodeData();
-  }, [jwtToken]);
+  // useEffect(() => {
+  //   decodeData();
+  // }, [jwtToken]);
   console.log(tokenData.driver_name);
 
   const [isRfdOn, setIsRfdOn] = useState(false);
@@ -153,6 +157,15 @@ const TrustedDriver = ({navigation}) => {
     },
   ];
 
+  const handleAwarnessPress = useCallback(
+    awareness => {
+      navigation.navigate('NoticeBoardDetail', {
+        noticeId: awareness.id,
+      });
+    },
+    [navigation],
+  );
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header extraButton={true} />
@@ -186,8 +199,8 @@ const TrustedDriver = ({navigation}) => {
                     <View style={styles.earningView}>
                       <Text style={styles.rupeeIcon}>
                         <Icon name="rupee" size={responsiveSize(8)} />{' '}
-                        {tokenData &&
-                          tokenData.DriverCommisonData.earning_30days}
+                        {/* {tokenData &&
+                          tokenData.DriverCommisonData.earning_30days || null} */}
                       </Text>
                     </View>
                   </TouchableOpacity>
@@ -233,21 +246,27 @@ const TrustedDriver = ({navigation}) => {
                   <TouchableOpacity
                     onPress={() => dispatch(setModalVisible(true))}>
                     <View style={styles.otrView}>
-                      <Text style={styles.bottamRightText}>4</Text>
+                      <Text style={styles.bottamRightText}>
+                        {/* {tokenData && tokenData.TrustedDriverData.otr} % */}
+                        </Text>
                       <Text style={styles.bottamRightText}>OTR</Text>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => dispatch(setRatingModal(true))}>
                     <View style={styles.ratingView}>
-                      <Text style={styles.bottamRightText}>4</Text>
+                      <Text style={styles.bottamRightText}>
+                        {/* { tokenData && tokenData.TrustedDriverData.rating} */}
+                      </Text>
                       <Text style={styles.bottamRightText}>Rating</Text>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => dispatch(setBookingModal(true))}>
                     <View style={styles.bookingView}>
-                      <Text style={styles.bottamRightText}>70 %</Text>
+                      <Text style={styles.bottamRightText}>
+                        {/* {tokenData && tokenData.TrustedDriverData.recent_dcr} */}
+                         %</Text>
                       <Text style={styles.bottamRightText}>Booking</Text>
                     </View>
                   </TouchableOpacity>
@@ -314,6 +333,44 @@ const TrustedDriver = ({navigation}) => {
             button2Label="English"
             onToggle={label => dispatch(setCurrentView(label))}
           />
+
+          {awarenessData && awarenessData.length > 0
+            ? awarenessData.map(awareness => (
+                <View
+                  style={{
+                    margin: 15,
+                    borderRadius: 5,
+                    padding: 8,
+                  }}>
+                  <TouchableOpacity
+                    key={awareness}
+                    style={styles.touchable}
+                    onPress={() => handleAwarnessPress(awareness)}>
+                    <View style={styles.iconContainer}>
+                      <Image
+                        style={styles.icon}
+                        resizeMode="contain"
+                        source={
+                          awareness.status_image === 'open_envlop.png'
+                            ? OpenEnvelop
+                            : CloseEnvelop
+                        }
+                      />
+                    </View>
+                    <View style={styles.textContainer}>
+                      <Text style={styles.subjectText}>
+                        {awareness.subject}
+                      </Text>
+                    </View>
+                    <View style={{alignSelf: 'flex-end'}}>
+                      <Text style={{color: AppColors.black}}>
+                        {awareness.timestamp}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              ))
+            : null}
 
           {/* Main Toggle Content */}
           <View style={styles.toggleContentContainer}>
@@ -602,6 +659,30 @@ const styles = StyleSheet.create({
     color: AppColors.mainColor,
     fontSize: 9,
     textAlign: 'center',
+  },
+  touchable: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+    marginBottom: 5,
+    justifyContent:"space-between"
+  },
+  iconContainer: {
+    marginRight: 10,
+    paddingTop: 2,
+  },
+  icon: {
+    width: 20,
+    height: 20,
+  },
+  textContainer: {
+    // flex: 1,
+  },
+  subjectText: {
+    color: AppColors.black,
+    fontSize: 15,
   },
 });
 

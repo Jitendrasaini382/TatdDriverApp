@@ -104,3 +104,12 @@ export const LANGUAGE_SWITCH = body => {
     {},
   );
 };
+
+export const HOME_AWARENESS = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/trusted-home-awareness-api.php',
+    {...body},
+    {},
+  );
+};

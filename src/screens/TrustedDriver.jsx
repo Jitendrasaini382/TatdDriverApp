@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   SafeAreaView,
@@ -36,7 +36,7 @@ import {
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {LOGIN_BUTTON} from '../apis/Apis';
+import {HOME_AWARENESS, LOGIN_BUTTON} from '../apis/Apis';
 import {TokenConstextApi} from '../context/GlobalContext';
 import {jwtDecode} from 'jwt-decode';
 
@@ -48,12 +48,11 @@ const responsiveSize = size => {
 
 const TrustedDriver = ({navigation}) => {
   const [tokenData, setTokenData] = useState([]);
-  const {setJwtToken} = useContext(TokenConstextApi);
-  const {jwtToken} = useContext(TokenConstextApi);
-
-  const {refreshToken} = useContext(TokenConstextApi);
+  const {jwtToken, refreshToken, setJwtToken} = useContext(TokenConstextApi);
 
   console.log(refreshToken, 'contest trusted REFRESH');
+
+  console.log(tokenData, 'tttttttttttttt');
 
   console.log(jwtToken, 'trusted context jwttt');
   const decodeData = () => {
@@ -61,6 +60,21 @@ const TrustedDriver = ({navigation}) => {
     const decoded = jwtDecode(token);
     setTokenData(decoded.data);
   };
+
+  const getHomeAwareness = useCallback(async () => {
+    try {
+      const response = await HOME_AWARENESS({
+        action: 'view_all_awareness',
+      });
+      console.log(response, ' HOME AWARENESS DATA');
+    } catch (err) {
+      console.log(err, ' HOME AWARENESS err');
+    }
+  }, []);
+
+  useEffect(() => {
+    // getHomeAwareness();
+  }, [getHomeAwareness]);
 
   // const regenerateToken = async (refreshToken) => {
   //   // console.log(refreshToken, 'mmmmmmmm');
@@ -194,12 +208,11 @@ const TrustedDriver = ({navigation}) => {
                 </View>
                 <View style={styles.topRight}>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('DriverEarning')}
-                    >
+                    onPress={() => navigation.navigate('DriverEarning')}>
                     <View style={styles.earningView}>
                       <Text style={styles.rupeeIcon}>
-                        <Icon name="rupee" size={responsiveSize(7)} />
-                        15115
+                        <Icon name="rupee" size={responsiveSize(8)} />{' '}
+                        {tokenData.DriverCommisonData.earning_30days}
                       </Text>
                     </View>
                   </TouchableOpacity>
@@ -463,8 +476,8 @@ const styles = StyleSheet.create({
   rupeeIcon: {
     color: AppColors.mainColor,
     textAlign: 'center',
-    padding: responsiveSize(2),
-    fontSize: responsiveSize(7),
+    // padding: responsiveSize(2),
+    fontSize: responsiveSize(9),
   },
   notification: {
     margin: responsiveSize(5),

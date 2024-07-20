@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   SafeAreaView,
@@ -45,9 +45,7 @@ const responsiveSize = size => {
 };
 
 const TrustedDriver = ({navigation}) => {
-  const {jwtToken, refreshToken, setJwtToken, decodedToken, setDecodedToken} =
-    useContext(TokenConstextApi);
-  const [driverData, setDriverData] = useState(null);
+  const {decodedToken} = useContext(TokenConstextApi);
   const [isRfdOn, setIsRfdOn] = useState(false);
   const [loginButton, setLoginButton] = useState({
     action: 'login_button',
@@ -55,7 +53,7 @@ const TrustedDriver = ({navigation}) => {
     rfd: '0',
   });
 
-  // console.log(decodedToken, '.......................');
+  console.log(decodedToken, 'decodedTokendecodedTokendecodedTokendecodedToken');
 
   const dispatch = useDispatch();
   const {
@@ -70,25 +68,6 @@ const TrustedDriver = ({navigation}) => {
     ratingModal,
     myBookingModal,
   } = useSelector(state => state.trustedDriver);
-
-  // const getDriverData = async () => {
-  //   if (decodedToken) {
-  //     console.log(decodedToken ,'Decoded token exists, running related code...');
-  //     // setDriverData(ddd.data);
-  //   } else {
-  //     console.log('No decoded token available, skipping related code.');
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getDriverData();
-  // }, [getDriverData]);
-
-  
-
-  // console.log(driverData, 'dddddddddddddddd');
-
-  // console.log(ddd.data.DriverCommisonData, "ddddd data");
 
   const handleToggleButton = () => {
     const newRfdValue = isRfdOn ? '0' : '1';
@@ -106,6 +85,7 @@ const TrustedDriver = ({navigation}) => {
         });
     }
   };
+
   const Item = [
     {
       title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
@@ -197,10 +177,7 @@ const TrustedDriver = ({navigation}) => {
               <View style={styles.bottamView}>
                 <View style={styles.driverNameView}>
                   <Text style={styles.driverNameText}>
-                    {/* { decodedToken &&  decodedToken.driver_name}  */}
-                    {decodedToken &&
-                      decodedToken.DriverCommisonData.driver_name}
-                    {/* Mohit */}
+                    {decodedToken && decodedToken.driver_name}
                   </Text>
                 </View>
                 <View style={styles.bottamRightView}>
@@ -208,7 +185,6 @@ const TrustedDriver = ({navigation}) => {
                     onPress={() => dispatch(setModalVisible(true))}>
                     <View style={styles.otrView}>
                       <Text style={styles.bottamRightText}>
-                        {' '}
                         {decodedToken && decodedToken.TrustedDriverData.otr}
                       </Text>
                       <Text style={styles.bottamRightText}>OTR</Text>
@@ -361,6 +337,368 @@ const TrustedDriver = ({navigation}) => {
 };
 
 export default TrustedDriver;
+
+// import React, {useContext, useState} from 'react';
+// import {useDispatch, useSelector} from 'react-redux';
+// import {
+//   SafeAreaView,
+//   ScrollView,
+//   StyleSheet,
+//   Text,
+//   TouchableOpacity,
+//   View,
+//   Dimensions,
+//   Alert,
+// } from 'react-native';
+// import {Marquee} from '@animatereactnative/marquee';
+// import Icon from 'react-native-vector-icons/dist/FontAwesome';
+// import ToggleSwitch from 'toggle-switch-react-native';
+// import Modal from 'react-native-modal';
+// import {AppColors} from '../assets/Colors';
+// import Header from '../components/Header';
+// import OtrModal from '../components/modal/OtrModal';
+// import RatingModal from '../components/modal/RatingModal';
+// import BookingModal from '../components/modal/BookingModal';
+// import MainToggleModal from '../components/modal/MainToggleModal';
+// import BookingView from '../components/BookingView';
+// import TrainingVideo from '../components/TrainingVideos';
+// import MyBookingAgencyModal from '../components/modal/MyBookingAgencyModal';
+// import MyBookingModal from '../components/MyBookingModal';
+// import {
+//   setCurrentView,
+//   setModalVisible,
+//   setBookingModal,
+//   setRatingModal,
+//   setVideosContent,
+//   setMyBookingAgencyModal,
+// } from '../redux/slices/trustedDriverSlice';
+// import {AppFont} from '../assets/FontsFamily';
+// import ToggleButton from '../components/modal/ToggleButton';
+// import {LOGIN_BUTTON} from '../apis/Apis';
+// import {TokenConstextApi} from '../context/GlobalContext';
+// import ViewAwarenessData from '../components/ViewAwarenessData';
+
+// const {width} = Dimensions.get('window');
+
+// const responsiveSize = size => {
+//   return (width / 411.42857142857144) * size;
+// };
+
+// const TrustedDriver = ({navigation}) => {
+//   const {jwtToken, refreshToken, setJwtToken, decodedToken, setDecodedToken} =
+//     useContext(TokenConstextApi);
+//   const [driverData, setDriverData] = useState(null);
+//   const [isRfdOn, setIsRfdOn] = useState(false);
+//   const [loginButton, setLoginButton] = useState({
+//     action: 'login_button',
+//     submitR: '1',
+//     rfd: '0',
+//   });
+
+//   // console.log(decodedToken, '.......................');
+
+//   const dispatch = useDispatch();
+//   const {
+//     currentView,
+//     toggleButton,
+//     mainToggleModal,
+//     mainToggleContent,
+//     videosContent,
+//     myBookingAgencyModal,
+//     isModalVisible,
+//     bookingModal,
+//     ratingModal,
+//     myBookingModal,
+//   } = useSelector(state => state.trustedDriver);
+
+//   // const getDriverData = async () => {
+//   //   if (decodedToken) {
+//   //     console.log(decodedToken ,'Decoded token exists, running related code...');
+//   //     // setDriverData(ddd.data);
+//   //   } else {
+//   //     console.log('No decoded token available, skipping related code.');
+//   //   }
+//   // };
+
+//   // useEffect(() => {
+//   //   getDriverData();
+//   // }, [getDriverData]);
+
+//   // console.log(driverData, 'dddddddddddddddd');
+
+//   // console.log(ddd.data.DriverCommisonData, "ddddd data");
+
+//   const handleToggleButton = () => {
+//     const newRfdValue = isRfdOn ? '0' : '1';
+//     setIsRfdOn(!isRfdOn);
+//     setLoginButton(prevState => ({...prevState, rfd: newRfdValue}));
+
+//     if (newRfdValue === '1') {
+//       LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
+//         .then(response => {
+//           console.log(response, 'LOGIN API RESPONSE');
+//           Alert.alert(response.message, 'RFD Logged in successfully');
+//         })
+//         .catch(err => {
+//           console.log(err, 'LOGIN API ERROR');
+//         });
+//     }
+//   };
+//   const Item = [
+//     {
+//       title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
+//       videoId: 'uuCULpkpKrA',
+//     },
+//     {
+//       title: 'Login करने के बाद आपको अपनी मर्जी की बुकिंग उठानी होगी। ',
+//       videoId: '4HDKAi75-Vo',
+//     },
+//     {
+//       title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
+//       videoId: 'u892FTsKLKk',
+//     },
+//     {
+//       title: 'Login करने के बाद आपको अपनी मर्जी की बुकिंग उठानी होगी।',
+//       videoId: 'M-iyhUZ-h7o',
+//     },
+//     {
+//       title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
+//       videoId: 'v6n5SvV3XSs',
+//     },
+//   ];
+
+//   return (
+//     <SafeAreaView style={styles.safeArea}>
+//       <Header extraButton={true} />
+//       {myBookingModal && <MyBookingModal />}
+
+//       <ScrollView>
+//         <View style={styles.mainContainer}>
+//           {/* Marquee View */}
+//           <View style={styles.marqueeView}>
+//             <Marquee spacing={20} speed={0.5}>
+//               <Text style={styles.marqueeText}>
+//                 Please watch the remaining training videos in a quiet place.
+//                 After watching the videos, your ID will be unlocked following a
+//                 question and answer session.
+//               </Text>
+//             </Marquee>
+//           </View>
+
+//           {/* Middle Container */}
+//           <View style={styles.middleContainer}>
+//             <View style={styles.middleContent}>
+//               {/* Top div */}
+//               <View style={styles.topView}>
+//                 <View style={styles.topLeft}>
+//                   <Text style={styles.topLeftText}>
+//                     {decodedToken && decodedToken.DriverCommisonData.commission}
+//                     %
+//                   </Text>
+//                   <Text style={styles.bottamLeftText}>Commission</Text>
+//                 </View>
+//                 <View style={styles.topRight}>
+//                   <TouchableOpacity
+//                     onPress={() => navigation.navigate('DriverEarning')}>
+//                     <View style={styles.earningView}>
+//                       <Text style={styles.rupeeIcon}>
+//                         <Icon name="rupee" size={responsiveSize(8)} />{' '}
+//                         {decodedToken &&
+//                           decodedToken.DriverCommisonData.earning_30days}
+//                       </Text>
+//                     </View>
+//                   </TouchableOpacity>
+//                   <TouchableOpacity
+//                     onPress={() => navigation.navigate('DriverNotifications')}>
+//                     <View style={styles.notification}>
+//                       <Icon
+//                         color={AppColors.white}
+//                         size={responsiveSize(22.5)}
+//                         name="bell"
+//                       />
+//                       <Text style={styles.notificationCount}>0</Text>
+//                     </View>
+//                   </TouchableOpacity>
+//                   <View style={styles.toggleView}>
+//                     <ToggleSwitch
+//                       isOn={isRfdOn}
+//                       onColor={AppColors.mainColor}
+//                       offColor={AppColors.greyColor}
+//                       size="medium"
+//                       onToggle={handleToggleButton}
+//                     />
+//                   </View>
+//                 </View>
+//               </View>
+
+//               {/* Bottom div */}
+//               <View style={styles.bottamView}>
+//                 <View style={styles.driverNameView}>
+//                   <Text style={styles.driverNameText}>
+//                     {/* { decodedToken &&  decodedToken.driver_name}  */}
+//                     {decodedToken &&
+//                       decodedToken.DriverCommisonData.driver_name}
+//                     {/* Mohit */}
+//                   </Text>
+//                 </View>
+//                 <View style={styles.bottamRightView}>
+//                   <TouchableOpacity
+//                     onPress={() => dispatch(setModalVisible(true))}>
+//                     <View style={styles.otrView}>
+//                       <Text style={styles.bottamRightText}>
+//                         {' '}
+//                         {decodedToken && decodedToken.TrustedDriverData.otr}
+//                       </Text>
+//                       <Text style={styles.bottamRightText}>OTR</Text>
+//                     </View>
+//                   </TouchableOpacity>
+//                   <TouchableOpacity
+//                     onPress={() => dispatch(setRatingModal(true))}>
+//                     <View style={styles.ratingView}>
+//                       <Text style={styles.bottamRightText}>
+//                         {decodedToken && decodedToken.TrustedDriverData.rating}
+//                       </Text>
+//                       <Text style={styles.bottamRightText}>Rating</Text>
+//                     </View>
+//                   </TouchableOpacity>
+//                   <TouchableOpacity
+//                     onPress={() => dispatch(setBookingModal(true))}>
+//                     <View style={styles.bookingView}>
+//                       <Text style={styles.bottamRightText}>
+//                         {decodedToken &&
+//                           decodedToken.TrustedDriverData.recent_dcr}{' '}
+//                         %
+//                       </Text>
+//                       <Text style={styles.bottamRightText}>Booking</Text>
+//                     </View>
+//                   </TouchableOpacity>
+//                 </View>
+//               </View>
+//             </View>
+
+//             {/* Bottom div */}
+//             <View style={styles.bottamContent}>
+//               <TouchableOpacity
+//                 onPress={() => dispatch(setVideosContent(true))}
+//                 style={[
+//                   styles.bottamContent1,
+//                   videosContent && {backgroundColor: AppColors.mainColor},
+//                 ]}>
+//                 <Text style={styles.absoulteText}>5</Text>
+//                 <View style={styles.absoulteView}>
+//                   <Text
+//                     style={[
+//                       styles.bottamContent1Text,
+//                       videosContent && {color: AppColors.white},
+//                     ]}>
+//                     Training
+//                   </Text>
+//                   <Text
+//                     style={[
+//                       styles.bottamContent1Text,
+//                       videosContent && {color: AppColors.white},
+//                     ]}>
+//                     Videos
+//                   </Text>
+//                 </View>
+//               </TouchableOpacity>
+//               <TouchableOpacity
+//                 onPress={() => navigation.navigate('MyBonusStatusHistory')}
+//                 style={styles.bottamContent2}>
+//                 <Text style={styles.mainText}>My Bonus</Text>
+//                 <Text style={styles.textIcon}>
+//                   <Icon name="rupee" size={responsiveSize(9)} /> 0
+//                 </Text>
+//               </TouchableOpacity>
+//               <TouchableOpacity
+//                 onPress={() => navigation.navigate('AgentLogin')}
+//                 style={styles.bottamContent3}>
+//                 <Text style={styles.mainText}>Agent panel</Text>
+//                 <Text style={styles.textIcon}>
+//                   <Icon name="rupee" size={responsiveSize(9)} /> 0
+//                 </Text>
+//               </TouchableOpacity>
+//               <TouchableOpacity
+//                 onPress={() => navigation.navigate('ClearMyDuePayment')}
+//                 style={styles.bottamContent4}>
+//                 <Text style={styles.mainText}>Clear My Due</Text>
+//                 <Text style={styles.textIcon}>
+//                   <Icon name="rupee" size={responsiveSize(9)} />{' '}
+//                   {decodedToken && decodedToken.DRIVER_CLEAR_MY_DUE}
+//                 </Text>
+//               </TouchableOpacity>
+//             </View>
+//           </View>
+
+//           {/* Toggle Button */}
+//           <ToggleButton
+//             button1Label="Hindi"
+//             button2Label="English"
+//             onToggle={label => dispatch(setCurrentView(label))}
+//           />
+
+//           <ViewAwarenessData />
+
+//           {/* Main Toggle Content */}
+//           <View style={styles.toggleContentContainer}>
+//             {mainToggleContent ? (
+//               <BookingView />
+//             ) : videosContent ? (
+//               <TrainingVideo data={Item} />
+//             ) : null}
+//           </View>
+//         </View>
+//       </ScrollView>
+
+//       {/* Modals */}
+//       <Modal
+//         backdropOpacity={0}
+//         animationIn={'fadeInDown'}
+//         animationOut={'fadeOutUp'}
+//         isVisible={mainToggleModal}>
+//         <MainToggleModal />
+//       </Modal>
+
+//       <Modal
+//         backdropOpacity={0}
+//         onBackdropPress={() => dispatch(setModalVisible(false))}
+//         animationIn={'fadeInDown'}
+//         animationOut={'fadeOutUp'}
+//         isVisible={isModalVisible}>
+//         <OtrModal />
+//       </Modal>
+
+//       <Modal
+//         backdropOpacity={0}
+//         onBackdropPress={() => dispatch(setRatingModal(false))}
+//         animationIn={'fadeInDown'}
+//         animationOut={'fadeOutUp'}
+//         isVisible={ratingModal}>
+//         <RatingModal />
+//       </Modal>
+
+//       <Modal
+//         backdropOpacity={0}
+//         onBackdropPress={() => dispatch(setBookingModal(false))}
+//         animationIn={'fadeInDown'}
+//         animationOut={'fadeOutUp'}
+//         isVisible={bookingModal}>
+//         <BookingModal />
+//       </Modal>
+
+//       <Modal
+//         backdropOpacity={0}
+//         onBackdropPress={() => dispatch(setMyBookingAgencyModal(false))}
+//         animationIn={'fadeInDown'}
+//         animationOut={'fadeOutUp'}
+//         isVisible={myBookingAgencyModal}>
+//         <MyBookingAgencyModal />
+//       </Modal>
+//     </SafeAreaView>
+//   );
+// };
+
+// export default TrustedDriver;
 
 const styles = StyleSheet.create({
   safeArea: {

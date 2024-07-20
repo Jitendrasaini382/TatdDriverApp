@@ -125,11 +125,9 @@ const CheckDriverOtp = ({navigation}) => {
     try {
       if (!otp) {
         setError('Please Enter The OTP');
-        // setLoading(false);
         return;
       } else if (otp.length !== 4) {
         setError('Please enter a 4-digit OTP');
-        // setLoading(false);
         return;
       }
 

@@ -2,10 +2,15 @@ import _Fetch from './Service';
 
 // https://www.tatd.in/app-api/driver/login/driver-login.php?
 
+// export const DRIVER_LOGIN = body => {
+//   console.log(body, 'Driver Login Body');
+//   return _Fetch('POST', 'login/driver-login.php', {...body}, {});
+// };
+
 export const DRIVER_LOGIN = body => {
-  console.log(body, 'Driver Login Body');
-  return _Fetch('POST', 'login/driver-login.php', {...body}, {});
+  return _Fetch('POST', 'login/driver-login.php', body, {});
 };
+
 
 // https://www.tatd.in/app-api/driver/login/verify-otp-login.php
 
@@ -16,10 +21,10 @@ export const VERIFY_OTP_LOGIN = body => {
 
 // https://www.tatd.in/app-api/driver/login/refresh_token.php
 
-export const REFRESH_TOKEN = body => {
-  console.log(body, 'REFRESH_TOKEN Body');
-  return _Fetch('GET', 'login/refresh_token.php', {...body}, {});
-};
+// export const REFRESH_TOKEN = body => {
+//   console.log(body, 'REFRESH_TOKEN Body');
+//   return _Fetch('GET', 'login/refresh_token.php', {...body}, {});
+// };
 
 // https://www.tatd.in/app-api/driver/faq/driver-faq-api.php
 

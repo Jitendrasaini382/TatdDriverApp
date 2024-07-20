@@ -1,4 +1,10 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   SafeAreaView,
@@ -9,7 +15,7 @@ import {
   View,
   Dimensions,
   Alert,
-  Image,
+  ActivityIndicator,
 } from 'react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -31,17 +37,14 @@ import {
   setBookingModal,
   setRatingModal,
   setVideosContent,
-  mainToggleHandle,
   setMyBookingAgencyModal,
 } from '../redux/slices/trustedDriverSlice';
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {HOME_AWARENESS, LOGIN_BUTTON} from '../apis/Apis';
+import {LOGIN_BUTTON} from '../apis/Apis';
 import {TokenConstextApi} from '../context/GlobalContext';
-import {jwtDecode} from 'jwt-decode';
-import {CloseEnvelop, OpenEnvelop} from '../assets/images';
 import ViewAwarenessData from '../components/ViewAwarenessData';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width} = Dimensions.get('window');
 
@@ -50,108 +53,15 @@ const responsiveSize = size => {
 };
 
 const TrustedDriver = ({navigation}) => {
-  const {jwtToken, refreshToken, setJwtToken, tokenData, setTokenData} =
+  const {jwtToken, refreshToken, setJwtToken, decodedToken, setDecodedToken} =
     useContext(TokenConstextApi);
-
-  // const [tokenData, setTokenData] = useState([]);
-
-  // const [awarenessData, setAwareness] = useState([]);
-
-  console.log(refreshToken, 'contest trusted REFRESH');
-
-  console.log(tokenData, 'Token Data Trusted Driver');
-
-  console.log(jwtToken, 'trusted context jwttt');
-
-  // const decodeData = () => {
-  //   console.log('JWT Token:', jwtToken);
-  //   const token = jwtToken;
-  //   try {
-  //     const decoded = jwtDecode(token);
-  //     console.log('Decoded data:', decoded);
-  //     setTokenData(decoded.data);
-  //   } catch (error) {
-  //     console.error('Error decoding token:', error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   decodeData();
-  // }, [decodeData]);
-
-  // const decodeData = useCallback(() => {
-  //   if (!jwtToken) return;
-
-  //   console.log('JWT Token:', jwtToken);
-  //   try {
-  //     const decoded = jwtDecode(jwtToken);
-  //     console.log('Decoded data:', decoded);
-  //     setTokenData(decoded.data);
-  //   } catch (error) {
-  //     console.error('Error decoding token:', error);
-  //   }
-  // }, [jwtToken]);
-
-  // useEffect(() => {
-  //   decodeData();
-  // }, [decodeData]);
-
-  // useEffect(() => {
-  //   console.log('Updated tokenData:', tokenData);
-  // }, [tokenData]);
-
-  const {commission, earning_30days} = tokenData.DriverCommisonData;
-  const {otr, rating, recent_dcr} = tokenData.TrustedDriverData;
-
-  // const getHomeAwareness = useCallback(async () => {
-  //   try {
-  //     const response = await HOME_AWARENESS({
-  //       action: 'view_all_awareness',
-  //     });
-  //     setAwareness(response.awareness_data);
-  //     // console.log(response.awareness_data, ' HOME AWARENESS DATA');
-  //   } catch (err) {
-  //     console.log(err, ' HOME AWARENESS err');
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   getHomeAwareness();
-  // }, [getHomeAwareness]);
-
+  const [driverData, setDriverData] = useState(null);
   const [isRfdOn, setIsRfdOn] = useState(false);
   const [loginButton, setLoginButton] = useState({
     action: 'login_button',
     submitR: '1',
     rfd: '0',
   });
-
-  const handleToggleButton = () => {
-    const newRfdValue = isRfdOn ? '0' : '1';
-    setIsRfdOn(!isRfdOn);
-    setLoginButton(prevState => ({...prevState, rfd: newRfdValue}));
-
-    if (newRfdValue === '1') {
-      LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
-        .then(response => {
-          console.log(response, 'LOGIN API RESPONSE');
-
-          // if (response.data.status_code === '200') {
-          // Handle successful login, e.g., redirect or update UI
-
-          // navigation.navigate("AgentLogin")
-
-          Alert.alert(response.message, 'RFD Logged in successfully');
-          console.log(response, 'RFD Logged in successfully');
-          // }
-        })
-        .catch(err => {
-          console.log(err, 'LOGIN API ERROR');
-          // Alert.alert('qq')
-
-          // Handle error, e.g., show error message to user
-        });
-    }
-  };
 
   const dispatch = useDispatch();
   const {
@@ -166,6 +76,33 @@ const TrustedDriver = ({navigation}) => {
     ratingModal,
     myBookingModal,
   } = useSelector(state => state.trustedDriver);
+
+  console.log(decodedToken, '=================');
+
+  const handleToggleButton = () => {
+    const newRfdValue = isRfdOn ? '0' : '1';
+    setIsRfdOn(!isRfdOn);
+    setLoginButton(prevState => ({...prevState, rfd: newRfdValue}));
+
+    if (newRfdValue === '1') {
+      LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
+        .then(response => {
+          console.log(response, 'LOGIN API RESPONSE');
+          Alert.alert(response.message, 'RFD Logged in successfully');
+        })
+        .catch(err => {
+          console.log(err, 'LOGIN API ERROR');
+        });
+    }
+  };
+
+  // useEffect(() => {
+  //   setDriverData(decodedToken);
+  // }, []);
+
+  // console.log('====================================');
+  // console.log(driverData.data);
+  // console.log('====================================');
 
   const Item = [
     {
@@ -189,15 +126,6 @@ const TrustedDriver = ({navigation}) => {
       videoId: 'v6n5SvV3XSs',
     },
   ];
-
-  const handleAwarnessPress = useCallback(
-    awareness => {
-      navigation.navigate('NoticeBoardDetail', {
-        noticeId: awareness.id,
-      });
-    },
-    [navigation],
-  );
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -223,11 +151,7 @@ const TrustedDriver = ({navigation}) => {
               {/* Top div */}
               <View style={styles.topView}>
                 <View style={styles.topLeft}>
-                  <Text style={styles.topLeftText}>
-                    {/* {tokenData  ? (tokenData.DriverCommisonData.commission) : 20} */}
-                    {/* {tokenData ? 20 : <Text style={{}}>...</Text>}% */}
-                    {commission}%
-                  </Text>
+                  <Text style={styles.topLeftText}>{driverData}%</Text>
                   <Text style={styles.bottamLeftText}>Commission</Text>
                 </View>
                 <View style={styles.topRight}>
@@ -236,8 +160,7 @@ const TrustedDriver = ({navigation}) => {
                     <View style={styles.earningView}>
                       <Text style={styles.rupeeIcon}>
                         <Icon name="rupee" size={responsiveSize(8)} />{' '}
-                        {/* {tokenData ? 20 : <Text style={{}}>...</Text>}% */}
-                        {earning_30days}
+                        {/* {earning_30days} */}
                       </Text>
                     </View>
                   </TouchableOpacity>
@@ -253,14 +176,6 @@ const TrustedDriver = ({navigation}) => {
                     </View>
                   </TouchableOpacity>
                   <View style={styles.toggleView}>
-                    {/* <ToggleSwitch
-                      isOn={toggleButton}
-                      onColor={AppColors.mainColor}
-                      offColor={AppColors.greyColor}
-                      size="medium"
-                      onToggle={() => dispatch(mainToggleHandle())}
-                    /> */}
-
                     <ToggleSwitch
                       isOn={isRfdOn}
                       onColor={AppColors.mainColor}
@@ -275,19 +190,13 @@ const TrustedDriver = ({navigation}) => {
               {/* Bottom div */}
               <View style={styles.bottamView}>
                 <View style={styles.driverNameView}>
-                  <Text style={styles.driverNameText}>
-                    {tokenData.driver_name}
-                  </Text>
+                  <Text style={styles.driverNameText}>{driverData}</Text>
                 </View>
                 <View style={styles.bottamRightView}>
                   <TouchableOpacity
                     onPress={() => dispatch(setModalVisible(true))}>
                     <View style={styles.otrView}>
-                      <Text style={styles.bottamRightText}>
-                        {otr}
-                        {/* {tokenData ? 20 : <Text style={{}}>...</Text>}% */}
-                        {/* {tokenData && tokenData.TrustedDriverData.otr} % */}
-                      </Text>
+                      <Text style={styles.bottamRightText}>{/* {otr} */}</Text>
                       <Text style={styles.bottamRightText}>OTR</Text>
                     </View>
                   </TouchableOpacity>
@@ -295,9 +204,7 @@ const TrustedDriver = ({navigation}) => {
                     onPress={() => dispatch(setRatingModal(true))}>
                     <View style={styles.ratingView}>
                       <Text style={styles.bottamRightText}>
-                        {rating}
-                        {/* {tokenData ? 20 : <Text style={{}}>...</Text>}% */}
-                        {/* {tokenData && tokenData.TrustedDriverData.rating} */}
+                        {/* {rating} */}
                       </Text>
                       <Text style={styles.bottamRightText}>Rating</Text>
                     </View>
@@ -306,9 +213,7 @@ const TrustedDriver = ({navigation}) => {
                     onPress={() => dispatch(setBookingModal(true))}>
                     <View style={styles.bookingView}>
                       <Text style={styles.bottamRightText}>
-                        {recent_dcr} %
-                        {/* {tokenData ? 20 : <Text style={{}}>...</Text>}% */}
-                        {/* {tokenData && tokenData.TrustedDriverData.recent_dcr}% */}
+                        {/* {recent_dcr} */}%
                       </Text>
                       <Text style={styles.bottamRightText}>Booking</Text>
                     </View>
@@ -365,7 +270,8 @@ const TrustedDriver = ({navigation}) => {
                 <Text style={styles.mainText}>Clear My Due</Text>
                 <Text style={styles.textIcon}>
                   <Icon name="rupee" size={responsiveSize(9)} />{' '}
-                  {tokenData && tokenData.DRIVER_CLEAR_MY_DUE}
+                  {/* {driverData?.DRIVER_CLEAR_MY_DUE || 0} */}
+                  {/* {decodedToken.data.CASH_WITH_DRIVER_10_DAYS} */}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -378,43 +284,6 @@ const TrustedDriver = ({navigation}) => {
             onToggle={label => dispatch(setCurrentView(label))}
           />
 
-          {/* {awarenessData && awarenessData.length > 0
-            ? awarenessData.map(awareness => (
-                <View
-                  style={{
-                    margin: 15,
-                    borderRadius: 5,
-                    padding: 8,
-                  }}>
-                  <TouchableOpacity
-                    // key={awareness}
-                    style={styles.touchable}
-                    onPress={() => handleAwarnessPress(awareness)}>
-                    <View style={styles.iconContainer}>
-                      <Image
-                        style={styles.icon}
-                        resizeMode="contain"
-                        source={
-                          awareness.status_image === 'open_envlop.png'
-                            ? OpenEnvelop
-                            : CloseEnvelop
-                        }
-                      />
-                    </View>
-                    <View style={styles.textContainer}>
-                      <Text style={styles.subjectText}>
-                        {awareness.subject}
-                      </Text>
-                    </View>
-                    <View style={{alignSelf: 'flex-end'}}>
-                      <Text style={{color: AppColors.black}}>
-                        {awareness.timestamp}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              ))
-            : null} */}
           <View>
             <ViewAwarenessData />
           </View>

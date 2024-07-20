@@ -17,7 +17,6 @@ import {CommonActions, useRoute} from '@react-navigation/native';
 import {DRIVER_LOGIN, VERIFY_OTP_LOGIN} from '../apis/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TokenConstextApi} from '../context/GlobalContext';
-import {jwtDecode} from 'jwt-decode';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -61,23 +60,23 @@ const CheckDriverOtp = ({navigation}) => {
       });
   };
 
-  const decodeData = async data => {
-    console.log(data, '11111111');
-    if (!data) {
-      return;
-    } else {
-      try {
-        console.log(data, '22222222');
+  // const decodeData = async data => {
+  //   console.log(data, '11111111');
+  //   if (!data) {
+  //     return;
+  //   } else {
+  //     try {
+  //       console.log(data, '22222222');
 
-        const decoded = jwtDecode(data);
-        console.log('Decoded data:', decoded);
-        await setTokenData(decoded.data);
-        console.log(decodeData, '33333333333');
-      } catch (error) {
-        console.error('Error decoding token:', error);
-      }
-    }
-  };
+  //       const decoded = jwtDecode(data);
+  //       console.log('Decoded data:', decoded);
+  //       await setTokenData(decoded.data);
+  //       console.log(decodeData, '33333333333');
+  //     } catch (error) {
+  //       console.error('Error decoding token:', error);
+  //     }
+  //   }
+  // };
 
   // useEffect(() => {
   //   decodeData();
@@ -87,28 +86,69 @@ const CheckDriverOtp = ({navigation}) => {
   //   console.log('Updated tokenData:', tokenData);
   // }, [tokenData]);
 
+  const setJwtTokenn = async token => {
+    console.log(token, "jjjjjjjjjjjjjjjjjjjjjjjj");
+    await AsyncStorage.setItem('jwt', token);
+  };
+
+  const setRefreshTokenn = async token => {
+    console.log(token,"rrrrrrrrrrrrrrrrrrrrrr");
+    await AsyncStorage.setItem('refresh_token', token);
+  };
+
+  // const verifyOtp = async () => {
+  //   try {
+  //     if (!otp) {
+  //       setError('Please Enter The OTP');
+
+  //       // Alert.alert('Error', 'Please Enter The OTP');
+  //     } else if (otp.length !== 4) {
+  //       setError('Please enter a 4-digit OTP');
+  //       // Alert.alert('Error', 'Please enter a 4-digit OTP');
+  //     }
+  //     const response = await VERIFY_OTP_LOGIN({
+  //       mobile: mobile,
+  //       otp: otp,
+  //     });
+  //     // console.log(response);
+  //     // decodeData(response.jwt);
+  //     await setRefreshToken(response.refresh_token);
+  //     await setJwtToken(response.jwt);
+  //     await AsyncStorage.setItem('refresh_token', response.refresh_token);
+  //     await AsyncStorage.setItem('jwt', response.jwt);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
   const verifyOtp = async () => {
     try {
       if (!otp) {
         setError('Please Enter The OTP');
-
-        // Alert.alert('Error', 'Please Enter The OTP');
+        // setLoading(false);
+        return;
       } else if (otp.length !== 4) {
         setError('Please enter a 4-digit OTP');
-        // Alert.alert('Error', 'Please enter a 4-digit OTP');
+        // setLoading(false);
+        return;
       }
+
       const response = await VERIFY_OTP_LOGIN({
         mobile: mobile,
         otp: otp,
       });
-      // console.log(response);
-      decodeData(response.jwt);
-      await setRefreshToken(response.refresh_token);
-      await setJwtToken(response.jwt);
-      await AsyncStorage.setItem('refresh_token', response.refresh_token);
-      await AsyncStorage.setItem('jwt', response.jwt);
+
+      console.log('OTP verification response:', response);
+
+      if (response.jwt && response.refresh_token) {
+        await setRefreshTokenn(response.refresh_token);
+        await setJwtTokenn(response.jwt);
+      } else {
+        setError('Invalid response from server');
+      }
     } catch (err) {
-      console.log(err);
+      console.error('OTP verification failed:', err);
+      setError(err.message || 'OTP verification failed. Please try again.');
     }
   };
 

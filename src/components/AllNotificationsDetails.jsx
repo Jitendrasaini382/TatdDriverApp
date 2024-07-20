@@ -81,9 +81,12 @@ const AllNotificationComponent = () => {
               />
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.previewText} numberOfLines={2}>
+              <Text
+                style={styles.previewText}
+                //  numberOfLines={1}
+              >
                 {notification.message_preview ||
-                  notification.message.substring(0, 100) + '...'}
+                  notification.message.substring(0, 50) + '...'}
               </Text>
             </View>
           </TouchableOpacity>
@@ -247,25 +250,28 @@ const styles = StyleSheet.create({
   },
   touchable: {
     flexDirection: 'row',
-    padding: 12,
+    marginHorizontal: 10,
+    paddingVertical: 5,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
-    backgroundColor: '#ffffff',
+    backgroundColor: AppColors.white,
   },
   iconContainer: {
     marginRight: 15,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   icon: {
-    width: 30,
-    height: 30,
+    width: 15,
+    height: 15,
   },
   textContainer: {
-    flex: 1,
+    // flex: 1,
   },
   previewText: {
-    fontSize: 14,
-    color: '#666666',
+    fontSize: 15,
+    color: AppColors.black,
+    fontFamily: AppFont.regularFont,
+    fontWeight: 'bold',
   },
   fullScreenContainer: {
     flex: 1,

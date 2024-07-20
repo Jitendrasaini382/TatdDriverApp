@@ -49,32 +49,39 @@ const AllNoticeBoardComponent = () => {
 
   return (
     <ScrollView style={styles.container}>
-      { noticeBoardData &&  noticeBoardData.map(noticeBoard => (
-        <TouchableOpacity
-          key={noticeBoard.id}
-          style={styles.touchable}
-          onPress={() => handleNoticePress(noticeBoard)}>
-          <View style={styles.iconContainer}>
-            <Image
-              style={styles.icon}
-              resizeMode="contain"
-              source={
-                noticeBoard.status_image === 'open_envlop.png'
-                  ? OpenEnvelop
-                  : CloseEnvelop
-              }
-            />
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.subjectText}>{noticeBoard.subject}</Text>
-          </View>
-          <View style={{alignSelf: 'flex-end'}}>
-            <Text style={{color: AppColors.black}}>
-              {noticeBoard.timestamp}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      ))}
+      {noticeBoardData &&
+        noticeBoardData.map(noticeBoard => (
+          <TouchableOpacity
+            key={noticeBoard.id}
+            style={styles.touchable}
+            onPress={() => handleNoticePress(noticeBoard)}>
+            <View style={styles.iconContainer}>
+              <Image
+                style={styles.icon}
+                resizeMode="contain"
+                source={
+                  noticeBoard.status_image === 'open_envlop.png'
+                    ? OpenEnvelop
+                    : CloseEnvelop
+                }
+              />
+            </View>
+            {/* <View style={styles.textContainer}>
+              <Text style={styles.subjectText}>
+                {noticeBoard.subject &&
+                  noticeBoard.subject.substring(0, 50) + '...'}
+              </Text>
+            </View> */}
+            <View style={styles.textContainer}>
+              <Text style={styles.subjectText} numberOfLines={1}>
+                {noticeBoard.subject}
+              </Text>
+            </View>
+            <View style={{alignSelf: 'flex-end'}}>
+              <Text style={styles.subjectText}>{noticeBoard.timestamp}</Text>
+            </View>
+          </TouchableOpacity>
+        ))}
     </ScrollView>
   );
 };
@@ -174,10 +181,13 @@ export const NoticeBoardDetailScreen = ({route}) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.subjectText}>{footerNotice.subject}</Text>
+                <Text style={styles.subjectText} numberOfLines={1}>
+                  {footerNotice.subject}
+                </Text>
               </View>
+
               <View style={{alignSelf: 'flex-end'}}>
-                <Text style={{color: AppColors.black}}>
+                <Text style={styles.subjectText}>
                   {formatDate(footerNotice.timestamp)}
                 </Text>
               </View>
@@ -223,7 +233,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   container: {
-    padding: 10,
+    // padding: 10,
     // margin: 10,
     backgroundColor: AppColors.white,
   },
@@ -257,8 +267,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   subjectText: {
+    fontSize: 19,
     color: AppColors.black,
-    fontSize: 15,
+    fontFamily: AppFont.regularFont,
   },
   indexText: {
     fontSize: 15,

@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, {useContext, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   SafeAreaView,
@@ -15,7 +9,6 @@ import {
   View,
   Dimensions,
   Alert,
-  ActivityIndicator,
 } from 'react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -44,7 +37,6 @@ import ToggleButton from '../components/modal/ToggleButton';
 import {LOGIN_BUTTON} from '../apis/Apis';
 import {TokenConstextApi} from '../context/GlobalContext';
 import ViewAwarenessData from '../components/ViewAwarenessData';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width} = Dimensions.get('window');
 
@@ -63,6 +55,8 @@ const TrustedDriver = ({navigation}) => {
     rfd: '0',
   });
 
+  // console.log(decodedToken, '.......................');
+
   const dispatch = useDispatch();
   const {
     currentView,
@@ -77,7 +71,24 @@ const TrustedDriver = ({navigation}) => {
     myBookingModal,
   } = useSelector(state => state.trustedDriver);
 
-  console.log(decodedToken, '=================');
+  // const getDriverData = async () => {
+  //   if (decodedToken) {
+  //     console.log(decodedToken ,'Decoded token exists, running related code...');
+  //     // setDriverData(ddd.data);
+  //   } else {
+  //     console.log('No decoded token available, skipping related code.');
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getDriverData();
+  // }, [getDriverData]);
+
+  
+
+  // console.log(driverData, 'dddddddddddddddd');
+
+  // console.log(ddd.data.DriverCommisonData, "ddddd data");
 
   const handleToggleButton = () => {
     const newRfdValue = isRfdOn ? '0' : '1';
@@ -95,15 +106,6 @@ const TrustedDriver = ({navigation}) => {
         });
     }
   };
-
-  // useEffect(() => {
-  //   setDriverData(decodedToken);
-  // }, []);
-
-  // console.log('====================================');
-  // console.log(driverData.data);
-  // console.log('====================================');
-
   const Item = [
     {
       title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
@@ -151,7 +153,10 @@ const TrustedDriver = ({navigation}) => {
               {/* Top div */}
               <View style={styles.topView}>
                 <View style={styles.topLeft}>
-                  <Text style={styles.topLeftText}>{driverData}%</Text>
+                  <Text style={styles.topLeftText}>
+                    {decodedToken && decodedToken.DriverCommisonData.commission}
+                    %
+                  </Text>
                   <Text style={styles.bottamLeftText}>Commission</Text>
                 </View>
                 <View style={styles.topRight}>
@@ -160,7 +165,8 @@ const TrustedDriver = ({navigation}) => {
                     <View style={styles.earningView}>
                       <Text style={styles.rupeeIcon}>
                         <Icon name="rupee" size={responsiveSize(8)} />{' '}
-                        {/* {earning_30days} */}
+                        {decodedToken &&
+                          decodedToken.DriverCommisonData.earning_30days}
                       </Text>
                     </View>
                   </TouchableOpacity>
@@ -190,13 +196,21 @@ const TrustedDriver = ({navigation}) => {
               {/* Bottom div */}
               <View style={styles.bottamView}>
                 <View style={styles.driverNameView}>
-                  <Text style={styles.driverNameText}>{driverData}</Text>
+                  <Text style={styles.driverNameText}>
+                    {/* { decodedToken &&  decodedToken.driver_name}  */}
+                    {decodedToken &&
+                      decodedToken.DriverCommisonData.driver_name}
+                    {/* Mohit */}
+                  </Text>
                 </View>
                 <View style={styles.bottamRightView}>
                   <TouchableOpacity
                     onPress={() => dispatch(setModalVisible(true))}>
                     <View style={styles.otrView}>
-                      <Text style={styles.bottamRightText}>{/* {otr} */}</Text>
+                      <Text style={styles.bottamRightText}>
+                        {' '}
+                        {decodedToken && decodedToken.TrustedDriverData.otr}
+                      </Text>
                       <Text style={styles.bottamRightText}>OTR</Text>
                     </View>
                   </TouchableOpacity>
@@ -204,7 +218,7 @@ const TrustedDriver = ({navigation}) => {
                     onPress={() => dispatch(setRatingModal(true))}>
                     <View style={styles.ratingView}>
                       <Text style={styles.bottamRightText}>
-                        {/* {rating} */}
+                        {decodedToken && decodedToken.TrustedDriverData.rating}
                       </Text>
                       <Text style={styles.bottamRightText}>Rating</Text>
                     </View>
@@ -213,7 +227,9 @@ const TrustedDriver = ({navigation}) => {
                     onPress={() => dispatch(setBookingModal(true))}>
                     <View style={styles.bookingView}>
                       <Text style={styles.bottamRightText}>
-                        {/* {recent_dcr} */}%
+                        {decodedToken &&
+                          decodedToken.TrustedDriverData.recent_dcr}{' '}
+                        %
                       </Text>
                       <Text style={styles.bottamRightText}>Booking</Text>
                     </View>
@@ -270,8 +286,7 @@ const TrustedDriver = ({navigation}) => {
                 <Text style={styles.mainText}>Clear My Due</Text>
                 <Text style={styles.textIcon}>
                   <Icon name="rupee" size={responsiveSize(9)} />{' '}
-                  {/* {driverData?.DRIVER_CLEAR_MY_DUE || 0} */}
-                  {/* {decodedToken.data.CASH_WITH_DRIVER_10_DAYS} */}
+                  {decodedToken && decodedToken.DRIVER_CLEAR_MY_DUE}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -284,9 +299,7 @@ const TrustedDriver = ({navigation}) => {
             onToggle={label => dispatch(setCurrentView(label))}
           />
 
-          <View>
-            <ViewAwarenessData />
-          </View>
+          <ViewAwarenessData />
 
           {/* Main Toggle Content */}
           <View style={styles.toggleContentContainer}>

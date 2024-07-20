@@ -41,6 +41,7 @@ const DriverEarning = () => {
       const response = await DRIVER_EARNING({
         action: 'view_all_earnings',
       });
+      console.log(response.bookings, ' : fetching all earnings ');
       setBookingsData(response.bookings);
     } catch (error) {
       console.error('Error fetching all earnings:', error);

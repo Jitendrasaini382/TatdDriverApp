@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {createContext} from 'react';
 import {Alert} from 'react-native';
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from 'jwt-decode';
 
 export const TokenConstextApi = createContext(null);
 
@@ -19,7 +19,40 @@ export const GlobalContextApi = ({children}) => {
   const [showButtonText, setShowButtonText] = useState('');
   const [storedRating, setStoredRating] = useState(null);
   const [notificationData, setNotificationData] = useState([]);
-  const [decodedToken, setDecodedToken] = useState();
+  const [decodedToken, setDecodedToken] = useState(null);
+
+  // Copyconst [tokens, setTokens] = useState({ jwtToken: null, refreshToken: null });
+
+  const decodeData = useCallback((token) => {
+    if (!token) {
+      return null;
+    } else {
+      const decoded = jwtDecode(token);
+      console.log(decoded.data, '>>>>>>>>>>>>>>>>');
+      setDecodedToken(decoded.data);
+    }
+  }, []);
+  
+  const getTokens = useCallback(async () => {
+    try {
+      const refreshToken = await AsyncStorage.getItem('refresh_token');
+      const jwtToken = await AsyncStorage.getItem('jwt');
+  
+      console.log(refreshToken, 'refresh_token context');
+  
+      setJwtToken(jwtToken);
+      decodeData(jwtToken);
+      setRefreshToken(refreshToken);
+      return {refreshToken, jwtToken};
+    } catch (error) {
+      console.error('Error retrieving tokens:', error);
+      return null;
+    }
+  }, [decodeData]);
+  
+  useEffect(() => {
+    getTokens();
+  }, []);
 
   // console.log(decodedToken, 'jjjjjjjjjjjjjjjjjjjjkkkkkkkkkkkkkkkkkkkk');
 
@@ -40,42 +73,44 @@ export const GlobalContextApi = ({children}) => {
   //   }
   // };
 
+  // console.log(
+  //   decodedToken,
+  //   ' decode context ====================================',
+  // );
 
-  const getTokens = async () => {
-    try {
-      const refreshToken = await AsyncStorage.getItem('refresh_token');
-      const jwtToken = await AsyncStorage.getItem('jwt');
+  // const decodeJwtToken = token => {
+  //   try {
+  //     const decoded = jwtDecode(token);
+  //     return decoded;
+  //   } catch (error) {
+  //     console.error('Error decoding JWT:', error);
+  //     return null;
+  //   }
+  // };
 
-      console.log(refreshToken, 'refresh_token context');
-      setJwtToken(jwtToken);
-      setRefreshToken(refreshToken);
+  // /////////////
 
-      if (jwtToken) {
-        const decoded = decodeJwtToken(jwtToken);
-        setDecodedToken(decoded);
-        await AsyncStorage.setItem('tokenData',JSON.stringify(decoded))
-      }
+  // const getTokens = async () => {
+  //   try {
+  //     const refreshToken = await AsyncStorage.getItem('refresh_token');
+  //     const jwtToken = await AsyncStorage.getItem('jwt');
 
-      return {refreshToken, jwtToken};
-    } catch (error) {
-      console.error('Error retrieving tokens:', error);
-      return null;
-    }
-  };
+  //     console.log(refreshToken, 'refresh_token context');
+  //     setJwtToken(jwtToken);
+  //     setRefreshToken(refreshToken);
 
-  const decodeJwtToken = token => {
-    try {
-      const decoded = jwtDecode(token);
-      return decoded;
-    } catch (error) {
-      console.error('Error decoding JWT:', error);
-      return null;
-    }
-  };
+  //     return {refreshToken, jwtToken};
+  //   } catch (error) {
+  //     console.error('Error retrieving tokens:', error);
+  //     return null;
+  //   }
+  // };
 
-  useEffect(() => {
-    getTokens();
-  }, []);
+  // useEffect(() => {
+  //   getTokens();
+  // }, []);
+
+  // ///////
 
   const values = {
     jwtToken,
@@ -88,7 +123,9 @@ export const GlobalContextApi = ({children}) => {
     storedRating,
     setStoredRating,
     setShowButtonText,
-    rating,decodedToken, setDecodedToken,
+    rating,
+    decodedToken,
+    setDecodedToken,
     setRating,
     setTicketData,
     languageSwitch,

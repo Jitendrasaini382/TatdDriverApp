@@ -56,8 +56,10 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     paddingHorizontal: 16,
+    marginTop:20,
+
   },
-  headingHindi: {color: AppColors.black, fontSize: 15, paddingLeft: 10},
+  headingHindi: {color: AppColors.black, fontSize: 15, paddingLeft: 10,paddingBottom: 10},
 });
 
 // import {

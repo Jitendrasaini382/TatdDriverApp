@@ -27,7 +27,7 @@ const ViewAwarenessData = () => {
         action: 'view_all_awareness',
       });
       setAwareness(response.awareness_data);
-      console.log(response, 'getAllAwareness DATAAAA');
+    //   console.log(response, 'getAllAwareness DATAAAA');
     } catch (error) {
       console.error('getAllAwareness ', error);
     }

@@ -87,12 +87,12 @@ const CheckDriverOtp = ({navigation}) => {
   // }, [tokenData]);
 
   const setJwtTokenn = async token => {
-    console.log(token, "jjjjjjjjjjjjjjjjjjjjjjjj");
+    console.log(token, 'jjjjjjjjjjjjjjjjjjjjjjjj');
     await AsyncStorage.setItem('jwt', token);
   };
 
   const setRefreshTokenn = async token => {
-    console.log(token,"rrrrrrrrrrrrrrrrrrrrrr");
+    console.log(token, 'rrrrrrrrrrrrrrrrrrrrrr');
     await AsyncStorage.setItem('refresh_token', token);
   };
 
@@ -141,6 +141,7 @@ const CheckDriverOtp = ({navigation}) => {
       console.log('OTP verification response:', response);
 
       if (response.jwt && response.refresh_token) {
+        await setJwtToken(response.jwt);
         await setRefreshTokenn(response.refresh_token);
         await setJwtTokenn(response.jwt);
       } else {

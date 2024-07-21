@@ -177,7 +177,8 @@ const TrustedDriver = ({navigation}) => {
               <View style={styles.bottamView}>
                 <View style={styles.driverNameView}>
                   <Text style={styles.driverNameText}>
-                    {decodedToken && decodedToken.driver_name}
+                    {decodedToken && decodedToken.
+                    driver_name}
                   </Text>
                 </View>
                 <View style={styles.bottamRightView}>
@@ -217,7 +218,7 @@ const TrustedDriver = ({navigation}) => {
             {/* Bottom div */}
             <View style={styles.bottamContent}>
               <TouchableOpacity
-                onPress={() => dispatch(setVideosContent(true))}
+                onPress={() => dispatch(setVideosContent(!videosContent))}
                 style={[
                   styles.bottamContent1,
                   videosContent && {backgroundColor: AppColors.mainColor},

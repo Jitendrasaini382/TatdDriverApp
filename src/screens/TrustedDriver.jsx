@@ -778,7 +778,7 @@ const styles = StyleSheet.create({
   },
   topLeftText: {
     color: AppColors.mainColor,
-    fontSize: responsiveSize(25),
+    fontSize: responsiveSize(27),
     fontWeight: '700',
     fontFamily: AppFont.regularFont,
   },

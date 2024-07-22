@@ -118,12 +118,23 @@ export const HOME_AWARENESS = body => {
   );
 };
 
-export const EXPRESS_BOOKING_POPUP = (body) => {
+export const EXPRESS_BOOKING_POPUP = body => {
   return _Fetch(
     'GET',
     'trusted-driver/express-booking-popup.php',
     {
-      ...body
+      ...body,
+    },
+    {},
+  );
+};
+
+export const EXPRESS_BOOKING_UPDATE = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/express-booking-popup.php',
+    {
+      ...body,
     },
     {},
   );

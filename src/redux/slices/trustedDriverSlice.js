@@ -3,7 +3,7 @@ import {createSlice} from '@reduxjs/toolkit';
 const initialState = {
   currentView: 'Hindi',
   toggleButton: false,
-  mainToggleModal: false,
+  expressBookingModal: false,
   mainToggleContent: false,
   videosContent: false,
   myBookingAgencyModal: false,
@@ -23,8 +23,8 @@ const trustedDriverSlice = createSlice({
     setToggleButton: (state, action) => {
       state.toggleButton = action.payload;
     },
-    setMainToggleModal: (state, action) => {
-      state.mainToggleModal = action.payload;
+    setExpressBookingModal: (state, action) => {
+      state.expressBookingModal = action.payload;
     },
     setMainToggleContent: (state, action) => {
       state.mainToggleContent = action.payload;
@@ -50,7 +50,7 @@ const trustedDriverSlice = createSlice({
     mainToggleHandle: state => {
       if (!state.toggleButton) {
         state.toggleButton = true;
-        state.mainToggleModal = true;
+        // state.expressBookingModal = true;
         state.mainToggleContent = true;
       } else {
         state.toggleButton = false;
@@ -64,7 +64,7 @@ const trustedDriverSlice = createSlice({
 export const {
   setCurrentView,
   setToggleButton,
-  setMainToggleModal,
+  setExpressBookingModal,
   setMainToggleContent,
   setVideosContent,
   setMyBookingAgencyModal,

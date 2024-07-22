@@ -19,7 +19,6 @@ import Header from '../components/Header';
 import OtrModal from '../components/modal/OtrModal';
 import RatingModal from '../components/modal/RatingModal';
 import BookingModal from '../components/modal/BookingModal';
-import MainToggleModal from '../components/modal/MainToggleModal';
 import BookingView from '../components/BookingView';
 import TrainingVideo from '../components/TrainingVideos';
 import MyBookingAgencyModal from '../components/modal/MyBookingAgencyModal';
@@ -31,6 +30,7 @@ import {
   setRatingModal,
   setVideosContent,
   setMyBookingAgencyModal,
+  setExpressBookingModal,
 } from '../redux/slices/trustedDriverSlice';
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
@@ -38,7 +38,7 @@ import {EXPRESS_BOOKING_POPUP, LOGIN_BUTTON} from '../apis/Apis';
 import {TokenConstextApi} from '../context/GlobalContext';
 import ViewAwarenessData from '../components/ViewAwarenessData';
 import {jwtDecode} from 'jwt-decode';
-
+import ExpressBookingModal from '../components/modal/ExpressBookingModal';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -59,7 +59,7 @@ const TrustedDriver = ({navigation}) => {
   const {
     currentView,
     toggleButton,
-    mainToggleModal,
+    expressBookingModal,
     mainToggleContent,
     videosContent,
     myBookingAgencyModal,
@@ -69,7 +69,7 @@ const TrustedDriver = ({navigation}) => {
     myBookingModal,
   } = useSelector(state => state.trustedDriver);
 
-  // console.log(jwtToken , "trusted Context Jwt Token")
+  console.log(jwtToken , "trusted Context Jwt Token")
 
   const decodeData = token => {
     const decoded = jwtDecode(token);
@@ -81,12 +81,26 @@ const TrustedDriver = ({navigation}) => {
     decodeData(jwtToken);
   }, [jwtToken]);
 
+  // const [expressBookingModal, setExpressBookingModal] = useState(false);
+  const [popupData, setPopupData] = useState(0);
+
   const getPopup = async () => {
     try {
       const response = await EXPRESS_BOOKING_POPUP({
         action: 'check_popup',
       });
       console.log(response, 'GET_POPUP  Response ');
+      if (response.express_booking_popup_flag == 1) {
+        console.log('runnnnnnnnn 1111');
+        dispatch(setExpressBookingModal(true));
+        // setExpressBookingModal(true);
+        setPopupData(response.express_booking_popup_flag);
+      } else {
+        console.log('runnnnnnnnn 0000');
+        dispatch(setExpressBookingModal(false));
+
+        // setExpressBookingModal(false);
+      }
     } catch (error) {
       console.log(error, 'GET_POPUPGET_POPUP Error');
     }
@@ -316,12 +330,13 @@ const TrustedDriver = ({navigation}) => {
       </ScrollView>
 
       {/* Modals */}
+
       <Modal
         backdropOpacity={0}
         animationIn={'fadeInDown'}
         animationOut={'fadeOutUp'}
-        isVisible={mainToggleModal}>
-        <MainToggleModal />
+        isVisible={popupData == 0 && !expressBookingModal}>
+        <ExpressBookingModal />
       </Modal>
 
       <Modal

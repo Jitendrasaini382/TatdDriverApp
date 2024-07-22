@@ -55,11 +55,11 @@ const TrustedDriver = ({navigation}) => {
     rfd: '0',
   });
 
-  console.log(jwtToken , "trusted Context Jwt Token")
+  // console.log(jwtToken , "trusted Context Jwt Token")
 
   const decodeData = token => {
     const decoded = jwtDecode(token);
-    console.log(decoded.data, '>>>>>>>>>>>>>>>>');
+    // console.log(decoded.data, '>>>>>>>>>>>>>>>>');
     setDecodedToken(decoded.data);
   };
 

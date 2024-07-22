@@ -7,6 +7,7 @@ import {
   View,
   FlatList,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
@@ -23,6 +24,7 @@ const DriverEarning = () => {
   const [earnData, setEarnData] = useState({});
   const [bookingsData, setBookingsData] = useState([]);
   const [selectedBookingNumber, setSelectedBookingNumber] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchEarningData = useCallback(async () => {
     try {
@@ -37,14 +39,19 @@ const DriverEarning = () => {
   }, []);
 
   const fetchAllEarnings = useCallback(async () => {
+    setIsLoading(true);
+
     try {
       const response = await DRIVER_EARNING({
         action: 'view_all_earnings',
       });
       console.log(response.bookings, ' : fetching all earnings ');
       setBookingsData(response.bookings);
+      // setIsLoading(false);
     } catch (error) {
       console.error('Error fetching all earnings:', error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 

@@ -73,7 +73,7 @@
 //           </View>
 //           <View style={styles.contentView}>
 //             <Text style={styles.contentText}>
-//               कृपया गलत जानकारी मत देना जिससे आपका और हमारा दोनों को समय बर्बाद हो
+//               कृपया गलत जानकारी मत देना जिससे आपका और हमारा दोनों को समय बर्बाद हो।
 //             </Text>
 //           </View>
 //         </>
@@ -356,7 +356,7 @@ const ExpressBookingModal = () => {
           </View>
           <View style={styles.contentView}>
             <Text style={styles.contentText}>
-              कृपया गलत जानकारी मत देना जिससे आपका और हमारा दोनों को समय बर्बाद हो
+              कृपया गलत जानकारी मत देना जिससे आपका और हमारा दोनों को समय बर्बाद हो।
             </Text>
           </View>
         </>
@@ -708,7 +708,7 @@ export default ExpressBookingModal;
 // //               <View style={{marginVertical: 15, marginHorizontal: 3}}>
 // //                 <Text style={{color: AppColors.black, fontSize: 15}}>
 // //                   कृपया गलत जानकारी मत देना जिससे आपका और हमारा दोनों को समय
-// //                   बर्बाद हो
+// //                   बर्बाद हो।
 // //                 </Text>
 // //               </View>
 

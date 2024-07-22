@@ -21,9 +21,10 @@ import CreateTicketModal from '../components/modal/CreateTicketModal';
 const TicketsDriver = () => {
   const [createTicketModal, setCreateTicketModal] = useState(false);
   const [ticketDetailsModal, setTicketDetailsModal] = useState(false);
+  const [selectedTicketId, setSelectedTicketId] = useState(null);
   const {
-    selectedTicketId,
-    setSelectedTicketId,
+    // selectedTicketId,
+    // setSelectedTicketId,
     buttonShow,
     setButtonShow,
     showButtonText,

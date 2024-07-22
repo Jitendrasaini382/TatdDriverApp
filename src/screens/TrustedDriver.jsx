@@ -37,6 +37,7 @@ import ToggleButton from '../components/modal/ToggleButton';
 import {LOGIN_BUTTON} from '../apis/Apis';
 import {TokenConstextApi} from '../context/GlobalContext';
 import ViewAwarenessData from '../components/ViewAwarenessData';
+import {jwtDecode} from 'jwt-decode';
 
 const {width} = Dimensions.get('window');
 
@@ -45,7 +46,8 @@ const responsiveSize = size => {
 };
 
 const TrustedDriver = ({navigation}) => {
-  const {decodedToken} = useContext(TokenConstextApi);
+  const {decodedToken, setDecodedToken, jwtToken} =
+    useContext(TokenConstextApi);
   const [isRfdOn, setIsRfdOn] = useState(false);
   const [loginButton, setLoginButton] = useState({
     action: 'login_button',
@@ -53,7 +55,17 @@ const TrustedDriver = ({navigation}) => {
     rfd: '0',
   });
 
-  console.log(decodedToken, 'decodedTokendecodedTokendecodedTokendecodedToken');
+  console.log(jwtToken , "trusted Context Jwt Token")
+
+  const decodeData = token => {
+    const decoded = jwtDecode(token);
+    console.log(decoded.data, '>>>>>>>>>>>>>>>>');
+    setDecodedToken(decoded.data);
+  };
+
+  useEffect(() => {
+    decodeData(jwtToken);
+  }, [jwtToken]);
 
   const dispatch = useDispatch();
   const {
@@ -177,8 +189,7 @@ const TrustedDriver = ({navigation}) => {
               <View style={styles.bottamView}>
                 <View style={styles.driverNameView}>
                   <Text style={styles.driverNameText}>
-                    {decodedToken && decodedToken.
-                    driver_name}
+                    {decodedToken && decodedToken.driver_name}
                   </Text>
                 </View>
                 <View style={styles.bottamRightView}>

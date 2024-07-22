@@ -34,7 +34,7 @@ import {
 } from '../redux/slices/trustedDriverSlice';
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
-import {LOGIN_BUTTON} from '../apis/Apis';
+import {EXPRESS_BOOKING_POPUP, LOGIN_BUTTON} from '../apis/Apis';
 import {TokenConstextApi} from '../context/GlobalContext';
 import ViewAwarenessData from '../components/ViewAwarenessData';
 import {jwtDecode} from 'jwt-decode';
@@ -46,6 +46,7 @@ const responsiveSize = size => {
 };
 
 const TrustedDriver = ({navigation}) => {
+  const dispatch = useDispatch();
   const {decodedToken, setDecodedToken, jwtToken} =
     useContext(TokenConstextApi);
   const [isRfdOn, setIsRfdOn] = useState(false);
@@ -54,6 +55,19 @@ const TrustedDriver = ({navigation}) => {
     submitR: '1',
     rfd: '0',
   });
+
+  const {
+    currentView,
+    toggleButton,
+    mainToggleModal,
+    mainToggleContent,
+    videosContent,
+    myBookingAgencyModal,
+    isModalVisible,
+    bookingModal,
+    ratingModal,
+    myBookingModal,
+  } = useSelector(state => state.trustedDriver);
 
   // console.log(jwtToken , "trusted Context Jwt Token")
 
@@ -67,19 +81,20 @@ const TrustedDriver = ({navigation}) => {
     decodeData(jwtToken);
   }, [jwtToken]);
 
-  const dispatch = useDispatch();
-  const {
-    currentView,
-    toggleButton,
-    mainToggleModal,
-    mainToggleContent,
-    videosContent,
-    myBookingAgencyModal,
-    isModalVisible,
-    bookingModal,
-    ratingModal,
-    myBookingModal,
-  } = useSelector(state => state.trustedDriver);
+  const getPopup = async () => {
+    try {
+      const response = await EXPRESS_BOOKING_POPUP({
+        action: 'check_popup',
+      });
+      console.log(response, 'GET_POPUP  Response ');
+    } catch (error) {
+      console.log(error, 'GET_POPUPGET_POPUP Error');
+    }
+  };
+
+  useEffect(() => {
+    getPopup();
+  }, []);
 
   const handleToggleButton = () => {
     const newRfdValue = isRfdOn ? '0' : '1';

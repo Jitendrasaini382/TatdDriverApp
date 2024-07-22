@@ -11,7 +11,6 @@ export const DRIVER_LOGIN = body => {
   return _Fetch('POST', 'login/driver-login.php', body, {});
 };
 
-
 // https://www.tatd.in/app-api/driver/login/verify-otp-login.php
 
 export const VERIFY_OTP_LOGIN = body => {
@@ -115,6 +114,17 @@ export const HOME_AWARENESS = body => {
     'POST',
     'trusted-driver/trusted-home-awareness-api.php',
     {...body},
+    {},
+  );
+};
+
+export const EXPRESS_BOOKING_POPUP = (body) => {
+  return _Fetch(
+    'GET',
+    'trusted-driver/express-booking-popup.php',
+    {
+      ...body
+    },
     {},
   );
 };

@@ -43,6 +43,7 @@ import {TokenConstextApi} from '../context/GlobalContext';
 import ViewAwarenessData from '../components/ViewAwarenessData';
 import {jwtDecode} from 'jwt-decode';
 import ExpressBookingModal from '../components/modal/ExpressBookingModal';
+import RoundTripBookingView from '../components/bookingsView/RoundTripBookingView';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -86,7 +87,7 @@ const TrustedDriver = ({navigation}) => {
   }, [jwtToken]);
 
   const [popupData, setPopupData] = useState(0);
-  console.log(jwtToken, 'jwt Token Trusted');
+  // console.log(jwtToken, 'jwt Token Trusted');
 
   const getPopup = async () => {
     try {
@@ -112,7 +113,7 @@ const TrustedDriver = ({navigation}) => {
     getPopup();
   }, []);
 
-  const [incityOneWayBooking, setIncityOneWayBooking] = useState([]);
+  // const [incityOneWayBooking, setIncityOneWayBooking] = useState([]);
 
   const getOnDemandBooking = async data => {
     try {
@@ -125,17 +126,17 @@ const TrustedDriver = ({navigation}) => {
     }
   };
 
-  useEffect(() => {
-    // getOnDemandBooking({
-    //   action: 'ondemand_outstation_bookings',
-    // });
-    // getOnDemandBooking({
-    //   action: 'incity_roundtrip_booking',
-    // });
-    getOnDemandBooking({
-      action: 'incity_oneway_booking',
-    });
-  }, []);
+  // useEffect(() => {
+  //   getOnDemandBooking({
+  //     action: 'ondemand_outstation_bookings',
+  //   });
+  //   // getOnDemandBooking({
+  //   //   action: 'incity_roundtrip_booking',
+  //   // });
+  //   // getOnDemandBooking({
+  //   //   action: 'incity_oneway_booking',
+  //   // });
+  // }, []);
 
   const handleToggleButton = () => {
     const newRfdValue = isRfdOn ? '0' : '1';
@@ -344,6 +345,8 @@ const TrustedDriver = ({navigation}) => {
           />
 
           <ViewAwarenessData />
+
+          <RoundTripBookingView/>
 
           {/* Main Toggle Content */}
           <View style={styles.toggleContentContainer}>

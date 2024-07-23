@@ -34,7 +34,11 @@ import {
 } from '../redux/slices/trustedDriverSlice';
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
-import {EXPRESS_BOOKING_POPUP, LOGIN_BUTTON} from '../apis/Apis';
+import {
+  EXPRESS_BOOKING_POPUP,
+  LOGIN_BUTTON,
+  ON_DEMAND_BOOKING,
+} from '../apis/Apis';
 import {TokenConstextApi} from '../context/GlobalContext';
 import ViewAwarenessData from '../components/ViewAwarenessData';
 import {jwtDecode} from 'jwt-decode';
@@ -69,7 +73,7 @@ const TrustedDriver = ({navigation}) => {
     myBookingModal,
   } = useSelector(state => state.trustedDriver);
 
-  console.log(jwtToken , "trusted Context Jwt Token")
+  console.log(jwtToken, 'trusted Context Jwt Token');
 
   const decodeData = token => {
     const decoded = jwtDecode(token);
@@ -81,8 +85,8 @@ const TrustedDriver = ({navigation}) => {
     decodeData(jwtToken);
   }, [jwtToken]);
 
-  // const [expressBookingModal, setExpressBookingModal] = useState(false);
   const [popupData, setPopupData] = useState(0);
+  console.log(jwtToken, 'jwt Token Trusted');
 
   const getPopup = async () => {
     try {
@@ -98,8 +102,6 @@ const TrustedDriver = ({navigation}) => {
       } else {
         console.log('runnnnnnnnn 0000');
         dispatch(setExpressBookingModal(false));
-
-        // setExpressBookingModal(false);
       }
     } catch (error) {
       console.log(error, 'GET_POPUPGET_POPUP Error');
@@ -108,6 +110,27 @@ const TrustedDriver = ({navigation}) => {
 
   useEffect(() => {
     getPopup();
+  }, []);
+
+  const getOnDemandBooking = async data => {
+    try {
+      const response = await ON_DEMAND_BOOKING(data);
+      console.log(response, `On Demand Booking response ${data.action}`);
+    } catch (error) {
+      console.log(error, 'On Demand Booking  Error');
+    }
+  };
+
+  useEffect(() => {
+    getOnDemandBooking({
+      action: 'ondemand_outstation_bookings',
+    });
+    getOnDemandBooking({
+      action: 'incity_roundtrip_booking',
+    });
+    getOnDemandBooking({
+      action: 'incity_oneway_booking',
+    });
   }, []);
 
   const handleToggleButton = () => {

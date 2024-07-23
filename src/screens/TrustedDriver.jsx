@@ -112,22 +112,27 @@ const TrustedDriver = ({navigation}) => {
     getPopup();
   }, []);
 
+  const [incityOneWayBooking , setIncityOneWayBooking] = useState([])
+
+
   const getOnDemandBooking = async data => {
     try {
       const response = await ON_DEMAND_BOOKING(data);
+
       console.log(response, `On Demand Booking response ${data.action}`);
+      setIncityOneWayBooking(response.incity_one_way_bookings)
     } catch (error) {
       console.log(error, 'On Demand Booking  Error');
     }
   };
 
   useEffect(() => {
-    getOnDemandBooking({
-      action: 'ondemand_outstation_bookings',
-    });
-    getOnDemandBooking({
-      action: 'incity_roundtrip_booking',
-    });
+    // getOnDemandBooking({
+    //   action: 'ondemand_outstation_bookings',
+    // });
+    // getOnDemandBooking({
+    //   action: 'incity_roundtrip_booking',
+    // });
     getOnDemandBooking({
       action: 'incity_oneway_booking',
     });

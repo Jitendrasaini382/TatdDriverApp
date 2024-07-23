@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -10,9 +10,6 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {AppColors} from '../../assets/Colors';
 import Modal from 'react-native-modal';
 import RoundTripBookingAceeptModal from '../modal/RoundTripBookingAceeptModal';
-import { ON_DEMAND_BOOKING } from '../../apis/Apis';
-const [incityOneWayBooking, setIncityOneWayBooking] = useState([]);
-
 
 const TripCard = ({trip}) => {
   const [openModal, setOpenModal] = useState(false);
@@ -122,36 +119,7 @@ const dummyData = [
   },
 ];
 
-
-
-
-
 const RoundTripBookingView = () => {
-
-  const getOnDemandBooking = async data => {
-    try {
-      const response = await ON_DEMAND_BOOKING(data);
-  
-      console.log(response, `On Demand Booking response ${data.action}`);
-      setIncityOneWayBooking(response.incity_one_way_bookings);
-    } catch (error) {
-      console.log(error, 'On Demand Booking  Error');
-    }
-  };
-  
-  useEffect(() => {
-    // getOnDemandBooking({
-    //   action: 'ondemand_outstation_bookings',
-    // });
-    // getOnDemandBooking({
-    //   action: 'incity_roundtrip_booking',
-    // });
-    getOnDemandBooking({
-      action: 'incity_oneway_booking',
-    });
-  }, []);
-
-
   return (
     <ScrollView>
       {dummyData.map((trip, index) => (

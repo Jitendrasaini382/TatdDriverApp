@@ -358,7 +358,7 @@ const TrustedDriver = ({navigation}) => {
         backdropOpacity={0}
         animationIn={'fadeInDown'}
         animationOut={'fadeOutUp'}
-        isVisible={popupData == 0 && !expressBookingModal}>
+        isVisible={popupData == 1 && expressBookingModal}>
         <ExpressBookingModal />
       </Modal>
 

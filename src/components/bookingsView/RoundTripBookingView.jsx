@@ -13,7 +13,7 @@ import RoundTripBookingAceeptModal from '../modal/RoundTripBookingAceeptModal';
 import {ON_DEMAND_BOOKING} from '../../apis/Apis';
 
 const TripCard = ({trip}) => {
-  console.log(trip, 'jjjjjjjjjjjj');
+  // console.log(trip, 'jjjjjjjjjjjj');
   const [openModal, setOpenModal] = useState(false);
   return (
     <View style={styles.card}>

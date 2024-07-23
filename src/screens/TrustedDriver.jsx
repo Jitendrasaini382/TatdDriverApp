@@ -114,29 +114,34 @@ const TrustedDriver = ({navigation}) => {
   }, []);
 
   // const [incityOneWayBooking, setIncityOneWayBooking] = useState([]);
+  const [showBookingView, setBookingView] = useState(1);
 
   const getOnDemandBooking = async data => {
     try {
       const response = await ON_DEMAND_BOOKING(data);
 
-      console.log(response, `On Demand Booking response ${data.action}`);
-      setIncityOneWayBooking(response.incity_one_way_bookings);
+      console.log(
+        response.incity_one_way_bookings.access_flag,
+        `On Demand Booking response ${data.action}`,
+      );
+      // setBookingView(response.incity_one_way_bookings.access_flag);
+      // setIncityOneWayBooking(response.incity_one_way_bookings);
     } catch (error) {
       console.log(error, 'On Demand Booking  Error');
     }
   };
 
-  // useEffect(() => {
-  //   getOnDemandBooking({
-  //     action: 'ondemand_outstation_bookings',
-  //   });
-  //   // getOnDemandBooking({
-  //   //   action: 'incity_roundtrip_booking',
-  //   // });
-  //   // getOnDemandBooking({
-  //   //   action: 'incity_oneway_booking',
-  //   // });
-  // }, []);
+  useEffect(() => {
+    // getOnDemandBooking({
+    //   action: 'ondemand_outstation_bookings',
+    // });
+    // getOnDemandBooking({
+    //   action: 'incity_roundtrip_booking',
+    // });
+    getOnDemandBooking({
+      action: 'incity_oneway_booking',
+    });
+  }, []);
 
   const handleToggleButton = () => {
     const newRfdValue = isRfdOn ? '0' : '1';
@@ -346,8 +351,9 @@ const TrustedDriver = ({navigation}) => {
 
           <ViewAwarenessData />
 
-          <RoundTripBookingView/>
-
+          {showBookingView && showBookingView === 1 ? (
+            <RoundTripBookingView />
+          ) : null}
           {/* Main Toggle Content */}
           <View style={styles.toggleContentContainer}>
             {mainToggleContent ? (

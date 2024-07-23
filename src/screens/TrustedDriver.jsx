@@ -34,11 +34,7 @@ import {
 } from '../redux/slices/trustedDriverSlice';
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
-import {
-  EXPRESS_BOOKING_POPUP,
-  LOGIN_BUTTON,
-  ON_DEMAND_BOOKING,
-} from '../apis/Apis';
+import {EXPRESS_BOOKING_POPUP, LOGIN_BUTTON} from '../apis/Apis';
 import {TokenConstextApi} from '../context/GlobalContext';
 import ViewAwarenessData from '../components/ViewAwarenessData';
 import {jwtDecode} from 'jwt-decode';
@@ -110,32 +106,6 @@ const TrustedDriver = ({navigation}) => {
 
   useEffect(() => {
     getPopup();
-  }, []);
-
-  const [incityOneWayBooking , setIncityOneWayBooking] = useState([])
-
-
-  const getOnDemandBooking = async data => {
-    try {
-      const response = await ON_DEMAND_BOOKING(data);
-
-      console.log(response, `On Demand Booking response ${data.action}`);
-      setIncityOneWayBooking(response.incity_one_way_bookings)
-    } catch (error) {
-      console.log(error, 'On Demand Booking  Error');
-    }
-  };
-
-  useEffect(() => {
-    // getOnDemandBooking({
-    //   action: 'ondemand_outstation_bookings',
-    // });
-    // getOnDemandBooking({
-    //   action: 'incity_roundtrip_booking',
-    // });
-    getOnDemandBooking({
-      action: 'incity_oneway_booking',
-    });
   }, []);
 
   const handleToggleButton = () => {

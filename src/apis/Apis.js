@@ -137,14 +137,3 @@ export const EXPRESS_BOOKING_UPDATE = body => {
     {},
   );
 };
-
-// https://www.tatd.in/app-api/driver/trusted-driver/ondemand-bookings-view.php
-
-export const ON_DEMAND_BOOKING = body => {
-  return _Fetch(
-    'POST',
-    'trusted-driver/ondemand-bookings-view.php',
-    {...body},
-    {},
-  );
-};

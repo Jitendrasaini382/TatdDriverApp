@@ -1,4 +1,4 @@
-package com.tatd
+package com.tatd.driver
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

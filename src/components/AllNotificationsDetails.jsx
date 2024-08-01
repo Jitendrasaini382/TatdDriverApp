@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
   },
   touchable: {
     flexDirection: 'row',
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
     paddingVertical: 5,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',

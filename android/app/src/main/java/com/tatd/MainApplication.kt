@@ -1,4 +1,4 @@
-package com.tatd
+package com.tatd.driver
 
 import android.app.Application
 import com.facebook.react.PackageList

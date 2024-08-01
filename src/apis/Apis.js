@@ -18,6 +18,17 @@ export const VERIFY_OTP_LOGIN = body => {
   return _Fetch('POST', 'login/verify-otp-login.php', {...body}, {});
 };
 
+
+
+// export const API_BASE_URL = "https://www.tatd.in/app-api/driver/"
+
+// https://www.tatd.in/app-api/driver/login/save-fcm-token-api.php
+
+export const GET_FCM_TOKEN = (body) =>{
+    console.log(body, 'Get FCM Token');
+    return _Fetch('POST', 'login/save-fcm-token-api.php', {...body}, {});
+}
+
 // https://www.tatd.in/app-api/driver/login/refresh_token.php
 
 // export const REFRESH_TOKEN = body => {

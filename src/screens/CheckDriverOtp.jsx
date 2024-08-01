@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -14,10 +14,11 @@ import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AppColors} from '../assets/Colors';
 import {CommonActions, useRoute} from '@react-navigation/native';
-import {DRIVER_LOGIN, VERIFY_OTP_LOGIN} from '../apis/Apis';
+import {DRIVER_LOGIN, GET_FCM_TOKEN, VERIFY_OTP_LOGIN} from '../apis/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TokenConstextApi} from '../context/GlobalContext';
 import {jwtDecode} from 'jwt-decode';
+import messaging from '@react-native-firebase/messaging';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -31,7 +32,7 @@ const moderateScale = (size, factor = 0.5) =>
 const CheckDriverOtp = ({navigation}) => {
   const route = useRoute();
   const {mobile} = route.params;
-
+ const [fcmtoken,setFcmToken]=useState()
   const {setRefreshToken, setJwtToken, setDecodedToken} =
     useContext(TokenConstextApi);
 
@@ -95,6 +96,7 @@ const CheckDriverOtp = ({navigation}) => {
         await setRefreshToken(response.refresh_token);
         await setJwtTokenn(response.jwt);
         await setRefreshTokenn(response.refresh_token);
+        await sendNotificationMessage(fcmtoken)
       } else {
         setError('Invalid response from server');
       }
@@ -104,6 +106,85 @@ const CheckDriverOtp = ({navigation}) => {
     }
   };
 
+
+  const sendNotificationMessage = async (fcmtoken)=>{
+    const response = await GET_FCM_TOKEN({
+      "fcm_token":fcmtoken,
+      "action":"save_fcm"
+  });
+
+    console.log('GET FCM TOKEN response:', response);
+
+    setFcmToken()
+
+  }
+
+  // const sendNotification = async () => {
+  //   const isValid = await validateAccessToken();
+  //   if (!isValid) {
+  //     await refreshAccessToken();
+  //   }
+  //   try {
+  //     const userData = await AsyncStorage.getItem('userData');
+  //     const parsedUserData = userData ? JSON.parse(userData) : null;
+  //     const token = parsedUserData ? parsedUserData.jwt : null;
+  //   console.log('fffffffff=====',fcmToken)
+  //   if (!token) {
+  //     throw new Error('No token found');
+  //   }
+  //   const config = {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //       'Content-Type': 'application/json',
+  //     },
+  //   };
+  //     const response = await axios.post('https://www.tatd.in/app-api/customer/login/save-fcm-token-api.php', 
+  //       {
+  //         "fcm_token":"1221299990903",
+  //         "action":"save_fcm"
+  //     },config
+  //     );
+  //     setFcmdata(response.data)
+  //     console.log('toen succesfull send:', response.data);
+  //   } catch (error) {
+  //     console.error('error:', error);
+     
+  //   }
+  // };
+
+  useEffect(() => {
+    const requestUserPermission = async () => {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      if (enabled) {
+        console.log('Authorization status:', authStatus);
+        getFcmToken();
+      }
+    };
+
+    const getFcmToken = async () => {
+      const token = await messaging().getToken();
+      if (token) {
+        console.log('Your Firebase Cloud Messaging token is:', token);
+        setFcmToken(token);
+      } else {
+        console.log('Failed to get FCM token');
+      }
+    };
+
+    requestUserPermission();
+    const unsubscribe = messaging().onTokenRefresh((token) => {
+      console.log('New FCM token:', token);
+      setFcmToken(token);
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <Header />

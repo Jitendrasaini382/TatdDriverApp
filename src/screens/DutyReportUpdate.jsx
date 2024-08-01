@@ -172,6 +172,7 @@ const AcceptBooking = () => {
             </TouchableOpacity>
           </View>
         </View>
+        
         {/* bottom */}
         <View
           style={{

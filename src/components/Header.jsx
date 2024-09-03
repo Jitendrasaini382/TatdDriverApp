@@ -12,10 +12,12 @@ const Header = ({backButton, extraButton}) => {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.leftContent}>
-        <View style={styles.logoView}>
+        <TouchableOpacity
+        onPress={()=>navigation.navigate('TrustedDriverr')}
+        style={styles.logoView}>
           <Image source={AppLogo} />
           <Text style={styles.logoText}>tat d</Text>
-        </View>
+        </TouchableOpacity>
 
         <View style={styles.logoBottom}>
           <Text style={styles.logoBottomText}>trusted & trained driver</Text>

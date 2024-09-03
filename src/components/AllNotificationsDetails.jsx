@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   touchable: {
     flexDirection: 'row',
     // marginHorizontal: 10,
-    paddingVertical: 5,
+    paddingVertical: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
     backgroundColor: AppColors.white,

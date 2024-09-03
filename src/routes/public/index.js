@@ -3,6 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {StatusBar} from 'react-native';
 import DriverLogin from '../../screens/DriverLogin';
 import CheckDriverOtp from '../../screens/CheckDriverOtp';
+import SplashScreen from '../../screens/SplashScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,8 @@ const PublicRoute = () => {
           screenOptions={{
             headerShown: false,
           }}>
+          <Stack.Screen name="SplashScreen" component={SplashScreen} />
+
           <Stack.Screen name="DriverLogin" component={DriverLogin} />
           <Stack.Screen name="CheckDriverOtp" component={CheckDriverOtp} />
         </Stack.Navigator>

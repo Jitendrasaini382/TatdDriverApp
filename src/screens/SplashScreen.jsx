@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {View, Image, StyleSheet} from 'react-native';
 import { AppColors } from '../assets/Colors';
-import { bluelogo, whitelogo } from '../assets/images';
+import {whitelogo } from '../assets/images';
 
 const SplashScreen = ({navigation}) => {
   

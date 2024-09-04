@@ -116,20 +116,20 @@ const TrustedDriver = ({navigation}) => {
   // const [incityOneWayBooking, setIncityOneWayBooking] = useState([]);
   const [showBookingView, setBookingView] = useState(1);
 
-  const getOnDemandBooking = async data => {
-    try {
-      const response = await ON_DEMAND_BOOKING(data);
+  // const getOnDemandBooking = async data => {
+  //   try {
+  //     const response = await ON_DEMAND_BOOKING(data);
 
-      console.log(
-        response.incity_one_way_bookings.access_flag,
-        `On Demand Booking response ${data.action}`,
-      );
-      // setBookingView(response.incity_one_way_bookings.access_flag);
-      // setIncityOneWayBooking(response.incity_one_way_bookings);
-    } catch (error) {
-      console.log(error, 'On Demand Booking  Error');
-    }
-  };
+  //     console.log(
+  //       response.incity_one_way_bookings.access_flag,
+  //       `On Demand Booking response ${data.action}`,
+  //     );
+  //     // setBookingView(response.incity_one_way_bookings.access_flag);
+  //     // setIncityOneWayBooking(response.incity_one_way_bookings);
+  //   } catch (error) {
+  //     console.log(error, 'On Demand Booking  Error');
+  //   }
+  // };
 
   useEffect(() => {
     // getOnDemandBooking({
@@ -138,9 +138,9 @@ const TrustedDriver = ({navigation}) => {
     // getOnDemandBooking({
     //   action: 'incity_roundtrip_booking',
     // });
-    getOnDemandBooking({
-      action: 'incity_oneway_booking',
-    });
+    // getOnDemandBooking({
+    //   action: 'incity_oneway_booking',
+    // });
   }, []);
 
   const handleToggleButton = () => {

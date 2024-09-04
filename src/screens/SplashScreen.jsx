@@ -7,7 +7,7 @@ const SplashScreen = ({navigation}) => {
   
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.navigate('login');
+      navigation.navigate('DriverLogin');
     }, 2000);
     return () => clearTimeout(timer);
   }, [navigation]);

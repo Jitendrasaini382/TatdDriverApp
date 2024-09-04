@@ -13,7 +13,7 @@ const Header = ({backButton, extraButton}) => {
     <View style={styles.mainContainer}>
       <View style={styles.leftContent}>
         <TouchableOpacity
-        onPress={()=>navigation.navigate('TrustedDriverr')}
+        onPress={()=>navigation.navigate('TrustedDriver')}
         style={styles.logoView}>
           <Image source={AppLogo} />
           <Text style={styles.logoText}>tat d</Text>

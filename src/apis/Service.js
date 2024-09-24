@@ -16,7 +16,7 @@ axiosClient.interceptors.request.use(
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-    console.log('Request headers:', config.headers);
+    // console.log('Request headers Service:', config.headers);
     return config;
   },
   error => {
@@ -48,7 +48,7 @@ axiosClient.interceptors.response.use(
           );
 
           if (res.data.jwt) {
-            console.log('New JWT:', res.data.jwt);
+            // console.log('New JWT:', res.data.jwt);
             await AsyncStorage.setItem('jwt', res.data.jwt);
             axiosClient.defaults.headers.common[
               'Authorization'

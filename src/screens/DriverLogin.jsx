@@ -9,6 +9,7 @@ import {
   Dimensions,
   ScrollView,
   Alert,
+  BackHandler,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -34,6 +35,27 @@ const DriverLogin = () => {
   const handleChange = text => {
     setField({mobile: text});
   };
+
+
+  // backButton not working Stop
+
+  // useEffect(()=>{
+  //   const backAction = () => {
+  //     // Block back navigation and show alert
+  //     // Alert.alert("Hold on!", "You can't go back from here.", [
+  //     //   {text: "OK", onPress: () => null},
+  //     // ]);
+  //     return true;
+  //   };
+
+  //   const backHandler = BackHandler.addEventListener(
+  //     'hardwareBackPress',
+  //     backAction,
+  //   );
+
+  //   return () => backHandler.remove();
+  // },[])
+
 
   const sendOtp = async () => {
     try {

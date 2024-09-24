@@ -13,7 +13,7 @@ import RoundTripBookingAceeptModal from '../modal/RoundTripBookingAceeptModal';
 import {ON_DEMAND_BOOKING} from '../../apis/Apis';
 
 const TripCard = ({trip}) => {
-  console.log(trip, 'jjjjjjjjjjjj');
+  // console.log(trip, 'jjjjjjjjjjjj');
   const [openModal, setOpenModal] = useState(false);
   return (
     <View style={styles.card}>
@@ -271,10 +271,10 @@ const RoundTripBookingView = () => {
     try {
       const response = await ON_DEMAND_BOOKING(data);
 
-      console.log(
-        response,
-        'getIncityOneWayBookings response',
-      );
+      // console.log(
+      //   response,
+      //   'getIncityOneWayBookings response',
+      // );
       setIncityOneWayBooking(response.incity_one_way_bookings);
     } catch (error) {
       console.log(error, 'incity_OneWay_bookings  Error');
@@ -285,11 +285,11 @@ const RoundTripBookingView = () => {
     try {
       const response = await ON_DEMAND_BOOKING(data);
 
-      console.log(
-        response,
-       'getIncityRoundTripBookings response',
-      );
-      console.log(response.incity_roundtrip_bookings,"gggggggggggggggggggggggggggggggggggggggggg");
+      // console.log(
+      //   response,
+      //  'getIncityRoundTripBookings response',
+      // );
+      // console.log(response.incity_roundtrip_bookings,"gggggggggggggggggggggggggggggggggggggggggg");
       
       setIncityRoundTripBooking(response.incity_roundtrip_bookings);
     } catch (error) {

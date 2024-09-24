@@ -44,6 +44,7 @@ import ViewAwarenessData from '../components/ViewAwarenessData';
 import {jwtDecode} from 'jwt-decode';
 import ExpressBookingModal from '../components/modal/ExpressBookingModal';
 import RoundTripBookingView from '../components/bookingsView/RoundTripBookingView';
+import NotificationService from '../utils/NotificationService';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -76,6 +77,16 @@ const TrustedDriver = ({navigation}) => {
 
   // console.log(jwtToken, 'trusted Context Jwt Token');
 
+  useEffect(() => {
+    // Request notification permission when the user lands on the home screen after login
+    NotificationService.requestUserPermission();
+
+    // Optional: Listen for token refresh
+    const unsubscribe = NotificationService.onTokenRefresh();
+
+    return () => unsubscribe(); // Cleanup on unmount
+  }, []);
+
   const decodeData = token => {
     const decoded = jwtDecode(token);
     // console.log(decoded.data, '>>>>>>>>>>>>>>>>');
@@ -101,7 +112,7 @@ const TrustedDriver = ({navigation}) => {
         // setExpressBookingModal(true);
         setPopupData(response.express_booking_popup_flag);
       } else {
-        console.log('runnnnnnnnn 0000');
+        // console.log('runnnnnnnnn 0000');
         dispatch(setExpressBookingModal(false));
       }
     } catch (error) {

@@ -8,7 +8,6 @@ import {
   View,
   Dimensions,
   ScrollView,
-  Alert,
   BackHandler,
 } from 'react-native';
 import Header from '../components/Header';
@@ -36,15 +35,10 @@ const DriverLogin = () => {
     setField({mobile: text});
   };
 
-
   // backButton not working Stop
 
   // useEffect(()=>{
   //   const backAction = () => {
-  //     // Block back navigation and show alert
-  //     // Alert.alert("Hold on!", "You can't go back from here.", [
-  //     //   {text: "OK", onPress: () => null},
-  //     // ]);
   //     return true;
   //   };
 
@@ -55,7 +49,6 @@ const DriverLogin = () => {
 
   //   return () => backHandler.remove();
   // },[])
-
 
   const sendOtp = async () => {
     try {

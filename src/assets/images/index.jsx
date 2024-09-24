@@ -17,3 +17,5 @@ export const Copy_Icon = require('./copy.png')
 export const CloseEnvelop = require('./closed_envlop.png')
 export const bluelogo = require('./bluelogo.png')
 export const whitelogo = require('./logo-white.png')
+export const Headerlogo = require('./headerLogo.png')
+

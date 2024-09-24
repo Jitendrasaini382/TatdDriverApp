@@ -31,7 +31,9 @@ const PrivateRoute = () => {
     <>
       <StatusBar
         animated={true}
-        backgroundColor="#d1bcff"
+        // backgroundColor="#d1bcff"
+        backgroundColor="#16588e"
+
         barStyle="dark-content"
         showHideTransition="slide"
         hidden={false}

@@ -89,7 +89,7 @@ const TrustedDriver = ({navigation}) => {
 
   const decodeData = token => {
     const decoded = jwtDecode(token);
-    // console.log(decoded.data, '>>>>>>>>>>>>>>>>');
+    console.log(decoded.data, '>>>>>>>>>>>>>>>>');
     setDecodedToken(decoded.data);
   };
 

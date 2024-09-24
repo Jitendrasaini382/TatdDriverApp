@@ -26,7 +26,7 @@ const moderateScale = (size, factor = 0.5) =>
 const AgentLogin = ({navigation}) => {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header backButton={false} />
+      <Header backButton={true} />
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>

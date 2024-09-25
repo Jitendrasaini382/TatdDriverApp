@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     transform: [{rotate: '270deg'}],
   },
   mainHeading: {
-    fontSize: moderateScale(22),
+    fontSize: moderateScale(28),
     marginTop: verticalScale(30),
     paddingBottom: verticalScale(10),
     fontWeight: '500',

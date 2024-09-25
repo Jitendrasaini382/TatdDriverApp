@@ -45,6 +45,7 @@ import {jwtDecode} from 'jwt-decode';
 import ExpressBookingModal from '../components/modal/ExpressBookingModal';
 import RoundTripBookingView from '../components/bookingsView/RoundTripBookingView';
 import NotificationService from '../utils/NotificationService';
+import { checkVibrationPermission, requestNotificationPermission } from '../utils/permissions';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -86,6 +87,11 @@ const TrustedDriver = ({navigation}) => {
 
     return () => unsubscribe(); // Cleanup on unmount
   }, []);
+
+  useEffect(async()=>{
+    await requestNotificationPermission();  // Request notification permission for Android 13+
+    await checkVibrationPermission();  
+  }, [])
 
   const decodeData = token => {
     const decoded = jwtDecode(token);

@@ -26,7 +26,7 @@ const TripCard = ({trip}) => {
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'row',
-            padding: 10,
+            // padding: 10,
           }}>
           <Icon color={AppColors.white} name="car" />
           <Text style={styles.vehicleType}>{trip.vehicle_type} {trip.vehicle_model}</Text>
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
   vehicleType: {
     fontSize: 14,
     color: AppColors.white,
-    marginLeft: 10,
+    marginLeft: 5,
   },
   contentWrapper: {
     flexDirection: 'row',

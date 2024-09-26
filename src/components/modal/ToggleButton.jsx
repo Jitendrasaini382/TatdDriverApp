@@ -10,7 +10,7 @@ const ToggleButton = ({button1Label, button2Label, onToggle}) => {
   // const [languageSwitch , setLanguageSwitch] = useState(null)
 
   const {languageSwitch, setLanguageSwitch} = useContext(TokenConstextApi);
-  console.log(languageSwitch, ': language Switch Console');
+  // console.log(languageSwitch, ': language Switch Console');
 
   const handlePress = async label => {
     setCurrentState(label);
@@ -42,7 +42,8 @@ const ToggleButton = ({button1Label, button2Label, onToggle}) => {
             ? styles.activeButton
             : styles.inactiveButton,
         ]}
-        onPress={() => handlePress(button1Label)}>
+        onPress={() => handlePress(button1Label)}
+        >
         <Text
           style={[
             styles.buttonText,
@@ -61,7 +62,8 @@ const ToggleButton = ({button1Label, button2Label, onToggle}) => {
             ? styles.activeButton
             : styles.inactiveButton,
         ]}
-        onPress={() => handlePress(button2Label)}>
+        onPress={() => handlePress(button2Label)}
+        >
         <Text
           style={[
             styles.buttonText,

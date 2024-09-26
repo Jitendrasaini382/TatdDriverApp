@@ -45,7 +45,10 @@ import {jwtDecode} from 'jwt-decode';
 import ExpressBookingModal from '../components/modal/ExpressBookingModal';
 import RoundTripBookingView from '../components/bookingsView/RoundTripBookingView';
 import NotificationService from '../utils/NotificationService';
-import { checkVibrationPermission, requestNotificationPermission } from '../utils/permissions';
+import {
+  checkVibrationPermission,
+  requestNotificationPermission,
+} from '../utils/permissions';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -88,10 +91,10 @@ const TrustedDriver = ({navigation}) => {
     return () => unsubscribe(); // Cleanup on unmount
   }, []);
 
-  useEffect(async()=>{
-    await requestNotificationPermission();  // Request notification permission for Android 13+
-    await checkVibrationPermission();  
-  }, [])
+  useEffect(async () => {
+    await requestNotificationPermission(); // Request notification permission for Android 13+
+    await checkVibrationPermission();
+  }, []);
 
   const decodeData = token => {
     const decoded = jwtDecode(token);
@@ -169,7 +172,8 @@ const TrustedDriver = ({navigation}) => {
       LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
         .then(response => {
           console.log(response, 'LOGIN API RESPONSE');
-          Alert.alert(response.message, 'RFD Logged in successfully');
+          navigation.navigate("TrustedDriver")
+          Alert.alert(response.data?.message);
         })
         .catch(err => {
           console.log(err, 'LOGIN API ERROR');
@@ -268,6 +272,8 @@ const TrustedDriver = ({navigation}) => {
               <View style={styles.bottamView}>
                 <View style={styles.driverNameView}>
                   <Text style={styles.driverNameText}>
+
+                    {console.log(decodedToken, "tokenn data")}
                     {decodedToken && decodedToken.driver_name}
                   </Text>
                 </View>
@@ -276,7 +282,7 @@ const TrustedDriver = ({navigation}) => {
                     onPress={() => dispatch(setModalVisible(true))}>
                     <View style={styles.otrView}>
                       <Text style={styles.bottamRightText}>
-                        {decodedToken && decodedToken.TrustedDriverData.otr}
+                        {decodedToken && decodedToken.TrustedDriverData.otr} %
                       </Text>
                       <Text style={styles.bottamRightText}>OTR</Text>
                     </View>
@@ -397,6 +403,7 @@ const TrustedDriver = ({navigation}) => {
         onBackdropPress={() => dispatch(setModalVisible(false))}
         animationIn={'fadeInDown'}
         animationOut={'fadeOutUp'}
+        style={{justifyContent: 'center', alignItems: 'center'}}
         isVisible={isModalVisible}>
         <OtrModal />
       </Modal>

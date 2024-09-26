@@ -9,6 +9,7 @@ import {
   Dimensions,
   ScrollView,
   BackHandler,
+  Pressable,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -30,6 +31,8 @@ const DriverLogin = () => {
   const navigation = useNavigation();
   const [field, setField] = useState('');
   const [error, setError] = useState(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const handleChange = text => {
     setField({mobile: text});
@@ -53,18 +56,21 @@ const DriverLogin = () => {
   const sendOtp = async () => {
     try {
       if (!field.mobile) {
-        // Alert.alert('Please Enter Mobile No.');
-        setError('Please Enter Mobile No.');
+        setError('Please Enter Mobile Number');
         return;
       } else if (field.mobile.length !== 10) {
-        setError('Please Enter Valid Mobile No.');
+        setError('Please Enter 10 digit Mobile Number');
         // Alert.alert('Please Enter Valid Mobile No.');
         return;
       }
       setError(null);
+      setLoader(true);
       const response = await DRIVER_LOGIN(field);
-      console.log(response);
-      navigation.navigate('CheckDriverOtp', {mobile: field.mobile});
+      // console.log(response, 'rrrrrr');
+      if (response.status_code == '200') {
+        setLoader(false);
+        navigation.navigate('CheckDriverOtp', {mobile: field.mobile});
+      }
     } catch (err) {
       console.log(err, 'err');
     }
@@ -73,7 +79,7 @@ const DriverLogin = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header backButton={false} />
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent} >
         <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>
             <View style={styles.mainView}>
@@ -104,26 +110,65 @@ const DriverLogin = () => {
                     color={AppColors.greyColor}
                   />
                 </View>
-                <View style={styles.inputView}>
+
+                <View
+                  style={[
+                    styles.inputView,
+                    isFocused || field.mobile ? styles.inputFocused : null,
+                    {
+                      borderColor: isFocused
+                        ? AppColors.mainColor
+                        : AppColors.greyColor,
+                    },
+                  ]}>
                   <TextInput
-                    style={styles.inputText}
+                    style={[
+                      styles.inputText,
+                      {fontWeight: isFocused ? 'bold' : 'normal'},
+                    ]}
+                    onChangeText={handleChange}
+                    keyboardType="numeric"
+                    value={field.mobile}
+                    maxLength={10}
+                    placeholder="Enter Driver Mobile Number"
+                    placeholderTextColor="rgb(42, 42, 42)"
+                    onFocus={() => setIsFocused(true)}
+                    onPressIn={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                  />
+                </View>
+
+                {/* <View style={[styles.inputView,
+                      isFocused || field.mobile ? styles.inputFocused : null,
+                ]}>
+                  <TextInput
+                    style={[styles.inputText,
+                      isFocused || field.mobile ? styles.inputFocused : null,
+
+                    ]}
                     onChangeText={handleChange}
                     // value={field.mobile}
                     keyboardType="numeric"
                     placeholder="Enter Driver Mobile Number"
                     placeholderTextColor="rgb(42, 42, 42)"
+                    onFocus={() => setIsFocused(true)}
+                    onPressIn={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
                   />
-                </View>
+                </View> */}
               </View>
               <View style={{marginHorizontal: moderateScale(30)}}>
-                <Text style={{color: 'red', fontSize: 10, marginTop: 10}}>
-                  {error}
-                </Text>
+                <Text style={{color: 'red', fontSize: 12}}>{error}</Text>
               </View>
 
-              <TouchableOpacity style={styles.btnView} onPress={sendOtp}>
-                <Text style={styles.btnText}>Submit</Text>
-              </TouchableOpacity>
+              <Pressable
+                style={styles.btnView}
+                disabled={loader}
+                onPress={sendOtp}>
+                <Text style={styles.btnText}>
+                  {loader ? 'Please Wait' : 'Submit'}
+                </Text>
+              </Pressable>
             </View>
           </View>
         </View>
@@ -135,6 +180,7 @@ const DriverLogin = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor : AppColors.white
   },
   scrollViewContent: {
     flexGrow: 1,
@@ -142,6 +188,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: AppColors.white,
+    marginVertical: 1
   },
   contentContainer: {
     flex: 1,
@@ -171,6 +218,7 @@ const styles = StyleSheet.create({
   headingView: {
     backgroundColor: AppColors.white,
     width: '80%',
+    height: 25,
   },
   headingText: {
     color: AppColors.mainColor,
@@ -185,8 +233,8 @@ const styles = StyleSheet.create({
     height: 0,
     backgroundColor: 'transparent',
     borderStyle: 'solid',
-    borderRightWidth: moderateScale(12),
-    borderTopWidth: moderateScale(12),
+    borderRightWidth: 12,
+    borderTopWidth: 12,
     borderRightColor: 'transparent',
     borderTopColor: AppColors.white,
   },
@@ -229,6 +277,12 @@ const styles = StyleSheet.create({
     color: AppColors.black,
     textAlign: 'left',
   },
+  inputFocused: {
+    borderTopColor: AppColors.mainColor,
+    borderBottomColor: AppColors.mainColor,
+    borderRightColor: AppColors.mainColor,
+    fontWeight: 'bold',
+  },
   btnView: {
     backgroundColor: AppColors.mainColor,
     alignItems: 'center',
@@ -239,12 +293,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: verticalScale(30),
     marginBottom: verticalScale(40),
-    width: '40%',
+    width: '45%',
   },
   btnText: {
-    fontSize: moderateScale(14),
+    fontSize: moderateScale(18),
     color: AppColors.white,
-    fontWeight: '400',
+    fontWeight: '600',
     fontFamily: AppFont.regularFont,
   },
 });

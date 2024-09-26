@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useContext} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -11,10 +11,13 @@ import {
 import {AppColors} from '../../assets/Colors';
 import {useDispatch, useSelector} from 'react-redux';
 import {setBookingModal} from '../../redux/slices/trustedDriverSlice';
+import {TokenConstextApi} from '../../context/GlobalContext';
 
 const BookingModal = () => {
   const dispatch = useDispatch();
-  const userName = useSelector(state => state.user?.name) || 'Driver';
+  const {decodedToken, setDecodedToken, jwtToken} =
+    useContext(TokenConstextApi);
+  // const userName = useSelector(state => state.user?.name) || 'Driver';
 
   const closeModal = useCallback(() => {
     dispatch(setBookingModal(false));
@@ -34,29 +37,30 @@ const BookingModal = () => {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <TouchableWithoutFeedback onPress={closeModal}>
-        <View style={styles.contentContainer}>
-          <ScrollView>
+      <View style={styles.contentContainer}>
+        <TouchableWithoutFeedback onPress={closeModal}>
+          <ScrollView contentContainerStyle={{flexGrow: 1}}>
             <Text style={styles.topHeading}>
               If your Booking Score is more than 70%, then:
             </Text>
             {bulletPoints.map(renderBulletPoint)}
             <Text style={styles.subHeading}>Booking Score Clarity</Text>
             <Text style={styles.BottamText}>
-              Dear {userName.toUpperCase()}, customers book drivers only when
-              they urgently need them. It is our responsibility to ensure that
-              we reach the customer on time and fulfill their trust. Customer
-              cancellations occur in 10% to 20% of cases. Additionally,
-              cancellations often happen when the customer does not answer the
-              call promptly or when the customer is disrespectful. Please inform
-              the customer as soon as you pick up the booking - "My name is Anil
-              Rawat, and I am speaking as your driver from TatD. I will reach
-              you on time." If the customer does not answer, press the 'Customer
-              Not Answering' button, which sends a message to the customer from
-              the company to answer the driver's call. In most cases, customers
-              answer the call, reducing cancellations. It is common for drivers
-              with fewer cancellations to get more work. Have a great day!
-              www.tatd.in
+              {/* Dear {userName.toUpperCase()}, customers book drivers only when they */}
+              Dear {decodedToken && decodedToken.driver_name}, customers book
+              drivers only when they urgently need them. It is our
+              responsibility to ensure that we reach the customer on time and
+              fulfill their trust. Customer cancellations occur in 10% to 20% of
+              cases. Additionally, cancellations often happen when the customer
+              does not answer the call promptly or when the customer is
+              disrespectful. Please inform the customer as soon as you pick up
+              the booking - "My name is Anil Rawat, and I am speaking as your
+              driver from TatD. I will reach you on time." If the customer does
+              not answer, press the 'Customer Not Answering' button, which sends
+              a message to the customer from the company to answer the driver's
+              call. In most cases, customers answer the call, reducing
+              cancellations. It is common for drivers with fewer cancellations
+              to get more work. Have a great day! www.tatd.in
             </Text>
             <TouchableOpacity
               style={styles.button}
@@ -65,8 +69,8 @@ const BookingModal = () => {
               <Text style={styles.buttonText}>Close</Text>
             </TouchableOpacity>
           </ScrollView>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </View>
     </SafeAreaView>
   );
 };
@@ -80,6 +84,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: 'center',
     marginVertical: 20,
+    fontWeight: '700',
   },
 
   contentContainer: {
@@ -87,6 +92,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: AppColors.white,
     paddingLeft: 15,
+    borderWidth: 0.2,
   },
   topHeading: {
     justifyContent: 'center',
@@ -117,7 +123,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     paddingHorizontal: 10,
     borderRadius: 5,
-    backgroundColor: '#195788',
+    backgroundColor: AppColors.mainColor,
     alignSelf: 'flex-start',
   },
   buttonText: {color: AppColors.white},
@@ -239,7 +245,7 @@ const styles = StyleSheet.create({
 //     paddingVertical: 3,
 //     paddingHorizontal: 10,
 //     borderRadius: 5,
-//     backgroundColor: '#195788',
+//     backgroundColor: AppColors.mainColor,
 //     alignSelf: 'flex-start',
 //   },
 //   buttonText: {color: AppColors.white},

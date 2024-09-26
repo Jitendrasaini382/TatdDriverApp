@@ -23,6 +23,7 @@ import AgentLeads from '../../screens/AgentLeads';
 import DriverNotifications from '../../screens/DriverNotification';
 import ClearMyDuePayment from '../../screens/ClearMyDuePayment';
 import SplashScreen from '../../screens/SplashScreen';
+import { AppColors } from '../../assets/Colors';
 
 const Stack = createStackNavigator();
 
@@ -32,7 +33,7 @@ const PrivateRoute = () => {
       <StatusBar
         animated={true}
         // backgroundColor="#d1bcff"
-        backgroundColor="#16588e"
+        backgroundColor={AppColors.mainColor}
 
         barStyle="dark-content"
         showHideTransition="slide"

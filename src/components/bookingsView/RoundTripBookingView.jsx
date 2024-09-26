@@ -29,39 +29,43 @@ const TripCard = ({trip}) => {
             // padding: 10,
           }}>
           <Icon color={AppColors.white} name="car" />
-          <Text style={styles.vehicleType}>{trip.vehicle_type} {trip.vehicle_model}</Text>
+          <Text style={styles.vehicleType}>
+            {trip.vehicle_type} {trip.vehicle_model}
+          </Text>
         </View>
       </View>
       <View style={styles.contentWrapper}>
         <View style={styles.leftContent}>
-          <Text style={styles.title}>{trip.way_type} - {trip.product_type}</Text>
+          <Text style={styles.title}>
+            {trip.way_type} - {trip.product_type}
+          </Text>
           {/* {trip.addresses.map((address, index) => ( */}
-            <View style={{flexDirection: 'row'}}>
-              <View
-                style={{
-                  height: 10,
-                  width: 10,
-                  borderRadius: 5,
-                  backgroundColor: '#0dc53d' ,
-                  alignItems: 'flex-start',
-                  top: 5,
-                  left: 10,
-                }}></View>
-              <Text style={styles.address}>{trip.pickup_address}</Text>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-              <View
-                style={{
-                  height: 10,
-                  width: 10,
-                  borderRadius: 5,
-                  backgroundColor: 'black' ,
-                  alignItems: 'flex-start',
-                  top: 5,
-                  left: 10,
-                }}></View>
-              <Text style={styles.address}>{trip.drop_address}</Text>
-            </View>
+          <View style={{flexDirection: 'row'}}>
+            <View
+              style={{
+                height: 10,
+                width: 10,
+                borderRadius: 5,
+                backgroundColor: '#0dc53d',
+                alignItems: 'flex-start',
+                top: 5,
+                left: 10,
+              }}></View>
+            <Text style={styles.address}>{trip.pickup_address}</Text>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <View
+              style={{
+                height: 10,
+                width: 10,
+                borderRadius: 5,
+                backgroundColor: 'black',
+                alignItems: 'flex-start',
+                top: 5,
+                left: 10,
+              }}></View>
+            <Text style={styles.address}>{trip.drop_address}</Text>
+          </View>
           {/* ))} */}
         </View>
         <View style={styles.rightContent}>
@@ -87,26 +91,26 @@ const TripCard = ({trip}) => {
           </Text>
         </View> 
          ) } */}
-         {/* {console.log(trip.incentive_eligibility_fullfillment) } */}
-         {trip.incentive > 0 ? (
-  <View style={styles.incentiveBox}>
-    <Text style={styles.incentiveText}>
-      + Incentive ₹ {trip.incentive}
-    </Text>
-  </View>
-) : trip.incentive_eligibility_fullfillment > 0 ? (
-  <View style={styles.incentiveBox}>
-    <Text style={styles.incentiveText}>
-      + Incentive ₹ {trip.incentive_eligibility_fullfillment}
-    </Text>
-  </View>
-) : trip.incentive_eligible_amount_fullfillment > 0 ? (
-  <View style={styles.incentiveBox}>
-    <Text style={styles.incentiveText}>
-      + Incentive ₹ {trip.incentive_eligible_amount_fullfillment}
-    </Text>
-  </View>
-) : null}
+            {/* {console.log(trip.incentive_eligibility_fullfillment) } */}
+            {trip.incentive > 0 ? (
+              <View style={styles.incentiveBox}>
+                <Text style={styles.incentiveText}>
+                  + Incentive ₹ {trip.incentive}
+                </Text>
+              </View>
+            ) : trip.incentive_eligibility_fullfillment > 0 ? (
+              <View style={styles.incentiveBox}>
+                <Text style={styles.incentiveText}>
+                  + Incentive ₹ {trip.incentive_eligibility_fullfillment}
+                </Text>
+              </View>
+            ) : trip.incentive_eligible_amount_fullfillment > 0 ? (
+              <View style={styles.incentiveBox}>
+                <Text style={styles.incentiveText}>
+                  + Incentive ₹ {trip.incentive_eligible_amount_fullfillment}
+                </Text>
+              </View>
+            ) : null}
 
             <View style={{marginRight: 5}}>
               <Text style={styles.price}>₹ {trip.bugdet_price}</Text>
@@ -117,7 +121,7 @@ const TripCard = ({trip}) => {
             </View>
           </View>
           <TouchableOpacity
-            onPress={() => setOpenModal("")}
+            onPress={() => setOpenModal('')}
             style={styles.acceptButton}>
             <Text style={styles.acceptText}>Accept</Text>
           </TouchableOpacity>
@@ -265,7 +269,7 @@ const RoundTripBookingView = () => {
   //   },
   // ];
   const [incityOneWayBooking, setIncityOneWayBooking] = useState([]);
-  const [incityRoundTripBooking, setIncityRoundTripBooking] = useState([])
+  const [incityRoundTripBooking, setIncityRoundTripBooking] = useState([]);
 
   const getIncityOneWayBookings = async data => {
     try {
@@ -290,7 +294,7 @@ const RoundTripBookingView = () => {
       //  'getIncityRoundTripBookings response',
       // );
       // console.log(response.incity_roundtrip_bookings,"gggggggggggggggggggggggggggggggggggggggggg");
-      
+
       setIncityRoundTripBooking(response.incity_roundtrip_bookings);
     } catch (error) {
       console.log(error, 'incity_roundtrip_bookings  Error');
@@ -298,9 +302,9 @@ const RoundTripBookingView = () => {
   };
 
   useEffect(() => {
-  //   getOnDemandBooking({
-  //     action: 'ondemand_outstation_bookings',
-  //   });
+    //   getOnDemandBooking({
+    //     action: 'ondemand_outstation_bookings',
+    //   });
     getIncityRoundTripBookings({
       action: 'incity_roundtrip_booking',
     });
@@ -315,10 +319,10 @@ const RoundTripBookingView = () => {
         incityOneWayBooking.map((trip, index) => (
           <TripCard key={index} trip={trip} />
         ))}
-         {incityRoundTripBooking &&
+      {/* {incityRoundTripBooking &&
         incityRoundTripBooking.map((e, index) => (
           <TripCard key={index} trip={e} />
-        ))}
+        ))} */}
     </>
   );
 };
@@ -367,7 +371,7 @@ const styles = StyleSheet.create({
   address: {
     fontSize: 14,
     color: '#444',
-    marginLeft: 18,
+    marginLeft: 15,
     fontWeight: 'bold',
     marginBottom: 10,
   },
@@ -646,30 +650,6 @@ export default RoundTripBookingView;
 // });
 
 // export default RoundTripBookingView;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, {useEffect, useState} from 'react';
 // import {

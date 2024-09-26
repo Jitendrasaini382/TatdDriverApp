@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,11 +8,13 @@ import {
   View,
   Dimensions,
   ScrollView,
+  Pressable,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AppColors} from '../assets/Colors';
-import { AppFont } from '../assets/FontsFamily';
+import {AppFont} from '../assets/FontsFamily';
+import {DRIVER_LOGIN} from '../apis/Apis';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -24,6 +26,37 @@ const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;
 
 const AgentLogin = ({navigation}) => {
+  const [isFocused, setIsFocused] = useState(false);
+  const [field, setField] = useState('');
+  const [loader, setLoader] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleChange = text => {
+    setField(text);
+  };
+
+  const sendOtp = async () => {
+    try {
+      if (!field) {
+        setError('Please Enter Mobile Number');
+        return;
+      } else if (field.length !== 10) {
+        setError('Please Enter 10 digit Mobile Number');
+        return;
+      }
+      setError(null);
+      setLoader(true);
+      // const response = await DRIVER_LOGIN(field);
+      // console.log(response, 'rrrrrr');
+      // if (response.status_code == '200') {
+      setLoader(false);
+      navigation.navigate('CheckAgentOtp', {mobile: field});
+      // }
+    } catch (err) {
+      console.log(err, 'err');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header backButton={true} />
@@ -58,21 +91,49 @@ const AgentLogin = ({navigation}) => {
                     color={AppColors.greyColor}
                   />
                 </View>
-                <View style={styles.inputView}>
+
+                <View
+                  style={[
+                    styles.inputView,
+                    isFocused ? styles.inputFocused : null,
+                    {
+                      borderColor: isFocused
+                        ? AppColors.mainColor
+                        : AppColors.greyColor,
+                    },
+                  ]}>
+                  <TextInput
+                    style={[
+                      styles.inputText,
+                      {fontWeight: isFocused ? 'bold' : 'normal'},
+                    ]}
+                    onChangeText={handleChange}
+                    keyboardType="numeric"
+                    value={field}
+                    maxLength={10}
+                    placeholder="Enter Agent Mobile Number"
+                    placeholderTextColor="rgb(42, 42, 42)"
+                    onFocus={() => setIsFocused(true)}
+                    onPressIn={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                  />
+                </View>
+
+                {/* <View style={styles.inputView}>
                   <TextInput
                     style={styles.inputText}
                     keyboardType="numeric"
                     placeholder="Enter Driver Mobile Number"
                     placeholderTextColor={AppColors.black}
                   />
-                </View>
+                </View> */}
               </View>
-
-              <TouchableOpacity
-                style={styles.btnView}
-                onPress={() => navigation.navigate('CheckAgentOtp')}>
-                <Text style={styles.btnText}>Submit</Text>
-              </TouchableOpacity>
+              <View style={{marginHorizontal: moderateScale(30)}}>
+                <Text style={{color: 'red', fontSize: 12}}>{error}</Text>
+              </View>
+              <Pressable style={styles.btnView} disabled={loader} onPress={sendOtp}>
+                <Text style={styles.btnText}>{ loader ? "Sending OTP" :"Submit"}</Text>
+              </Pressable>
             </View>
           </View>
         </View>
@@ -121,10 +182,11 @@ const styles = StyleSheet.create({
   headingView: {
     backgroundColor: AppColors.white,
     width: '80%',
+    height: 25,
   },
   headingText: {
     color: AppColors.mainColor,
-    fontSize: moderateScale(14),
+    fontSize: 14,
     paddingLeft: moderateScale(4),
   },
   triangleMainView: {
@@ -135,8 +197,8 @@ const styles = StyleSheet.create({
     height: 0,
     backgroundColor: 'transparent',
     borderStyle: 'solid',
-    borderRightWidth: moderateScale(12),
-    borderTopWidth: moderateScale(12),
+    borderRightWidth: 12,
+    borderTopWidth: 12,
     borderRightColor: 'transparent',
     borderTopColor: AppColors.white,
   },
@@ -179,6 +241,12 @@ const styles = StyleSheet.create({
     color: AppColors.black,
     textAlign: 'left',
   },
+  inputFocused: {
+    borderTopColor: AppColors.mainColor,
+    borderBottomColor: AppColors.mainColor,
+    borderRightColor: AppColors.mainColor,
+    fontWeight: 'bold',
+  },
   btnView: {
     backgroundColor: AppColors.mainColor,
     alignItems: 'center',
@@ -189,12 +257,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: verticalScale(30),
     marginBottom: verticalScale(40),
-    width: '40%',
+    width: '45%',
   },
   btnText: {
-    fontSize: moderateScale(14),
+    fontSize: moderateScale(18),
     color: AppColors.white,
-    fontWeight: '400',
+    fontWeight: '600',
     fontFamily: AppFont.regularFont,
   },
 });

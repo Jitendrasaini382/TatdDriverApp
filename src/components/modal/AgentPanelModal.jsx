@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#195788',
+    color: AppColors.mainColor,
     fontFamily: AppFont.regularFont,
   },
   closeButton: {

@@ -4,6 +4,7 @@ import {StatusBar} from 'react-native';
 import DriverLogin from '../../screens/DriverLogin';
 import CheckDriverOtp from '../../screens/CheckDriverOtp';
 import SplashScreen from '../../screens/SplashScreen';
+import { AppColors } from '../../assets/Colors';
 
 const Stack = createStackNavigator();
 
@@ -13,7 +14,7 @@ const PublicRoute = () => {
       <StatusBar
         animated={true}
         // backgroundColor="#d1bcff"
-        backgroundColor="#16588e"
+        backgroundColor={AppColors.mainColor}
         barStyle="dark-content"
         showHideTransition="slide"
         hidden={false}

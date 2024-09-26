@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  Pressable,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -22,7 +23,47 @@ const verticalScale = size => (height / designHeight) * size;
 const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;
 
-const CheckAgentOtp = ({navigation}) => {
+const CheckAgentOtp = ({navigation, route}) => {
+  const {mobile} = route.params;
+  const [otp, setOtp] = useState('');
+
+  console.log(mobile, 'mmmmm');
+
+  const [error, setError] = useState(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const [loader, setLoader] = useState(false);
+
+  const handleChangeOtp = e => {
+    setOtp(e);
+  };
+
+  const verifyOtp = async () => {
+    try {
+      if (!otp) {
+        setError('Please Enter OTP');
+        return;
+      } else if (otp.length !== 4) {
+        setError('Please enter a 4-digit OTP');
+        return;
+      }
+      setLoader(true);
+      // const response = await VERIFY_OTP_LOGIN({
+      //   mobile: mobile,
+      //   otp: otp,
+      // });
+
+      // console.log('OTP verification response:', response);
+
+      // if (response.status_code == 200) {
+      navigation.navigate('AgentPanel');
+      // } else {
+      // setError('Invalid response from server');
+      // }
+    } catch (err) {
+      console.error('OTP verification failed:', err);
+      setError(err.message || 'OTP verification failed. Please try again.');
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <Header />
@@ -52,7 +93,7 @@ const CheckAgentOtp = ({navigation}) => {
 
             <View style={styles.otpInfoContainer}>
               <Text style={styles.otpInfoText}>
-                An OTP is sent to 9810369319{' '}
+                An OTP is sent to {mobile}{' '}
               </Text>
               <TouchableOpacity
                 onPress={() => {
@@ -70,21 +111,46 @@ const CheckAgentOtp = ({navigation}) => {
                   color="rgb(183, 183, 183)"
                 />
               </View>
-              <View style={styles.textInputContainer}>
+              <View
+                style={[
+                  styles.textInputContainer,
+                  isFocused || otp ? styles.inputFocused : null,
+                  {
+                    borderColor: isFocused
+                      ? AppColors.mainColor
+                      : AppColors.greyColor,
+                  },
+                ]}>
                 <TextInput
-                  style={styles.textInput}
+                  style={[
+                    styles.textInput,
+                    {fontWeight: isFocused ? 'bold' : 'normal'},
+                  ]}
+                  onChangeText={handleChangeOtp}
                   keyboardType="numeric"
+                  value={otp}
+                  maxLength={4}
                   placeholder="Enter OTP or Password"
-                  placeholderTextColor="rgb(42,42,42)"
+                  placeholderTextColor="rgb(42, 42, 42)"
+                  onFocus={() => setIsFocused(true)}
+                  onPressIn={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
                 />
               </View>
             </View>
+            <View style={styles.errorView}>
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
 
-            <TouchableOpacity
+
+            <Pressable
               style={styles.verifyButton}
-              onPress={() => navigation.navigate('AgentPanel')}>
-              <Text style={styles.verifyButtonText}>Verify</Text>
-            </TouchableOpacity>
+              disabled={loader}
+              onPress={verifyOtp}>
+              <Text style={styles.verifyButtonText}>
+                {loader ? 'Please Wait' : 'Verify'}
+              </Text>
+            </Pressable>
           </View>
         </View>
       </ScrollView>
@@ -194,7 +260,7 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(5),
   },
   inputContainer: {
-    marginBottom: verticalScale(30),
+    // marginBottom: verticalScale(30),
     marginTop: verticalScale(25),
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
@@ -223,6 +289,12 @@ const styles = StyleSheet.create({
     height: verticalScale(36),
     fontSize: moderateScale(14),
   },
+  
+  errorView: {
+    marginHorizontal: moderateScale(30),
+    marginBottom: verticalScale(30),
+  },
+  errorText: {color: 'red', fontSize: 15, marginTop: 0},
   verifyButton: {
     backgroundColor: AppColors.mainColor,
     alignItems: 'center',

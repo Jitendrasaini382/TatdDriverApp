@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "51732838887",
-    "project_id": "tatd-driver",
-    "storage_bucket": "tatd-driver.appspot.com"
+    "project_number": "114600773224",
+    "project_id": "tatd-partner",
+    "storage_bucket": "tatd-partner.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:51732838887:android:c4ec086367f78b99a5e542",
+        "mobilesdk_app_id": "1:114600773224:android:2cb1321ac7aa9568a0dddd",
         "android_client_info": {
           "package_name": "com.tatd.driver"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCHUHchtYS6iW-zJkbaPQg810Oxp4Gv0XI"
+          "current_key": "AIzaSyD7fDVcVL-DdsxZyfNbh7iJIuNeM8kkFxY"
         }
       ],
       "services": {

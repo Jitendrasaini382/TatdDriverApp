@@ -43,6 +43,12 @@ import {TokenConstextApi} from '../context/GlobalContext';
 import ViewAwarenessData from '../components/ViewAwarenessData';
 import {jwtDecode} from 'jwt-decode';
 import ExpressBookingModal from '../components/modal/ExpressBookingModal';
+import RoundTripBookingView from '../components/bookingsView/RoundTripBookingView';
+import NotificationService from '../utils/NotificationService';
+import {
+  checkVibrationPermission,
+  requestNotificationPermission,
+} from '../utils/permissions';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -75,9 +81,24 @@ const TrustedDriver = ({navigation}) => {
 
   // console.log(jwtToken, 'trusted Context Jwt Token');
 
+  useEffect(() => {
+    // Request notification permission when the user lands on the home screen after login
+    NotificationService.requestUserPermission();
+
+    // Optional: Listen for token refresh
+    const unsubscribe = NotificationService.onTokenRefresh();
+
+    return () => unsubscribe(); // Cleanup on unmount
+  }, []);
+
+  useEffect(async () => {
+    await requestNotificationPermission(); // Request notification permission for Android 13+
+    await checkVibrationPermission();
+  }, []);
+
   const decodeData = token => {
     const decoded = jwtDecode(token);
-    // console.log(decoded.data, '>>>>>>>>>>>>>>>>');
+    console.log(decoded.data, '>>>>>>>>>>>>>>>>');
     setDecodedToken(decoded.data);
   };
 
@@ -100,7 +121,7 @@ const TrustedDriver = ({navigation}) => {
         // setExpressBookingModal(true);
         setPopupData(response.express_booking_popup_flag);
       } else {
-        console.log('runnnnnnnnn 0000');
+        // console.log('runnnnnnnnn 0000');
         dispatch(setExpressBookingModal(false));
       }
     } catch (error) {
@@ -112,19 +133,23 @@ const TrustedDriver = ({navigation}) => {
     getPopup();
   }, []);
 
-  const [incityOneWayBooking , setIncityOneWayBooking] = useState([])
+  // const [incityOneWayBooking, setIncityOneWayBooking] = useState([]);
+  const [showBookingView, setBookingView] = useState(1);
 
+  // const getOnDemandBooking = async data => {
+  //   try {
+  //     const response = await ON_DEMAND_BOOKING(data);
 
-  const getOnDemandBooking = async data => {
-    try {
-      const response = await ON_DEMAND_BOOKING(data);
-
-      console.log(response, `On Demand Booking response ${data.action}`);
-      setIncityOneWayBooking(response.incity_one_way_bookings)
-    } catch (error) {
-      console.log(error, 'On Demand Booking  Error');
-    }
-  };
+  //     console.log(
+  //       response.incity_one_way_bookings.access_flag,
+  //       `On Demand Booking response ${data.action}`,
+  //     );
+  //     // setBookingView(response.incity_one_way_bookings.access_flag);
+  //     // setIncityOneWayBooking(response.incity_one_way_bookings);
+  //   } catch (error) {
+  //     console.log(error, 'On Demand Booking  Error');
+  //   }
+  // };
 
   useEffect(() => {
     // getOnDemandBooking({
@@ -133,9 +158,9 @@ const TrustedDriver = ({navigation}) => {
     // getOnDemandBooking({
     //   action: 'incity_roundtrip_booking',
     // });
-    getOnDemandBooking({
-      action: 'incity_oneway_booking',
-    });
+    // getOnDemandBooking({
+    //   action: 'incity_oneway_booking',
+    // });
   }, []);
 
   const handleToggleButton = () => {
@@ -147,7 +172,8 @@ const TrustedDriver = ({navigation}) => {
       LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
         .then(response => {
           console.log(response, 'LOGIN API RESPONSE');
-          Alert.alert(response.message, 'RFD Logged in successfully');
+          navigation.navigate("TrustedDriver")
+          Alert.alert(response.data?.message);
         })
         .catch(err => {
           console.log(err, 'LOGIN API ERROR');
@@ -246,6 +272,8 @@ const TrustedDriver = ({navigation}) => {
               <View style={styles.bottamView}>
                 <View style={styles.driverNameView}>
                   <Text style={styles.driverNameText}>
+
+                    {console.log(decodedToken, "tokenn data")}
                     {decodedToken && decodedToken.driver_name}
                   </Text>
                 </View>
@@ -254,7 +282,7 @@ const TrustedDriver = ({navigation}) => {
                     onPress={() => dispatch(setModalVisible(true))}>
                     <View style={styles.otrView}>
                       <Text style={styles.bottamRightText}>
-                        {decodedToken && decodedToken.TrustedDriverData.otr}
+                        {decodedToken && decodedToken.TrustedDriverData.otr} %
                       </Text>
                       <Text style={styles.bottamRightText}>OTR</Text>
                     </View>
@@ -346,6 +374,9 @@ const TrustedDriver = ({navigation}) => {
 
           <ViewAwarenessData />
 
+          {showBookingView && showBookingView === 1 ? (
+            <RoundTripBookingView />
+          ) : null}
           {/* Main Toggle Content */}
           <View style={styles.toggleContentContainer}>
             {mainToggleContent ? (
@@ -372,6 +403,7 @@ const TrustedDriver = ({navigation}) => {
         onBackdropPress={() => dispatch(setModalVisible(false))}
         animationIn={'fadeInDown'}
         animationOut={'fadeOutUp'}
+        style={{justifyContent: 'center', alignItems: 'center'}}
         isVisible={isModalVisible}>
         <OtrModal />
       </Modal>

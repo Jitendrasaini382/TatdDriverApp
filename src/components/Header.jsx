@@ -1,6 +1,6 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
-import {AppLogo} from '../assets/images';
+import {AppLogo, Headerlogo} from '../assets/images';
 import {AppFont} from '../assets/FontsFamily';
 import BackButton from './BackButton';
 import ExtraButtons from './ExtraButtons';
@@ -12,14 +12,16 @@ const Header = ({backButton, extraButton}) => {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.leftContent}>
-        <View style={styles.logoView}>
-          <Image source={AppLogo} />
-          <Text style={styles.logoText}>tat d</Text>
-        </View>
+        <Pressable
+          onPress={() => navigation.navigate('TrustedDriver')}
+          style={styles.logoView}>
+          <Image source={Headerlogo}  style={{resizeMode : "contain" , height:70, width:140}} />
+          {/* <Text style={styles.logoText}>tat d</Text> */}
+        </Pressable>
 
-        <View style={styles.logoBottom}>
+        {/* <View style={styles.logoBottom}>
           <Text style={styles.logoBottomText}>trusted & trained driver</Text>
-        </View>
+        </View> */}
       </View>
 
       {backButton ? <BackButton /> : extraButton ? <ExtraButtons /> : null}
@@ -49,9 +51,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 10,
+    marginLeft: 5,
     marginTop: 10,
-    marginBottom: -5,
   },
   logoText: {
     color: AppColors.mainColor,

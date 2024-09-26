@@ -22,6 +22,8 @@ import SelectYourCity from '../../screens/SelectYourDist';
 import AgentLeads from '../../screens/AgentLeads';
 import DriverNotifications from '../../screens/DriverNotification';
 import ClearMyDuePayment from '../../screens/ClearMyDuePayment';
+import SplashScreen from '../../screens/SplashScreen';
+import { AppColors } from '../../assets/Colors';
 
 const Stack = createStackNavigator();
 
@@ -30,7 +32,9 @@ const PrivateRoute = () => {
     <>
       <StatusBar
         animated={true}
-        backgroundColor="#d1bcff"
+        // backgroundColor="#d1bcff"
+        backgroundColor={AppColors.mainColor}
+
         barStyle="dark-content"
         showHideTransition="slide"
         hidden={false}
@@ -43,6 +47,7 @@ const PrivateRoute = () => {
             headerShown: false,
           }}>
           <Stack.Screen name="TrustedDriver" component={TrustedDriver} />
+          <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen
             name="DriverNotifications"
             component={DriverNotifications}

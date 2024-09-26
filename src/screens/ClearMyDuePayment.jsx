@@ -36,8 +36,6 @@ const ClearMyDue = () => {
   const [dummyData, setDummyData] = useState([]);
   const [totalAmount, setTotalAmount] = useState(1000);
 
-
-
   // const data = [
   //   {
   //     bookingId: '430664',
@@ -65,29 +63,29 @@ const ClearMyDue = () => {
   //   // Simulating API call to fetch data
   //   // const fetchData = async () => {
   //     // Replace this with actual API call
-      // const data = [
-      //   {
-      //     bookingId: '430664',
-      //     scheduleDate: '26 Jun, 2024 10:30:00',
-      //     status: 'Cash With Driver',
-      //     amount: '-307',
-      //     gst: '20',
-      //   },
-      //   {
-      //     bookingId: '430665',
-      //     scheduleDate: '27 Jun, 2024 11:30:00',
-      //     status: 'Cash With Driver',
-      //     amount: '-410',
-      //     gst: '40',
-      //   },
-      //   {
-      //     bookingId: '430666',
-      //     scheduleDate: '28 Jun, 2024 09:30:00',
-      //     status: 'Cash With Driver',
-      //     amount: '-210',
-      //     gst: '90',
-      //   },
-      // ];
+  // const data = [
+  //   {
+  //     bookingId: '430664',
+  //     scheduleDate: '26 Jun, 2024 10:30:00',
+  //     status: 'Cash With Driver',
+  //     amount: '-307',
+  //     gst: '20',
+  //   },
+  //   {
+  //     bookingId: '430665',
+  //     scheduleDate: '27 Jun, 2024 11:30:00',
+  //     status: 'Cash With Driver',
+  //     amount: '-410',
+  //     gst: '40',
+  //   },
+  //   {
+  //     bookingId: '430666',
+  //     scheduleDate: '28 Jun, 2024 09:30:00',
+  //     status: 'Cash With Driver',
+  //     amount: '-210',
+  //     gst: '90',
+  //   },
+  // ];
   //     setDummyData(data);
   //     // calculateTotalAmount(data);
   //   };

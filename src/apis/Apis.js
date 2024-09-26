@@ -1,11 +1,9 @@
 import _Fetch from './Service';
 
+// export const API_BASE_URL = "https://www.tatd.in/app-api/driver/"
+
 // https://www.tatd.in/app-api/driver/login/driver-login.php?
 
-// export const DRIVER_LOGIN = body => {
-//   console.log(body, 'Driver Login Body');
-//   return _Fetch('POST', 'login/driver-login.php', {...body}, {});
-// };
 
 export const DRIVER_LOGIN = body => {
   return _Fetch('POST', 'login/driver-login.php', body, {});
@@ -18,12 +16,17 @@ export const VERIFY_OTP_LOGIN = body => {
   return _Fetch('POST', 'login/verify-otp-login.php', {...body}, {});
 };
 
-// https://www.tatd.in/app-api/driver/login/refresh_token.php
 
-// export const REFRESH_TOKEN = body => {
-//   console.log(body, 'REFRESH_TOKEN Body');
-//   return _Fetch('GET', 'login/refresh_token.php', {...body}, {});
-// };
+
+
+// https://www.tatd.in/app-api/driver/login/save-fcm-token-api.php
+
+export const GET_FCM_TOKEN = (body) =>{
+    console.log(body, 'Get FCM Token');
+    return _Fetch('POST', 'login/save-fcm-token-api.php', {...body}, {});
+}
+
+
 
 // https://www.tatd.in/app-api/driver/faq/driver-faq-api.php
 
@@ -122,9 +125,7 @@ export const EXPRESS_BOOKING_POPUP = body => {
   return _Fetch(
     'GET',
     'trusted-driver/express-booking-popup.php',
-    {
-      ...body,
-    },
+    {...body},
     {},
   );
 };

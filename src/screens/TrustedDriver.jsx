@@ -60,6 +60,8 @@ const TrustedDriver = ({navigation}) => {
   const {decodedToken, setDecodedToken, jwtToken} =
     useContext(TokenConstextApi);
   const [isRfdOn, setIsRfdOn] = useState(false);
+  const [popupData, setPopupData] = useState(0);
+
   const [loginButton, setLoginButton] = useState({
     action: 'login_button',
     submitR: '1',
@@ -79,26 +81,23 @@ const TrustedDriver = ({navigation}) => {
     myBookingModal,
   } = useSelector(state => state.trustedDriver);
 
-  // console.log(jwtToken, 'trusted Context Jwt Token');
 
   useEffect(() => {
-    // Request notification permission when the user lands on the home screen after login
     NotificationService.requestUserPermission();
 
-    // Optional: Listen for token refresh
     const unsubscribe = NotificationService.onTokenRefresh();
 
-    return () => unsubscribe(); // Cleanup on unmount
+    return () => unsubscribe();
   }, []);
 
   useEffect(async () => {
-    await requestNotificationPermission(); // Request notification permission for Android 13+
+    await requestNotificationPermission();
     await checkVibrationPermission();
   }, []);
 
   const decodeData = token => {
     const decoded = jwtDecode(token);
-    console.log(decoded.data, '>>>>>>>>>>>>>>>>');
+    // console.log(decoded.data, '>>>>>>>>>>>>>>>>');
     setDecodedToken(decoded.data);
   };
 
@@ -106,8 +105,6 @@ const TrustedDriver = ({navigation}) => {
     decodeData(jwtToken);
   }, [jwtToken]);
 
-  const [popupData, setPopupData] = useState(0);
-  // console.log(jwtToken, 'jwt Token Trusted');
 
   const getPopup = async () => {
     try {
@@ -116,12 +113,10 @@ const TrustedDriver = ({navigation}) => {
       });
       console.log(response, 'GET_POPUP  Response ');
       if (response.express_booking_popup_flag == 1) {
-        console.log('runnnnnnnnn 1111');
         dispatch(setExpressBookingModal(true));
-        // setExpressBookingModal(true);
         setPopupData(response.express_booking_popup_flag);
       } else {
-        // console.log('runnnnnnnnn 0000');
+        
         dispatch(setExpressBookingModal(false));
       }
     } catch (error) {
@@ -133,7 +128,6 @@ const TrustedDriver = ({navigation}) => {
     getPopup();
   }, []);
 
-  // const [incityOneWayBooking, setIncityOneWayBooking] = useState([]);
   const [showBookingView, setBookingView] = useState(1);
 
   // const getOnDemandBooking = async data => {
@@ -151,17 +145,17 @@ const TrustedDriver = ({navigation}) => {
   //   }
   // };
 
-  useEffect(() => {
-    // getOnDemandBooking({
-    //   action: 'ondemand_outstation_bookings',
-    // });
-    // getOnDemandBooking({
-    //   action: 'incity_roundtrip_booking',
-    // });
-    // getOnDemandBooking({
-    //   action: 'incity_oneway_booking',
-    // });
-  }, []);
+  // useEffect(() => {
+  //   getOnDemandBooking({
+  //     action: 'ondemand_outstation_bookings',
+  //   });
+  //   getOnDemandBooking({
+  //     action: 'incity_roundtrip_booking',
+  //   });
+  //   getOnDemandBooking({
+  //     action: 'incity_oneway_booking',
+  //   });
+  // }, []);
 
   const handleToggleButton = () => {
     const newRfdValue = isRfdOn ? '0' : '1';

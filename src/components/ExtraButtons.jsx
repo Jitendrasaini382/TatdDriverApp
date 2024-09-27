@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {AppColors} from '../assets/Colors';
@@ -10,10 +10,14 @@ const ExtraButtons = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
+  const openNeedHelp = () => {
+    Linking.openURL('https://www.tatd.in/tickets-driver.php');
+  };
+
   return (
     <View style={styles.mainView}>
       <View style={styles.leftView}>
-        <TouchableOpacity onPress={() => navigation.navigate('TicketsDriver')}>
+        <TouchableOpacity onPress={openNeedHelp}>
           <Text style={styles.leftText}>Need Help ?</Text>
         </TouchableOpacity>
       </View>

@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
   Dimensions,
   ScrollView,
@@ -38,7 +37,7 @@ const DriverLogin = () => {
     setField({mobile: text});
   };
 
-  // backButton not working Stop
+  // backButton working Stop
 
   // useEffect(()=>{
   //   const backAction = () => {
@@ -60,19 +59,17 @@ const DriverLogin = () => {
         return;
       } else if (field.mobile.length !== 10) {
         setError('Please Enter 10 digit Mobile Number');
-        // Alert.alert('Please Enter Valid Mobile No.');
         return;
       }
       setError(null);
       setLoader(true);
       const response = await DRIVER_LOGIN(field);
-      // console.log(response, 'rrrrrr');
       if (response.status_code == '200') {
         setLoader(false);
         navigation.navigate('CheckDriverOtp', {mobile: field.mobile});
       }
     } catch (err) {
-      setLoader(false)
+      setLoader(false);
       console.log(err, 'err');
     }
   };
@@ -80,7 +77,7 @@ const DriverLogin = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header backButton={false} />
-      <ScrollView contentContainerStyle={styles.scrollViewContent} >
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>
             <View style={styles.mainView}>
@@ -138,25 +135,6 @@ const DriverLogin = () => {
                     onBlur={() => setIsFocused(false)}
                   />
                 </View>
-
-                {/* <View style={[styles.inputView,
-                      isFocused || field.mobile ? styles.inputFocused : null,
-                ]}>
-                  <TextInput
-                    style={[styles.inputText,
-                      isFocused || field.mobile ? styles.inputFocused : null,
-
-                    ]}
-                    onChangeText={handleChange}
-                    // value={field.mobile}
-                    keyboardType="numeric"
-                    placeholder="Enter Driver Mobile Number"
-                    placeholderTextColor="rgb(42, 42, 42)"
-                    onFocus={() => setIsFocused(true)}
-                    onPressIn={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
-                  />
-                </View> */}
               </View>
               <View style={{marginHorizontal: moderateScale(30)}}>
                 <Text style={{color: 'red', fontSize: 12}}>{error}</Text>
@@ -167,7 +145,7 @@ const DriverLogin = () => {
                 disabled={loader}
                 onPress={sendOtp}>
                 <Text style={styles.btnText}>
-                  {loader ? 'Please Wait' : 'Submit'}
+                  {loader ? 'Sending OTP' : 'Submit'}
                 </Text>
               </Pressable>
             </View>
@@ -181,16 +159,16 @@ const DriverLogin = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor : AppColors.white
+    backgroundColor: AppColors.white,
   },
-  
+
   scrollViewContent: {
     flexGrow: 1,
   },
   mainContainer: {
     flex: 1,
     backgroundColor: AppColors.white,
-    marginVertical: 1
+    marginVertical: 1,
   },
   contentContainer: {
     flex: 1,

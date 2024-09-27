@@ -81,7 +81,6 @@ const TrustedDriver = ({navigation}) => {
     myBookingModal,
   } = useSelector(state => state.trustedDriver);
 
-
   useEffect(() => {
     NotificationService.requestUserPermission();
 
@@ -105,7 +104,6 @@ const TrustedDriver = ({navigation}) => {
     decodeData(jwtToken);
   }, [jwtToken]);
 
-
   const getPopup = async () => {
     try {
       const response = await EXPRESS_BOOKING_POPUP({
@@ -116,7 +114,6 @@ const TrustedDriver = ({navigation}) => {
         dispatch(setExpressBookingModal(true));
         setPopupData(response.express_booking_popup_flag);
       } else {
-        
         dispatch(setExpressBookingModal(false));
       }
     } catch (error) {
@@ -166,7 +163,7 @@ const TrustedDriver = ({navigation}) => {
       LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
         .then(response => {
           console.log(response, 'LOGIN API RESPONSE');
-          navigation.navigate("TrustedDriver")
+          navigation.navigate('TrustedDriver');
           Alert.alert(response.data?.message);
         })
         .catch(err => {
@@ -266,8 +263,6 @@ const TrustedDriver = ({navigation}) => {
               <View style={styles.bottamView}>
                 <View style={styles.driverNameView}>
                   <Text style={styles.driverNameText}>
-
-                    {console.log(decodedToken, "tokenn data")}
                     {decodedToken && decodedToken.driver_name}
                   </Text>
                 </View>

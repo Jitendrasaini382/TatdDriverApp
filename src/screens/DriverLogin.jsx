@@ -72,6 +72,7 @@ const DriverLogin = () => {
         navigation.navigate('CheckDriverOtp', {mobile: field.mobile});
       }
     } catch (err) {
+      setLoader(false)
       console.log(err, 'err');
     }
   };
@@ -234,8 +235,8 @@ const styles = StyleSheet.create({
     height: 0,
     backgroundColor: 'transparent',
     borderStyle: 'solid',
-    borderRightWidth: 12,
-    borderTopWidth: 12,
+    borderRightWidth: 12.5,
+    borderTopWidth: 12.5,
     borderRightColor: 'transparent',
     borderTopColor: AppColors.white,
   },

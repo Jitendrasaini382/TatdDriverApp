@@ -1,18 +1,30 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Linking,
+} from 'react-native';
 import {RightArrow} from '../assets/images';
 import {AppColors} from '../assets/Colors';
 import {useDispatch} from 'react-redux';
 import {setMyBookingModal} from '../redux/slices/trustedDriverSlice';
 import {MY_BOOKING_TOP_NAVBAR} from '../apis/Apis';
 
-const MyBookingModal = ({}) => {
+const MyBookingModal = ({navigation}) => {
   const [myBookingStyle, setMyBookingStyle] = useState(true);
-  const navigation = useNavigation();
   const dispatch = useDispatch();
   const [myBookingData, setMyBookingData] = useState({});
+
+  useEffect(() => {
+    getMyAllBookings();
+  }, []);
+
+  const openMyUrl = url => {
+    Linking.openURL(url);
+  };
 
   const getMyAllBookings = () => {
     MY_BOOKING_TOP_NAVBAR({
@@ -26,10 +38,6 @@ const MyBookingModal = ({}) => {
         console.log(err, 'MY_BOOKING_TOP_NAVBAR erroraaaaaaaaa');
       });
   };
-
-  useEffect(() => {
-    getMyAllBookings();
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -66,11 +74,7 @@ const MyBookingModal = ({}) => {
               myBookingData.bookings.map((booking, index) => (
                 <TouchableOpacity
                   key={index}
-                  onPress={() =>
-                    navigation.navigate('DutyReportUpdate', {
-                      bookingId: booking.booking_id,
-                    })
-                  }>
+                  onPress={() => openMyUrl(booking.url)}>
                   <View
                     style={[styles.bookingCard, {backgroundColor: booking.bg}]}>
                     <Text style={[styles.bookingText, {color: booking.color}]}>
@@ -93,7 +97,9 @@ const MyBookingModal = ({}) => {
         <>
           <View style={styles.bookingContainer}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('ClearMyDuePayment')}>
+              onPress={() =>
+                openMyUrl('https://www.tatd.in/clear-my-due-payment.php')
+              }>
               <View style={[styles.bookingCard, styles.activeBookingCard]}>
                 <Text style={[styles.bookingText, styles.activeBookingText]}>
                   {myBookingData.clear_my_due_txt}
@@ -192,13 +198,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   activeBookingCard: {
-    backgroundColor: AppColors.mainColor,
+    backgroundColor: AppColors.white,
   },
   bookingText: {
     color: AppColors.mainColor,
   },
   activeBookingText: {
-    color: AppColors.white,
+    color: AppColors.mainColor,
+    fontSize: 15,
+    fontWeight: '600',
   },
   arrowIcon: {
     height: 20,

@@ -55,7 +55,7 @@ const CheckAgentOtp = ({navigation, route}) => {
       // console.log('OTP verification response:', response);
 
       // if (response.status_code == 200) {
-      navigation.navigate('AgentPanel');
+      // navigation.navigate('AgentPanel');
       // } else {
       // setError('Invalid response from server');
       // }

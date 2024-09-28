@@ -8,8 +8,6 @@
 //   const [isAuthenticated, setIsAuthenticated] = useState(false);
 //   const [isLoading, setIsLoading] = useState(true);
 
-  
-
 //   const checkToken = async () => {
 //     try {
 //       const token = await AsyncStorage.getItem('jwt');
@@ -50,21 +48,18 @@
 
 // export default Routes;
 
-import { useContext } from "react"
-import PrivateRoute from "./private"
-import PublicRoute from "./public"
-import { TokenConstextApi } from "../context/GlobalContext"
+import {useContext} from 'react';
+import PrivateRoute from './private';
+import PublicRoute from './public';
+import {TokenConstextApi} from '../context/GlobalContext';
 
-const Routes = ()=>{
-
-  const{jwtToken} = useContext(TokenConstextApi)
-  const token = jwtToken
-  if(token){
-    return<PrivateRoute/>
+const Routes = () => {
+  const {jwtToken} = useContext(TokenConstextApi);
+  const token = jwtToken;
+  if (token) {
+    return <PrivateRoute />;
+  } else {
+    return <PublicRoute />;
   }
-  else{
-    return <PublicRoute/>
-  }
-
-}
-export default Routes
+};
+export default Routes;

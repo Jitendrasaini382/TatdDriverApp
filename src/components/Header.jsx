@@ -1,4 +1,4 @@
-import {Image, Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
 import React, {useState} from 'react';
 import {AppLogo, Headerlogo} from '../assets/images';
 import {AppFont} from '../assets/FontsFamily';
@@ -15,13 +15,11 @@ const Header = ({backButton, extraButton}) => {
         <Pressable
           onPress={() => navigation.navigate('TrustedDriver')}
           style={styles.logoView}>
-          <Image source={Headerlogo}  style={{resizeMode : "contain" , height:70, width:140}} />
-          {/* <Text style={styles.logoText}>tat d</Text> */}
+          <Image
+            source={Headerlogo}
+            style={{resizeMode: 'contain', height: 70, width: 140}}
+          />
         </Pressable>
-
-        {/* <View style={styles.logoBottom}>
-          <Text style={styles.logoBottomText}>trusted & trained driver</Text>
-        </View> */}
       </View>
 
       {backButton ? <BackButton /> : extraButton ? <ExtraButtons /> : null}

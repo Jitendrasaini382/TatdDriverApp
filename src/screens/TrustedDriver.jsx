@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   SafeAreaView,
@@ -9,6 +9,7 @@ import {
   View,
   Dimensions,
   Alert,
+  Linking,
 } from 'react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -59,14 +60,7 @@ const TrustedDriver = ({navigation}) => {
   const dispatch = useDispatch();
   const {decodedToken, setDecodedToken, jwtToken} =
     useContext(TokenConstextApi);
-  const [isRfdOn, setIsRfdOn] = useState(false);
   const [popupData, setPopupData] = useState(0);
-
-  const [loginButton, setLoginButton] = useState({
-    action: 'login_button',
-    submitR: '1',
-    rfd: '0',
-  });
 
   const {
     currentView,
@@ -81,17 +75,132 @@ const TrustedDriver = ({navigation}) => {
     myBookingModal,
   } = useSelector(state => state.trustedDriver);
 
-  useEffect(() => {
-    NotificationService.requestUserPermission();
+  // useEffect(() => {
+  //   NotificationService.requestUserPermission();
 
-    const unsubscribe = NotificationService.onTokenRefresh();
+  //   const unsubscribe = NotificationService.onTokenRefresh();
 
-    return () => unsubscribe();
-  }, []);
+  //   return () => unsubscribe();
+  // }, []);
 
   useEffect(async () => {
     await requestNotificationPermission();
     await checkVibrationPermission();
+  }, []);
+  const openMyUrl = url => {
+    Linking.openURL(url);
+  };
+
+  // const [loginButton, setLoginButton] = useState({
+  //   action: 'login_button',
+  //   submitR: '1',
+  //   rfd: '0',
+  // });
+  // const [isRfdOn, setIsRfdOn] = useState(false); // State to track if the toggle is on
+  // const [isDisabled, setIsDisabled] = useState(false); // State to disable the toggle button
+  // const timerRef = useRef(null); // Ref to store the timeout
+
+  // const handleToggleButton = () => {
+  //   if (isRfdOn && isDisabled) {
+  //     Alert.alert('Please wait 30 minutes');
+  //     return;
+  //   }
+
+  //   const newRfdValue = isRfdOn ? '0' : '1';
+  //   setIsRfdOn(!isRfdOn); // Update the toggle state
+  //   setLoginButton(prevState => ({
+  //     ...prevState,
+  //     rfd: newRfdValue,
+  //   })); // Update the loginButton state
+
+  //   if (newRfdValue === '1') {
+  //     // Disable the button for 30 minutes
+  //     // setIsDisabled(true);
+
+  //     // Call the LOGIN_BUTTON function (replace with your actual API call)
+  //     LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
+  //       .then(response => {
+  //         console.log(response, 'LOGIN API RESPONSE');
+  //         Alert.alert(response.data?.message);
+  //       })
+  //       .catch(err => {
+  //         console.log(err, 'LOGIN API ERROR');
+  //       });
+
+  //     // Set a 30-minute timeout to enable the toggle again
+  //     timerRef.current = setTimeout(() => {
+  //       setIsRfdOn(false); // Automatically turn off the toggle after 30 minutes
+  //       setLoginButton(prevState => ({
+  //         ...prevState,
+  //         rfd: '0',
+  //       }));
+  //       setIsDisabled(false); // Re-enable the toggle button after 30 minutes
+  //       Alert.alert('Toggle automatically turned off after 30 minutes');
+  //     }, 1800000); // 30 minutes in milliseconds
+  //   } else {
+  //     // If toggled OFF manually, clear the existing timeout (if any)
+  //     if (timerRef.current) {
+  //       clearTimeout(timerRef.current);
+  //       timerRef.current = null;
+  //     }
+  //   }
+  // };
+
+  // // useEffect to clear the timeout if the component is unmounted or re-rendered
+  // useEffect(() => {
+  //   return () => {
+  //     // Cleanup the timer when the component unmounts
+  //     if (timerRef.current) {
+  //       clearTimeout(timerRef.current);
+  //     }
+  //   };
+  // }, []);
+
+      const [isRfdOn, setIsRfdOn] = useState(false);
+    const [loginButton, setLoginButton] = useState({
+      action: 'login_button',
+      submitR: '1',
+      rfd: '0',
+    });
+  const timeoutRef = useRef(null);
+
+  const handleToggleButton = () => {
+    const newRfdValue = isRfdOn ? '0' : '1';
+    setIsRfdOn(!isRfdOn);
+    setLoginButton(prevState => ({...prevState, rfd: newRfdValue}));
+
+    if (newRfdValue == '1') {
+      // Start the 30 minute timer
+      timeoutRef.current = setTimeout(() => {
+        setIsRfdOn(false);
+        setLoginButton(prevState => ({...prevState, rfd: '0'}));
+        Alert.alert('Toggle switched off after 30 minutes');
+      }, 1800000); // 30 minutes in milliseconds (1800000 ms)
+
+      LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
+        .then(response => {
+          console.log(response, 'LOGIN API RESPONSE');
+          Alert.alert(response.message);
+        })
+        .catch(err => {
+          console.log(err, 'LOGIN API ERROR');
+        });
+    } else {
+      // If toggled off before 30 minutes, clear the timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      // Cleanup the timeout when the component is unmounted
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, []);
 
   const decodeData = token => {
@@ -103,6 +212,10 @@ const TrustedDriver = ({navigation}) => {
   useEffect(() => {
     decodeData(jwtToken);
   }, [jwtToken]);
+
+  // useEffect(() => {
+  //   getPopup();
+  // }, []);
 
   const getPopup = async () => {
     try {
@@ -120,10 +233,6 @@ const TrustedDriver = ({navigation}) => {
       console.log(error, 'GET_POPUPGET_POPUP Error');
     }
   };
-
-  useEffect(() => {
-    getPopup();
-  }, []);
 
   const [showBookingView, setBookingView] = useState(1);
 
@@ -153,24 +262,24 @@ const TrustedDriver = ({navigation}) => {
   //     action: 'incity_oneway_booking',
   //   });
   // }, []);
+  ///////////
+  // const handleToggleButton = () => {
+  //   const newRfdValue = isRfdOn ? '0' : '1';
+  //   setIsRfdOn(!isRfdOn);
+  //   setLoginButton(prevState => ({...prevState, rfd: newRfdValue}));
 
-  const handleToggleButton = () => {
-    const newRfdValue = isRfdOn ? '0' : '1';
-    setIsRfdOn(!isRfdOn);
-    setLoginButton(prevState => ({...prevState, rfd: newRfdValue}));
-
-    if (newRfdValue === '1') {
-      LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
-        .then(response => {
-          console.log(response, 'LOGIN API RESPONSE');
-          navigation.navigate('TrustedDriver');
-          Alert.alert(response.data?.message);
-        })
-        .catch(err => {
-          console.log(err, 'LOGIN API ERROR');
-        });
-    }
-  };
+  //   if (newRfdValue === '1') {
+  //     LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
+  //       .then(response => {
+  //         console.log(response, 'LOGIN API RESPONSE');
+  //         // navigation.navigate('TrustedDriver');
+  //         Alert.alert(response.data?.message);
+  //       })
+  //       .catch(err => {
+  //         console.log(err, 'LOGIN API ERROR');
+  //       });
+  //   }
+  // };
 
   const Item = [
     {
@@ -254,6 +363,7 @@ const TrustedDriver = ({navigation}) => {
                       offColor={AppColors.greyColor}
                       size="medium"
                       onToggle={handleToggleButton}
+                      // disabled={isDisabled}
                     />
                   </View>
                 </View>
@@ -327,7 +437,7 @@ const TrustedDriver = ({navigation}) => {
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.navigate('MyBonusStatusHistory')}
+                // onPress={() => navigation.navigate('MyBonusStatusHistory')}
                 style={styles.bottamContent2}>
                 <Text style={styles.mainText}>My Bonus</Text>
                 <Text style={styles.textIcon}>
@@ -343,7 +453,10 @@ const TrustedDriver = ({navigation}) => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.navigate('ClearMyDuePayment')}
+                onPress={() =>
+                  openMyUrl('https://www.tatd.in/clear-my-due-payment.php')
+                }
+                // onPress={() => navigation.navigate('ClearMyDuePayment')}
                 style={styles.bottamContent4}>
                 <Text style={styles.mainText}>Clear My Due</Text>
                 <Text style={styles.textIcon}>
@@ -361,18 +474,19 @@ const TrustedDriver = ({navigation}) => {
             onToggle={label => dispatch(setCurrentView(label))}
           />
 
-          <ViewAwarenessData />
+          {/* <ViewAwarenessData /> */}
 
-          {showBookingView && showBookingView === 1 ? (
+          {/* {showBookingView && showBookingView === 1 ? (
             <RoundTripBookingView />
-          ) : null}
+          ) : null} */}
           {/* Main Toggle Content */}
           <View style={styles.toggleContentContainer}>
-            {mainToggleContent ? (
-              <BookingView />
-            ) : videosContent ? (
-              <TrainingVideo data={Item} />
-            ) : null}
+            {
+              // mainToggleContent ? (
+              //   <BookingView />
+              // ) :
+              videosContent ? <TrainingVideo data={Item} /> : null
+            }
           </View>
         </View>
       </ScrollView>

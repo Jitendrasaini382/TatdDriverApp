@@ -30,17 +30,17 @@ export const GET_FCM_TOKEN = (body) =>{
 
 // https://www.tatd.in/app-api/driver/faq/driver-faq-api.php
 
-export const DRIVER_FAQ = body => {
-  console.log(body, 'DRIVER_FAQ Body');
-  return _Fetch('POST', 'faq/driver-faq-api.php', {...body}, {});
-};
+// export const DRIVER_FAQ = body => {
+//   console.log(body, 'DRIVER_FAQ Body');
+//   return _Fetch('POST', 'faq/driver-faq-api.php', {...body}, {});
+// };
 
 // https://www.tatd.in/app-api/driver/tickets/tickets-driver-api.php
 
-export const TICKETS_DRIVER = body => {
-  console.log(body, 'CREATE_TICKET_DRIVER Body');
-  return _Fetch('POST', 'tickets/tickets-driver-api.php', {...body}, {});
-};
+// export const TICKETS_DRIVER = body => {
+//   console.log(body, 'CREATE_TICKET_DRIVER Body');
+//   return _Fetch('POST', 'tickets/tickets-driver-api.php', {...body}, {});
+// };
 
 // https://www.tatd.in/app-api/driver/trusted-driver/login-button-trusted.php
 

@@ -70,27 +70,32 @@ const MyBookingModal = ({navigation}) => {
       {myBookingStyle ? (
         <>
           <View style={styles.bookingContainer}>
-            {myBookingData.bookings && myBookingData.bookings.length > 0 ? (
-              myBookingData.bookings.map((booking, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => openMyUrl(booking.url)}>
-                  <View
-                    style={[styles.bookingCard, {backgroundColor: booking.bg}]}>
-                    <Text style={[styles.bookingText, {color: booking.color}]}>
-                      {booking.booking_id} - {booking.booking_date}
-                    </Text>
-                    <Image
-                      resizeMode="center"
-                      style={styles.arrowIcon}
-                      source={RightArrow}
-                    />
-                  </View>
-                </TouchableOpacity>
-              ))
-            ) : (
-              <Text>No bookings available</Text>
-            )}
+            {
+              myBookingData.bookings && myBookingData.bookings.length > 0
+                ? myBookingData.bookings.map((booking, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => openMyUrl(booking.url)}>
+                      <View
+                        style={[
+                          styles.bookingCard,
+                          {backgroundColor: booking.bg},
+                        ]}>
+                        <Text
+                          style={[styles.bookingText, {color: booking.color}]}>
+                          {booking.booking_id} - {booking.booking_date}
+                        </Text>
+                        <Image
+                          resizeMode="center"
+                          style={styles.arrowIcon}
+                          source={RightArrow}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  ))
+                : null
+              // <Text>No bookings available</Text>
+            }
           </View>
         </>
       ) : (

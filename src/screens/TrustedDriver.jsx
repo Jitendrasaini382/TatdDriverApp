@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   SafeAreaView,
@@ -10,6 +10,7 @@ import {
   Dimensions,
   Alert,
   Linking,
+  RefreshControl,
 } from 'react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -50,6 +51,7 @@ import {
   checkVibrationPermission,
   requestNotificationPermission,
 } from '../utils/permissions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -61,6 +63,7 @@ const TrustedDriver = ({navigation}) => {
   const {decodedToken, setDecodedToken, jwtToken} =
     useContext(TokenConstextApi);
   const [popupData, setPopupData] = useState(0);
+  const [refreshing, setRefreshing] = useState(false)
 
   const {
     currentView,
@@ -75,17 +78,10 @@ const TrustedDriver = ({navigation}) => {
     myBookingModal,
   } = useSelector(state => state.trustedDriver);
 
-  // useEffect(() => {
-  //   NotificationService.requestUserPermission();
-
-  //   const unsubscribe = NotificationService.onTokenRefresh();
-
-  //   return () => unsubscribe();
-  // }, []);
-
   useEffect(async () => {
     await requestNotificationPermission();
     await checkVibrationPermission();
+    // await AsyncStorage.removeItem('jwt')
   }, []);
   const openMyUrl = url => {
     Linking.openURL(url);
@@ -156,12 +152,12 @@ const TrustedDriver = ({navigation}) => {
   //   };
   // }, []);
 
-      const [isRfdOn, setIsRfdOn] = useState(false);
-    const [loginButton, setLoginButton] = useState({
-      action: 'login_button',
-      submitR: '1',
-      rfd: '0',
-    });
+  const [isRfdOn, setIsRfdOn] = useState(false);
+  const [loginButton, setLoginButton] = useState({
+    action: 'login_button',
+    submitR: '1',
+    rfd: '0',
+  });
   const timeoutRef = useRef(null);
 
   const handleToggleButton = () => {
@@ -169,29 +165,30 @@ const TrustedDriver = ({navigation}) => {
     setIsRfdOn(!isRfdOn);
     setLoginButton(prevState => ({...prevState, rfd: newRfdValue}));
 
-    if (newRfdValue == '1') {
-      // Start the 30 minute timer
-      timeoutRef.current = setTimeout(() => {
-        setIsRfdOn(false);
-        setLoginButton(prevState => ({...prevState, rfd: '0'}));
-        Alert.alert('Toggle switched off after 30 minutes');
-      }, 1800000); // 30 minutes in milliseconds (1800000 ms)
+    // if (newRfdValue == '1') {
+    //   // Start the 30 minute timer
+    //   timeoutRef.current = setTimeout(() => {
+    //     setIsRfdOn(false);
+    //     setLoginButton(prevState => ({...prevState, rfd: '0'}));
+    //     Alert.alert('Toggle switched off after 30 minutes');
+    //   }, 1800000); // 30 minutes in milliseconds (1800000 ms)
 
-      LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
-        .then(response => {
-          console.log(response, 'LOGIN API RESPONSE');
-          Alert.alert(response.message);
-        })
-        .catch(err => {
-          console.log(err, 'LOGIN API ERROR');
-        });
-    } else {
-      // If toggled off before 30 minutes, clear the timeout
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
-    }
+    LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
+      .then(response => {
+        console.log(response, 'LOGIN API RESPONSE');
+        Alert.alert(response.message, response.data.redirect);
+      })
+      .catch(err => {
+        console.log(err, 'LOGIN API ERROR');
+      });
+    // }
+    // else {
+    //   // If toggled off before 30 minutes, clear the timeout
+    //   if (timeoutRef.current) {
+    //     clearTimeout(timeoutRef.current);
+    //     timeoutRef.current = null;
+    //   }
+    // }
   };
 
   useEffect(() => {
@@ -304,12 +301,23 @@ const TrustedDriver = ({navigation}) => {
     },
   ];
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    // Promise.all([]).then(() =>
+      setRefreshing(false)
+    // );
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header extraButton={true} />
       {myBookingModal && <MyBookingModal />}
 
-      <ScrollView>
+      <ScrollView 
+      
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
         <View style={styles.mainContainer}>
           {/* Marquee View */}
           <View style={styles.marqueeView}>
@@ -336,7 +344,10 @@ const TrustedDriver = ({navigation}) => {
                 </View>
                 <View style={styles.topRight}>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('DriverEarning')}>
+                    // onPress={() => navigation.navigate('DriverEarning')}
+                    onPress={() =>
+                      openMyUrl('https://www.tatd.in/driver-earning.php')
+                    }>
                     <View style={styles.earningView}>
                       <Text style={styles.rupeeIcon}>
                         <Icon name="rupee" size={responsiveSize(8)} />{' '}
@@ -346,7 +357,11 @@ const TrustedDriver = ({navigation}) => {
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('DriverNotifications')}>
+                    onPress={() =>
+                      openMyUrl('https://www.tatd.in/driver-notifications.php')
+                    }
+                    // onPress={() => navigation.navigate('DriverNotifications')}
+                  >
                     <View style={styles.notification}>
                       <Icon
                         color={AppColors.white}
@@ -437,7 +452,7 @@ const TrustedDriver = ({navigation}) => {
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
-                // onPress={() => navigation.navigate('MyBonusStatusHistory')}
+                onPress={() => navigation.navigate('MyBonusStatusHistory')}
                 style={styles.bottamContent2}>
                 <Text style={styles.mainText}>My Bonus</Text>
                 <Text style={styles.textIcon}>
@@ -475,19 +490,15 @@ const TrustedDriver = ({navigation}) => {
           />
 
           {/* <ViewAwarenessData /> */}
+          {/* <RoundTripBookingView /> */}
+          {/* <BookingView /> */}
 
-          {/* {showBookingView && showBookingView === 1 ? (
-            <RoundTripBookingView />
-          ) : null} */}
+          
           {/* Main Toggle Content */}
-          <View style={styles.toggleContentContainer}>
-            {
-              // mainToggleContent ? (
-              //   <BookingView />
-              // ) :
-              videosContent ? <TrainingVideo data={Item} /> : null
-            }
-          </View>
+          <>
+          {isRfdOn ? <BookingView /> : null}
+          </>
+          {videosContent ? <TrainingVideo data={Item} /> : null}
         </View>
       </ScrollView>
 

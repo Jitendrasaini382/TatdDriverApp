@@ -204,6 +204,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: AppColors.mainColor,
     marginBottom: 10,
+    marginHorizontal:5
   },
   header: {
     flexDirection: 'row',

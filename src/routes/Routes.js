@@ -57,6 +57,8 @@ const Routes = () => {
   const {jwtToken} = useContext(TokenConstextApi);
   const token = jwtToken;
   if (token) {
+    console.log(token, "jwt token")
+    
     return <PrivateRoute />;
   } else {
     return <PublicRoute />;

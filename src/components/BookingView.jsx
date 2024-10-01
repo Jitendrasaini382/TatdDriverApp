@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   Image,
   StyleSheet,
@@ -6,23 +6,31 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  Pressable,
+  Linking,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {AppColors} from '../assets/Colors';
-import {RightArrow} from '../assets/images';
+import {LeftArrow, RightArrow} from '../assets/images';
 import {AppFont} from '../assets/FontsFamily';
 import Modal from 'react-native-modal';
 import MyBookingAgencyModal from './modal/MyBookingAgencyModal';
 import RoundTripBookingView from './bookingsView/RoundTripBookingView';
 import PermanentBookingView from './bookingsView/PermanentBookingView';
 import FlexibleBookingView from './bookingsView/FlexibleBookingView';
-import { useDispatch } from 'react-redux';
-import { setMyBookingAgencyModal } from '../redux/slices/trustedDriverSlice';
+import {useDispatch} from 'react-redux';
+import {setMyBookingAgencyModal} from '../redux/slices/trustedDriverSlice';
+import {TokenConstextApi} from '../context/GlobalContext';
+import {Buffer} from 'buffer';
 
 const {width} = Dimensions.get('window');
 
 const BookingView = () => {
   const dispatch = useDispatch();
+  const {decodedToken, setDecodedToken, jwtToken} =
+    useContext(TokenConstextApi);
+  console.log(decodedToken, 'datatataatatattatatat');
 
   <Modal
     backdropOpacity={0}
@@ -30,23 +38,40 @@ const BookingView = () => {
     animationIn={'fadeInDown'}
     animationOut={'fadeOutUp'}
     isVisible={true}>
-    <MyBookingAgencyModal 
+    <MyBookingAgencyModal
     // setMyBookingAgencyModal={setMyBookingAgencyModal}
-    
     />
   </Modal>;
+
+  const handleLoginPress = () => {
+    try {
+      const encodedMobile = Buffer.from(
+        decodedToken?.driver_mobile_number,
+      ).toString('base64');
+      const url = `https://www.tatd.in/agent-login.php?dologin=${encodedMobile}`;
+
+      console.log('Generated URL:', url);
+      Linking.openURL(url).catch(err => {
+        // Alert.alert('An error occurred while opening the URL', err.message);
+        console.error('Error opening URL:', err);
+      });
+    } catch (error) {
+      console.error('Caught error:', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.connectContainer}>
-        <TouchableOpacity
-          onPress={() => {
-           dispatch( setMyBookingAgencyModal(true));
-          }}
+        <Pressable
+          // onPress={() => {
+          //  dispatch( setMyBookingAgencyModal(true));
+          // }}
+          onPress={handleLoginPress}
           style={styles.connectButton}>
           <Icon color={AppColors.white} size={15} name="plus" />
-          <Image style={styles.rightArrow} source={RightArrow} />
-        </TouchableOpacity>
+          <Image style={styles.rightArrow} source={LeftArrow} />
+        </Pressable>
         <Text style={styles.connectText}>
           Connect the driver to your network using this button and earn Rs 250.
         </Text>
@@ -54,14 +79,14 @@ const BookingView = () => {
 
       <View style={styles.notificationContainer}>
         <Text style={styles.notificationText}>
-          Dear MOHIT DHANAWAT, from now on, if you have completed at least one
-          booking in the last two days and are available for bookings, you will
-          receive an SMS alert when a new booking comes in.
+          Dear {decodedToken?.driver_name}, from now on, if you have completed
+          at least one booking in the last two days and are available for
+          bookings, you will receive an SMS alert when a new booking comes in.
         </Text>
       </View>
-      <FlexibleBookingView />
+      {/* <FlexibleBookingView /> */}
       <RoundTripBookingView />
-      <PermanentBookingView />
+      {/* <PermanentBookingView /> */}
     </View>
   );
 };
@@ -69,15 +94,16 @@ const BookingView = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
+    paddingVertical: 10,
   },
   connectContainer: {
     flexDirection: 'row',
     borderRadius: 5,
     marginBottom: 15,
+    paddingHorizontal: 15,
   },
   connectButton: {
-    backgroundColor: AppColors.orange,
+    backgroundColor: AppColors.mainColor,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
@@ -98,18 +124,19 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     textAlignVertical: 'center',
     fontFamily: AppFont.regularFont,
-    fontWeight: '500',
-    fontSize: 14,
+    fontWeight: '700',
+    fontSize: 15,
   },
   notificationContainer: {
     marginBottom: 20,
     borderRadius: 5,
+    paddingHorizontal: 15,
   },
   notificationText: {
     color: AppColors.black,
     fontFamily: AppFont.regularFont,
     fontWeight: '500',
-    fontSize: 14,
+    fontSize: 15,
   },
   bookingContainer: {
     marginTop: 20,

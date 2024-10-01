@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.mainColor,
     borderRadius: 10,
     padding: 15,
+    marginHorizontal:10
   },
   bookingHeader: {
     flexDirection: 'row',

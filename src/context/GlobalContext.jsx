@@ -28,25 +28,55 @@ export const GlobalContextApi = ({children}) => {
   //   }
   // }, [jwtToken]);
 
+  /////
+
+  // const getTokens = useCallback(async () => {
+  //   try {
+  //     const refreshToken = await AsyncStorage.getItem('refresh_token');
+  //     const jwtToken = await AsyncStorage.getItem('jwt');
+
+  //     // console.log(refreshToken, 'refresh_token context');
+  //     console.log(jwtToken, 'jwt_token context');
+
+  //     setJwtToken(jwtToken);
+  //     // decodeData(jwtToken);
+  //     setRefreshToken(refreshToken);
+  //     return {refreshToken, jwtToken};
+  //   } catch (error) {
+  //     console.error('Error retrieving tokens:', error);
+  //     return null;
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   getTokens();
+  // }, [getTokens]);
+
   const getTokens = useCallback(async () => {
     try {
       const refreshToken = await AsyncStorage.getItem('refresh_token');
       const jwtToken = await AsyncStorage.getItem('jwt');
 
-      console.log(refreshToken, 'refresh_token context');
+      console.log(jwtToken, 'jwt_token ');
 
       setJwtToken(jwtToken);
-      // decodeData(jwtToken);
+      // decodeData(jwtToken); // Assuming you have this function elsewhere
       setRefreshToken(refreshToken);
+
       return {refreshToken, jwtToken};
     } catch (error) {
       console.error('Error retrieving tokens:', error);
       return null;
     }
-  }, []);
+  }, []); // If you have dependencies, pass them in the array
 
   useEffect(() => {
-    getTokens();
+    // Wrap your async call in another function to avoid returning a promise
+    const fetchTokens = async () => {
+      await getTokens();
+    };
+
+    fetchTokens(); // Call the async function
   }, [getTokens]);
 
   const values = {

@@ -48,7 +48,7 @@ axiosClient.interceptors.response.use(
           );
 
           if (res.data.jwt) {
-            // console.log('New JWT:', res.data.jwt);
+            console.log('New JWT:', res.data.jwt);
             await AsyncStorage.setItem('jwt', res.data.jwt);
             axiosClient.defaults.headers.common[
               'Authorization'

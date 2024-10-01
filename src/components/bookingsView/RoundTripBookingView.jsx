@@ -70,27 +70,6 @@ const TripCard = ({trip}) => {
         </View>
         <View style={styles.rightContent}>
           <View style={styles.paymentDetails}>
-            {/* {trip.incentive > 0 && (
-              <View style={styles.incentiveBox}>
-                <Text style={styles.incentiveText}>
-                  + Incentive ₹ {trip.incentive}
-                </Text>
-              </View>  
-            )         
-         : trip.incentive_eligibility_fullfillment   > 0(
-          <View style={styles.incentiveBox}>
-          <Text style={styles.incentiveText}>
-            + Incentive ₹ {trip.incentive_eligibility_fullfillment}
-          </Text>
-        </View> 
-         )  : 
-         trip.incentive_eligible_amount_fullfillment > 0 (
-          <View style={styles.incentiveBox}>
-          <Text style={styles.incentiveText}>
-            + Incentive ₹ {trip.incentive_eligible_amount_fullfillment}
-          </Text>
-        </View> 
-         ) } */}
             {/* {console.log(trip.incentive_eligibility_fullfillment) } */}
             {trip.incentive > 0 ? (
               <View style={styles.incentiveBox}>
@@ -98,13 +77,15 @@ const TripCard = ({trip}) => {
                   + Incentive ₹ {trip.incentive}
                 </Text>
               </View>
-            ) : trip.incentive_eligibility_fullfillment > 0 ? (
+            ) : null}
+            {trip.incentive_eligibility_fullfillment > 0 ? (
               <View style={styles.incentiveBox}>
                 <Text style={styles.incentiveText}>
                   + Incentive ₹ {trip.incentive_eligibility_fullfillment}
                 </Text>
               </View>
-            ) : trip.incentive_eligible_amount_fullfillment > 0 ? (
+            ) : null}
+            {trip.incentive_eligible_amount_fullfillment > 0 ? (
               <View style={styles.incentiveBox}>
                 <Text style={styles.incentiveText}>
                   + Incentive ₹ {trip.incentive_eligible_amount_fullfillment}
@@ -121,7 +102,8 @@ const TripCard = ({trip}) => {
             </View>
           </View>
           <TouchableOpacity
-            onPress={() => setOpenModal('')}
+            onPress={() => console.log("Are u sure Confirm Accept.....")
+            }
             style={styles.acceptButton}>
             <Text style={styles.acceptText}>Accept</Text>
           </TouchableOpacity>
@@ -142,6 +124,7 @@ const TripCard = ({trip}) => {
 const RoundTripBookingView = () => {
   const [incityOneWayBooking, setIncityOneWayBooking] = useState([]);
   const [incityRoundTripBooking, setIncityRoundTripBooking] = useState([]);
+  const [onDemandOutstationBooking, setOnDemandOutstationBooking] = useState([]);
 
   const getIncityOneWayBookings = async data => {
     try {
@@ -156,6 +139,16 @@ const RoundTripBookingView = () => {
       console.log(error, 'incity_OneWay_bookings  Error');
     }
   };
+  const getOnDemandOutstationBookings = async data => {
+    try {
+      const response = await ON_DEMAND_BOOKING(data);
+
+      // console.log(response, 'getOnDemandOutstationBookings response');
+      setOnDemandOutstationBooking(response.ondemand_outstation_bookings);
+    } catch (error) {
+      console.log(error, 'ondemand_outstation_bookings  Error');
+    }
+  };
 
   const getIncityRoundTripBookings = async data => {
     try {
@@ -165,8 +158,6 @@ const RoundTripBookingView = () => {
       //   response,
       //  'getIncityRoundTripBookings response',
       // );
-      // console.log(response.incity_roundtrip_bookings,"gggggggggggggggggggggggggggggggggggggggggg");
-
       setIncityRoundTripBooking(response.incity_roundtrip_bookings);
     } catch (error) {
       console.log(error, 'incity_roundtrip_bookings  Error');
@@ -174,9 +165,9 @@ const RoundTripBookingView = () => {
   };
 
   useEffect(() => {
-    //   getOnDemandBooking({
-    //     action: 'ondemand_outstation_bookings',
-    //   });
+    getOnDemandOutstationBookings({
+      action: 'ondemand_outstation_bookings',
+    });
     getIncityRoundTripBookings({
       action: 'incity_roundtrip_booking',
     });
@@ -191,10 +182,14 @@ const RoundTripBookingView = () => {
         incityOneWayBooking.map((trip, index) => (
           <TripCard key={index} trip={trip} />
         ))}
-      {/* {incityRoundTripBooking &&
+      {incityRoundTripBooking &&
         incityRoundTripBooking.map((e, index) => (
           <TripCard key={index} trip={e} />
-        ))} */}
+        ))}
+      {onDemandOutstationBooking &&
+        onDemandOutstationBooking.map((x, index) => (
+          <TripCard key={index} trip={x} />
+        ))}
     </>
   );
 };
@@ -203,9 +198,9 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: AppColors.mainColor,
     borderRadius: 10,
-    padding: 15,
+    padding: 12,
     marginVertical: 10,
-    marginHorizontal: 15,
+    marginHorizontal: 10,
   },
   header: {
     flexDirection: 'row',
@@ -218,7 +213,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   vehicleType: {
-    fontSize: 14,
+    fontSize: 15,
     color: AppColors.white,
     marginLeft: 5,
   },

@@ -73,10 +73,10 @@ const PrivateRoute = () => {
             component={ClearMyDuePayment}
           />
           <Stack.Screen name="DriverEarning" component={DriverEarning} />
-          {/* <Stack.Screen
+          <Stack.Screen
             name="MyBonusStatusHistory"
             component={MyBonusStatusHistory}
-          /> */}
+          />
           {/* <Stack.Screen name="TicketsDriver" component={TicketsDriver} /> */}
           {/* <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} /> */}
 

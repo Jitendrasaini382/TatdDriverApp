@@ -102,13 +102,12 @@ const TripCard = ({trip}) => {
             </View>
           </View>
           <TouchableOpacity
-            onPress={() => console.log("Are u sure Confirm Accept.....")
-            }
+            onPress={() => setOpenModal(true)}
             style={styles.acceptButton}>
             <Text style={styles.acceptText}>Accept</Text>
           </TouchableOpacity>
           <Modal
-            backdropOpacity={0}
+            backdropOpacity={.6}
             onBackdropPress={() => setOpenModal(false)}
             animationIn={'fadeInDown'}
             animationOut={'fadeOutUp'}

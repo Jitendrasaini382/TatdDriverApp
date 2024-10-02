@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Image,
   StyleSheet,
@@ -23,25 +23,46 @@ import {useDispatch} from 'react-redux';
 import {setMyBookingAgencyModal} from '../redux/slices/trustedDriverSlice';
 import {TokenConstextApi} from '../context/GlobalContext';
 import {Buffer} from 'buffer';
+import {ON_DEMAND_BOOKING} from '../apis/Apis';
 
 const {width} = Dimensions.get('window');
 
 const BookingView = () => {
   const dispatch = useDispatch();
-  const {decodedToken, setDecodedToken, jwtToken} =
+  const {decodedToken, setDecodedToken, jwtToken, languageSwitch} =
     useContext(TokenConstextApi);
-  console.log(decodedToken, 'datatataatatattatatat');
+  // console.log(decodedToken, 'datatataatatattatatat');
 
-  <Modal
-    backdropOpacity={0}
-    onBackdropPress={() => dispatch(setMyBookingAgencyModal(false))}
-    animationIn={'fadeInDown'}
-    animationOut={'fadeOutUp'}
-    isVisible={true}>
-    <MyBookingAgencyModal
-    // setMyBookingAgencyModal={setMyBookingAgencyModal}
-    />
-  </Modal>;
+  const [agentPanelViewData, setAgentPanelViewData] = useState([]);
+
+  useEffect(() => {
+    getAgentPanelView();
+  }, [languageSwitch]);
+
+  // <Modal
+  //   backdropOpacity={0}
+  //   onBackdropPress={() => dispatch(setMyBookingAgencyModal(false))}
+  //   animationIn={'fadeInDown'}
+  //   animationOut={'fadeOutUp'}
+  //   isVisible={true}>
+  //   <MyBookingAgencyModal
+  //   // setMyBookingAgencyModal={setMyBookingAgencyModal}
+  //   />
+  // </Modal>;
+
+  const getAgentPanelView = async () => {
+    try {
+      const response = await ON_DEMAND_BOOKING({
+        action: 'agent_panel_view',
+        current_language: languageSwitch,
+      });
+
+      console.log(response, 'getIagent Panel View response');
+      setAgentPanelViewData(response.agent_panel_text);
+    } catch (error) {
+      console.log(error, 'getIagent Panel View  Error');
+    }
+  };
 
   const handleLoginPress = () => {
     try {
@@ -73,15 +94,16 @@ const BookingView = () => {
           <Image style={styles.rightArrow} source={LeftArrow} />
         </Pressable>
         <Text style={styles.connectText}>
-          Connect the driver to your network using this button and earn Rs 250.
+          {/* Connect the driver to your network using this button and earn Rs 250. */}
+          {agentPanelViewData}
         </Text>
       </View>
 
       <View style={styles.notificationContainer}>
         <Text style={styles.notificationText}>
-          Dear {decodedToken?.driver_name}, from now on, if you have completed
-          at least one booking in the last two days and are available for
-          bookings, you will receive an SMS alert when a new booking comes in.
+          {languageSwitch == 'english'
+            ? `Dear ${decodedToken?.driver_name}, from now on, if you have completed at least one booking in the last two days and are available for bookings, you will receive an SMS alert when a new booking comes in.`
+            : `डिअर ${decodedToken?.driver_name},अब से यदि आपने पिछले दो दिनों में कम से कम एक बुकिंग पूरी की है, और आप बुकिंग करने के लिए उपलब्ध हैं, तो नई बुकिंग आने पर आपको SMS Alert भेजा जाएगा।`}
         </Text>
       </View>
       {/* <FlexibleBookingView /> */}
@@ -135,8 +157,9 @@ const styles = StyleSheet.create({
   notificationText: {
     color: AppColors.black,
     fontFamily: AppFont.regularFont,
-    fontWeight: '500',
-    fontSize: 15,
+    fontWeight: '700',
+    fontSize: 16,
+    marginVertical:10
   },
   bookingContainer: {
     marginTop: 20,

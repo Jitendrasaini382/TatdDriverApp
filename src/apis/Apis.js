@@ -4,7 +4,6 @@ import _Fetch from './Service';
 
 // https://www.tatd.in/app-api/driver/login/driver-login.php?
 
-
 export const DRIVER_LOGIN = body => {
   return _Fetch('POST', 'login/driver-login.php', body, {});
 };
@@ -16,17 +15,12 @@ export const VERIFY_OTP_LOGIN = body => {
   return _Fetch('POST', 'login/verify-otp-login.php', {...body}, {});
 };
 
-
-
-
 // https://www.tatd.in/app-api/driver/login/save-fcm-token-api.php
 
-export const GET_FCM_TOKEN = (body) =>{
-    console.log(body, 'Get FCM Token');
-    return _Fetch('POST', 'login/save-fcm-token-api.php', {...body}, {});
-}
-
-
+export const GET_FCM_TOKEN = body => {
+  console.log(body, 'Get FCM Token');
+  return _Fetch('POST', 'login/save-fcm-token-api.php', {...body}, {});
+};
 
 // https://www.tatd.in/app-api/driver/faq/driver-faq-api.php
 
@@ -121,15 +115,6 @@ export const HOME_AWARENESS = body => {
   );
 };
 
-export const EXPRESS_BOOKING_POPUP = body => {
-  return _Fetch(
-    'GET',
-    'trusted-driver/express-booking-popup.php',
-    {...body},
-    {},
-  );
-};
-
 export const EXPRESS_BOOKING_UPDATE = body => {
   return _Fetch(
     'POST',
@@ -145,6 +130,17 @@ export const ON_DEMAND_BOOKING = body => {
   return _Fetch(
     'POST',
     'trusted-driver/ondemand-bookings-view.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/trusted-driver/express-booking-popup.php?action=check_popup
+
+export const EXPRESS_BOOKING_POPUP = body => {
+  return _Fetch(
+    'GET',
+    'trusted-driver/express-booking-popup.php',
     {...body},
     {},
   );

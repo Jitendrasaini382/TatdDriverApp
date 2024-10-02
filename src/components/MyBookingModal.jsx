@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -12,23 +12,32 @@ import {AppColors} from '../assets/Colors';
 import {useDispatch} from 'react-redux';
 import {setMyBookingModal} from '../redux/slices/trustedDriverSlice';
 import {MY_BOOKING_TOP_NAVBAR} from '../apis/Apis';
+import {TokenConstextApi} from '../context/GlobalContext';
 
 const MyBookingModal = ({navigation}) => {
   const [myBookingStyle, setMyBookingStyle] = useState(true);
   const dispatch = useDispatch();
   const [myBookingData, setMyBookingData] = useState({});
+  const {languageSwitch, decodedToken} = useContext(TokenConstextApi);
+
+
+  console.log(languageSwitch, "my booking lang switchhhhhh");
+  
 
   useEffect(() => {
     getMyAllBookings();
-  }, []);
+  }, [languageSwitch]);
 
   const openMyUrl = url => {
+    console.log(url,"open url");
+    
     Linking.openURL(url);
   };
 
   const getMyAllBookings = () => {
     MY_BOOKING_TOP_NAVBAR({
       action: 'my_booking',
+      current_language: languageSwitch,
     })
       .then(e => {
         console.log(e.bookings, 'MY_BOOKING_TOP_NAVBAR data');
@@ -103,7 +112,7 @@ const MyBookingModal = ({navigation}) => {
           <View style={styles.bookingContainer}>
             <TouchableOpacity
               onPress={() =>
-                openMyUrl('https://www.tatd.in/clear-my-due-payment.php')
+                openMyUrl(`https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`)
               }>
               <View style={[styles.bookingCard, styles.activeBookingCard]}>
                 <Text style={[styles.bookingText, styles.activeBookingText]}>

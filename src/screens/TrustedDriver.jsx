@@ -1,4 +1,10 @@
-import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   SafeAreaView,
@@ -60,10 +66,10 @@ const responsiveSize = size => {
 
 const TrustedDriver = ({navigation}) => {
   const dispatch = useDispatch();
-  const {decodedToken, setDecodedToken, jwtToken} =
+  const {decodedToken, setDecodedToken, jwtToken, languageSwitch} =
     useContext(TokenConstextApi);
   const [popupData, setPopupData] = useState(0);
-  const [refreshing, setRefreshing] = useState(false)
+  const [refreshing, setRefreshing] = useState(false);
 
   const {
     currentView,
@@ -176,7 +182,7 @@ const TrustedDriver = ({navigation}) => {
     LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
       .then(response => {
         console.log(response, 'LOGIN API RESPONSE');
-        Alert.alert(response.message, response.data.redirect);
+        // Alert.alert(response.message, response.data.redirect);
       })
       .catch(err => {
         console.log(err, 'LOGIN API ERROR');
@@ -210,17 +216,20 @@ const TrustedDriver = ({navigation}) => {
     decodeData(jwtToken);
   }, [jwtToken]);
 
-  // useEffect(() => {
-  //   getPopup();
-  // }, []);
+  useEffect(() => {
+    getPopup();
+  }, [languageSwitch]);
 
   const getPopup = async () => {
     try {
       const response = await EXPRESS_BOOKING_POPUP({
         action: 'check_popup',
+        current_language: languageSwitch,
       });
       console.log(response, 'GET_POPUP  Response ');
       if (response.express_booking_popup_flag == 1) {
+        console.log('run popup flaggggggg');
+
         dispatch(setExpressBookingModal(true));
         setPopupData(response.express_booking_popup_flag);
       } else {
@@ -304,7 +313,7 @@ const TrustedDriver = ({navigation}) => {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     // Promise.all([]).then(() =>
-      setRefreshing(false)
+    setRefreshing(false);
     // );
   }, []);
 
@@ -313,11 +322,10 @@ const TrustedDriver = ({navigation}) => {
       <Header extraButton={true} />
       {myBookingModal && <MyBookingModal />}
 
-      <ScrollView 
-      
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View style={styles.mainContainer}>
           {/* Marquee View */}
           <View style={styles.marqueeView}>
@@ -398,7 +406,7 @@ const TrustedDriver = ({navigation}) => {
                       <Text style={styles.bottamRightText}>
                         {decodedToken && decodedToken.TrustedDriverData.otr} %
                       </Text>
-                      <Text style={styles.bottamRightText}>OTR</Text>
+                      <Text style={styles.bottamRightText}>{languageSwitch == 'english' ? "OTR" : "ओटीआर"}</Text>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -407,7 +415,7 @@ const TrustedDriver = ({navigation}) => {
                       <Text style={styles.bottamRightText}>
                         {decodedToken && decodedToken.TrustedDriverData.rating}
                       </Text>
-                      <Text style={styles.bottamRightText}>Rating</Text>
+                      <Text style={styles.bottamRightText}>{languageSwitch == 'english' ? "Rating" : "रेटिंग"}</Text>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -418,7 +426,7 @@ const TrustedDriver = ({navigation}) => {
                           decodedToken.TrustedDriverData.recent_dcr}{' '}
                         %
                       </Text>
-                      <Text style={styles.bottamRightText}>Booking</Text>
+                      <Text style={styles.bottamRightText}>{languageSwitch == 'english' ?"Booking" : "बुकिंग"}</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -440,21 +448,23 @@ const TrustedDriver = ({navigation}) => {
                       styles.bottamContent1Text,
                       videosContent && {color: AppColors.white},
                     ]}>
-                    Training
+                    {languageSwitch == 'english' ? 'Training' : 'ट्रेनिंग'}
                   </Text>
                   <Text
                     style={[
                       styles.bottamContent1Text,
                       videosContent && {color: AppColors.white},
                     ]}>
-                    Videos
+                    {languageSwitch == 'english' ? 'Videos' : 'वीडियो'}
                   </Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => navigation.navigate('MyBonusStatusHistory')}
                 style={styles.bottamContent2}>
-                <Text style={styles.mainText}>My Bonus</Text>
+                <Text style={styles.mainText}>
+                  {languageSwitch == 'english' ? 'My Bonus' : 'मेरा बोनस'}
+                </Text>
                 <Text style={styles.textIcon}>
                   <Icon name="rupee" size={responsiveSize(9)} /> 0
                 </Text>
@@ -462,18 +472,26 @@ const TrustedDriver = ({navigation}) => {
               <TouchableOpacity
                 onPress={() => navigation.navigate('AgentLogin')}
                 style={styles.bottamContent3}>
-                <Text style={styles.mainText}>Agent panel</Text>
+                <Text style={styles.mainText}>
+                  {languageSwitch == 'english' ? 'Agent panel' : 'एजेंट पैनल'}
+                </Text>
                 <Text style={styles.textIcon}>
                   <Icon name="rupee" size={responsiveSize(9)} /> 0
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() =>
-                  openMyUrl('https://www.tatd.in/clear-my-due-payment.php')
+                  openMyUrl(
+                    `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                  )
                 }
                 // onPress={() => navigation.navigate('ClearMyDuePayment')}
                 style={styles.bottamContent4}>
-                <Text style={styles.mainText}>Clear My Due</Text>
+                <Text style={styles.mainText}>
+                  {languageSwitch == 'english'
+                    ? 'Clear My Due'
+                    : 'बकाया जमा करें'}
+                </Text>
                 <Text style={styles.textIcon}>
                   <Icon name="rupee" size={responsiveSize(9)} />{' '}
                   {decodedToken && decodedToken.DRIVER_CLEAR_MY_DUE}
@@ -493,12 +511,9 @@ const TrustedDriver = ({navigation}) => {
           {/* <RoundTripBookingView /> */}
           {/* <BookingView /> */}
 
-          
           {/* Main Toggle Content */}
-          <>
-          {isRfdOn ? <BookingView /> : null}
-          </>
-          {videosContent ? <TrainingVideo data={Item} /> : null}
+          <>{isRfdOn ? <BookingView /> : null}</>
+          {/* {videosContent ? <TrainingVideo data={Item} /> : null} */}
         </View>
       </ScrollView>
 
@@ -547,6 +562,14 @@ const TrustedDriver = ({navigation}) => {
         animationOut={'fadeOutUp'}
         isVisible={myBookingAgencyModal}>
         <MyBookingAgencyModal />
+      </Modal>
+      <Modal
+        backdropOpacity={0}
+        onBackdropPress={() => dispatch(setExpressBookingModal(false))}
+        animationIn={'fadeInDown'}
+        animationOut={'fadeOutUp'}
+        isVisible={expressBookingModal}>
+        <ExpressBookingModal />
       </Modal>
     </SafeAreaView>
   );
@@ -773,14 +796,14 @@ const styles = StyleSheet.create({
   },
   mainText: {
     color: AppColors.mainColor,
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: '400',
     paddingTop: 5,
     textAlign: 'center',
   },
   textIcon: {
     color: AppColors.mainColor,
-    fontSize: 9,
+    fontSize: 10,
     textAlign: 'center',
   },
   touchable: {

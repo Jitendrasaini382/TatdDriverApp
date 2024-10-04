@@ -1,5 +1,4 @@
-platform :ios, '12.0'  # Ensure iOS 12.0 or higher
-$FirebaseSDKVersion = '9.6.0'
+platform :ios, '13.4'  # Ensure iOS 12.0 or higher
 
 # Resolve react_native_pods.rb with node to allow for hoisting
 require Pod::Executable.execute_command('node', ['-p',
@@ -20,10 +19,10 @@ target 'tatd' do
   config = use_native_modules!
   
   # Firebase Core and Messaging setup
-  pod 'Firebase/App'  # Ensure Firebase is initialized
-  pod 'Firebase/Messaging'
-  pod 'GoogleUtilities'
-  pod 'GTMSessionFetcher', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true;
+  pod 'GoogleUtilities', :modular_headers => true;
+  pod 'SPTPersistentCache', :modular_headers => true
+  pod 'DVAssetLoaderDelegate',:modular_headers => true
 
   
   use_react_native!(

@@ -20,17 +20,15 @@ const MyBookingModal = ({navigation}) => {
   const [myBookingData, setMyBookingData] = useState({});
   const {languageSwitch, decodedToken} = useContext(TokenConstextApi);
 
-
-  console.log(languageSwitch, "my booking lang switchhhhhh");
-  
+  console.log(languageSwitch, 'my booking lang switchhhhhh');
 
   useEffect(() => {
     getMyAllBookings();
   }, [languageSwitch]);
 
   const openMyUrl = url => {
-    console.log(url,"open url");
-    
+    console.log(url, 'open url');
+
     Linking.openURL(url);
   };
 
@@ -112,7 +110,9 @@ const MyBookingModal = ({navigation}) => {
           <View style={styles.bookingContainer}>
             <TouchableOpacity
               onPress={() =>
-                openMyUrl(`https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`)
+                openMyUrl(
+                  `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                )
               }>
               <View style={[styles.bookingCard, styles.activeBookingCard]}>
                 <Text style={[styles.bookingText, styles.activeBookingText]}>

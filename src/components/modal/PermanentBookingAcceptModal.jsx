@@ -6,39 +6,41 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  Pressable,
 } from 'react-native';
-import { AppColors } from '../../assets/Colors';
+import {AppColors} from '../../assets/Colors';
+import { AppFont } from '../../assets/FontsFamily';
 
 const PermanentBookingAcceptModal = ({setOpenModal}) => {
   return (
-    <ScrollView style={{flex: 1}}>
-      
-      
+    <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={styles.card}>
-        <Text style={styles.header}>Please Read Carefully.</Text>
+        <Text style={styles.header}>Please read carefully.</Text>
 
-        <Text style={styles.subHeader}>Company Me Kaam Hai:</Text>
+        <Text style={styles.subHeader}>
+          यह एक Private नौकरी है, Apply for this job only if
+        </Text>
 
         <View style={styles.listContainer}>
           <Text style={styles.listItem}>
             1. If you live within 10 KM of the customer's home, which is in
-            manmeet society, sector 122003.
+            Vijay Nagar Single Story.
           </Text>
           <Text style={styles.listItem}>
-            2. If you are proficient in driving a Audi, volvo.
+            2. If you are proficient in driving a Altis Manual and Automatic .
           </Text>
           <Text style={styles.listItem}>
             3. If you are well-versed in maintaining and keeping the vehicle
             clean.
           </Text>
           <Text style={styles.listItem}>
-            4. If you can arrive on time for the interview on 03 Jul at 08:00
+            4. If you can arrive on time for the interview on 04 Oct at 09:00
             AM, the trial will be 2 hours - 0 Rs.
           </Text>
           <Text style={styles.listItem}>
             5. If you agree to work for 26 days, 12 Hours, and a salary of
-            22000₹. The job will start on 29 Jun, and you need to be there every
-            day at 07:00 AM.
+            20000₹. The job will start on 02 Oct, and you need to be there every
+            day at 09:00 AM.
           </Text>
           <Text style={[styles.listItem, styles.warning]}>
             6. Do not press the Accept button without reason. After accepting,
@@ -48,18 +50,18 @@ const PermanentBookingAcceptModal = ({setOpenModal}) => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity 
-          onPress={()=>setOpenModal(false)}
-          style={styles.cancelButton}>
+          <Pressable
+            onPress={() => setOpenModal(false)}
+            style={styles.cancelButton}>
             <Text style={styles.cancelButtonText}>Cancel</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-           onPress={() => {
-            Alert.alert('Are You Confirm');
-          }}
-          style={styles.applyButton}>
-            <Text style={styles.applyButtonText}>Apply</Text>
-          </TouchableOpacity>
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              Alert.alert('Are You Confirm');
+            }}
+            style={styles.applyButton}>
+            <Text style={styles.applyButtonText}>Accept</Text>
+          </Pressable>
         </View>
       </View>
     </ScrollView>
@@ -109,7 +111,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     paddingHorizontal: 20,
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderWidth: 1,
     borderRadius: 5,
     width: '35%',
@@ -118,16 +120,24 @@ const styles = StyleSheet.create({
   applyButton: {
     backgroundColor: AppColors.mainColor,
     paddingHorizontal: 20,
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderRadius: 5,
     width: '35%',
     alignItems: 'center',
   },
   cancelButtonText: {
     color: AppColors.black,
+    fontSize: 20,
+    fontWeight:"500",
+fontFamily : AppFont.regularFont
+
   },
   applyButtonText: {
     color: AppColors.white,
+    fontSize: 20,
+    fontWeight:"500",
+fontFamily : AppFont.regularFont
+
   },
 });
 

@@ -7,7 +7,7 @@ import { setMyBookingModal } from '../redux/slices/trustedDriverSlice';
 import { TokenConstextApi } from '../context/GlobalContext';
 
 const ExtraButtons = () => {
-  const {decodedToken, setDecodedToken, jwtToken, languageSwitch} =
+  const {decodedToken, languageSwitch} =
   useContext(TokenConstextApi);
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -20,15 +20,15 @@ const ExtraButtons = () => {
     <View style={styles.mainView}>
       <View style={styles.leftView}>
         <TouchableOpacity onPress={openNeedHelp}>
-          <Text style={styles.leftText}>Need Help?</Text>
-          {/* <Text style={styles.leftText}>{languageSwitch == "english" ?"Need Help?" : " मदद चाहिए?"}</Text> */}
+          {/* <Text style={styles.leftText}>Need Help?</Text> */}
+          <Text style={styles.leftText}>{languageSwitch == "english" ?"Need Help?" : " मदद चाहिए?"}</Text>
          
         </TouchableOpacity>
       </View>
       <View style={styles.rightView}>
         <TouchableOpacity onPress={() => dispatch(setMyBookingModal(true))}>
-          <Text style={styles.rightText}>My Bookings</Text>
-          {/* <Text style={styles.rightText}>{languageSwitch == "english" ? "My Bookings" : "मेरी बुकिंगें"}</Text> */}
+          {/* <Text style={styles.rightText}>My Bookings</Text> */}
+          <Text style={styles.rightText}>{languageSwitch == "english" ? "My Bookings" : "मेरी बुकिंगें"}</Text>
         </TouchableOpacity>
       </View>
     </View>

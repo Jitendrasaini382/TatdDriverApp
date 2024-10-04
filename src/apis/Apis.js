@@ -5,6 +5,8 @@ import _Fetch from './Service';
 // https://www.tatd.in/app-api/driver/login/driver-login.php?
 
 export const DRIVER_LOGIN = body => {
+  console.log(body, "send action");
+  
   return _Fetch('POST', 'login/driver-login.php', body, {});
 };
 

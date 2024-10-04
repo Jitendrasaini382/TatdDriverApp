@@ -115,7 +115,7 @@ const CheckDriverOtp = ({navigation, route}) => {
       });
 
       if (response.jwt && response.refresh_token) {
-        await setJwtToken(response.jwt);
+        await setJwtToken(response?.jwt);
         const decoded = jwtDecode(response.jwt);
         setDecodedToken(decoded.data);
         await setRefreshToken(response.refresh_token);

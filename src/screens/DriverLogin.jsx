@@ -53,6 +53,8 @@ const DriverLogin = () => {
   // },[])
 
   const sendOtp = async () => {
+    console.log("send otppp");
+    
     try {
       if (!field.mobile) {
         setError('Please Enter Mobile Number');
@@ -65,10 +67,14 @@ const DriverLogin = () => {
       setLoader(true);
       const response = await DRIVER_LOGIN(field);
       if (response.status_code == '200') {
+    console.log("send otppp111111");
+
         setLoader(false);
         navigation.navigate('CheckDriverOtp', {mobile: field.mobile});
       }
     } catch (err) {
+    console.log("send otppp111112222221");
+
       setLoader(false);
       console.log(err, 'err');
     }

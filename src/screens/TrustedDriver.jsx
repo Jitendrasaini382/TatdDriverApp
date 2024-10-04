@@ -218,9 +218,10 @@ const TrustedDriver = ({navigation}) => {
 
   useEffect(() => {
     getPopup();
-  }, [languageSwitch]);
+  }, []);
 
   const getPopup = async () => {
+    
     try {
       const response = await EXPRESS_BOOKING_POPUP({
         action: 'check_popup',
@@ -368,7 +369,6 @@ const TrustedDriver = ({navigation}) => {
                     onPress={() =>
                       openMyUrl('https://www.tatd.in/driver-notifications.php')
                     }
-                    // onPress={() => navigation.navigate('DriverNotifications')}
                   >
                     <View style={styles.notification}>
                       <Icon

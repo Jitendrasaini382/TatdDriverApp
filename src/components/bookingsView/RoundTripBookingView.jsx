@@ -5,10 +5,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Modal
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {AppColors} from '../../assets/Colors';
-import Modal from 'react-native-modal';
+// import Modal from 'react-native-modal';
 import RoundTripBookingAceeptModal from '../modal/RoundTripBookingAceeptModal';
 import {ON_DEMAND_BOOKING} from '../../apis/Apis';
 
@@ -106,14 +107,22 @@ const TripCard = ({trip}) => {
             style={styles.acceptButton}>
             <Text style={styles.acceptText}>Accept</Text>
           </TouchableOpacity>
+
           <Modal
+            animationType="slide"
+            transparent={false}
+            onRequestClose={() => setOpenModal(false)}
+            visible={openModal}>
+            <RoundTripBookingAceeptModal setOpenModal={setOpenModal} />
+            </Modal>
+          {/* <Modal
             backdropOpacity={.6}
             onBackdropPress={() => setOpenModal(false)}
             animationIn={'fadeInDown'}
             animationOut={'fadeOutUp'}
             isVisible={openModal}>
             <RoundTripBookingAceeptModal setOpenModal={setOpenModal} />
-          </Modal>
+          </Modal> */}
         </View>
       </View>
     </View>

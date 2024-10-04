@@ -6,11 +6,13 @@ import {
   Text,
   View,
   ScrollView,
+  Modal,
 } from 'react-native';
-import Modal from 'react-native-modal';
+// import Modal from 'react-native-modal';
 import {AppColors} from '../../assets/Colors';
 import PermanentBookingAcceptModal from '../modal/PermanentBookingAcceptModal';
 import ReferFriendModal from '../modal/ReferFriendModal';
+import {AppFont} from '../../assets/FontsFamily';
 
 const BookingCard = ({booking}) => {
   const [openModal, setOpenModal] = useState(false);
@@ -32,12 +34,12 @@ const BookingCard = ({booking}) => {
             <Icon color={AppColors.white} name="rupee" size={27} />
             {amount}
           </Text>
-          <Text style={styles.duration}>{duration}</Text>
+          {/* <Text style={styles.duration}>{duration}</Text> */}
         </View>
-        <Text style={styles.location}>{location}</Text>
+        {/* <Text style={styles.location}>{location}</Text> */}
         <View style={styles.eventContainer}>
-          <Text style={styles.eventTypeText}>{eventType}</Text>
-          <Text style={styles.eventText}>{date}</Text>
+          {/* <Text style={styles.eventTypeText}>{eventType}</Text> */}
+          {/* <Text style={styles.eventText}>{date}</Text> */}
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -58,20 +60,33 @@ const BookingCard = ({booking}) => {
             style={styles.acceptButton}>
             <Text style={styles.acceptButtonText}>Accept</Text>
           </TouchableOpacity>
-          <Modal
+          {/* <Modal
             backdropOpacity={0}
             onBackdropPress={() => setOpenModal(false)}
             animationIn={'fadeInDown'}
             animationOut={'fadeOutUp'}
             isVisible={openModal}>
             <PermanentBookingAcceptModal setOpenModal={setOpenModal} />
-          </Modal>
+          </Modal> */}
+
           <Modal
+            animationType="slide"
+            transparent={false}
+            onRequestClose={() => setOpenModal(false)}
+            visible={openModal}>
+            <PermanentBookingAcceptModal setOpenModal={setOpenModal} />
+          </Modal>
+          {/* <Modal
             backdropOpacity={0}
             onBackdropPress={() => setReferFriendModal(false)}
             animationIn={'fadeInDown'}
             animationOut={'fadeOutUp'}
-            isVisible={referFriendModal}>
+            isVisible={referFriendModal}> */}
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={referFriendModal}
+            onRequestClose={() => setReferFriendModal(false)}>
             <ReferFriendModal setReferFriendModal={setReferFriendModal} />
           </Modal>
         </View>
@@ -81,7 +96,7 @@ const BookingCard = ({booking}) => {
 };
 
 const PermanentBookingView = () => {
-  const bookings = [
+  const permanentBookings = [
     {
       type: 'Private Driver',
       cars: 'Altis Manual and Exter Automatic',
@@ -91,20 +106,20 @@ const PermanentBookingView = () => {
       eventType: 'Interview',
       date: '24 Jun, 10:00 AM',
     },
-    {
-      type: 'Govt Driver',
-      cars: 'Creata Manual and Exter Automatic',
-      amount: 500000,
-      duration: '26 Days | 12 Hours',
-      location: 'Kiran Nagar',
-      eventType: 'Interview',
-      date: '28 Jun, 10:00 AM',
-    },
+    // {
+    //   type: 'Govt Driver',
+    //   cars: 'Creata Manual and Exter Automatic',
+    //   amount: 500000,
+    //   duration: '26 Days | 12 Hours',
+    //   location: 'Kiran Nagar',
+    //   eventType: 'Interview',
+    //   date: '28 Jun, 10:00 AM',
+    // },
   ];
 
   return (
     <ScrollView>
-      {bookings.map((booking, index) => (
+      {permanentBookings.map((booking, index) => (
         <BookingCard key={index} booking={booking} />
       ))}
     </ScrollView>
@@ -117,7 +132,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.mainColor,
     borderRadius: 10,
     padding: 15,
-    marginHorizontal:10
+    marginHorizontal: 10,
   },
   bookingHeader: {
     flexDirection: 'row',
@@ -185,6 +200,9 @@ const styles = StyleSheet.create({
   },
   referButtonText: {
     color: AppColors.white,
+    fontSize: 15,
+    fontWeight: 'bold',
+    fontFamily: AppFont.regularFont,
   },
   acceptButton: {
     backgroundColor: AppColors.white,
@@ -193,6 +211,9 @@ const styles = StyleSheet.create({
   },
   acceptButtonText: {
     color: AppColors.mainColor,
+    fontWeight: 'bold',
+    fontSize: 15,
+    fontFamily: AppFont.regularFont,
   },
 });
 

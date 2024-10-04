@@ -106,9 +106,8 @@ const BookingView = () => {
             : `डिअर ${decodedToken?.driver_name},अब से यदि आपने पिछले दो दिनों में कम से कम एक बुकिंग पूरी की है, और आप बुकिंग करने के लिए उपलब्ध हैं, तो नई बुकिंग आने पर आपको SMS Alert भेजा जाएगा।`}
         </Text>
       </View>
-      {/* <FlexibleBookingView /> */}
       <RoundTripBookingView />
-      {/* <PermanentBookingView /> */}
+      <PermanentBookingView />
     </View>
   );
 };
@@ -159,7 +158,7 @@ const styles = StyleSheet.create({
     fontFamily: AppFont.regularFont,
     fontWeight: '700',
     fontSize: 16,
-    marginVertical:10
+    marginVertical: 10,
   },
   bookingContainer: {
     marginTop: 20,
@@ -214,27 +213,6 @@ const styles = StyleSheet.create({
     color: AppColors.white,
     fontSize: 15,
     marginRight: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 15,
-  },
-  referButton: {
-    backgroundColor: '#ffa500',
-    borderRadius: 8,
-    padding: 10,
-  },
-  referButtonText: {
-    color: AppColors.white,
-  },
-  acceptButton: {
-    backgroundColor: AppColors.white,
-    borderRadius: 8,
-    padding: 10,
-  },
-  acceptButtonText: {
-    color: AppColors.mainColor,
   },
 });
 

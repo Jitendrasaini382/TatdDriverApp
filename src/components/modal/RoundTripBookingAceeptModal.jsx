@@ -11,11 +11,18 @@ import {AppColors} from '../../assets/Colors';
 import {ON_DEMAND_BOOKING} from '../../apis/Apis';
 import {TokenConstextApi} from '../../context/GlobalContext';
 
-const RoundTripBookingAceeptModal = ({setOpenModal}) => {
+const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   const [checked1, setChecked1] = useState(false);
   const [checked2, setChecked2] = useState(false);
   const [driverConsent, setDriverConsent] = useState({});
   const {languageSwitch} = useContext(TokenConstextApi);
+  console.log(trip, "popuop datatattatatat");
+
+  const {booking_number, incentive, incentive_eligibility_fullfillment, incentive_eligible_amount_fullfillment, driver_assignment_in_10_minutes_incentive} = trip
+ 
+  
+  console.log(booking_number, incentive, incentive_eligibility_fullfillment, incentive_eligible_amount_fullfillment, driver_assignment_in_10_minutes_incentive, "all recieve Data");
+  
 
   useEffect(() => {
     driverConsentPopupView();
@@ -37,6 +44,27 @@ const RoundTripBookingAceeptModal = ({setOpenModal}) => {
       console.log(error, 'ondemand_driver_consent_popup_view Error');
     }
   };
+
+  const acceptBooking = async ()=>{
+    console.log("final accepttttt");
+    // try {
+    //   const response = await ON_DEMAND_BOOKING({
+    //     action: 'ondemand_driver_consent_popup_view',
+    //     current_language: languageSwitch,
+    //     booking_id : booking_number
+    //   });
+
+    //   console.log(
+    //     response?.ondemand_driver_consent_popup_data,
+    //     'ondemand_driver_consent_popup_view response',
+    //   );
+    //   setDriverConsent(response?.ondemand_driver_consent_popup_data);
+    // } catch (error) {
+    //   console.log(error, 'ondemand_driver_consent_popup_view Error');
+    // }
+    
+  }
+
 
   return (
     <View style={styles.container}>
@@ -88,9 +116,9 @@ const RoundTripBookingAceeptModal = ({setOpenModal}) => {
         </View>
       </View>
       <TouchableOpacity
-        onPress={() => {
-          Alert.alert('Are You Confirm');
-        }}
+        onPress={() => 
+          acceptBooking()
+        }
         disabled={!(checked1 && checked2)}
         style={[
           styles.acceptButton,

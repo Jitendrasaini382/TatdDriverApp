@@ -1,21 +1,23 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  Modal
+  Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {AppColors} from '../../assets/Colors';
 // import Modal from 'react-native-modal';
 import RoundTripBookingAceeptModal from '../modal/RoundTripBookingAceeptModal';
 import {ON_DEMAND_BOOKING} from '../../apis/Apis';
+import {TokenConstextApi} from '../../context/GlobalContext';
 
 const TripCard = ({trip}) => {
   // console.log(trip, 'jjjjjjjjjjjj');
   const [openModal, setOpenModal] = useState(false);
+
   return (
     <View style={styles.card}>
       <View style={styles.header}>
@@ -54,24 +56,56 @@ const TripCard = ({trip}) => {
               }}></View>
             <Text style={styles.address}>{trip.pickup_address}</Text>
           </View>
-          <View style={{flexDirection: 'row'}}>
-            <View
-              style={{
-                height: 10,
-                width: 10,
-                borderRadius: 5,
-                backgroundColor: 'black',
-                alignItems: 'flex-start',
-                top: 5,
-                left: 10,
-              }}></View>
-            <Text style={styles.address}>{trip.drop_address}</Text>
-          </View>
+          {trip.drop_address ? (
+            <View style={{flexDirection: 'row'}}>
+              <View
+                style={{
+                  height: 10,
+                  width: 10,
+                  borderRadius: 5,
+                  backgroundColor: 'black',
+                  alignItems: 'flex-start',
+                  top: 5,
+                  left: 10,
+                }}></View>
+              <Text style={styles.address}>{trip.drop_address}</Text>
+            </View>
+          ) : (
+            ''
+          )}
           {/* ))} */}
         </View>
         <View style={styles.rightContent}>
           <View style={styles.paymentDetails}>
             {/* {console.log(trip.incentive_eligibility_fullfillment) } */}
+            {trip.night_charge > 0 ? (
+              <View style={[styles.incentiveBox, {backgroundColor : "#FF8C00"}]}>
+                <Text style={[styles.incentiveText, {color :AppColors.white}]}>
+                  + ₹ {trip.night_charge} Night Charge
+                </Text>
+              </View>
+            ) : null}
+            {trip.surge > 0 ? (
+              <View style={[styles.incentiveBox, {backgroundColor : AppColors.orange}]}>
+                <Text style={[styles.incentiveText, {color :AppColors.white}]}>
+                  + ₹ {trip.surge} Surge
+                </Text>
+              </View>
+            ) : null}
+            {trip.chauffeur_service > 0 ? (
+              <View style={[styles.incentiveBox, {backgroundColor : AppColors.orange}]}>
+                <Text style={[styles.incentiveText, {color :AppColors.white}]}>
+                  + ₹ {trip.chauffeur_service} Chauffeur Service
+                </Text>
+              </View>
+            ) : null}
+            {trip.washing_service > 0 ? (
+              <View style={[styles.incentiveBox, {backgroundColor : AppColors.orange}]}>
+                <Text style={[styles.incentiveText, {color :AppColors.white}]}>
+                  + ₹ {trip.washing_service} Washing Service
+                </Text>
+              </View>
+            ) : null}
             {trip.incentive > 0 ? (
               <View style={styles.incentiveBox}>
                 <Text style={styles.incentiveText}>
@@ -86,7 +120,8 @@ const TripCard = ({trip}) => {
                 </Text>
               </View>
             ) : null}
-            {trip.incentive_eligible_amount_fullfillment > 0 ? (
+            
+              {trip.incentive_eligible_amount_fullfillment > 0 ? (
               <View style={styles.incentiveBox}>
                 <Text style={styles.incentiveText}>
                   + Incentive ₹ {trip.incentive_eligible_amount_fullfillment}
@@ -113,8 +148,8 @@ const TripCard = ({trip}) => {
             transparent={false}
             onRequestClose={() => setOpenModal(false)}
             visible={openModal}>
-            <RoundTripBookingAceeptModal setOpenModal={setOpenModal} />
-            </Modal>
+            <RoundTripBookingAceeptModal setOpenModal={setOpenModal} trip={trip} />
+          </Modal>
           {/* <Modal
             backdropOpacity={.6}
             onBackdropPress={() => setOpenModal(false)}
@@ -132,9 +167,15 @@ const TripCard = ({trip}) => {
 const RoundTripBookingView = () => {
   const [incityOneWayBooking, setIncityOneWayBooking] = useState([]);
   const [incityRoundTripBooking, setIncityRoundTripBooking] = useState([]);
-  const [onDemandOutstationBooking, setOnDemandOutstationBooking] = useState([]);
+  const [onDemandOutstationBooking, setOnDemandOutstationBooking] = useState(
+    [],
+  );
+
+  const {languageSwitch} = useContext(TokenConstextApi);
 
   const getIncityOneWayBookings = async data => {
+    console.log(data, 'runnnnnnnnnnn');
+
     try {
       const response = await ON_DEMAND_BOOKING(data);
 
@@ -148,6 +189,8 @@ const RoundTripBookingView = () => {
     }
   };
   const getOnDemandOutstationBookings = async data => {
+    console.log(data, 'runnnnnnnnnnn');
+
     try {
       const response = await ON_DEMAND_BOOKING(data);
 
@@ -159,6 +202,8 @@ const RoundTripBookingView = () => {
   };
 
   const getIncityRoundTripBookings = async data => {
+    console.log(data, 'runnnnnnnnnnn');
+
     try {
       const response = await ON_DEMAND_BOOKING(data);
 
@@ -182,7 +227,7 @@ const RoundTripBookingView = () => {
     getIncityOneWayBookings({
       action: 'incity_oneway_booking',
     });
-  }, []);
+  }, [languageSwitch]);
 
   return (
     <>
@@ -221,9 +266,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   vehicleType: {
-    fontSize: 15,
+    fontSize: 17,
     color: AppColors.white,
-    marginLeft: 5,
+    marginLeft: 6,
   },
   contentWrapper: {
     flexDirection: 'row',

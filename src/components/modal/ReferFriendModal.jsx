@@ -43,6 +43,12 @@ const ReferFriendModal = ({setReferFriendModal}) => {
     setConfirmModal(true);
   };
 
+  const text =
+    'अब आप, अपने किसी भी जानकार को यह नौकरी दिलवा सकते हैं। आपके जानकार को, कस्टमर के पास interview के लिए भेजा जाएगा। इंटरव्यू में पास होने पर, उनकी नौकरी शुरू हो जाएगी, नौकरी शुरू होने के 7 वे दिन आपको';
+  const boldPart = '250 Rs Hiring Bonus';
+  const remainingText =
+    'दिया जाएगा। \n इस नौकरी को पाने के लिए आपके दोस्त को किसी प्रकार का रजिस्ट्रेशन करवाने की जरूरत नहीं है।';
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -54,9 +60,17 @@ const ReferFriendModal = ({setReferFriendModal}) => {
         </TouchableOpacity>
         <View style={styles.content}>
           <Text style={styles.description}>
-            {languageSwitch == 'english'
-              ? 'Now you can get this job for any of your acquaintances. Your acquaintance will be sent to the customer for an interview. If they pass the interview, their job will start, and you will receive a 250 Rs Hiring Bonus on the 7th day of their employment. \nThere is no need to register your friend in any way to get this job.'
-              : 'अब आप, अपने किसी भी जानकार को यह नौकरी दिलवा सकते हैं। आपके जानकार को, कस्टमर के पास interview के लिए भेजा जाएगा। इंटरव्यू में पास होने पर, उनकी नौकरी शुरू हो जाएगी, नौकरी शुरू होने के 7 वे दिन आपको 250 Rs Hiring Bonus दिया जाएगा। \n इस नौकरी को पाने के लिए आपके दोस्त को किसी प्रकार का रजिस्ट्रेशन करवाने की जरूरत नहीं है।'}
+            {
+              languageSwitch == 'english'
+                ? 'Now you can get this job for any of your acquaintances. Your acquaintance will be sent to the customer for an interview. If they pass the interview, their job will start, and you will receive a 250 Rs Hiring Bonus on the 7th day of their employment. \nThere is no need to register your friend in any way to get this job.'
+                : 'अब आप, अपने किसी भी जानकार को यह नौकरी दिलवा सकते हैं। आपके जानकार को, कस्टमर के पास interview के लिए भेजा जाएगा। इंटरव्यू में पास होने पर, उनकी नौकरी शुरू हो जाएगी, नौकरी शुरू होने के 7 वे दिन आपको 250 Rs Hiring Bonus दिया जाएगा। \n इस नौकरी को पाने के लिए आपके दोस्त को किसी प्रकार का रजिस्ट्रेशन करवाने की जरूरत नहीं है।'
+              // (
+              //   <>
+              //     {text} <Text style={{fontWeight: 'bold'}}>{boldPart}</Text>{' '}
+              //     {remainingText}
+              //   </>
+              // )
+            }
 
             {/* Now you can get this job for any of your acquaintances. Your
             acquaintance will be sent to the customer for an interview. If they
@@ -96,9 +110,7 @@ const ReferFriendModal = ({setReferFriendModal}) => {
             maxLength={10}
           />
 
-          <TouchableOpacity
-            style={styles.referButton}
-            onPress={referFriend}>
+          <TouchableOpacity style={styles.referButton} onPress={referFriend}>
             <Text style={styles.referButtonText}>Refer Now</Text>
           </TouchableOpacity>
         </View>
@@ -180,7 +192,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
   },
   referButton: {
-    backgroundColor: '#ddd',
+    backgroundColor: '#A6A6A6',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',

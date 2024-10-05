@@ -147,3 +147,14 @@ export const EXPRESS_BOOKING_POPUP = body => {
     {},
   );
 };
+
+// https://www.tatd.in/app-api/driver/trusted-driver/permanent-booking-view.php
+
+export const PERMANENT_BOOKING = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/permanent-booking-view.php',
+    {...body},
+    {},
+  );
+};

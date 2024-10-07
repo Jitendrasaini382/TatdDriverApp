@@ -28,16 +28,28 @@ const BookingCard = ({booking}) => {
     locality,
     trial_date,
     P_ID,
+    refer_price,
+    refer_button_title,
+    apply_or_accept
   } = booking;
 
   const {languageSwitch} = useContext(TokenConstextApi);
   const [permanentBookingPopup, setPermanentBookingPopup] = useState([]);
 
   // console.log(P_ID, 'piiiiiiiid');
+  
+  const tat = `Dear Sumit Bhasin. Thank you for trusting tat d. Contribute & help new users by providing your valuable insights.
+  
+  tat d`;
+  
+  const cleanedTat = (tat)=>{
+    tat.trim();
+  }
+console.log(cleanedTat(tat), "qqqqqqqq");
 
   useEffect(() => {
     getPermanentBookingPopup();
-  }, []);
+  }, [languageSwitch]);
 
   const getPermanentBookingPopup = async () => {
     // console.log('runnnnnnnnnnn permanent_booking_popup_data');
@@ -66,10 +78,7 @@ const BookingCard = ({booking}) => {
       </View>
       <View style={styles.bookingDetails}>
         <View style={styles.amountContainer}>
-          <Text style={styles.amount}>
-            {/* <Icon color={AppColors.white} name="rupee" size={27} /> */}₹{' '}
-            {salary}
-          </Text>
+          <Text style={styles.amount}>₹ {salary}</Text>
           <Text style={styles.duration}>
             {working_days} Days | {working_hours} Hours
           </Text>
@@ -85,14 +94,14 @@ const BookingCard = ({booking}) => {
               setReferFriendModal(true);
             }}
             style={styles.referButton}>
-            <Text style={styles.referButtonText}>Refer Your Friend- ₹ 250</Text>
+            <Text style={styles.referButtonText}>{refer_button_title} - ₹ {refer_price}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               setOpenModal(true);
             }}
             style={styles.acceptButton}>
-            <Text style={styles.acceptButtonText}>Accept</Text>
+            <Text style={styles.acceptButtonText}>{apply_or_accept}</Text>
           </TouchableOpacity>
 
           <Modal
@@ -177,7 +186,7 @@ const PermanentBookingView = () => {
 
 const styles = StyleSheet.create({
   bookingContainer: {
-    marginTop: 20,
+    marginVertical: 10,
     backgroundColor: AppColors.mainColor,
     borderRadius: 10,
     padding: 15,
@@ -226,9 +235,10 @@ const styles = StyleSheet.create({
   },
   eventContainer: {
     flexDirection: 'row',
-    marginBottom: 15,
+    // marginBottom: 15,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    marginTop: 50,
   },
   eventTypeText: {
     color: AppColors.white,

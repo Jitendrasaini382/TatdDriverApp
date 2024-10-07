@@ -16,20 +16,16 @@ import {TokenConstextApi} from '../../context/GlobalContext';
 const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
   const {languageSwitch} = useContext(TokenConstextApi);
 
-  // console.log(data, 'all send data');
-  // console.log(data.actions, 'all send data internallll actionsss');
-  // console.log(data.conditions, 'all send data internallll conditions');
+  const {
+    condition_1,
+    condition_2,
+    condition_3,
+    condition_4,
+    condition_5,
+    warning,
+  } = data?.conditions;
 
-  // const {
-  //   condition_1,
-  //   condition_2,
-  //   condition_3,
-  //   condition_4,
-  //   condition_5,
-  //   warning,
-  // } = data?.conditions;
-
-  const conditionsArray = Object.entries(data?.conditions || {});
+  // const conditionsArray = Object.entries(data?.conditions || {});
 
   const {cancel, apply_or_accept, P_ID} = data?.actions;
 
@@ -41,25 +37,24 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
         <Text style={styles.subHeader}>
           यह एक Private नौकरी है, {data?.job_content}
         </Text>
-
         <View style={styles.listContainer}>
-          {/* <Text style={styles.listItem}>1. {condition_1}</Text>
+          <Text style={styles.listItem}>1. {condition_1}</Text>
           <Text style={styles.listItem}>2. {condition_2}</Text>
           <Text style={styles.listItem}>3. {condition_3}</Text>
           <Text style={styles.listItem}>4. {condition_4}</Text>
           <Text style={styles.listItem}>5. {condition_5}</Text>
-          <Text style={[styles.listItem, styles.warning]}>6. {warning}</Text> */}
-           {conditionsArray.map(([key, value], index) => (
+          <Text style={styles.warning}>6. {warning}</Text>
+          {/* {conditionsArray.map(([key, value], index) => (
         <Text
           key={key}
           style={[
             styles.listItem,
-            key === 'warning' ? styles.warning : null, // Apply the warning style conditionally
+            key == 'warning' ? styles.warning : null,
           ]}
         >
           {index + 1}. {value}
         </Text>
-      ))}
+      ))} */}
         </View>
 
         <View style={styles.buttonContainer}>
@@ -68,7 +63,7 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
             style={styles.cancelButton}>
             <Text style={styles.cancelButtonText}>{cancel}</Text>
           </Pressable>
-          {console.log(P_ID, "apply button")}
+          {console.log(P_ID, 'apply button')}
           <Pressable
             onPress={() => {
               Alert.alert('Are You Confirm');

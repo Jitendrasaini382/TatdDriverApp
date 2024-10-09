@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Linking,
+  Pressable,
 } from 'react-native';
 import {RightArrow} from '../assets/images';
 import {AppColors} from '../assets/Colors';
@@ -108,7 +109,49 @@ const MyBookingModal = ({navigation}) => {
       ) : (
         <>
           <View style={styles.bookingContainer}>
-            <TouchableOpacity
+            {console.log(decodedToken.driver_mobile_number, 'jwt dta')}
+            {
+              myBookingData.clear_my_due_bookings &&
+              myBookingData.clear_my_due_bookings.length > 0
+                ? myBookingData.clear_my_due_bookings.map((booking, index) => (
+                    <Pressable
+                      onPress={() =>
+                        openMyUrl(
+                          `https://www.tatd.in/duty-report-login.php?action=dologin&driver_mobile_number=${decodedToken?.driver_mobile_number}&booking_number=${booking.booking_id}`,
+                        )
+                      }>
+                      <View
+                        style={[styles.bookingCard, styles.activeBookingCard]}>
+                        <Text
+                          style={[
+                            styles.bookingText,
+                            styles.activeBookingText,
+                            {fontWeight: "700"}
+
+                          ]}>
+                          {booking.booking_id}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.bookingText,
+                            styles.activeBookingText,
+                            {fontWeight: "700"}
+                          ]}>
+                          {'        '}+ {booking.amount}
+                        </Text>
+                        <Image
+                          resizeMode="center"
+                          style={styles.arrowIcon}
+                          source={RightArrow}
+                        />
+                      </View>
+                    </Pressable>
+                  ))
+                : null
+              // <Text>No bookings available</Text>
+            }
+
+            <Pressable
               onPress={() =>
                 openMyUrl(
                   `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
@@ -124,7 +167,7 @@ const MyBookingModal = ({navigation}) => {
                   source={RightArrow}
                 />
               </View>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </>
       )}
@@ -162,7 +205,7 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent:'flex-start',
   },
   tabItem: {
     margin: 10,

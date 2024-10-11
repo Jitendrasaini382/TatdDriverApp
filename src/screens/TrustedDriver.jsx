@@ -622,9 +622,9 @@ const styles = StyleSheet.create({
   },
   topLeft: {
     backgroundColor: AppColors.white,
-    height: responsiveSize(70),
-    width: responsiveSize(70),
-    borderRadius: responsiveSize(35),
+    height: responsiveSize(80),
+    width: responsiveSize(80),
+    borderRadius: responsiveSize(40),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -636,8 +636,8 @@ const styles = StyleSheet.create({
   },
   bottamLeftText: {
     color: AppColors.mainColor,
-    fontSize: responsiveSize(9),
-    fontWeight: '300',
+    fontSize: responsiveSize(10),
+    fontWeight: '400',
     fontFamily: AppFont.regularFont,
   },
   topRight: {

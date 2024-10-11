@@ -129,7 +129,7 @@ const PermanentBookingView = () => {
   useEffect(() => {
     getPermanentBookings();
     getPermanentBookingsOthers();
-  }, []);
+  }, [languageSwitch]);
 
   const getPermanentBookings = async () => {
     // console.log('runnnnnnnnnnn permamnet');
@@ -189,6 +189,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 15,
+    flexWrap: "wrap"
   },
   bookingType: {
     fontSize: 14,

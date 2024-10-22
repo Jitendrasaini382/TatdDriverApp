@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
-import {PERMANENT_BOOKING} from '../../apis/Apis';
 import {TokenConstextApi} from '../../context/GlobalContext';
 
 const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
@@ -24,8 +23,6 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
     condition_5,
     warning,
   } = data?.conditions;
-
-  // const conditionsArray = Object.entries(data?.conditions || {});
 
   const {cancel, apply_or_accept, P_ID} = data?.actions;
 
@@ -44,17 +41,6 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
           <Text style={styles.listItem}>4. {condition_4}</Text>
           <Text style={styles.listItem}>5. {condition_5}</Text>
           <Text style={styles.warning}>6. {warning}</Text>
-          {/* {conditionsArray.map(([key, value], index) => (
-        <Text
-          key={key}
-          style={[
-            styles.listItem,
-            key == 'warning' ? styles.warning : null,
-          ]}
-        >
-          {index + 1}. {value}
-        </Text>
-      ))} */}
         </View>
 
         <View style={styles.buttonContainer}>

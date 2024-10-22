@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -14,20 +14,56 @@ import {AppColors} from '../../assets/Colors';
 import {TokenConstextApi} from '../../context/GlobalContext';
 import {AppFont} from '../../assets/FontsFamily';
 import ConfirmReferFriendModal from './ConfirmReferFriendModal';
+import {
+  PERMANENT_REFER_ACCEPT_POPUP,
+  PERMANENT_REFER_POPUP,
+} from '../../apis/Apis';
 
-const ReferFriendModal = ({setReferFriendModal}) => {
+const ReferFriendModal = ({setReferFriendModal, id}) => {
   const [friendName, setFriendName] = useState('');
   const [friendNumber, setFriendNumber] = useState('');
-  const {decodedToken, setDecodedToken, jwtToken, languageSwitch} =
-    useContext(TokenConstextApi);
+  const {decodedToken, languageSwitch} = useContext(TokenConstextApi);
   const [confirmModal, setConfirmModal] = useState(false);
+  const [permanentReferPopup, setPermanentReferPopup] = useState({});
+  const [permanentReferAcceptPopup, setPermanentReferAcceptPopup] = useState(
+    {},
+  );
 
   const closeModalButton = () => {
     setConfirmModal(false);
   };
 
+  useEffect(() => {
+    getPermanentReferPopup();
+    getPermanentReferAcceptPopup(languageSwitch, id);
+  }, [languageSwitch]);
+
+  const getPermanentReferPopup = async () => {
+    console.log('runnnnnnnnnnn getPermanentReferPopup ');
+    try {
+      const response = await PERMANENT_REFER_POPUP(languageSwitch);
+
+      console.log(response, 'getPermanentReferPopup response');
+      setPermanentReferPopup(response?.refer_popup_data);
+    } catch (error) {
+      console.log(error, 'getPermanentReferPopup  Error');
+    }
+  };
+
+  const getPermanentReferAcceptPopup = async (languageSwitch, id) => {
+    console.log('runnnnnnnnnnn getPermanentReferAcceptPopup');
+
+    try {
+      const response = await PERMANENT_REFER_ACCEPT_POPUP(languageSwitch, id);
+      console.log(response, 'getPermanentReferAcceptPopupresponse');
+      setPermanentReferAcceptPopup(response?.refer_popup_data);
+    } catch (error) {
+      console.log(error, 'getPermanentReferAcceptPopup  Error');
+    }
+  };
+
   const referFriend = () => {
-    if (!friendName) {
+    if (!friendName.trim()) {
       Alert.alert('Please Enter Friend Name.');
       return;
     }
@@ -39,15 +75,8 @@ const ReferFriendModal = ({setReferFriendModal}) => {
       Alert.alert('Please enter a valid 10-digit mobile number.');
       return;
     }
-
     setConfirmModal(true);
   };
-
-  const text =
-    'अब आप, अपने किसी भी जानकार को यह नौकरी दिलवा सकते हैं। आपके जानकार को, कस्टमर के पास interview के लिए भेजा जाएगा। इंटरव्यू में पास होने पर, उनकी नौकरी शुरू हो जाएगी, नौकरी शुरू होने के 7 वे दिन आपको';
-  const boldPart = '250 Rs Hiring Bonus';
-  const remainingText =
-    'दिया जाएगा। \n इस नौकरी को पाने के लिए आपके दोस्त को किसी प्रकार का रजिस्ट्रेशन करवाने की जरूरत नहीं है।';
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -59,59 +88,35 @@ const ReferFriendModal = ({setReferFriendModal}) => {
           {/* <Text style={{color: AppColors.white, fontSize:25, fontWeight:"bold"}} >x</Text> */}
         </TouchableOpacity>
         <View style={styles.content}>
-          <Text style={styles.description}>
-            {
-              languageSwitch == 'english'
-                ? 'Now you can get this job for any of your acquaintances. Your acquaintance will be sent to the customer for an interview. If they pass the interview, their job will start, and you will receive a 250 Rs Hiring Bonus on the 7th day of their employment. \nThere is no need to register your friend in any way to get this job.'
-                : 'अब आप, अपने किसी भी जानकार को यह नौकरी दिलवा सकते हैं। आपके जानकार को, कस्टमर के पास interview के लिए भेजा जाएगा। इंटरव्यू में पास होने पर, उनकी नौकरी शुरू हो जाएगी, नौकरी शुरू होने के 7 वे दिन आपको 250 Rs Hiring Bonus दिया जाएगा। \n इस नौकरी को पाने के लिए आपके दोस्त को किसी प्रकार का रजिस्ट्रेशन करवाने की जरूरत नहीं है।'
-              // (
-              //   <>
-              //     {text} <Text style={{fontWeight: 'bold'}}>{boldPart}</Text>{' '}
-              //     {remainingText}
-              //   </>
-              // )
-            }
-
-            {/* Now you can get this job for any of your acquaintances. Your
-            acquaintance will be sent to the customer for an interview. If they
-            pass the interview, their job will start, and you will receive a 250
-            Rs Hiring Bonus on the 7th day of their employment.
-            {'\n\n'}
-            There is no need to register your friend in any way to get this job. */}
-          </Text>
+          <Text style={styles.description}>{permanentReferPopup?.content}</Text>
         </View>
 
         <View style={styles.referSection}>
-          <Text style={styles.sectionTitle}>Refer Your Friend</Text>
-
+          <Text style={styles.sectionTitle}>{permanentReferPopup?.title}</Text>
           <TextInput
             style={styles.input}
             placeholder={
-              languageSwitch == 'english'
-                ? "Your friend's name ?"
-                : 'आपके दोस्त का नाम ?'
+              permanentReferPopup?.form_fields?.friend_name_placeholder
             }
             placeholderTextColor={'#999'}
             value={friendName}
             onChangeText={setFriendName}
           />
-
           <TextInput
             style={styles.input}
             placeholderTextColor={'#999'}
             placeholder={
-              languageSwitch == 'english'
-                ? "Your friend's number ?"
-                : 'आपके दोस्त का नंबर ?'
+              permanentReferPopup?.form_fields?.friend_number_placeholder
             }
             value={friendNumber}
             onChangeText={setFriendNumber}
-            keyboardType="phone-pad"
+            keyboardType="number-pad"
             maxLength={10}
           />
-
           <TouchableOpacity style={styles.referButton} onPress={referFriend}>
-            <Text style={styles.referButtonText}>Refer Now</Text>
+            <Text style={styles.referButtonText}>
+              {permanentReferPopup?.button_text}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -121,7 +126,13 @@ const ReferFriendModal = ({setReferFriendModal}) => {
         transparent={true}
         onRequestClose={closeModalButton}
         visible={confirmModal}>
-        <ConfirmReferFriendModal closeModalButton={closeModalButton} />
+        <ConfirmReferFriendModal
+          closeModalButton={closeModalButton}
+          friendName={friendName}
+          friendNumber={friendNumber}
+          id={id}
+          data={permanentReferAcceptPopup}
+        />
       </Modal>
     </SafeAreaView>
   );
@@ -168,7 +179,7 @@ const styles = StyleSheet.create({
   description: {
     color: AppColors.black,
     // lineHeight: 20,
-    fontSize: 16,
+    fontSize: 19,
     fontFamily: AppFont.regularFont,
   },
   referSection: {

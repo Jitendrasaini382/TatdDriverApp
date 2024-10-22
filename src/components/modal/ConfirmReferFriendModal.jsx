@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,93 +11,72 @@ import {
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 import {TokenConstextApi} from '../../context/GlobalContext';
+import {SAVE_REFER_PERMANENT} from '../../apis/Apis';
 
-const ConfirmReferFriendModal = ({closeModalButton}) => {
-  const {languageSwitch} = useContext(TokenConstextApi);
+const ConfirmReferFriendModal = ({
+  closeModalButton,
+  friendName,
+  friendNumber,
+  id,
+  data,
+}) => {
+  const {decodedToken, setDecodedToken, jwtToken, languageSwitch} =
+    useContext(TokenConstextApi);
+  const [saveReferPermanent, setSaveReferPermanent] = useState();
+
+  console.log(data.points[0], 'send previous data');
+
+  const bookingData = {
+    action: 'permanent_booking_refer_accept_insert',
+    current_language: languageSwitch,
+    friend_number: friendNumber,
+    friend_name: friendName,
+    driver_name: decodedToken?.driver_name,
+    driver_mobile_number: decodedToken?.driver_mobile_number,
+    P_ID: id,
+  };
+
+  const handleSaveReferPermanent = async () => {
+    console.log(bookingData, 'runnnnnnnnnnn getSaveReferPermanent');
+
+    try {
+      const response = await SAVE_REFER_PERMANENT(bookingData);
+
+      console.log(response, 'permaneda getSaveReferPermanent response');
+      // setSaveReferPermanent(response);
+    } catch (error) {
+      console.log(error, ' getSaveReferPermanent Error');
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={styles.card}>
-        <Text style={styles.header}>
-          {languageSwitch == 'english'
-            ? 'Please refer your friend with care - '
-            : 'कृपया अपने दोस्त को तभी refer करें -'}
-        </Text>
-
-        {/* <Text style={styles.subHeader}>
-          यह एक Private नौकरी है, Apply for this job only if
-        </Text> */}
-
-        {languageSwitch == 'english' ? (
-          <View style={styles.listContainer}>
-            <Text style={styles.listItem}>
-              1. If your friend is above 25 years old.
-            </Text>
-            <Text style={styles.listItem}>
-              2. If their home is within 5 KM from the customer's home, which is
-              in jannaram post office .
-            </Text>
-            <Text style={styles.listItem}>
-              3. If they have no hesitation in cleaning the car.
-            </Text>
-            <Text style={styles.listItem}>
-              4. If they have experience driving XUV 700 Atomatic.
-            </Text>
-            <Text style={styles.listItem}>
-              5. If your acquaintance is willing to work for 26 days, 12 Hours,
-              and a salary of 21000₹.
-            </Text>
-            <Text style={styles.listItem}>
-              6. They are available for an interview of 2 hours on 04 Oct, at
-              11:00 AM.
-            </Text>
-            <Text style={[styles.listItem, styles.warning]}>
-              7. Do not refer anyone without reason, as it will negatively
-              impact your record, and you may not be able to add any driver to
-              the company in the future.
-            </Text>
-          </View>
-        ) : (
-          <View style={styles.listContainer}>
-            <Text style={styles.listItem}>
-              1. यदि आपके दोस्त की उम्र 25 वर्ष से अधिक है।
-            </Text>
-            <Text style={styles.listItem}>
-              2. उनका घर कस्टमर के घर से 5 KM के अंदर है। जो की pitampura में
-              है।
-            </Text>
-            <Text style={styles.listItem}>
-              3. उन्हें गाडी की साफ़ सफाई करने में किसी प्रकार की हिचकिचाहट नहीं
-              है।
-            </Text>
-            <Text style={styles.listItem}>
-              4. उन्हें Audi and Maruti A-Star गाडी चलाने का तजुर्बा है।
-            </Text>
-            <Text style={styles.listItem}>
-              5. यदि आपके जानकार 26 days , 10 Hours , 18500₹ सैलरी पर काम करने
-              के लिए सहमत हैं ?
-            </Text>
-            <Text style={styles.listItem}>
-              6.वह 2 घंटे के interview के लिए 04 Oct, 10:00 AM समय पर available
-              हैं।
-            </Text>
-            <Text style={[styles.listItem, styles.warning]}>
-              7. बिना वजह किसी को भी refer ना करें, ऐसा करने से आपका रिकॉर्ड
-              ख़राब होगा और आगे चलकर आप, किसी भी ड्राइवर को कंपनी के साथ जोड़ नहीं
-              पाएंगे।
-            </Text>
-          </View>
-        )}
-
+        <Text style={styles.header}>{data?.title}</Text>
+        <View style={styles.listContainer}>
+          <Text style={styles.listItem}>1. {data?.points[0]}</Text>
+          <Text style={styles.listItem}>2. {data?.points[1]}</Text>
+          <Text style={styles.listItem}>3. {data?.points[2]}</Text>
+          <Text style={styles.listItem}>4. {data?.points[3]}</Text>
+          <Text style={styles.listItem}>5. {data?.points[4]}</Text>
+          <Text style={styles.listItem}>6. {data?.points[5]}</Text>
+          <Text style={[styles.listItem, styles.warning]}>
+            7. {data?.points[6]}
+          </Text>
+        </View>
         <View style={styles.buttonContainer}>
           <Pressable onPress={closeModalButton} style={styles.cancelButton}>
-            <Text style={styles.cancelButtonText}>Cancel</Text>
+            <Text style={styles.cancelButtonText}>{data?.cancel_button}</Text>
           </Pressable>
           <Pressable
-            onPress={() => {
+            onPress={() => 
+              {
               Alert.alert('Are You Confirm');
-            }}
+            }
+            // handleSaveReferPermanent()
+          }
             style={styles.applyButton}>
-            <Text style={styles.applyButtonText}>Refer</Text>
+            <Text style={styles.applyButtonText}>{data?.refer_button}</Text>
           </Pressable>
         </View>
       </View>

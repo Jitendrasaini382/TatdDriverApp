@@ -36,8 +36,6 @@ const BookingCard = ({booking}) => {
   const {languageSwitch} = useContext(TokenConstextApi);
   const [permanentBookingPopup, setPermanentBookingPopup] = useState([]);
 
-  // console.log(P_ID, 'piiiiiiiid');
-
   useEffect(() => {
     getPermanentBookingPopup();
   }, [languageSwitch]);
@@ -113,7 +111,10 @@ const BookingCard = ({booking}) => {
             transparent={true}
             visible={referFriendModal}
             onRequestClose={() => setReferFriendModal(false)}>
-            <ReferFriendModal setReferFriendModal={setReferFriendModal} />
+            <ReferFriendModal
+              setReferFriendModal={setReferFriendModal}
+              id={P_ID}
+            />
           </Modal>
         </View>
       </View>
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 15,
-    flexWrap: "wrap"
+    flexWrap: 'wrap',
   },
   bookingType: {
     fontSize: 14,

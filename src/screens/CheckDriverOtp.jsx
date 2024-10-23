@@ -136,7 +136,7 @@ const CheckDriverOtp = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
+      <Header  backButton={true} />
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.contentContainer}>
           <View style={styles.card}>

@@ -1,257 +1,257 @@
-// import React, {useEffect, useState} from 'react';
-// import {
-//   View,
-//   Text,
-//   TouchableOpacity,
-//   Modal,
-//   StyleSheet,
-//   NativeModules,
-//   Pressable,
-//   FlatList,
-//   Image,
-// } from 'react-native';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+// // import React, {useEffect, useState} from 'react';
+// // import {
+// //   View,
+// //   Text,
+// //   TouchableOpacity,
+// //   Modal,
+// //   StyleSheet,
+// //   NativeModules,
+// //   Pressable,
+// //   FlatList,
+// //   Image,
+// // } from 'react-native';
+// // import Icon from 'react-native-vector-icons/FontAwesome';
 
-// import {PermissionsAndroid} from 'react-native';
-// import {AppColors} from '../assets/Colors';
-// import {AppFont} from '../assets/FontsFamily';
-// import {googleLogo} from '../assets/images';
+// // import {PermissionsAndroid} from 'react-native';
+// // import {AppColors} from '../assets/Colors';
+// // import {AppFont} from '../assets/FontsFamily';
+// // import {googleLogo} from '../assets/images';
 
-// const {MyTelephonyModule} = NativeModules;
-// console.log('MyTelephonyModule:', MyTelephonyModule);
+// // const {MyTelephonyModule} = NativeModules;
+// // console.log('MyTelephonyModule:', MyTelephonyModule);
 
-// async function requestPermissions() {
-//   if (Platform.OS === 'android') {
-//     try {
-//       const granted = await PermissionsAndroid.requestMultiple([
-//         PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
-//         PermissionsAndroid.PERMISSIONS.READ_PHONE_NUMBERS,
-//       ]);
+// // async function requestPermissions() {
+// //   if (Platform.OS === 'android') {
+// //     try {
+// //       const granted = await PermissionsAndroid.requestMultiple([
+// //         PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
+// //         PermissionsAndroid.PERMISSIONS.READ_PHONE_NUMBERS,
+// //       ]);
 
-//       if (
-//         granted['android.permission.READ_PHONE_STATE'] ===
-//           PermissionsAndroid.RESULTS.GRANTED &&
-//         granted['android.permission.READ_PHONE_NUMBERS'] ===
-//           PermissionsAndroid.RESULTS.GRANTED
-//       ) {
-//         console.log('Phone state permissions granted');
-//         return true;
-//       } else {
-//         console.log('Phone state permissions denied');
-//         return false;
-//       }
-//     } catch (err) {
-//       console.warn(err);
-//       return false;
-//     }
-//   }
-//   return true;
-// }
+// //       if (
+// //         granted['android.permission.READ_PHONE_STATE'] ===
+// //           PermissionsAndroid.RESULTS.GRANTED &&
+// //         granted['android.permission.READ_PHONE_NUMBERS'] ===
+// //           PermissionsAndroid.RESULTS.GRANTED
+// //       ) {
+// //         console.log('Phone state permissions granted');
+// //         return true;
+// //       } else {
+// //         console.log('Phone state permissions denied');
+// //         return false;
+// //       }
+// //     } catch (err) {
+// //       console.warn(err);
+// //       return false;
+// //     }
+// //   }
+// //   return true;
+// // }
 
-// const getSimInfo = async () => {
-//   const hasPermission = await requestPermissions();
-//   if (hasPermission) {
-//     try {
-//       console.log('Fetching SIM information...');
-//       const simInfo = await MyTelephonyModule.getSimInfo();
-//       console.log('SIM Information retrieved:', simInfo);
-//       return simInfo;
-//     } catch (error) {
-//       console.error('Error fetching SIM Info:', error);
-//       return 'Failed to get SIM information';
-//     }
-//   } else {
-//     console.error('Error fetching SIM Info:', error);
-//   }
-// };
+// // const getSimInfo = async () => {
+// //   const hasPermission = await requestPermissions();
+// //   if (hasPermission) {
+// //     try {
+// //       console.log('Fetching SIM information...');
+// //       const simInfo = await MyTelephonyModule.getSimInfo();
+// //       console.log('SIM Information retrieved:', simInfo);
+// //       return simInfo;
+// //     } catch (error) {
+// //       console.error('Error fetching SIM Info:', error);
+// //       return 'Failed to get SIM information';
+// //     }
+// //   } else {
+// //     console.error('Error fetching SIM Info:', error);
+// //   }
+// // };
 
-// const extractPhoneNumbers = info => {
-//   return info.match(/Phone Number: [\+\d]+/g).map(match => {
-//     const phoneNumber = match
-//       .replace('Phone Number: ', '')
-//       .replace(/^(\+91|0)/, '');
-//     return Number(phoneNumber);
-//   });
-// };
+// // const extractPhoneNumbers = info => {
+// //   return info.match(/Phone Number: [\+\d]+/g).map(match => {
+// //     const phoneNumber = match
+// //       .replace('Phone Number: ', '')
+// //       .replace(/^(\+91|0)/, '');
+// //     return Number(phoneNumber);
+// //   });
+// // };
 
-// const SimInfoComponent = () => {
-//   const [simInfo, setSimInfo] = useState([]);
-//   const [isModalVisible, setModalVisible] = useState(false);
+// // const SimInfoComponent = () => {
+// //   const [simInfo, setSimInfo] = useState([]);
+// //   const [isModalVisible, setModalVisible] = useState(false);
 
-// const handleClose = () => {
-//   setModalVisible(false);
-// };
-// const handleOpen = () => {
-//   setModalVisible(true);
-// };
-// useEffect(() => {
-//   fetchSimInfo();
-// }, []);
+// // const handleClose = () => {
+// //   setModalVisible(false);
+// // };
+// // const handleOpen = () => {
+// //   setModalVisible(true);
+// // };
+// // useEffect(() => {
+// //   fetchSimInfo();
+// // }, []);
 
-// const fetchSimInfo = async () => {
-//   try {
-//     const info = await getSimInfo();
-//     setSimInfo(extractPhoneNumbers(info));
-//   } catch (err) {
-//     setSimInfo('Failed to get SIM information');
-//   }
-// };
+// // const fetchSimInfo = async () => {
+// //   try {
+// //     const info = await getSimInfo();
+// //     setSimInfo(extractPhoneNumbers(info));
+// //   } catch (err) {
+// //     setSimInfo('Failed to get SIM information');
+// //   }
+// // };
 
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.title}>SIM Information</Text>
-//       <Text>{simInfo}</Text>
-//       <TouchableOpacity onPress={handleOpen}>
-//         <Text style={{color: 'red'}}>hello</Text>
-//       </TouchableOpacity>
+// //   return (
+// //     <View style={styles.container}>
+// //       <Text style={styles.title}>SIM Information</Text>
+// //       <Text>{simInfo}</Text>
+// //       <TouchableOpacity onPress={handleOpen}>
+// //         <Text style={{color: 'red'}}>hello</Text>
+// //       </TouchableOpacity>
 
-// <Modal visible={isModalVisible} transparent={true} animationType="slide">
-//   <View
-//     style={{
-//       flex: 1,
-//       backgroundColor: 'rgba(0, 0, 0, 0.5)',
-//       justifyContent: 'flex-end',
-//       alignItems: 'center',
-//       // alignContent: "space-between"
-//     }}>
-//     <View
-//       style={{
-//         width: '100%',
-//         backgroundColor: 'white',
-//         borderRadius: 10,
-//         padding: 20,
-//       }}>
-//       <View
-//         style={{
-//           justifyContent: 'space-between',
-//           alignContent: 'center',
-//           flexDirection: 'row',
-//           marginBottom: 10,
-//         }}>
-//         <View
-//           style={{
-//             borderRadius: 18,
-//             height: 36,
-//             width: 36,
-//             justifyContent: 'center',
-//             alignItems: 'center',
-//             marginRight: 5,
-//           }}>
-//           <Image
-//             style={{
-//               resizeMode: 'center',
-//               height: 30,
-//               width: 30,
-//             }}
-//             source={googleLogo}
-//           />
-//         </View>
-//         <TouchableOpacity
-//           onPress={handleClose}
-//           style={{
-//             backgroundColor: 'white',
-//             borderRadius: 18,
-//             height: 36,
-//             width: 36,
-//             justifyContent: 'center',
-//             alignItems: 'center',
-//             marginRight: 5,
-//           }}>
-//           <Icon name="close" size={20} color={AppColors.greyColor} />
-//         </TouchableOpacity>
-//       </View>
-//       <Text
-//         style={{
-//           fontSize: 18,
-//           fontWeight: 'bold',
-//           marginBottom: 10,
-//           color: 'black',
-//         }}>
-//         Choose a phone number
-//       </Text>
-//       <Text
-//         style={{
-//           fontSize: 14,
-//           marginBottom: 5,
-//           color: '#555',
-//         }}>
-//         You can choose a phone number that's assigned to your phone, and
-//         Google will share it only with this app.
-//       </Text>
-//       <Text
-//         style={{
-//           fontSize: 14,
-//           marginBottom: 5,
-//           color: '#555',
-//         }}>
-//         Google won't store the phone number that you share with this app
-//         in your Google Account
-//       </Text>
+// // <Modal visible={isModalVisible} transparent={true} animationType="slide">
+// //   <View
+// //     style={{
+// //       flex: 1,
+// //       backgroundColor: 'rgba(0, 0, 0, 0.5)',
+// //       justifyContent: 'flex-end',
+// //       alignItems: 'center',
+// //       // alignContent: "space-between"
+// //     }}>
+// //     <View
+// //       style={{
+// //         width: '100%',
+// //         backgroundColor: 'white',
+// //         borderRadius: 10,
+// //         padding: 20,
+// //       }}>
+// //       <View
+// //         style={{
+// //           justifyContent: 'space-between',
+// //           alignContent: 'center',
+// //           flexDirection: 'row',
+// //           marginBottom: 10,
+// //         }}>
+// //         <View
+// //           style={{
+// //             borderRadius: 18,
+// //             height: 36,
+// //             width: 36,
+// //             justifyContent: 'center',
+// //             alignItems: 'center',
+// //             marginRight: 5,
+// //           }}>
+// //           <Image
+// //             style={{
+// //               resizeMode: 'center',
+// //               height: 30,
+// //               width: 30,
+// //             }}
+// //             source={googleLogo}
+// //           />
+// //         </View>
+// //         <TouchableOpacity
+// //           onPress={handleClose}
+// //           style={{
+// //             backgroundColor: 'white',
+// //             borderRadius: 18,
+// //             height: 36,
+// //             width: 36,
+// //             justifyContent: 'center',
+// //             alignItems: 'center',
+// //             marginRight: 5,
+// //           }}>
+// //           <Icon name="close" size={20} color={AppColors.greyColor} />
+// //         </TouchableOpacity>
+// //       </View>
+// //       <Text
+// //         style={{
+// //           fontSize: 18,
+// //           fontWeight: 'bold',
+// //           marginBottom: 10,
+// //           color: 'black',
+// //         }}>
+// //         Choose a phone number
+// //       </Text>
+// //       <Text
+// //         style={{
+// //           fontSize: 14,
+// //           marginBottom: 5,
+// //           color: '#555',
+// //         }}>
+// //         You can choose a phone number that's assigned to your phone, and
+// //         Google will share it only with this app.
+// //       </Text>
+// //       <Text
+// //         style={{
+// //           fontSize: 14,
+// //           marginBottom: 5,
+// //           color: '#555',
+// //         }}>
+// //         Google won't store the phone number that you share with this app
+// //         in your Google Account
+// //       </Text>
 
-//       <FlatList
-//         data={simInfo}
-//         keyExtractor={(item, index) => index.toString()}
-//         renderItem={({item}) => (
-//           <View
-//             style={{
-//               flexDirection: 'row',
-//               alignItems: 'center',
-//               padding: 5,
-//             }}>
-//             <View
-//               style={{
-//                 backgroundColor: 'grey',
-//                 borderRadius: 18,
-//                 height: 36,
-//                 width: 36,
-//                 justifyContent: 'center',
-//                 alignItems: 'center',
-//                 marginRight: 15,
-//               }}>
-//               <Icon name="phone" size={20} color={AppColors.greyColor} />
-//             </View>
-//             <TouchableOpacity style={{}}>
-//               <Text style={{fontSize: 18, color: 'black'}}>{item}</Text>
-//             </TouchableOpacity>
-//           </View>
-//         )}
-//       />
+// //       <FlatList
+// //         data={simInfo}
+// //         keyExtractor={(item, index) => index.toString()}
+// //         renderItem={({item}) => (
+// //           <View
+// //             style={{
+// //               flexDirection: 'row',
+// //               alignItems: 'center',
+// //               padding: 5,
+// //             }}>
+// //             <View
+// //               style={{
+// //                 backgroundColor: 'grey',
+// //                 borderRadius: 18,
+// //                 height: 36,
+// //                 width: 36,
+// //                 justifyContent: 'center',
+// //                 alignItems: 'center',
+// //                 marginRight: 15,
+// //               }}>
+// //               <Icon name="phone" size={20} color={AppColors.greyColor} />
+// //             </View>
+// //             <TouchableOpacity style={{}}>
+// //               <Text style={{fontSize: 18, color: 'black'}}>{item}</Text>
+// //             </TouchableOpacity>
+// //           </View>
+// //         )}
+// //       />
 
-//       <Text
-//         style={{
-//           fontSize: 12,
-//           marginTop: 15,
-//           color: '#555',
-//         }}>
-//         You can update your phone number sharing preference in your device
-//         settings
-//         {/* <Text style={{color: '#1a73e8'}}> device settings</Text>. */}
-//       </Text>
-//     </View>
-//   </View>
-// </Modal>
-//     </View>
-//   );
-// };
+// //       <Text
+// //         style={{
+// //           fontSize: 12,
+// //           marginTop: 15,
+// //           color: '#555',
+// //         }}>
+// //         You can update your phone number sharing preference in your device
+// //         settings
+// //         {/* <Text style={{color: '#1a73e8'}}> device settings</Text>. */}
+// //       </Text>
+// //     </View>
+// //   </View>
+// // </Modal>
+// //     </View>
+// //   );
+// // };
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     padding: 20,
-//     backgroundColor: 'white',
-//   },
-//   title: {
-//     fontSize: 24,
-//     marginBottom: 20,
-//     color: 'black',
-//   },
-// });
+// // const styles = StyleSheet.create({
+// //   container: {
+// //     flex: 1,
+// //     justifyContent: 'center',
+// //     alignItems: 'center',
+// //     padding: 20,
+// //     backgroundColor: 'white',
+// //   },
+// //   title: {
+// //     fontSize: 24,
+// //     marginBottom: 20,
+// //     color: 'black',
+// //   },
+// // });
 
-// export default SimInfoComponent;
+// // export default SimInfoComponent;
 
-/////////////
+// /////////////
 
 import React, {useEffect, useState} from 'react';
 import {
@@ -351,7 +351,7 @@ const DriverLogin = () => {
   const [error, setError] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const [loader, setLoader] = useState(false);
-
+  const [hasModalOpened, setHasModalOpened] = useState(false); // Track if modal has been opened
   const [simInfo, setSimInfo] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -372,7 +372,11 @@ const DriverLogin = () => {
     setModalVisible(false);
   };
   const handleOpen = () => {
-    setModalVisible(true);
+    if (!hasModalOpened) {
+      // Check if the modal has not been opened before
+      setModalVisible(true);
+      setHasModalOpened(true); // Set modal as opened
+    }
   };
   useEffect(() => {
     fetchSimInfo();
@@ -405,7 +409,8 @@ const DriverLogin = () => {
   const sendOtp = async number => {
     console.log('send otppp===========================');
 
-    console.log(typeof number);
+    console.log(typeof(number));
+    console.log(number);
     console.log('send otppp===========================');
     console.log('send otppp===========================');
     console.log('send otppp===========================');
@@ -413,12 +418,12 @@ const DriverLogin = () => {
     console.log('send otppp===========================');
 
     try {
-      console.log(mobile.length, mobile, 'apiiiiiiiii');
+      console.log(number.length, mobile, 'apiiiiiiiii');
 
-      if (!mobile) {
+      if (!number) {
         setError('Please Enter Mobile Number');
         return;
-      } else if (mobile.length !== 10) {
+      } else if (number.length !== 10) {
         setError('Please Enter 10 digit Mobile Number');
         return;
       }

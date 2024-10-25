@@ -31,6 +31,7 @@ const ReferFriendModal = ({setReferFriendModal, id}) => {
 
   const closeModalButton = () => {
     setConfirmModal(false);
+    setReferFriendModal(false);
   };
 
   useEffect(() => {
@@ -39,11 +40,8 @@ const ReferFriendModal = ({setReferFriendModal, id}) => {
   }, [languageSwitch]);
 
   const getPermanentReferPopup = async () => {
-    console.log('runnnnnnnnnnn getPermanentReferPopup ');
     try {
       const response = await PERMANENT_REFER_POPUP(languageSwitch);
-
-      console.log(response, 'getPermanentReferPopup response');
       setPermanentReferPopup(response?.refer_popup_data);
     } catch (error) {
       console.log(error, 'getPermanentReferPopup  Error');
@@ -51,8 +49,6 @@ const ReferFriendModal = ({setReferFriendModal, id}) => {
   };
 
   const getPermanentReferAcceptPopup = async (languageSwitch, id) => {
-    console.log('runnnnnnnnnnn getPermanentReferAcceptPopup');
-
     try {
       const response = await PERMANENT_REFER_ACCEPT_POPUP(languageSwitch, id);
       console.log(response, 'getPermanentReferAcceptPopupresponse');

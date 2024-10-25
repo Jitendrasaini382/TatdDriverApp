@@ -42,8 +42,21 @@ const ConfirmReferFriendModal = ({
     try {
       const response = await SAVE_REFER_PERMANENT(bookingData);
 
-      console.log(response, 'permaneda getSaveReferPermanent response');
-      // setSaveReferPermanent(response);
+      console.log(response, 'permanent getSaveReferPermanent response');
+      // if (response?.status_code == 200) {
+      //   Alert.alert(response?.message);
+      // }
+      if (response?.status_code === 200) {
+        Alert.alert('Thanks', response?.message || 'Thanks', [
+          {
+            text: 'OK',
+            onPress: () => {
+              closeModalButton();
+            },
+          },
+        ]);
+      }
+      setSaveReferPermanent(response);
     } catch (error) {
       console.log(error, ' getSaveReferPermanent Error');
     }
@@ -69,12 +82,7 @@ const ConfirmReferFriendModal = ({
             <Text style={styles.cancelButtonText}>{data?.cancel_button}</Text>
           </Pressable>
           <Pressable
-            onPress={() => 
-              {
-              Alert.alert('Are You Confirm');
-            }
-            // handleSaveReferPermanent()
-          }
+            onPress={() => handleSaveReferPermanent()}
             style={styles.applyButton}>
             <Text style={styles.applyButtonText}>{data?.refer_button}</Text>
           </Pressable>

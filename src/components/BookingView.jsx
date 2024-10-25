@@ -108,6 +108,7 @@ const BookingView = () => {
       </View>
       <RoundTripBookingView />
       <PermanentBookingView />
+      <FlexibleBookingView/>
     </View>
   );
 };

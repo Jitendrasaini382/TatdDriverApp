@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   leftContent: {
-    flex: 0.7,
+    flex: 0.6,
     justifyContent: 'center',
     borderRadius: 10,
     backgroundColor: AppColors.white,
@@ -344,24 +344,7 @@ const styles = StyleSheet.create({
 export default RoundTripBookingView;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+////////////////////
 
 
 // import React, {useContext, useEffect, useState} from 'react';
@@ -403,15 +386,38 @@ export default RoundTripBookingView;
 //           ffffff
 //         </Text>
 //       </View> */}
-//        {trip.night_charge > 0 ? (
-//                 <View
-//                   style={[styles.incentiveBox, {backgroundColor: '#FF8C00'}]}>
-//                   <Text
-//                     style={[styles.incentiveText, {color: AppColors.white}]}>
-//                     + ₹ {trip.night_charge} Night Charge
-//                   </Text>
-//                 </View>
-//               ) : null}
+//       {trip.night_charge > 0 ? (
+//         // <View
+//         // //  style={[styles.incentiveBox, {backgroundColor: 'white'}]}
+//         // style={{ backgroundColor: 'orange',
+//         //   padding: 5,
+//         //   borderRadius: 5,
+//         //   marginBottom: 5,}}
+//         // >
+//         //   <Text
+//         //     // style={[styles.incentiveText, {color: AppColors.black, backgroundColor: 'white'}]}
+//         //     style={{color: AppColors.white, fontSize: 12}}>
+//         //     + ₹ {trip.night_charge} Night Charge
+//         //   </Text>
+//         // </View>
+//         <View
+//         style={{
+//           justifyContent: 'flex-end',
+//           alignItems: 'flex-end',
+//           marginHorizontal: 10,
+//         }}>
+//         <Text
+//           style={{
+//             color: 'white',
+//             fontSize: 15,
+//             fontWeight: '500',
+//             backgroundColor: 'orange',
+//             padding:5
+//           }}>
+//          + ₹ {trip.night_charge} Night Charge
+//         </Text>
+//       </View> 
+//       ) : null}
 //       <View style={styles.card}>
 //         <View style={styles.header}>
 //           <Text style={styles.time}>
@@ -471,7 +477,7 @@ export default RoundTripBookingView;
 //           <View style={styles.rightContent}>
 //             <View style={styles.paymentDetails}>
 //               {/* {console.log(trip.incentive_eligibility_fullfillment) } */}
-//               {trip.night_charge > 0 ? (
+//               {/* {trip.night_charge > 0 ? (
 //                 <View
 //                   style={[styles.incentiveBox, {backgroundColor: '#FF8C00'}]}>
 //                   <Text
@@ -479,7 +485,7 @@ export default RoundTripBookingView;
 //                     + ₹ {trip.night_charge} Night Charge
 //                   </Text>
 //                 </View>
-//               ) : null}
+//               ) : null} */}
 //               {trip.surge > 0 ? (
 //                 <View
 //                   style={[
@@ -664,7 +670,7 @@ export default RoundTripBookingView;
 // const styles = StyleSheet.create({
 //   card: {
 //     backgroundColor: AppColors.mainColor,
-//     borderRadius: 10,
+//     // borderRadius: 10,
 //     padding: 12,
 //     marginBottom: 20,
 //     marginHorizontal: 10,
@@ -689,7 +695,7 @@ export default RoundTripBookingView;
 //     justifyContent: 'space-between',
 //   },
 //   leftContent: {
-//     flex: 0.7,
+//     flex: 0.6,
 //     justifyContent: 'center',
 //     borderRadius: 10,
 //     backgroundColor: AppColors.white,
@@ -756,4 +762,3 @@ export default RoundTripBookingView;
 // });
 
 // export default RoundTripBookingView;
-

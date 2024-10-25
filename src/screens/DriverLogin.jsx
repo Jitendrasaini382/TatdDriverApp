@@ -289,7 +289,7 @@ const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;
 
 const {MyTelephonyModule} = NativeModules;
-console.log('MyTelephonyModule:', MyTelephonyModule);
+// console.log('MyTelephonyModule:', MyTelephonyModule);
 
 async function requestPermissions() {
   if (Platform.OS === 'android') {
@@ -328,7 +328,7 @@ const getSimInfo = async () => {
       // console.log('SIM Information retrieved:', simInfo);
       return simInfo;
     } catch (error) {
-      // console.error('Error fetching SIM Info:', error);
+      console.error('Error fetching SIM Info:', error);
       return 'Failed to get SIM information';
     }
   } else {
@@ -356,7 +356,7 @@ const DriverLogin = () => {
   const [isModalVisible, setModalVisible] = useState(false);
 
   const handleChange = text => {
-    setMobile(text); // Update the state when the input value changes
+    setMobile(text);
   };
 
   // Function to handle setting the number
@@ -373,9 +373,8 @@ const DriverLogin = () => {
   };
   const handleOpen = () => {
     if (!hasModalOpened) {
-      // Check if the modal has not been opened before
       setModalVisible(true);
-      setHasModalOpened(true); // Set modal as opened
+      setHasModalOpened(true);
     }
   };
   useEffect(() => {
@@ -386,8 +385,9 @@ const DriverLogin = () => {
     try {
       const info = await getSimInfo();
       setSimInfo(extractPhoneNumbers(info));
+      console.log(extractPhoneNumbers(info), 'fghjkkjhgfdfghj');
     } catch (err) {
-      // setSimInfo('Failed to get SIM information');
+      setSimInfo(['Please Allow The Permission']);
     }
   };
 
@@ -408,13 +408,7 @@ const DriverLogin = () => {
 
   const sendOtp = async number => {
     console.log('send otppp===========================');
-
-    console.log(typeof(number));
-    console.log(number);
-    console.log('send otppp===========================');
-    console.log('send otppp===========================');
-    console.log('send otppp===========================');
-    console.log('send otppp===========================');
+    console.log(typeof number, number);
     console.log('send otppp===========================');
 
     try {
@@ -434,13 +428,10 @@ const DriverLogin = () => {
 
       if (response.status_code == '200') {
         console.log('send otppp111111');
-
         setLoader(false);
         navigation.navigate('CheckDriverOtp', {mobile: number});
       }
     } catch (err) {
-      // console.log('send otppp111112222221');
-
       setLoader(false);
       console.log(err, 'err');
     }
@@ -491,7 +482,6 @@ const DriverLogin = () => {
                         : AppColors.greyColor,
                     },
                   ]}>
-                  {console.log(mobile, 'mmmmmm')}
                   <TextInput
                     style={[
                       styles.inputText,
@@ -631,22 +621,24 @@ const DriverLogin = () => {
                       alignItems: 'center',
                       padding: 5,
                     }}>
-                    <View
-                      style={{
-                        backgroundColor: 'grey',
-                        borderRadius: 18,
-                        height: 36,
-                        width: 36,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginRight: 15,
-                      }}>
-                      <Icon
-                        name="phone"
-                        size={20}
-                        color={AppColors.greyColor}
-                      />
-                    </View>
+                    {item !== 'Please Allow The Permission' ? (
+                      <View
+                        style={{
+                          backgroundColor: 'grey',
+                          borderRadius: 18,
+                          height: 36,
+                          width: 36,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          marginRight: 15,
+                        }}>
+                        <Icon
+                          name="phone"
+                          size={20}
+                          color={AppColors.greyColor}
+                        />
+                      </View>
+                    ) : null}
                     <TouchableOpacity
                       style={{}}
                       onPress={() => handleSetNumber(item.toString())}>

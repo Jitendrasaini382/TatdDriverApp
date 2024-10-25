@@ -188,12 +188,23 @@ export const PERMANENT_REFER_ACCEPT_POPUP = (lang, id) => {
   );
 };
 
-// https://www.tatd.in/app-api/driver/trusted-driver/permanent-booking-refer-view.php
+// https://www.tatd.in/app-api/driver/trusted-driver/permanent-booking-refer-accept.php
 
 export const SAVE_REFER_PERMANENT = body => {
   return _Fetch(
     'POST',
-    'trusted-driver/permanent-booking-refer-view.php',
+    'trusted-driver/permanent-booking-refer-accept.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/trusted-driver/permanent-booking-accept.php
+
+export const ACCEPT_PERMANENT_BOOKING = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/permanent-booking-accept.php',
     {...body},
     {},
   );

@@ -49,7 +49,7 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
             style={styles.cancelButton}>
             <Text style={styles.cancelButtonText}>{cancel}</Text>
           </Pressable>
-          {console.log(P_ID, 'apply button')}
+          {console.log(P_ID, 'permananet idd')}
           <Pressable
             onPress={() => {
               Alert.alert('Are You Confirm');

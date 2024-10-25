@@ -42,6 +42,8 @@ const BookingCard = ({booking}) => {
 
   const getPermanentBookingPopup = async () => {
     // console.log('runnnnnnnnnnn permanent_booking_popup_data');
+    console.log('1234567890-0987654321234567890--0987654321234567890-=-0987654321234567890-');
+    
 
     try {
       const response = await PERMANENT_BOOKING({
@@ -97,7 +99,7 @@ const BookingCard = ({booking}) => {
 
           <Modal
             animationType="slide"
-            transparent={false}
+            transparent={true}
             onRequestClose={() => setOpenModal(false)}
             visible={openModal}>
             <PermanentBookingAcceptModal
@@ -125,15 +127,15 @@ const BookingCard = ({booking}) => {
 const PermanentBookingView = () => {
   const [permanentBookings, setPermanentBookings] = useState([]);
   const [permanentBookingsOthers, setPermanentBookingsOthers] = useState([]);
-  const {languageSwitch} = useContext(TokenConstextApi);
+  const {languageSwitch, refreshData} = useContext(TokenConstextApi);
 
   useEffect(() => {
     getPermanentBookings();
     getPermanentBookingsOthers();
-  }, [languageSwitch]);
+  }, [languageSwitch, refreshData]);
 
   const getPermanentBookings = async () => {
-    // console.log('runnnnnnnnnnn permamnet');
+    console.log('runnnnnnnnnnn permamnet--------------<<<<<<<<<<<<<<<<');
 
     try {
       const response = await PERMANENT_BOOKING({
@@ -150,7 +152,7 @@ const PermanentBookingView = () => {
   };
 
   const getPermanentBookingsOthers = async () => {
-    // console.log('runnnnnnnnnnn permamnet');
+    console.log('runnnnnnnnnnn permamnet====================>>>>');
 
     try {
       const response = await PERMANENT_BOOKING({

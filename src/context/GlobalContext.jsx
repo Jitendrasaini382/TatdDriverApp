@@ -17,6 +17,7 @@ export const GlobalContextApi = ({children}) => {
   const [storedRating, setStoredRating] = useState(null);
   const [notificationData, setNotificationData] = useState([]);
   const [decodedToken, setDecodedToken] = useState(null);
+  const [refreshData, setRefreshData] = useState(true);
 
   // const decodeData = useCallback((token) => {
   //   if (!token) {
@@ -79,6 +80,9 @@ export const GlobalContextApi = ({children}) => {
     fetchTokens(); // Call the async function
   }, [getTokens]);
 
+  console.log("refreshDatarefreshDatarefreshDatarefreshData",refreshData);
+  
+
   const values = {
     jwtToken,
     ticketsData,
@@ -104,6 +108,8 @@ export const GlobalContextApi = ({children}) => {
     // setSelectedTicketId,
     refreshToken,
     setRefreshToken,
+    refreshData,
+    setRefreshData,
   };
 
   return (

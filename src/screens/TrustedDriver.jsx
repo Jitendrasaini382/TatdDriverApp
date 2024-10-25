@@ -66,8 +66,14 @@ const responsiveSize = size => {
 
 const TrustedDriver = ({navigation}) => {
   const dispatch = useDispatch();
-  const {decodedToken, setDecodedToken, jwtToken, languageSwitch} =
-    useContext(TokenConstextApi);
+  const {
+    decodedToken,
+    setDecodedToken,
+    jwtToken,
+    languageSwitch,
+    refreshData,
+    setRefreshData,
+  } = useContext(TokenConstextApi);
   const [popupData, setPopupData] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -221,7 +227,6 @@ const TrustedDriver = ({navigation}) => {
   }, []);
 
   const getPopup = async () => {
-    
     try {
       const response = await EXPRESS_BOOKING_POPUP({
         action: 'check_popup',
@@ -312,10 +317,13 @@ const TrustedDriver = ({navigation}) => {
   ];
 
   const onRefresh = useCallback(() => {
+    console.log(" phleeeeeeeeee " ,refreshData);
+    
     setRefreshing(true);
-    // Promise.all([]).then(() =>
+    // setRefreshData(!refreshData);
     setRefreshing(false);
-    // );
+    console.log(" badddddddddd " ,refreshData);
+
   }, []);
 
   return (
@@ -368,8 +376,7 @@ const TrustedDriver = ({navigation}) => {
                   <TouchableOpacity
                     onPress={() =>
                       openMyUrl('https://www.tatd.in/driver-notifications.php')
-                    }
-                  >
+                    }>
                     <View style={styles.notification}>
                       <Icon
                         color={AppColors.white}
@@ -406,7 +413,9 @@ const TrustedDriver = ({navigation}) => {
                       <Text style={styles.bottamRightText}>
                         {decodedToken && decodedToken.TrustedDriverData.otr} %
                       </Text>
-                      <Text style={styles.bottamRightText}>{languageSwitch == 'english' ? "OTR" : "ओटीआर"}</Text>
+                      <Text style={styles.bottamRightText}>
+                        {languageSwitch == 'english' ? 'OTR' : 'ओटीआर'}
+                      </Text>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -415,7 +424,9 @@ const TrustedDriver = ({navigation}) => {
                       <Text style={styles.bottamRightText}>
                         {decodedToken && decodedToken.TrustedDriverData.rating}
                       </Text>
-                      <Text style={styles.bottamRightText}>{languageSwitch == 'english' ? "Rating" : "रेटिंग"}</Text>
+                      <Text style={styles.bottamRightText}>
+                        {languageSwitch == 'english' ? 'Rating' : 'रेटिंग'}
+                      </Text>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -426,7 +437,9 @@ const TrustedDriver = ({navigation}) => {
                           decodedToken.TrustedDriverData.recent_dcr}{' '}
                         %
                       </Text>
-                      <Text style={styles.bottamRightText}>{languageSwitch == 'english' ?"Booking" : "बुकिंग"}</Text>
+                      <Text style={styles.bottamRightText}>
+                        {languageSwitch == 'english' ? 'Booking' : 'बुकिंग'}
+                      </Text>
                     </View>
                   </TouchableOpacity>
                 </View>

@@ -11,6 +11,10 @@ import {
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 import {TokenConstextApi} from '../../context/GlobalContext';
+import {
+  ACCEPT_PERMANENT_BOOKING,
+  APPLY_PERMANENT_BOOKING,
+} from '../../apis/Apis';
 
 const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
   const {languageSwitch} = useContext(TokenConstextApi);
@@ -25,6 +29,47 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
   } = data?.conditions;
 
   const {cancel, apply_or_accept, P_ID} = data?.actions;
+
+  const handleAccept = (id, name) => {
+    console.log(id, name, '==handleSubmittt');
+    if (name == 'Accept') {
+      console.log(name, '--- Accept run');
+      // handleAcceptPermanentBooking(id)
+    } else if (name == 'Apply') {
+      console.log(name, '--- Apply run');
+      // handleApplyPermanentBooking(id)
+    }
+  };
+
+  const handleApplyPermanentBooking = async id => {
+    try {
+      const response = await APPLY_PERMANENT_BOOKING({
+        action: 'apply_permanent_booking',
+        P_ID: id,
+      });
+      console.log(response, 'APPLY_PERMANENT_BOOKINGAPPLY_PERMANENT_BOOKING');
+    } catch (error) {
+      console.log(
+        error,
+        'APPLY_PERMANENT_BOOKINGAPPLY_PERMANENT_BOOKING  Error',
+      );
+    }
+  };
+
+  const handleAcceptPermanentBooking = async id => {
+    try {
+      const response = await ACCEPT_PERMANENT_BOOKING({
+        action: 'accept_permanent_booking',
+        P_ID: id,
+      });
+      console.log(response, 'ACCEPT_PERMANENT_BOOKINGACCEPT_PERMANENT_BOOKING');
+    } catch (error) {
+      console.log(
+        error,
+        'ACCEPT_PERMANENT_BOOKINGACCEPT_PERMANENT_BOOKING  Error',
+      );
+    }
+  };
 
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
@@ -49,10 +94,12 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
             style={styles.cancelButton}>
             <Text style={styles.cancelButtonText}>{cancel}</Text>
           </Pressable>
-          {console.log(P_ID, 'permananet idd')}
           <Pressable
             onPress={() => {
-              Alert.alert('Are You Confirm');
+              // Alert.alert('Are You Confirm');
+              // handleAcceptPermanentBooking(P_ID);
+              // console.log(P_ID, apply_or_accept, 'accept Button Clickk');
+              handleAccept(P_ID, apply_or_accept);
             }}
             style={styles.applyButton}>
             <Text style={styles.applyButtonText}>{apply_or_accept}</Text>

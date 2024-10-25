@@ -209,3 +209,14 @@ export const ACCEPT_PERMANENT_BOOKING = body => {
     {},
   );
 };
+
+//  	https://www.tatd.in/app-api/driver/trusted-driver/permanent-booking-apply.php
+
+export const APPLY_PERMANENT_BOOKING = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/permanent-booking-apply.php',
+    {...body},
+    {},
+  );
+};

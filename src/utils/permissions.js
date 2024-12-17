@@ -1,4 +1,4 @@
-import {Platform} from 'react-native';
+import {Platform, Vibration} from 'react-native';
 import {request, check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 // Request notification permission for Android 13+
@@ -18,6 +18,7 @@ export const requestNotificationPermission = async () => {
 };
 
 // Check vibration permission
+
 export const checkVibrationPermission = async () => {
   if (Platform.OS === 'android') {
     const result = await check(PERMISSIONS.ANDROID.VIBRATE);
@@ -37,3 +38,38 @@ export const checkVibrationPermission = async () => {
     }
   }
 };
+
+
+
+export const checkVibrationSupport = async () => {
+  try {
+    if (Platform.OS === 'ios') {
+      // Vibration works directly on iOS (no permission required)
+      Vibration.vibrate();
+      console.log('Vibration triggered successfully on iOS');
+    } else if (Platform.OS === 'android') {
+      // Test vibration on Android
+      Vibration.vibrate(500); // Vibrates for 500ms
+      console.log('Vibration triggered successfully on Android');
+    } else {
+      console.log('Vibration not supported on this platform');
+    }
+  } catch (error) {
+    console.log('Vibration feature failed', error);
+  }
+};
+
+
+// export const checkVibrationPermission = async () => {
+//   if (Platform.OS === 'android') {
+//     // Directly test vibration since permission might not be required
+//     try {
+//       Vibration.vibrate(5000); // Vibrates for 500ms
+//       console.log('Vibration triggered successfully');
+//     } catch (error) {
+//       console.log('Vibration feature failed', error);
+//     }
+//   } else {
+//     console.log('Vibration not supported on this platform');
+//   }
+// };

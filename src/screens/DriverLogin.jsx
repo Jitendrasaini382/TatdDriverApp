@@ -270,6 +270,7 @@ import {
   TouchableOpacity,
   NativeModules,
   PermissionsAndroid,
+  Keyboard,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -357,6 +358,9 @@ const DriverLogin = () => {
 
   const handleChange = text => {
     setMobile(text);
+    if(text.length == 10){
+      Keyboard.dismiss()
+    }
   };
 
   // Function to handle setting the number
@@ -371,12 +375,23 @@ const DriverLogin = () => {
   const handleClose = () => {
     setModalVisible(false);
   };
+  // const handleOpen = () => {
+  //   if (!hasModalOpened) {
+  //     setModalVisible(true);
+  //     setHasModalOpened(true);
+  //   }
+  // };
   const handleOpen = () => {
-    if (!hasModalOpened) {
-      setModalVisible(true);
-      setHasModalOpened(true);
+    if (simInfo.length > 0 && !simInfo.includes('Please Allow The Permission')) {
+      if (!hasModalOpened) {
+        setModalVisible(true);
+        setHasModalOpened(true);
+      }
+    } else {
+      console.log('No valid phone numbers available, modal will not open.');
     }
   };
+  
   useEffect(() => {
     fetchSimInfo();
   }, []);
@@ -422,6 +437,7 @@ const DriverLogin = () => {
         return;
       }
       setError(null);
+      Keyboard.dismiss()
       setLoader(true);
       const response = await DRIVER_LOGIN({mobile: number});
       console.log(response, 'loginnnnnnnnn');
@@ -440,7 +456,9 @@ const DriverLogin = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header backButton={false} />
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}
+      keyboardShouldPersistTaps = "always"
+      >
         <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>
             <View style={styles.mainView}>

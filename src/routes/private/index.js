@@ -78,7 +78,7 @@ const PrivateRoute = () => {
             component={MyBonusStatusHistory}
           />
           {/* <Stack.Screen name="TicketsDriver" component={TicketsDriver} /> */}
-          {/* <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} /> */}
+          <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
 
           <Stack.Screen name="AgentLogin" component={AgentLogin} />
           <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />

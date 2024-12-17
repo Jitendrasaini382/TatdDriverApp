@@ -14,8 +14,10 @@ import {useDispatch} from 'react-redux';
 import {setMyBookingModal} from '../redux/slices/trustedDriverSlice';
 import {MY_BOOKING_TOP_NAVBAR} from '../apis/Apis';
 import {TokenConstextApi} from '../context/GlobalContext';
+import { useNavigation } from '@react-navigation/native';
 
-const MyBookingModal = ({navigation}) => {
+const MyBookingModal = ({}) => {
+  const navigation = useNavigation()
   const [myBookingStyle, setMyBookingStyle] = useState(true);
   const dispatch = useDispatch();
   const [myBookingData, setMyBookingData] = useState({});
@@ -83,7 +85,10 @@ const MyBookingModal = ({navigation}) => {
                 ? myBookingData.bookings.map((booking, index) => (
                     <TouchableOpacity
                       key={index}
-                      onPress={() => openMyUrl(booking.url)}>
+                      // onPress={() => navigation.navigate('DutyReportUpdate')}
+                      onPress={() => openMyUrl(booking.url)}
+                      
+                      >
                       <View
                         style={[
                           styles.bookingCard,

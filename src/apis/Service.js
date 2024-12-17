@@ -1,7 +1,10 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {API_BASE_URL} from '../constant/path';
-
+import store from '../redux/store';
+const token = store.getState().userAuth.jwt;
+const refreshToken = store.getState().userAuth.refreshToken;
+// console.log(jwt);
 const axiosClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -12,7 +15,7 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(
   async config => {
-    const token = await AsyncStorage.getItem('jwt');
+    // const token = await AsyncStorage.getItem('jwt');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -37,7 +40,7 @@ axiosClient.interceptors.response.use(
         !originalRequest._retry)
     ) {
       originalRequest._retry = true;
-      const refreshToken = await AsyncStorage.getItem('refresh_token');
+      // const refreshToken = await AsyncStorage.getItem('refresh_token');
       console.log('Refresh token:', refreshToken);
 
       if (refreshToken) {
@@ -49,7 +52,11 @@ axiosClient.interceptors.response.use(
 
           if (res.data.jwt) {
             console.log('New JWT:', res.data.jwt);
-            await AsyncStorage.setItem('jwt', res.data.jwt);
+            // await AsyncStorage.setItem('jwt', res.data.jwt);
+            store.dispatch({
+              type: 'jwt',
+              payload: res?.data?.jwt,
+            });
             axiosClient.defaults.headers.common[
               'Authorization'
             ] = `Bearer ${res.data.jwt}`;

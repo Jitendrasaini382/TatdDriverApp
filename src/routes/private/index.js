@@ -60,28 +60,28 @@ const PrivateRoute = () => {
             }}
           /> */}
           {/* <Stack.Screen name="DriverNotice" component={DriverNotice} /> */}
-          <Stack.Screen
+          {/* <Stack.Screen
             name="NoticeBoardDetail"
             component={NoticeBoardDetailScreen}
             options={{
               title: 'NoticeBoard',
               headerBackTitle: 'Back',
             }}
-          />
-          <Stack.Screen
+          /> */}
+          {/* <Stack.Screen
             name="ClearMyDuePayment"
             component={ClearMyDuePayment}
-          />
-          <Stack.Screen name="DriverEarning" component={DriverEarning} />
-          <Stack.Screen
+          /> */}
+          {/* <Stack.Screen name="DriverEarning" component={DriverEarning} /> */}
+          {/* <Stack.Screen
             name="MyBonusStatusHistory"
             component={MyBonusStatusHistory}
-          />
+          /> */}
           {/* <Stack.Screen name="TicketsDriver" component={TicketsDriver} /> */}
-          <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
+          {/* <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} /> */}
 
-          <Stack.Screen name="AgentLogin" component={AgentLogin} />
-          <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />
+          {/* <Stack.Screen name="AgentLogin" component={AgentLogin} /> */}
+          {/* <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} /> */}
           {/* <Stack.Screen name="AgentPanel" component={AgentPanel} /> */}
           {/* <Stack.Screen name="AgentKyc" component={AgentKyc} /> */}
           {/* <Stack.Screen name="AgentTrainig" component={AgentTrainig} /> */}

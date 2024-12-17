@@ -21,6 +21,9 @@ import {TokenConstextApi} from '../context/GlobalContext';
 import {jwtDecode} from 'jwt-decode';
 import messaging from '@react-native-firebase/messaging';
 import {AppFont} from '../assets/FontsFamily';
+import {useDispatch, useSelector} from 'react-redux';
+import {setUserAuthStates} from '../redux/slices/userAuthSlice';
+import store from '../redux/store';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -34,11 +37,13 @@ const moderateScale = (size, factor = 0.5) =>
 const CheckDriverOtp = ({navigation, route}) => {
   const {mobile} = route.params;
   const [fcmtoken, setFcmToken] = useState();
-  const {setRefreshToken, setJwtToken, setDecodedToken} =
-    useContext(TokenConstextApi);
+  // const {setRefreshToken, setJwtToken, setDecodedToken} =
+  //   useContext(TokenConstextApi);
   const [otp, setOtp] = useState('');
   const [error, setError] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
+  const token = useSelector((e)=>e)
+  console.log(token,"dddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
   const [field, setField] = useState({
     mobile: mobile,
   });
@@ -77,8 +82,9 @@ const CheckDriverOtp = ({navigation, route}) => {
     // console.log(token, 'rrrrrrrrrrrrrrrrrrrrrr');
     await AsyncStorage.setItem('refresh_token', token);
   };
-
+  
   const getFcmToken = async () => {
+    console.log(token),"roken from  rewewerew  ee wew r wrwe re wrweredux"
     console.log('runnnnn getttttttttttttttttttttttttt');
     const token = await messaging().getToken();
     if (token) {
@@ -91,6 +97,7 @@ const CheckDriverOtp = ({navigation, route}) => {
 
   const sendNotificationMessage = async fcmtoken => {
     console.log('runnnnn setttttttttttttttttttttttttt');
+    // console.log(jwtw);
     const response = await GET_FCM_TOKEN({
       fcm_token: fcmtoken,
       action: 'save_fcm',
@@ -99,6 +106,7 @@ const CheckDriverOtp = ({navigation, route}) => {
     setFcmToken();
   };
 
+  const dispatch = useDispatch();
   const verifyOtp = async () => {
     try {
       if (!otp) {
@@ -113,14 +121,37 @@ const CheckDriverOtp = ({navigation, route}) => {
         mobile: mobile,
         otp: otp,
       });
+      console.log(mobile, otp, 'ertyuioiuy');
 
       if (response.jwt && response.refresh_token) {
-        await setJwtToken(response?.jwt);
-        const decoded = jwtDecode(response.jwt);
-        setDecodedToken(decoded.data);
-        await setRefreshToken(response.refresh_token);
-        await setJwtTokenn(response.jwt);
-        await setRefreshTokenn(response.refresh_token);
+        // await setJwtToken(response?.jwt);
+        // const decoded = ;
+        // console.log(decoded, 'decoded');
+        dispatch(
+          setUserAuthStates({
+            key: 'jwt', // The state key you want to update
+            value: response?.jwt, // 
+          }),
+        );
+        dispatch(
+          setUserAuthStates({
+            key: 'refreshToken', // The state key you want to update
+            value: response?.refresh_token
+          }),
+        );
+        dispatch(
+          setUserAuthStates({
+            key:"userProfile",
+            value: jwtDecode(response.jwt),
+          }),
+        );
+        sendNotificationMessage(fcmtoken);
+        // userProfile
+
+        // setDecodedToken(decoded.data);
+        // await setRefreshToken(response.refresh_token);
+        // await setJwtTokenn(response.jwt);
+        // await setRefreshTokenn(response.refresh_token);
         setLoader(false);
         sendNotificationMessage(fcmtoken);
       } else {
@@ -136,7 +167,7 @@ const CheckDriverOtp = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header  backButton={true} />
+      <Header backButton={true} />
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.contentContainer}>
           <View style={styles.card}>

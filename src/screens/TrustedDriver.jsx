@@ -1,4 +1,10 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   SafeAreaView,
@@ -9,6 +15,8 @@ import {
   View,
   Dimensions,
   Alert,
+  Linking,
+  RefreshControl,
 } from 'react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -23,15 +31,7 @@ import BookingView from '../components/BookingView';
 import TrainingVideo from '../components/TrainingVideos';
 import MyBookingAgencyModal from '../components/modal/MyBookingAgencyModal';
 import MyBookingModal from '../components/MyBookingModal';
-import {
-  setCurrentView,
-  setModalVisible,
-  setBookingModal,
-  setRatingModal,
-  setVideosContent,
-  setMyBookingAgencyModal,
-  setExpressBookingModal,
-} from '../redux/slices/trustedDriverSlice';
+
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
 import {
@@ -49,6 +49,16 @@ import {
   checkVibrationPermission,
   requestNotificationPermission,
 } from '../utils/permissions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  setBookingModal,
+  setCurrentView,
+  setExpressBookingModal,
+  setModalVisible,
+  setMyBookingAgencyModal,
+  setRatingModal,
+  setVideosContent,
+} from '../redux/slices/trustedDriverSlice';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -57,14 +67,16 @@ const responsiveSize = size => {
 
 const TrustedDriver = ({navigation}) => {
   const dispatch = useDispatch();
-  const {decodedToken, setDecodedToken, jwtToken} =
-    useContext(TokenConstextApi);
-  const [isRfdOn, setIsRfdOn] = useState(false);
-  const [loginButton, setLoginButton] = useState({
-    action: 'login_button',
-    submitR: '1',
-    rfd: '0',
-  });
+  // const {
+  //   decodedToken,
+  //   setDecodedToken,
+  //   jwtToken,
+  //   languageSwitch,
+  //   refreshData,
+  //   setRefreshData,
+  // } = useContext(TokenConstextApi);
+  const [popupData, setPopupData] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
 
   const {
     currentView,
@@ -77,51 +89,174 @@ const TrustedDriver = ({navigation}) => {
     bookingModal,
     ratingModal,
     myBookingModal,
-  } = useSelector(state => state.trustedDriver);
+  } = useSelector(state => state.trustedDriverSlice);
 
-  // console.log(jwtToken, 'trusted Context Jwt Token');
+  const e = useSelector(e => e);
+  // console.log(e.userAuth?.userProfile?.data)
+  const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   useEffect(() => {
-    // Request notification permission when the user lands on the home screen after login
-    NotificationService.requestUserPermission();
-
-    // Optional: Listen for token refresh
-    const unsubscribe = NotificationService.onTokenRefresh();
-
-    return () => unsubscribe(); // Cleanup on unmount
+    const initializePermissions = async () => {
+      try {
+        await requestNotificationPermission();
+        await checkVibrationPermission();
+        // Optionally remove JWT for testing
+        // await AsyncStorage.removeItem('jwt');
+      } catch (error) {
+        console.error('Error initializing permissions:', error);
+      }
+    };
+  
+    initializePermissions();  
   }, []);
+  const openMyUrl = url => {
+    Linking.openURL(url);
+  };
 
-  useEffect(async () => {
-    await requestNotificationPermission(); // Request notification permission for Android 13+
-    await checkVibrationPermission();
-  }, []);
+  // const [loginButton, setLoginButton] = useState({
+  //   action: 'login_button',
+  //   submitR: '1',
+  //   rfd: '0',
+  // });
+  // const [isRfdOn, setIsRfdOn] = useState(false); // State to track if the toggle is on
+  // const [isDisabled, setIsDisabled] = useState(false); // State to disable the toggle button
+  // const timerRef = useRef(null); // Ref to store the timeout
 
-  const decodeData = token => {
-    const decoded = jwtDecode(token);
-    console.log(decoded.data, '>>>>>>>>>>>>>>>>');
-    setDecodedToken(decoded.data);
+  // const handleToggleButton = () => {
+  //   if (isRfdOn && isDisabled) {
+  //     Alert.alert('Please wait 30 minutes');
+  //     return;
+  //   }
+
+  //   const newRfdValue = isRfdOn ? '0' : '1';
+  //   setIsRfdOn(!isRfdOn); // Update the toggle state
+  //   setLoginButton(prevState => ({
+  //     ...prevState,
+  //     rfd: newRfdValue,
+  //   })); // Update the loginButton state
+
+  //   if (newRfdValue === '1') {
+  //     // Disable the button for 30 minutes
+  //     // setIsDisabled(true);
+
+  //     // Call the LOGIN_BUTTON function (replace with your actual API call)
+  //     LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
+  //       .then(response => {
+  //         console.log(response, 'LOGIN API RESPONSE');
+  //         Alert.alert(response.data?.message);
+  //       })
+  //       .catch(err => {
+  //         console.log(err, 'LOGIN API ERROR');
+  //       });
+
+  //     // Set a 30-minute timeout to enable the toggle again
+  //     timerRef.current = setTimeout(() => {
+  //       setIsRfdOn(false); // Automatically turn off the toggle after 30 minutes
+  //       setLoginButton(prevState => ({
+  //         ...prevState,
+  //         rfd: '0',
+  //       }));
+  //       setIsDisabled(false); // Re-enable the toggle button after 30 minutes
+  //       Alert.alert('Toggle automatically turned off after 30 minutes');
+  //     }, 1800000); // 30 minutes in milliseconds
+  //   } else {
+  //     // If toggled OFF manually, clear the existing timeout (if any)
+  //     if (timerRef.current) {
+  //       clearTimeout(timerRef.current);
+  //       timerRef.current = null;
+  //     }
+  //   }
+  // };
+
+  // // useEffect to clear the timeout if the component is unmounted or re-rendered
+  // useEffect(() => {
+  //   return () => {
+  //     // Cleanup the timer when the component unmounts
+  //     if (timerRef.current) {
+  //       clearTimeout(timerRef.current);
+  //     }
+  //   };
+  // }, []);
+
+  const [isRfdOn, setIsRfdOn] = useState(false);
+  const [loginButton, setLoginButton] = useState({
+    action: 'login_button',
+    submitR: '1',
+    rfd: '0',
+  });
+  const timeoutRef = useRef(null);
+
+  const handleToggleButton = () => {
+    const newRfdValue = isRfdOn ? '0' : '1';
+    setIsRfdOn(!isRfdOn);
+    setLoginButton(prevState => ({...prevState, rfd: newRfdValue}));
+
+    // if (newRfdValue == '1') {
+    //   // Start the 30 minute timer
+    //   timeoutRef.current = setTimeout(() => {
+    //     setIsRfdOn(false);
+    //     setLoginButton(prevState => ({...prevState, rfd: '0'}));
+    //     Alert.alert('Toggle switched off after 30 minutes');
+    //   }, 1800000); // 30 minutes in milliseconds (1800000 ms)
+
+    LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
+      .then(response => {
+        console.log(response, 'LOGIN API RESPONSE');
+        // Alert.alert(response.message, response.data.redirect);
+      })
+      .catch(err => {
+        console.log(err, 'LOGIN API ERROR');
+      });
+    // }
+    // else {
+    //   // If toggled off before 30 minutes, clear the timeout
+    //   if (timeoutRef.current) {
+    //     clearTimeout(timeoutRef.current);
+    //     timeoutRef.current = null;
+    //   }
+    // }
   };
 
   useEffect(() => {
-    decodeData(jwtToken);
-  }, [jwtToken]);
+    return () => {
+      // Cleanup the timeout when the component is unmounted
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
-  const [popupData, setPopupData] = useState(0);
-  // console.log(jwtToken, 'jwt Token Trusted');
+  // const decodeData = token => {
+  //   const decoded = jwtDecode(token);
+  //   // console.log(decoded.data, '>>>>>>>>>>>>>>>>');
+  //   setDecodedToken(decoded.data);
+  // };
+
+  // useEffect(() => {
+  //   decodeData(jwtToken);
+  // }, [jwtToken]);
+  const jwt = useSelector(e => e?.userAuth?.jwt);
+  console.log(jwt, 'jwt token FROM TETSED DRVICE SCEEEB');
+  useEffect(() => {
+    if (jwt) {
+      getPopup();
+    }
+  }, [jwt]);
 
   const getPopup = async () => {
     try {
       const response = await EXPRESS_BOOKING_POPUP({
         action: 'check_popup',
+        current_language: languageSwitch,
       });
       console.log(response, 'GET_POPUP  Response ');
       if (response.express_booking_popup_flag == 1) {
-        console.log('runnnnnnnnn 1111');
+        console.log('run popup flaggggggg');
+
         dispatch(setExpressBookingModal(true));
-        // setExpressBookingModal(true);
         setPopupData(response.express_booking_popup_flag);
       } else {
-        // console.log('runnnnnnnnn 0000');
         dispatch(setExpressBookingModal(false));
       }
     } catch (error) {
@@ -129,11 +264,6 @@ const TrustedDriver = ({navigation}) => {
     }
   };
 
-  useEffect(() => {
-    getPopup();
-  }, []);
-
-  // const [incityOneWayBooking, setIncityOneWayBooking] = useState([]);
   const [showBookingView, setBookingView] = useState(1);
 
   // const getOnDemandBooking = async data => {
@@ -151,35 +281,35 @@ const TrustedDriver = ({navigation}) => {
   //   }
   // };
 
-  useEffect(() => {
-    // getOnDemandBooking({
-    //   action: 'ondemand_outstation_bookings',
-    // });
-    // getOnDemandBooking({
-    //   action: 'incity_roundtrip_booking',
-    // });
-    // getOnDemandBooking({
-    //   action: 'incity_oneway_booking',
-    // });
-  }, []);
+  // useEffect(() => {
+  //   getOnDemandBooking({
+  //     action: 'ondemand_outstation_bookings',
+  //   });
+  //   getOnDemandBooking({
+  //     action: 'incity_roundtrip_booking',
+  //   });
+  //   getOnDemandBooking({
+  //     action: 'incity_oneway_booking',
+  //   });
+  // }, []);
+  ///////////
+  // const handleToggleButton = () => {
+  //   const newRfdValue = isRfdOn ? '0' : '1';
+  //   setIsRfdOn(!isRfdOn);
+  //   setLoginButton(prevState => ({...prevState, rfd: newRfdValue}));
 
-  const handleToggleButton = () => {
-    const newRfdValue = isRfdOn ? '0' : '1';
-    setIsRfdOn(!isRfdOn);
-    setLoginButton(prevState => ({...prevState, rfd: newRfdValue}));
-
-    if (newRfdValue === '1') {
-      LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
-        .then(response => {
-          console.log(response, 'LOGIN API RESPONSE');
-          navigation.navigate("TrustedDriver")
-          Alert.alert(response.data?.message);
-        })
-        .catch(err => {
-          console.log(err, 'LOGIN API ERROR');
-        });
-    }
-  };
+  //   if (newRfdValue === '1') {
+  //     LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
+  //       .then(response => {
+  //         console.log(response, 'LOGIN API RESPONSE');
+  //         // navigation.navigate('TrustedDriver');
+  //         Alert.alert(response.data?.message);
+  //       })
+  //       .catch(err => {
+  //         console.log(err, 'LOGIN API ERROR');
+  //       });
+  //   }
+  // };
 
   const Item = [
     {
@@ -204,12 +334,24 @@ const TrustedDriver = ({navigation}) => {
     },
   ];
 
+  const onRefresh = useCallback(() => {
+    console.log(' phleeeeeeeeee ', refreshData);
+
+    setRefreshing(true);
+    // setRefreshData(!refreshData);
+    setRefreshing(false);
+    console.log(' badddddddddd ', refreshData);
+  }, []);
+  // return false
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header extraButton={true} />
       {myBookingModal && <MyBookingModal />}
 
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View style={styles.mainContainer}>
           {/* Marquee View */}
           <View style={styles.marqueeView}>
@@ -236,7 +378,10 @@ const TrustedDriver = ({navigation}) => {
                 </View>
                 <View style={styles.topRight}>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('DriverEarning')}>
+                    // onPress={() => navigation.navigate('DriverEarning')}
+                    onPress={() =>
+                      openMyUrl('https://www.tatd.in/driver-earning.php')
+                    }>
                     <View style={styles.earningView}>
                       <Text style={styles.rupeeIcon}>
                         <Icon name="rupee" size={responsiveSize(8)} />{' '}
@@ -246,7 +391,9 @@ const TrustedDriver = ({navigation}) => {
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('DriverNotifications')}>
+                    onPress={() =>
+                      openMyUrl('https://www.tatd.in/driver-notifications.php')
+                    }>
                     <View style={styles.notification}>
                       <Icon
                         color={AppColors.white}
@@ -263,6 +410,7 @@ const TrustedDriver = ({navigation}) => {
                       offColor={AppColors.greyColor}
                       size="medium"
                       onToggle={handleToggleButton}
+                      // disabled={isDisabled}
                     />
                   </View>
                 </View>
@@ -272,8 +420,6 @@ const TrustedDriver = ({navigation}) => {
               <View style={styles.bottamView}>
                 <View style={styles.driverNameView}>
                   <Text style={styles.driverNameText}>
-
-                    {console.log(decodedToken, "tokenn data")}
                     {decodedToken && decodedToken.driver_name}
                   </Text>
                 </View>
@@ -284,7 +430,9 @@ const TrustedDriver = ({navigation}) => {
                       <Text style={styles.bottamRightText}>
                         {decodedToken && decodedToken.TrustedDriverData.otr} %
                       </Text>
-                      <Text style={styles.bottamRightText}>OTR</Text>
+                      <Text style={styles.bottamRightText}>
+                        {languageSwitch == 'english' ? 'OTR' : 'ओटीआर'}
+                      </Text>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -293,7 +441,9 @@ const TrustedDriver = ({navigation}) => {
                       <Text style={styles.bottamRightText}>
                         {decodedToken && decodedToken.TrustedDriverData.rating}
                       </Text>
-                      <Text style={styles.bottamRightText}>Rating</Text>
+                      <Text style={styles.bottamRightText}>
+                        {languageSwitch == 'english' ? 'Rating' : 'रेटिंग'}
+                      </Text>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -304,7 +454,9 @@ const TrustedDriver = ({navigation}) => {
                           decodedToken.TrustedDriverData.recent_dcr}{' '}
                         %
                       </Text>
-                      <Text style={styles.bottamRightText}>Booking</Text>
+                      <Text style={styles.bottamRightText}>
+                        {languageSwitch == 'english' ? 'Booking' : 'बुकिंग'}
+                      </Text>
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -326,21 +478,23 @@ const TrustedDriver = ({navigation}) => {
                       styles.bottamContent1Text,
                       videosContent && {color: AppColors.white},
                     ]}>
-                    Training
+                    {languageSwitch == 'english' ? 'Training' : 'ट्रेनिंग'}
                   </Text>
                   <Text
                     style={[
                       styles.bottamContent1Text,
                       videosContent && {color: AppColors.white},
                     ]}>
-                    Videos
+                    {languageSwitch == 'english' ? 'Videos' : 'वीडियो'}
                   </Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => navigation.navigate('MyBonusStatusHistory')}
                 style={styles.bottamContent2}>
-                <Text style={styles.mainText}>My Bonus</Text>
+                <Text style={styles.mainText}>
+                  {languageSwitch == 'english' ? 'My Bonus' : 'मेरा बोनस'}
+                </Text>
                 <Text style={styles.textIcon}>
                   <Icon name="rupee" size={responsiveSize(9)} /> 0
                 </Text>
@@ -348,15 +502,26 @@ const TrustedDriver = ({navigation}) => {
               <TouchableOpacity
                 onPress={() => navigation.navigate('AgentLogin')}
                 style={styles.bottamContent3}>
-                <Text style={styles.mainText}>Agent panel</Text>
+                <Text style={styles.mainText}>
+                  {languageSwitch == 'english' ? 'Agent panel' : 'एजेंट पैनल'}
+                </Text>
                 <Text style={styles.textIcon}>
                   <Icon name="rupee" size={responsiveSize(9)} /> 0
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.navigate('ClearMyDuePayment')}
+                onPress={() =>
+                  openMyUrl(
+                    `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                  )
+                }
+                // onPress={() => navigation.navigate('ClearMyDuePayment')}
                 style={styles.bottamContent4}>
-                <Text style={styles.mainText}>Clear My Due</Text>
+                <Text style={styles.mainText}>
+                  {languageSwitch == 'english'
+                    ? 'Clear My Due'
+                    : 'बकाया जमा करें'}
+                </Text>
                 <Text style={styles.textIcon}>
                   <Icon name="rupee" size={responsiveSize(9)} />{' '}
                   {decodedToken && decodedToken.DRIVER_CLEAR_MY_DUE}
@@ -372,19 +537,13 @@ const TrustedDriver = ({navigation}) => {
             onToggle={label => dispatch(setCurrentView(label))}
           />
 
-          <ViewAwarenessData />
+          {/* <ViewAwarenessData /> */}
+          {/* <RoundTripBookingView /> */}
+          {/* <BookingView /> */}
 
-          {showBookingView && showBookingView === 1 ? (
-            <RoundTripBookingView />
-          ) : null}
           {/* Main Toggle Content */}
-          <View style={styles.toggleContentContainer}>
-            {mainToggleContent ? (
-              <BookingView />
-            ) : videosContent ? (
-              <TrainingVideo data={Item} />
-            ) : null}
-          </View>
+          <>{isRfdOn ? <BookingView /> : null}</>
+          {/* {videosContent ? <TrainingVideo data={Item} /> : null} */}
         </View>
       </ScrollView>
 
@@ -433,6 +592,14 @@ const TrustedDriver = ({navigation}) => {
         animationOut={'fadeOutUp'}
         isVisible={myBookingAgencyModal}>
         <MyBookingAgencyModal />
+      </Modal>
+      <Modal
+        backdropOpacity={0}
+        onBackdropPress={() => dispatch(setExpressBookingModal(false))}
+        animationIn={'fadeInDown'}
+        animationOut={'fadeOutUp'}
+        isVisible={expressBookingModal}>
+        <ExpressBookingModal />
       </Modal>
     </SafeAreaView>
   );
@@ -485,9 +652,9 @@ const styles = StyleSheet.create({
   },
   topLeft: {
     backgroundColor: AppColors.white,
-    height: responsiveSize(70),
-    width: responsiveSize(70),
-    borderRadius: responsiveSize(35),
+    height: responsiveSize(80),
+    width: responsiveSize(80),
+    borderRadius: responsiveSize(40),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -499,8 +666,8 @@ const styles = StyleSheet.create({
   },
   bottamLeftText: {
     color: AppColors.mainColor,
-    fontSize: responsiveSize(9),
-    fontWeight: '300',
+    fontSize: responsiveSize(10),
+    fontWeight: '400',
     fontFamily: AppFont.regularFont,
   },
   topRight: {
@@ -659,14 +826,14 @@ const styles = StyleSheet.create({
   },
   mainText: {
     color: AppColors.mainColor,
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: '400',
     paddingTop: 5,
     textAlign: 'center',
   },
   textIcon: {
     color: AppColors.mainColor,
-    fontSize: 9,
+    fontSize: 10,
     textAlign: 'center',
   },
   touchable: {

@@ -12,7 +12,7 @@ const SplashScreen = ({navigation}) => {
     if (isFocused) {
       timer = setTimeout(() => {
         navigation.navigate('DriverLogin');
-      }, 2000);
+      }, 1000);
     }
     return () => clearTimeout(timer);
   }, [isFocused, navigation]);

@@ -1,7 +1,10 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {API_BASE_URL} from '../constant/path';
+import store from '../redux/store';
 
+
+// console.log(jwt);
 const axiosClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -12,7 +15,8 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(
   async config => {
-    const token = await AsyncStorage.getItem('jwt');
+    // const token = await AsyncStorage.getItem('jwt');
+    const token = store.getState().userAuth.jwt;  
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -37,8 +41,9 @@ axiosClient.interceptors.response.use(
         !originalRequest._retry)
     ) {
       originalRequest._retry = true;
-      const refreshToken = await AsyncStorage.getItem('refresh_token');
+      // const refreshToken = await AsyncStorage.getItem('refresh_token');
       console.log('Refresh token:', refreshToken);
+      const refreshToken = store.getState().userAuth.refreshToken;
 
       if (refreshToken) {
         try {
@@ -48,8 +53,12 @@ axiosClient.interceptors.response.use(
           );
 
           if (res.data.jwt) {
-            // console.log('New JWT:', res.data.jwt);
-            await AsyncStorage.setItem('jwt', res.data.jwt);
+            console.log('New JWT:', res.data.jwt);
+            // await AsyncStorage.setItem('jwt', res.data.jwt);
+            store.dispatch({
+              type: 'jwt',
+              payload: res?.data?.jwt,
+            });
             axiosClient.defaults.headers.common[
               'Authorization'
             ] = `Bearer ${res.data.jwt}`;
@@ -70,14 +79,21 @@ axiosClient.interceptors.response.use(
   },
 );
 
+
 const _Fetch = (method, path, body, headers = {}) => {
   return new Promise((resolve, reject) => {
+    // Merge headers: If headers are passed, merge with default headers
+    const finalHeaders = {
+      ...axiosClient.defaults.headers.common,
+      ...headers, // Custom headers override default headers if any conflict
+    };
+
     axiosClient({
       method,
       url: path,
       data: method !== 'GET' ? body : undefined,
       params: method === 'GET' ? body : undefined,
-      headers: {...axiosClient.defaults.headers.common, ...headers},
+      headers: finalHeaders, // Pass merged headers
     })
       .then(response => {
         console.log('Response data:', response.data);
@@ -93,6 +109,9 @@ const _Fetch = (method, path, body, headers = {}) => {
       });
   });
 };
+
+
+
 
 export default _Fetch;
 

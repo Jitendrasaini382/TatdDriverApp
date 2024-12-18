@@ -8,8 +8,6 @@
 //   const [isAuthenticated, setIsAuthenticated] = useState(false);
 //   const [isLoading, setIsLoading] = useState(true);
 
-  
-
 //   const checkToken = async () => {
 //     try {
 //       const token = await AsyncStorage.getItem('jwt');
@@ -50,21 +48,20 @@
 
 // export default Routes;
 
-import { useContext } from "react"
-import PrivateRoute from "./private"
-import PublicRoute from "./public"
-import { TokenConstextApi } from "../context/GlobalContext"
+// import {useContext, useState} from 'react';
+import PrivateRoute from './private';
+import PublicRoute from './public';
+import {useSelector} from 'react-redux';
+// import {TokenConstextApi} from '../context/GlobalContext';
 
-const Routes = ()=>{
-
-  const{jwtToken} = useContext(TokenConstextApi)
-  const token = jwtToken
-  if(token){
-    return<PrivateRoute/>
+const Routes = () => {
+  const isLogin = useSelector(e => e?.userAuth?.login);
+  const jwt = useSelector((e)=>e?.userAuth?.jwt)
+  if(isLogin&&jwt){
+    return <PrivateRoute />;
   }
   else{
-    return <PublicRoute/>
+    return <PublicRoute />;
   }
-
-}
-export default Routes
+};
+export default Routes;

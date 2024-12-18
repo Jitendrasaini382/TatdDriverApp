@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,13 +6,73 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Modal,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { AppColors } from '../../assets/Colors';
+import {AppColors} from '../../assets/Colors';
+import {TokenConstextApi} from '../../context/GlobalContext';
+import {AppFont} from '../../assets/FontsFamily';
+import ConfirmReferFriendModal from './ConfirmReferFriendModal';
+import {
+  PERMANENT_REFER_ACCEPT_POPUP,
+  PERMANENT_REFER_POPUP,
+} from '../../apis/Apis';
 
-const ReferFriendModal = ({setReferFriendModal}) => {
+const ReferFriendModal = ({setReferFriendModal, id}) => {
   const [friendName, setFriendName] = useState('');
   const [friendNumber, setFriendNumber] = useState('');
+  const {decodedToken, languageSwitch} = useContext(TokenConstextApi);
+  const [confirmModal, setConfirmModal] = useState(false);
+  const [permanentReferPopup, setPermanentReferPopup] = useState({});
+  const [permanentReferAcceptPopup, setPermanentReferAcceptPopup] = useState(
+    {},
+  );
+
+  const closeModalButton = () => {
+    setConfirmModal(false);
+    setReferFriendModal(false);
+  };
+
+  useEffect(() => {
+    getPermanentReferPopup();
+    getPermanentReferAcceptPopup(languageSwitch, id);
+  }, [languageSwitch]);
+
+  const getPermanentReferPopup = async () => {
+    try {
+      const response = await PERMANENT_REFER_POPUP(languageSwitch);
+      setPermanentReferPopup(response?.refer_popup_data);
+    } catch (error) {
+      console.log(error, 'getPermanentReferPopup  Error');
+    }
+  };
+
+  const getPermanentReferAcceptPopup = async (languageSwitch, id) => {
+    try {
+      const response = await PERMANENT_REFER_ACCEPT_POPUP(languageSwitch, id);
+      console.log(response, 'getPermanentReferAcceptPopupresponse');
+      setPermanentReferAcceptPopup(response?.refer_popup_data);
+    } catch (error) {
+      console.log(error, 'getPermanentReferAcceptPopup  Error');
+    }
+  };
+
+  const referFriend = () => {
+    if (!friendName.trim()) {
+      Alert.alert('Please Enter Friend Name.');
+      return;
+    }
+    if (!friendNumber) {
+      Alert.alert('Please Enter Friend Mobile Number.');
+      return;
+    }
+    if (friendNumber.length < 10) {
+      Alert.alert('Please enter a valid 10-digit mobile number.');
+      return;
+    }
+    setConfirmModal(true);
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -20,44 +80,56 @@ const ReferFriendModal = ({setReferFriendModal}) => {
         <TouchableOpacity
           style={styles.closeButton}
           onPress={() => setReferFriendModal(false)}>
-          <Icon name="close" size={20} color={AppColors.white} />
+          <Icon name="close" size={25} color={AppColors.white} />
+          {/* <Text style={{color: AppColors.white, fontSize:25, fontWeight:"bold"}} >x</Text> */}
         </TouchableOpacity>
         <View style={styles.content}>
-          <Text style={styles.description}>
-            Now you can get this job for any of your acquaintances. Your
-            acquaintance will be sent to the customer for an interview. If they
-            pass the interview, their job will start, and you will receive a 250
-            Rs Hiring Bonus on the 7th day of their employment.
-            {'\n\n'}
-            There is no need to register your friend in any way to get this job.
-          </Text>
+          <Text style={styles.description}>{permanentReferPopup?.content}</Text>
         </View>
 
         <View style={styles.referSection}>
-          <Text style={styles.sectionTitle}>Refer Your Friend</Text>
-
+          <Text style={styles.sectionTitle}>{permanentReferPopup?.title}</Text>
           <TextInput
             style={styles.input}
-            placeholder="Your friend's name?"
+            placeholder={
+              permanentReferPopup?.form_fields?.friend_name_placeholder
+            }
             placeholderTextColor={'#999'}
             value={friendName}
             onChangeText={setFriendName}
           />
-
           <TextInput
             style={styles.input}
             placeholderTextColor={'#999'}
-            placeholder="Your friend's number?"
+            placeholder={
+              permanentReferPopup?.form_fields?.friend_number_placeholder
+            }
             value={friendNumber}
             onChangeText={setFriendNumber}
-            keyboardType="phone-pad"
+            keyboardType="number-pad"
+            maxLength={10}
           />
-
-          <TouchableOpacity style={styles.referButton}>
-            <Text style={styles.referButtonText}>Refer Now</Text>
+          <TouchableOpacity style={styles.referButton} onPress={referFriend}>
+            <Text style={styles.referButtonText}>
+              {permanentReferPopup?.button_text}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        onRequestClose={closeModalButton}
+        visible={confirmModal}>
+        <ConfirmReferFriendModal
+          closeModalButton={closeModalButton}
+          friendName={friendName}
+          friendNumber={friendNumber}
+          id={id}
+          data={permanentReferAcceptPopup}
+        />
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -72,15 +144,17 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     backgroundColor: AppColors.mainColor,
+    borderTopWidth: 1,
+    borderTopColor: AppColors.mainColor,
     // paddingTop: 20,
   },
   closeButton: {
     position: 'absolute',
-    top: -15,
+    top: -20,
     right: 15,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: AppColors.mainColor,
     justifyContent: 'center',
     alignItems: 'center',
@@ -89,18 +163,20 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   content: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
     backgroundColor: AppColors.white,
-    borderRadius: 20,
+    borderRadius: 15,
     shadowColor: AppColors.white,
     elevation: 5,
-    borderWidth:2,
-    borderColor:AppColors.white
+    borderWidth: 2,
+    borderColor: AppColors.white,
   },
   description: {
     color: AppColors.black,
     // lineHeight: 20,
-    fontSize: 15
+    fontSize: 19,
+    fontFamily: AppFont.regularFont,
   },
   referSection: {
     backgroundColor: AppColors.mainColor,
@@ -115,7 +191,7 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 5,
+    borderRadius: 10,
     padding: 10,
     fontSize: 15,
     color: AppColors.black,
@@ -123,9 +199,9 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
   },
   referButton: {
-    backgroundColor: '#ddd',
+    backgroundColor: '#A6A6A6',
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 10,
     alignItems: 'center',
   },
   referButtonText: {
@@ -135,4 +211,3 @@ const styles = StyleSheet.create({
 });
 
 export default ReferFriendModal;
-

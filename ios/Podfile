@@ -1,3 +1,5 @@
+platform :ios, '13.4'  # Ensure iOS 12.0 or higher
+
 # Resolve react_native_pods.rb with node to allow for hoisting
 require Pod::Executable.execute_command('node', ['-p',
   'require.resolve(
@@ -5,7 +7,6 @@ require Pod::Executable.execute_command('node', ['-p',
     {paths: [process.argv[1]]},
   )', __dir__]).strip
 
-platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
 linkage = ENV['USE_FRAMEWORKS']
@@ -16,7 +17,14 @@ end
 
 target 'tatd' do
   config = use_native_modules!
+  
+  # Firebase Core and Messaging setup
+  pod 'FirebaseCore', :modular_headers => true;
+  pod 'GoogleUtilities', :modular_headers => true;
+  pod 'SPTPersistentCache', :modular_headers => true
+  pod 'DVAssetLoaderDelegate',:modular_headers => true
 
+  
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
@@ -29,7 +37,7 @@ target 'tatd' do
   end
 
   post_install do |installer|
-    # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
+    # React Native post install script
     react_native_post_install(
       installer,
       config[:reactNativePath],

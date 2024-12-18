@@ -18,4 +18,5 @@ export const CloseEnvelop = require('./closed_envlop.png')
 export const bluelogo = require('./bluelogo.png')
 export const whitelogo = require('./logo-white.png')
 export const Headerlogo = require('./headerLogo.png')
+export const googleLogo = require('./google.png')
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Image,
   StyleSheet,
@@ -6,62 +6,109 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  Pressable,
+  Linking,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {AppColors} from '../assets/Colors';
-import {RightArrow} from '../assets/images';
+import {LeftArrow, RightArrow} from '../assets/images';
 import {AppFont} from '../assets/FontsFamily';
 import Modal from 'react-native-modal';
 import MyBookingAgencyModal from './modal/MyBookingAgencyModal';
 import RoundTripBookingView from './bookingsView/RoundTripBookingView';
 import PermanentBookingView from './bookingsView/PermanentBookingView';
 import FlexibleBookingView from './bookingsView/FlexibleBookingView';
-import { useDispatch } from 'react-redux';
-import { setMyBookingAgencyModal } from '../redux/slices/trustedDriverSlice';
+import {useDispatch} from 'react-redux';
+import {setMyBookingAgencyModal} from '../redux/slices/trustedDriverSlice';
+import {TokenConstextApi} from '../context/GlobalContext';
+import {Buffer} from 'buffer';
+import {ON_DEMAND_BOOKING} from '../apis/Apis';
 
 const {width} = Dimensions.get('window');
 
 const BookingView = () => {
   const dispatch = useDispatch();
+  const {decodedToken, setDecodedToken, jwtToken, languageSwitch} =
+    useContext(TokenConstextApi);
+  // console.log(decodedToken, 'datatataatatattatatat');
 
-  <Modal
-    backdropOpacity={0}
-    onBackdropPress={() => dispatch(setMyBookingAgencyModal(false))}
-    animationIn={'fadeInDown'}
-    animationOut={'fadeOutUp'}
-    isVisible={true}>
-    <MyBookingAgencyModal 
-    // setMyBookingAgencyModal={setMyBookingAgencyModal}
-    
-    />
-  </Modal>;
+  const [agentPanelViewData, setAgentPanelViewData] = useState([]);
+
+  useEffect(() => {
+    getAgentPanelView();
+  }, [languageSwitch]);
+
+  // <Modal
+  //   backdropOpacity={0}
+  //   onBackdropPress={() => dispatch(setMyBookingAgencyModal(false))}
+  //   animationIn={'fadeInDown'}
+  //   animationOut={'fadeOutUp'}
+  //   isVisible={true}>
+  //   <MyBookingAgencyModal
+  //   // setMyBookingAgencyModal={setMyBookingAgencyModal}
+  //   />
+  // </Modal>;
+
+  const getAgentPanelView = async () => {
+    try {
+      const response = await ON_DEMAND_BOOKING({
+        action: 'agent_panel_view',
+        current_language: languageSwitch,
+      });
+
+      console.log(response, 'getIagent Panel View response');
+      setAgentPanelViewData(response.agent_panel_text);
+    } catch (error) {
+      console.log(error, 'getIagent Panel View  Error');
+    }
+  };
+
+  const handleLoginPress = () => {
+    try {
+      const encodedMobile = Buffer.from(
+        decodedToken?.driver_mobile_number,
+      ).toString('base64');
+      const url = `https://www.tatd.in/agent-login.php?dologin=${encodedMobile}`;
+
+      console.log('Generated URL:', url);
+      Linking.openURL(url).catch(err => {
+        // Alert.alert('An error occurred while opening the URL', err.message);
+        console.error('Error opening URL:', err);
+      });
+    } catch (error) {
+      console.error('Caught error:', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.connectContainer}>
-        <TouchableOpacity
-          onPress={() => {
-           dispatch( setMyBookingAgencyModal(true));
-          }}
+        <Pressable
+          // onPress={() => {
+          //  dispatch( setMyBookingAgencyModal(true));
+          // }}
+          onPress={handleLoginPress}
           style={styles.connectButton}>
           <Icon color={AppColors.white} size={15} name="plus" />
-          <Image style={styles.rightArrow} source={RightArrow} />
-        </TouchableOpacity>
+          <Image style={styles.rightArrow} source={LeftArrow} />
+        </Pressable>
         <Text style={styles.connectText}>
-          Connect the driver to your network using this button and earn Rs 250.
+          {/* Connect the driver to your network using this button and earn Rs 250. */}
+          {agentPanelViewData}
         </Text>
       </View>
 
       <View style={styles.notificationContainer}>
         <Text style={styles.notificationText}>
-          Dear MOHIT DHANAWAT, from now on, if you have completed at least one
-          booking in the last two days and are available for bookings, you will
-          receive an SMS alert when a new booking comes in.
+          {languageSwitch == 'english'
+            ? `Dear ${decodedToken?.driver_name}, from now on, if you have completed at least one booking in the last two days and are available for bookings, you will receive an SMS alert when a new booking comes in.`
+            : `डिअर ${decodedToken?.driver_name},अब से यदि आपने पिछले दो दिनों में कम से कम एक बुकिंग पूरी की है, और आप बुकिंग करने के लिए उपलब्ध हैं, तो नई बुकिंग आने पर आपको SMS Alert भेजा जाएगा।`}
         </Text>
       </View>
-      <FlexibleBookingView />
       <RoundTripBookingView />
       <PermanentBookingView />
+      <FlexibleBookingView/>
     </View>
   );
 };
@@ -69,15 +116,16 @@ const BookingView = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
+    paddingVertical: 10,
   },
   connectContainer: {
     flexDirection: 'row',
     borderRadius: 5,
     marginBottom: 15,
+    paddingHorizontal: 15,
   },
   connectButton: {
-    backgroundColor: AppColors.orange,
+    backgroundColor: AppColors.mainColor,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
@@ -98,18 +146,20 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     textAlignVertical: 'center',
     fontFamily: AppFont.regularFont,
-    fontWeight: '500',
-    fontSize: 14,
+    fontWeight: '700',
+    fontSize: 15,
   },
   notificationContainer: {
     marginBottom: 20,
     borderRadius: 5,
+    paddingHorizontal: 15,
   },
   notificationText: {
     color: AppColors.black,
     fontFamily: AppFont.regularFont,
-    fontWeight: '500',
-    fontSize: 14,
+    fontWeight: '700',
+    fontSize: 16,
+    marginVertical: 10,
   },
   bookingContainer: {
     marginTop: 20,
@@ -164,27 +214,6 @@ const styles = StyleSheet.create({
     color: AppColors.white,
     fontSize: 15,
     marginRight: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 15,
-  },
-  referButton: {
-    backgroundColor: '#ffa500',
-    borderRadius: 8,
-    padding: 10,
-  },
-  referButtonText: {
-    color: AppColors.white,
-  },
-  acceptButton: {
-    backgroundColor: AppColors.white,
-    borderRadius: 8,
-    padding: 10,
-  },
-  acceptButtonText: {
-    color: AppColors.mainColor,
   },
 });
 

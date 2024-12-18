@@ -20,9 +20,9 @@ const OtrModal = () => {
   }, [dispatch]);
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
+    // <SafeAreaView style={styles.mainContainer}>
       <TouchableWithoutFeedback onPress={closeModal}>
-        <View style={styles.overlay}>
+        <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>
             <Text style={styles.topHeading}>What Is OTR?</Text>
             <Text style={styles.middleText}>OTR stands for On Time Reach.</Text>
@@ -40,22 +40,23 @@ const OtrModal = () => {
           </View>
         </View>
       </TouchableWithoutFeedback>
-    </SafeAreaView>
+    // </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   mainContainer: {flex: 1},
   contentContainer: {
-    borderRadius: 10,
+    borderRadius: 12,
     // maxWidth: 400,
-    padding: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 15,
     shadowColor: 'grey',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: {width: 5, height: 5},
     shadowOpacity: 0.1,
     shadowRadius: 14,
-    // elevation: 13,
-    borderWidth: 0.5,
+    elevation: 13,
+    borderWidth: 0.2,
     backgroundColor: AppColors.white,
   },
   topHeading: {

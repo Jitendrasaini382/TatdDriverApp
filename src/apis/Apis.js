@@ -4,8 +4,9 @@ import _Fetch from './Service';
 
 // https://www.tatd.in/app-api/driver/login/driver-login.php?
 
-
 export const DRIVER_LOGIN = body => {
+  console.log(body, 'send action');
+
   return _Fetch('POST', 'login/driver-login.php', body, {});
 };
 
@@ -16,31 +17,26 @@ export const VERIFY_OTP_LOGIN = body => {
   return _Fetch('POST', 'login/verify-otp-login.php', {...body}, {});
 };
 
-
-
-
 // https://www.tatd.in/app-api/driver/login/save-fcm-token-api.php
 
-export const GET_FCM_TOKEN = (body) =>{
-    console.log(body, 'Get FCM Token');
-    return _Fetch('POST', 'login/save-fcm-token-api.php', {...body}, {});
-}
-
-
+export const GET_FCM_TOKEN = (body,header) => {
+  console.log(body, 'Get FCM Token');
+  return _Fetch('POST', 'login/save-fcm-token-api.php', {...body},header);
+};
 
 // https://www.tatd.in/app-api/driver/faq/driver-faq-api.php
 
-export const DRIVER_FAQ = body => {
-  console.log(body, 'DRIVER_FAQ Body');
-  return _Fetch('POST', 'faq/driver-faq-api.php', {...body}, {});
-};
+// export const DRIVER_FAQ = body => {
+//   console.log(body, 'DRIVER_FAQ Body');
+//   return _Fetch('POST', 'faq/driver-faq-api.php', {...body}, {});
+// };
 
 // https://www.tatd.in/app-api/driver/tickets/tickets-driver-api.php
 
-export const TICKETS_DRIVER = body => {
-  console.log(body, 'CREATE_TICKET_DRIVER Body');
-  return _Fetch('POST', 'tickets/tickets-driver-api.php', {...body}, {});
-};
+// export const TICKETS_DRIVER = body => {
+//   console.log(body, 'CREATE_TICKET_DRIVER Body');
+//   return _Fetch('POST', 'tickets/tickets-driver-api.php', {...body}, {});
+// };
 
 // https://www.tatd.in/app-api/driver/trusted-driver/login-button-trusted.php
 
@@ -69,7 +65,7 @@ export const MY_BONUS_HISTORY = body => {
 // https://www.tatd.in/app-api/driver/trusted-driver/driver-notification-api.php
 
 export const DRIVER_NOTIFICATION = body => {
-  console.log(body, 'DRIVER_NOTIFICATION Body');
+  // console.log(body, 'DRIVER_NOTIFICATION Body');
   return _Fetch(
     'POST',
     'trusted-driver/driver-notification-api.php',
@@ -81,7 +77,7 @@ export const DRIVER_NOTIFICATION = body => {
 // https://www.tatd.in/app-api/driver/trusted-driver/my-booking-top-navbar-api.php
 
 export const MY_BOOKING_TOP_NAVBAR = body => {
-  console.log(body, 'MY BOOKING TOP NAV BAR Body');
+  // console.log(body, 'MY BOOKING TOP NAV BAR Body');
   return _Fetch(
     'POST',
     'trusted-driver/my-booking-top-navbar-api.php',
@@ -93,7 +89,7 @@ export const MY_BOOKING_TOP_NAVBAR = body => {
 // https://www.tatd.in/app-api/driver/trusted-driver/driver-notice-api.php
 
 export const DRIVER_NOTICE = body => {
-  console.log(body, 'DRIVER NOTICE Body');
+  // console.log(body, 'DRIVER NOTICE Body');
   return _Fetch('POST', 'trusted-driver/driver-notice-api.php', {...body}, {});
 };
 
@@ -102,6 +98,8 @@ export const DRIVER_NOTICE = body => {
 export const DRIVER_EARNING = body => {
   return _Fetch('POST', 'trusted-driver/driver-earning-api.php', {...body}, {});
 };
+
+// https://www.tatd.in/app-api/driver/trusted-driver/switch-language-api.php
 
 export const LANGUAGE_SWITCH = body => {
   return _Fetch(
@@ -112,6 +110,8 @@ export const LANGUAGE_SWITCH = body => {
   );
 };
 
+// https://www.tatd.in/app-api/driver/trusted-driver/trusted-home-awareness-api.php
+
 export const HOME_AWARENESS = body => {
   return _Fetch(
     'POST',
@@ -121,14 +121,7 @@ export const HOME_AWARENESS = body => {
   );
 };
 
-export const EXPRESS_BOOKING_POPUP = body => {
-  return _Fetch(
-    'GET',
-    'trusted-driver/express-booking-popup.php',
-    {...body},
-    {},
-  );
-};
+// https://www.tatd.in/app-api/driver/trusted-driver/express-booking-popup.php
 
 export const EXPRESS_BOOKING_UPDATE = body => {
   return _Fetch(
@@ -145,6 +138,84 @@ export const ON_DEMAND_BOOKING = body => {
   return _Fetch(
     'POST',
     'trusted-driver/ondemand-bookings-view.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/trusted-driver/express-booking-popup.php?action=check_popup
+
+export const EXPRESS_BOOKING_POPUP = body => {
+  return _Fetch(
+    'GET',
+    'trusted-driver/express-booking-popup.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/trusted-driver/permanent-booking-view.php
+
+export const PERMANENT_BOOKING = body => {
+  console.log(body, 'aaaaa');
+
+  return _Fetch(
+    'POST',
+    'trusted-driver/permanent-booking-view.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/trusted-driver/permanent-booking-refer-view.php?action=permanent_booking_refer_view&current_language=hindi
+
+export const PERMANENT_REFER_POPUP = body => {
+  return _Fetch(
+    'GET',
+    `trusted-driver/permanent-booking-refer-view.php?action=permanent_booking_refer_view&current_language=${body}`,
+  );
+};
+
+// https://www.tatd.in/app-api/driver/trusted-driver/permanent-booking-refer-view.php?action=permanent_booking_refer_accept_view&current_language=hindi&P_ID=PD-11947
+
+export const PERMANENT_REFER_ACCEPT_POPUP = (lang, id) => {
+  console.log(lang, id, 'bodyyyyyyyy acceptttt');
+  return _Fetch(
+    'GET',
+    `trusted-driver/permanent-booking-refer-view.php?action=permanent_booking_refer_accept_view&current_language=${lang}&P_ID=${id}`,
+    {},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/trusted-driver/permanent-booking-refer-accept.php
+
+export const SAVE_REFER_PERMANENT = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/permanent-booking-refer-accept.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/trusted-driver/permanent-booking-accept.php
+
+export const ACCEPT_PERMANENT_BOOKING = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/permanent-booking-accept.php',
+    {...body},
+    {},
+  );
+};
+
+//  	https://www.tatd.in/app-api/driver/trusted-driver/permanent-booking-apply.php
+
+export const APPLY_PERMANENT_BOOKING = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/permanent-booking-apply.php',
     {...body},
     {},
   );

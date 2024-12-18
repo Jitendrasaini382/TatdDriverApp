@@ -12,9 +12,11 @@ import {
 import React, {useContext, useEffect, useState} from 'react';
 import {AppColors} from '../../assets/Colors';
 import {TICKETS_DRIVER} from '../../apis/Apis';
-import {TokenConstextApi} from '../../context/GlobalContext';
+import { useDispatch } from 'react-redux';
+import { setButtonShow, setShowButtonText, setTicketsData } from '../../redux/slices/globalSlice';
 
 const CreateTicketModal = ({setCreateTicketModal}) => {
+  const dispatch = useDispatch()
   const [field, setField] = useState({
     action: 'create_driver_ticket',
     remarks: '',
@@ -25,9 +27,13 @@ const CreateTicketModal = ({setCreateTicketModal}) => {
     tbooking_id: '',
   });
 
-  const {setTicketData} = useContext(TokenConstextApi);
-  const {setButtonShow} = useContext(TokenConstextApi);
-  const {setShowButtonText} = useContext(TokenConstextApi);
+
+
+const storeRating = useSelector((e)=>e?.globalSlice?.storeRating)
+
+const  decodedToken = useSelector((e)=>e?.userAuth?.userProfile)
+const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
+ const  notificationData = useSelector((e)=>e?.globalSlice?.notificationData)
 
   const handleChange = (name, value) => {
     setField({...field, [name]: value});
@@ -43,11 +49,18 @@ const CreateTicketModal = ({setCreateTicketModal}) => {
           response.status_code == 200 &&
           response.message == 'no_open_ticket_found'
         ) {
-          setButtonShow(true);
-          setShowButtonText('');
+          dispatch(setButtonShow(true));
+          dispatch(setShowButtonText(''));
         } else {
-          setButtonShow(false);
-          setShowButtonText(response.message);
+          dispatch(setButtonShow(true));
+          dispatch(setShowButtonText(response.message));
+
+
+const storeRating = useSelector((e)=>e?.globalSlice?.storeRating)
+
+const  decodedToken = useSelector((e)=>e?.userAuth?.userProfile)
+const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
+ const  notificationData = useSelector((e)=>e?.globalSlice?.notificationData)
         }
       })
       .catch(err => {
@@ -62,7 +75,7 @@ const CreateTicketModal = ({setCreateTicketModal}) => {
       .then(e => {
         // if (e.message == 'Success') {
         console.log(e.tickets, 'aaaaaaaaaaaaaaaaaaaaa');
-        setTicketData(e.tickets);
+        dispatch(setTicketsData(e.tickets));
         // }
       })
       .catch(err => {

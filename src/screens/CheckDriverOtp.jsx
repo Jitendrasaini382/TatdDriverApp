@@ -17,7 +17,6 @@ import {AppColors} from '../assets/Colors';
 import {CommonActions, useRoute} from '@react-navigation/native';
 import {DRIVER_LOGIN, GET_FCM_TOKEN, VERIFY_OTP_LOGIN} from '../apis/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {TokenConstextApi} from '../context/GlobalContext';
 import {jwtDecode} from 'jwt-decode';
 import messaging from '@react-native-firebase/messaging';
 import {AppFont} from '../assets/FontsFamily';
@@ -38,8 +37,6 @@ const CheckDriverOtp = ({navigation, route}) => {
   const dispatch = useDispatch();
   const {mobile} = route.params;
   const [fcmtoken, setFcmToken] = useState();
-  // const {setRefreshToken, setJwtToken, setDecodedToken} =
-  //   useContext(TokenConstextApi);
   const [otp, setOtp] = useState('');
   const [error, setError] = useState(null);
   const [isFocused, setIsFocused] = useState(false);

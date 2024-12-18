@@ -52,7 +52,6 @@
 import PrivateRoute from './private';
 import PublicRoute from './public';
 import {useSelector} from 'react-redux';
-// import {TokenConstextApi} from '../context/GlobalContext';
 
 const Routes = () => {
   const isLogin = useSelector(e => e?.userAuth?.login);

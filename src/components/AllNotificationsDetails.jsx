@@ -17,15 +17,19 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Header from './Header';
 import {DRIVER_NOTIFICATION} from '../apis/Apis';
 import {AppColors} from '../assets/Colors';
-import {TokenConstextApi} from '../context/GlobalContext';
 import {AppFont} from '../assets/FontsFamily';
+import { useDispatch, useSelector } from 'react-redux';
+import { setNotificationData, setStoredRating } from '../redux/slices/globalSlice';
 
 const AllNotificationComponent = () => {
   const navigation = useNavigation();
-  const {notificationData, setNotificationData} = useContext(TokenConstextApi);
+  const dispatch = useDispatch()
+   const  notificationData = useSelector((e)=>e?.globalSlice?.notificationData)
+  
+
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleNotificationPress = useCallback(
+  const handleNotificationPress = useCallback( 
     notification => {
       navigation.navigate('NotificationDetail', {
         notificationId: notification.id,
@@ -39,14 +43,15 @@ const AllNotificationComponent = () => {
       setIsLoading(true);
       try {
         const response = await DRIVER_NOTIFICATION(data);
-        setNotificationData(response.notifications);
+        dispatch(setNotificationData(response.notifications))
+
       } catch (error) {
         console.error('DRIVER NOTIFICATION error:', error);
       } finally {
         setIsLoading(false);
       }
     },
-    [setNotificationData],
+    [notificationData],
   );
 
   useEffect(() => {
@@ -96,9 +101,13 @@ const AllNotificationComponent = () => {
 };
 
 export const NotificationDetailScreen = ({route}) => {
+  const dispatch = useDispatch()
   const {notificationId} = route.params;
   const [notification, setNotification] = useState({});
-  const {rating, setRating} = useContext(TokenConstextApi);
+
+const storeRating = useSelector((e)=>e?.globalSlice?.storeRating)
+
+
   const [feedback, setFeedback] = useState('');
   const [currentDateTime, setCurrentDateTime] = useState('');
 
@@ -128,11 +137,11 @@ export const NotificationDetailScreen = ({route}) => {
         id: notificationId,
       });
       setNotification(response.headline);
-      setRating(response.headline.rate);
+      dispatch(setStoredRating(response.headline.rate));
     } catch (err) {
       console.error('VIEW_HEADLINE error:', err);
     }
-  }, [notificationId, setRating]);
+  }, [notificationId, storeRating]);
 
   const saveBookingExperience = useCallback(
     async newRating => {
@@ -143,7 +152,7 @@ export const NotificationDetailScreen = ({route}) => {
           rate: newRating,
         });
         Alert.alert('Success', response.message);
-        setRating(response.rate);
+        dispatch(setStoredRating(response.rate));
       } catch (error) {
         console.error('saveBookingExperience Error:', error);
         Alert.alert(
@@ -152,7 +161,7 @@ export const NotificationDetailScreen = ({route}) => {
         );
       }
     },
-    [notificationId, setRating],
+    [notificationId, storeRating],
   );
 
   useEffect(() => {
@@ -161,10 +170,10 @@ export const NotificationDetailScreen = ({route}) => {
 
   const handleStarPress = useCallback(
     selectedRating => {
-      setRating(selectedRating);
+      dispatch(setStoredRating(selectedRating));
       saveBookingExperience(selectedRating);
     },
-    [saveBookingExperience, setRating],
+    [saveBookingExperience, storeRating],
   );
 
   const saveBookingRemarks = useCallback(async () => {
@@ -203,7 +212,7 @@ export const NotificationDetailScreen = ({route}) => {
                   onPress={() => handleStarPress(star)}
                   style={styles.starButton}>
                   <Icon
-                    name={star <= rating ? 'star' : 'star-o'}
+                    name={star <= storeRating ? 'star' : 'star-o'}
                     size={30}
                     color={AppColors.mainColor}
                   />

@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
-import {TokenConstextApi} from '../../context/GlobalContext';
 import {SAVE_REFER_PERMANENT} from '../../apis/Apis';
+import { useSelector } from 'react-redux';
 
 const ConfirmReferFriendModal = ({
   closeModalButton,
@@ -20,8 +20,12 @@ const ConfirmReferFriendModal = ({
   id,
   data,
 }) => {
-  const {decodedToken, setDecodedToken, jwtToken, languageSwitch} =
-    useContext(TokenConstextApi);
+  
+
+
+    const  decodedToken = useSelector((e)=>e?.userAuth?.userProfile)
+    const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
+ 
   const [saveReferPermanent, setSaveReferPermanent] = useState();
 
   console.log(data.points[0], 'send previous data');

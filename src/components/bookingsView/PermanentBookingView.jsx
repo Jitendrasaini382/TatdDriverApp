@@ -13,7 +13,7 @@ import PermanentBookingAcceptModal from '../modal/PermanentBookingAcceptModal';
 import ReferFriendModal from '../modal/ReferFriendModal';
 import {AppFont} from '../../assets/FontsFamily';
 import {PERMANENT_BOOKING} from '../../apis/Apis';
-import {TokenConstextApi} from '../../context/GlobalContext';
+import { useSelector } from 'react-redux';
 
 const BookingCard = ({booking}) => {
   const [openModal, setOpenModal] = useState(false);
@@ -33,8 +33,10 @@ const BookingCard = ({booking}) => {
     apply_or_accept,
   } = booking;
 
-  const {languageSwitch} = useContext(TokenConstextApi);
   const [permanentBookingPopup, setPermanentBookingPopup] = useState([]);
+
+  const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
+
 
   useEffect(() => {
     getPermanentBookingPopup();
@@ -127,12 +129,15 @@ const BookingCard = ({booking}) => {
 const PermanentBookingView = () => {
   const [permanentBookings, setPermanentBookings] = useState([]);
   const [permanentBookingsOthers, setPermanentBookingsOthers] = useState([]);
-  const {languageSwitch, refreshData} = useContext(TokenConstextApi);
+
+
+  const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
+  
 
   useEffect(() => {
     getPermanentBookings();
     getPermanentBookingsOthers();
-  }, [languageSwitch, refreshData]);
+  }, [languageSwitch]);
 
   const getPermanentBookings = async () => {
     console.log('runnnnnnnnnnn permamnet--------------<<<<<<<<<<<<<<<<');

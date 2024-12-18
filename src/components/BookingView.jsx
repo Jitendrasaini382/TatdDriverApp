@@ -19,9 +19,8 @@ import MyBookingAgencyModal from './modal/MyBookingAgencyModal';
 import RoundTripBookingView from './bookingsView/RoundTripBookingView';
 import PermanentBookingView from './bookingsView/PermanentBookingView';
 import FlexibleBookingView from './bookingsView/FlexibleBookingView';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setMyBookingAgencyModal} from '../redux/slices/trustedDriverSlice';
-import {TokenConstextApi} from '../context/GlobalContext';
 import {Buffer} from 'buffer';
 import {ON_DEMAND_BOOKING} from '../apis/Apis';
 
@@ -29,8 +28,13 @@ const {width} = Dimensions.get('window');
 
 const BookingView = () => {
   const dispatch = useDispatch();
-  const {decodedToken, setDecodedToken, jwtToken, languageSwitch} =
-    useContext(TokenConstextApi);
+ 
+
+    const  decodedToken = useSelector((e)=>e?.userAuth?.userProfile)
+    const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
+ 
+
+
   // console.log(decodedToken, 'datatataatatattatatat');
 
   const [agentPanelViewData, setAgentPanelViewData] = useState([]);

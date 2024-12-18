@@ -9,13 +9,14 @@ import {
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {ON_DEMAND_BOOKING} from '../../apis/Apis';
-import {TokenConstextApi} from '../../context/GlobalContext';
+import { useSelector } from 'react-redux';
 
 const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   const [checked1, setChecked1] = useState(false);
   const [checked2, setChecked2] = useState(false);
   const [driverConsent, setDriverConsent] = useState({});
-  const {languageSwitch} = useContext(TokenConstextApi);
+  const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
+
   console.log(trip, "popuop datatattatatat");
 
   const {booking_number, incentive, incentive_eligibility_fullfillment, incentive_eligible_amount_fullfillment, driver_assignment_in_10_minutes_incentive} = trip

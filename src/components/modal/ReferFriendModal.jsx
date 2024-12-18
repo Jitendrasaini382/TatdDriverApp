@@ -11,18 +11,20 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {AppColors} from '../../assets/Colors';
-import {TokenConstextApi} from '../../context/GlobalContext';
 import {AppFont} from '../../assets/FontsFamily';
 import ConfirmReferFriendModal from './ConfirmReferFriendModal';
 import {
   PERMANENT_REFER_ACCEPT_POPUP,
   PERMANENT_REFER_POPUP,
 } from '../../apis/Apis';
+import { useSelector } from 'react-redux';
 
 const ReferFriendModal = ({setReferFriendModal, id}) => {
   const [friendName, setFriendName] = useState('');
   const [friendNumber, setFriendNumber] = useState('');
-  const {decodedToken, languageSwitch} = useContext(TokenConstextApi);
+
+  const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
+
   const [confirmModal, setConfirmModal] = useState(false);
   const [permanentReferPopup, setPermanentReferPopup] = useState({});
   const [permanentReferAcceptPopup, setPermanentReferAcceptPopup] = useState(

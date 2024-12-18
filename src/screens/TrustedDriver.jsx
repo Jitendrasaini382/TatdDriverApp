@@ -31,15 +31,7 @@ import BookingView from '../components/BookingView';
 import TrainingVideo from '../components/TrainingVideos';
 import MyBookingAgencyModal from '../components/modal/MyBookingAgencyModal';
 import MyBookingModal from '../components/MyBookingModal';
-import {
-  setCurrentView,
-  setModalVisible,
-  setBookingModal,
-  setRatingModal,
-  setVideosContent,
-  setMyBookingAgencyModal,
-  setExpressBookingModal,
-} from '../redux/slices/trustedDriverSlice';
+
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
 import {
@@ -58,6 +50,7 @@ import {
   requestNotificationPermission,
 } from '../utils/permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setBookingModal, setCurrentView, setExpressBookingModal, setModalVisible, setMyBookingAgencyModal, setRatingModal, setVideosContent } from '../redux/slices/trustedDriverSlice';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -66,14 +59,14 @@ const responsiveSize = size => {
 
 const TrustedDriver = ({navigation}) => {
   const dispatch = useDispatch();
-  const {
-    decodedToken,
-    setDecodedToken,
-    jwtToken,
-    languageSwitch,
-    refreshData,
-    setRefreshData,
-  } = useContext(TokenConstextApi);
+  // const {
+  //   decodedToken,
+  //   setDecodedToken,
+  //   jwtToken,
+  //   languageSwitch,
+  //   refreshData,
+  //   setRefreshData,
+  // } = useContext(TokenConstextApi);
   const [popupData, setPopupData] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -88,7 +81,12 @@ const TrustedDriver = ({navigation}) => {
     bookingModal,
     ratingModal,
     myBookingModal,
-  } = useSelector(state => state.trustedDriver);
+  } = useSelector(state => state.trustedDriverSlice);
+
+  const e  = useSelector((e)=>e)
+  // console.log(e.userAuth?.userProfile?.data)
+  const decodedToken = useSelector((e)=>e?.userAuth?.userProfile?.data)
+  const languageSwitch = useSelector(((e)=>e?.globalSlice?.languageSwitch))
 
   useEffect(async () => {
     await requestNotificationPermission();
@@ -212,15 +210,15 @@ const TrustedDriver = ({navigation}) => {
     };
   }, []);
 
-  const decodeData = token => {
-    const decoded = jwtDecode(token);
-    // console.log(decoded.data, '>>>>>>>>>>>>>>>>');
-    setDecodedToken(decoded.data);
-  };
+  // const decodeData = token => {
+  //   const decoded = jwtDecode(token);
+  //   // console.log(decoded.data, '>>>>>>>>>>>>>>>>');
+  //   setDecodedToken(decoded.data);
+  // };
 
-  useEffect(() => {
-    decodeData(jwtToken);
-  }, [jwtToken]);
+  // useEffect(() => {
+  //   decodeData(jwtToken);
+  // }, [jwtToken]);
 
   useEffect(() => {
     getPopup();
@@ -325,7 +323,7 @@ const TrustedDriver = ({navigation}) => {
     console.log(" badddddddddd " ,refreshData);
 
   }, []);
-
+// return false
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header extraButton={true} />

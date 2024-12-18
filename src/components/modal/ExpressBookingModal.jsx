@@ -3,7 +3,7 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 import {EXPRESS_BOOKING_UPDATE} from '../../apis/Apis';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setExpressBookingModal} from '../../redux/slices/trustedDriverSlice';
 import {TokenConstextApi} from '../../context/GlobalContext';
 
@@ -13,7 +13,10 @@ const ExpressBookingModal = () => {
   }, []);
 
   const dispatch = useDispatch();
-  const {decodedToken, languageSwitch} = useContext(TokenConstextApi);
+  // const {decodedToken, languageSwitch} = useContext(TokenConstextApi);
+
+  const decodedToken = useSelector((e)=>e?.userAuth?.userProfile?.data)
+  const languageSwitch = "Hindi"
 
   const expressBookingUpdate = async status => {
     try {

@@ -15,9 +15,13 @@ import {TokenConstextApi} from '../../context/GlobalContext';
 
 const BookingModal = () => {
   const dispatch = useDispatch();
-  const {decodedToken, setDecodedToken, jwtToken} =
-    useContext(TokenConstextApi);
-  // const userName = useSelector(state => state.user?.name) || 'Driver';
+  // const {decodedToken, setDecodedToken, jwtToken} =
+  //   useContext(TokenConstextApi);
+  // // const userName = useSelector(state => state.user?.name) || 'Driver';
+
+
+  const decodedToken = useSelector((e)=>e?.userAuth?.userProfile?.data)
+  const languageSwitch = "Hindi"
 
   const closeModal = useCallback(() => {
     dispatch(setBookingModal(false));

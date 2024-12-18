@@ -10,10 +10,9 @@ import {
 } from 'react-native';
 import {RightArrow} from '../assets/images';
 import {AppColors} from '../assets/Colors';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setMyBookingModal} from '../redux/slices/trustedDriverSlice';
 import {MY_BOOKING_TOP_NAVBAR} from '../apis/Apis';
-import {TokenConstextApi} from '../context/GlobalContext';
 import { useNavigation } from '@react-navigation/native';
 
 const MyBookingModal = ({}) => {
@@ -21,7 +20,9 @@ const MyBookingModal = ({}) => {
   const [myBookingStyle, setMyBookingStyle] = useState(true);
   const dispatch = useDispatch();
   const [myBookingData, setMyBookingData] = useState({});
-  const {languageSwitch, decodedToken} = useContext(TokenConstextApi);
+
+  const decodedToken = useSelector((e)=>e?.userAuth?.userProfile?.data)
+  const languageSwitch = "Hindi"
 
   console.log(languageSwitch, 'my booking lang switchhhhhh');
 

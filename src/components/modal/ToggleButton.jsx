@@ -3,11 +3,16 @@ import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {LANGUAGE_SWITCH} from '../../apis/Apis';
 import {TokenConstextApi} from '../../context/GlobalContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLanguageSwitch } from '../../redux/slices/globalSlice';
 
 const ToggleButton = ({button1Label, button2Label, onToggle}) => {
   const [currentState, setCurrentState] = useState(button1Label);
-  const {languageSwitch, setLanguageSwitch} = useContext(TokenConstextApi);
-  console.log(languageSwitch, ': language Switch Console');
+  // const {languageSwitch, setLanguageSwitch} = useContext(TokenConstextApi);
+
+  const dispatch = useDispatch()
+  
+  // console.log(languageSwitch, ': language Switch Console');
 
   const handlePress = async label => {
     setCurrentState(label);
@@ -16,14 +21,16 @@ const ToggleButton = ({button1Label, button2Label, onToggle}) => {
     const language = label.toLowerCase();
     await switchLanguage(language);
   };
+const token = useSelector((e)=>e.userAuth)
 
   const switchLanguage = async language => {
+    console.log(token,"tokennnn");
     try {
       const response = await LANGUAGE_SWITCH({
         action: 'update_language',
         current_language: language,
       });
-      setLanguageSwitch(response.current_language);
+      dispatch(setLanguageSwitch(response.current_language));
       console.log(response.message, ' language response DATA');
     } catch (error) {
       console.log(error, 'Language Switch Error');

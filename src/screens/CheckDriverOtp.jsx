@@ -35,6 +35,7 @@ const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;
 
 const CheckDriverOtp = ({navigation, route}) => {
+  const dispatch = useDispatch();
   const {mobile} = route.params;
   const [fcmtoken, setFcmToken] = useState();
   // const {setRefreshToken, setJwtToken, setDecodedToken} =
@@ -43,7 +44,7 @@ const CheckDriverOtp = ({navigation, route}) => {
   const [error, setError] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const token = useSelector((e)=>e)
-  console.log(token,"dddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+  // console.log(token,"dddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
   const [field, setField] = useState({
     mobile: mobile,
   });
@@ -95,18 +96,27 @@ const CheckDriverOtp = ({navigation, route}) => {
     }
   };
 
-  const sendNotificationMessage = async fcmtoken => {
+  const sendNotificationMessage = async (fcmtoken,jwttoken) => {
     console.log('runnnnn setttttttttttttttttttttttttt');
     // console.log(jwtw);
     const response = await GET_FCM_TOKEN({
       fcm_token: fcmtoken,
       action: 'save_fcm',
-    });
+    },
+  {
+    "Authorization":`Bearer ${jwttoken}`
+  });
+
+    dispatch(
+      setUserAuthStates({
+        key: 'login', // The state key you want to update
+        value: true, // 
+      }),
+    );
     console.log('GET FCM TOKEN response:', response);
-    setFcmToken();
+    // setFcmToken();
   };
 
-  const dispatch = useDispatch();
   const verifyOtp = async () => {
     try {
       if (!otp) {
@@ -117,53 +127,117 @@ const CheckDriverOtp = ({navigation, route}) => {
         return;
       }
       setLoader(true);
-      const response = await VERIFY_OTP_LOGIN({
+  
+      VERIFY_OTP_LOGIN({
         mobile: mobile,
         otp: otp,
-      });
-      console.log(mobile, otp, 'ertyuioiuy');
-
-      if (response.jwt && response.refresh_token) {
-        // await setJwtToken(response?.jwt);
-        // const decoded = ;
-        // console.log(decoded, 'decoded');
-        dispatch(
-          setUserAuthStates({
-            key: 'jwt', // The state key you want to update
-            value: response?.jwt, // 
-          }),
-        );
-        dispatch(
-          setUserAuthStates({
-            key: 'refreshToken', // The state key you want to update
-            value: response?.refresh_token
-          }),
-        );
-        dispatch(
-          setUserAuthStates({
-            key:"userProfile",
-            value: jwtDecode(response.jwt),
-          }),
-        );
-        sendNotificationMessage(fcmtoken);
-        // userProfile
-
-        // setDecodedToken(decoded.data);
-        // await setRefreshToken(response.refresh_token);
-        // await setJwtTokenn(response.jwt);
-        // await setRefreshTokenn(response.refresh_token);
-        setLoader(false);
-        sendNotificationMessage(fcmtoken);
-      } else {
-        setError('Please try again.');
-        setLoader(false);
-      }
+      })
+        .then((response) => {
+          if (response?.jwt && response?.refresh_token) {
+            dispatch(
+              setUserAuthStates({
+                key: 'jwt',
+                value: response?.jwt,
+              })
+            );
+          }
+          return response;
+        })
+        .then((response) => {
+          dispatch(
+            setUserAuthStates({
+              key: 'refreshToken',
+              value: response?.refresh_token,
+            })
+          );
+          return response;
+        })
+        .then((response) => {
+          dispatch(
+            setUserAuthStates({
+              key: 'userProfile',
+              value: jwtDecode(response.jwt),
+            })
+          );
+          sendNotificationMessage(fcmtoken,response.jwt); // Only call now
+  
+          // Wait until JWT is fully dispatched
+          // store.subscribe(() => {
+          //   const currentJwt = store.getState().userAuth.jwt;
+          //   return false
+          //   Alert.alert(currentJwt)
+          //   if (currentJwt) {
+          //   }
+          // });
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setLoader(false);
+        });
     } catch (err) {
       console.error('OTP verification failed:', err);
       setLoader(false);
       setError(err.message || 'OTP verification failed. Please try again.');
     }
   };
+  
+
+
+  // const verifyOtp = async () => {
+  //   try {
+  //     if (!otp) {
+  //       setError('Please Enter OTP');
+  //       return;
+  //     } else if (otp.length !== 4) {
+  //       setError('Please enter a 4-digit OTP');
+  //       return;
+  //     }
+  //     setLoader(true);
+  //      VERIFY_OTP_LOGIN({
+  //       mobile: mobile,
+  //       otp: otp,
+  //     }).then((response)=>{
+  //       if(response?.jwt && response?.refresh_token){
+  //         dispatch(
+  //           setUserAuthStates({
+  //             key: 'jwt', // The state key you want to update
+  //             value: response?.jwt, // 
+  //           }),
+  //         );
+  //       }
+  //       return response
+  //     }).then((response)=>{
+  //       dispatch(
+  //         setUserAuthStates({
+  //           key: 'refreshToken', // The state key you want to update
+  //           value: response?.refresh_token
+  //         }),
+  //       );
+  //       return response
+  //     }).then((response)=>{
+  //       dispatch(
+  //         setUserAuthStates({
+  //           key:"userProfile",
+  //           value: jwtDecode(response.jwt),
+  //         }),
+  //       );
+  //       sendNotificationMessage(fcmtoken);
+  //     }).catch((err)=>{
+  //       console.log(err)
+  //     }).finally((e)=>{
+  //       setLoader(false)
+  //     })
+
+
+     
+  //   } catch (err) {
+  //     console.error('OTP verification failed:', err);
+  //     setLoader(false);
+  //     setError(err.message || 'OTP verification failed. Please try again.');
+  //   }
+  // };
 
   return (
     <SafeAreaView style={styles.container}>

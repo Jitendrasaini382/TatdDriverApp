@@ -2,13 +2,18 @@ import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, { useContext } from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {AppColors} from '../assets/Colors';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setMyBookingModal } from '../redux/slices/trustedDriverSlice';
 import { TokenConstextApi } from '../context/GlobalContext';
 
 const ExtraButtons = () => {
-  const {decodedToken, languageSwitch} =
-  useContext(TokenConstextApi);
+  // const {decodedToken, languageSwitch} =
+  // useContext(TokenConstextApi);
+
+  const decodedToken = useSelector((e)=>e?.userAuth?.userProfile?.data)
+  const languageSwitch = "Hindi"
+
+
   const navigation = useNavigation();
   const dispatch = useDispatch();
 

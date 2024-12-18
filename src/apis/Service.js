@@ -77,14 +77,21 @@ axiosClient.interceptors.response.use(
   },
 );
 
+
 const _Fetch = (method, path, body, headers = {}) => {
   return new Promise((resolve, reject) => {
+    // Merge headers: If headers are passed, merge with default headers
+    const finalHeaders = {
+      ...axiosClient.defaults.headers.common,
+      ...headers, // Custom headers override default headers if any conflict
+    };
+
     axiosClient({
       method,
       url: path,
       data: method !== 'GET' ? body : undefined,
       params: method === 'GET' ? body : undefined,
-      headers: {...axiosClient.defaults.headers.common, ...headers},
+      headers: finalHeaders, // Pass merged headers
     })
       .then(response => {
         console.log('Response data:', response.data);
@@ -100,6 +107,32 @@ const _Fetch = (method, path, body, headers = {}) => {
       });
   });
 };
+
+
+
+// const _Fetch = (method, path, body, headers = {}) => {
+//   return new Promise((resolve, reject) => {
+//     axiosClient({
+//       method,
+//       url: path,
+//       data: method !== 'GET' ? body : undefined,
+//       params: method === 'GET' ? body : undefined,
+//       headers: {...axiosClient.defaults.headers.common, ...headers},
+//     })
+//       .then(response => {
+//         console.log('Response data:', response.data);
+//         if (response.data.status_code == 200) {
+//           resolve(response.data);
+//         } else {
+//           reject(response.data.message);
+//         }
+//       })
+//       .catch(err => {
+//         console.error('Request error:', err);
+//         reject(err.response ? err.response.data : err.message);
+//       });
+//   });
+// };
 
 export default _Fetch;
 

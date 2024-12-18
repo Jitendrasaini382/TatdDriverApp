@@ -3,10 +3,10 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import TrustedDriver from '../../screens/TrustedDriver';
-// import DriverNotice from '../../screens/DriverNotice';
+import DriverNotice from '../../screens/DriverNotice';
 import DriverEarning from '../../screens/DriverEarning';
 import MyBonusStatusHistory from '../../screens/MyBonusStatusHistory';
-// import TicketsDriver from '../../screens/TicketsDriver';
+import TicketsDriver from '../../screens/TicketsDriver';
 import DutyReportUpdate from '../../screens/DutyReportUpdate';
 import {NotificationDetailScreen} from '../../components/AllNotificationsDetails';
 import {NoticeBoardDetailScreen} from '../../components/AllNoticeBoardDetails';
@@ -20,12 +20,10 @@ import AgentCommisionAdded from '../../screens/AgentCommisionAdded';
 import SelectYourState from '../../screens/SelectYourState';
 import SelectYourCity from '../../screens/SelectYourDist';
 import AgentLeads from '../../screens/AgentLeads';
-// import DriverNotifications from '../../screens/DriverNotification';
+import DriverNotifications from '../../screens/DriverNotification';
 import ClearMyDuePayment from '../../screens/ClearMyDuePayment';
 import SplashScreen from '../../screens/SplashScreen';
 import {AppColors} from '../../assets/Colors';
-import DriverNotifications from '../../screens/DriverNotification';
-import DriverNotice from '../../screens/DriverNotice';
 
 const Stack = createStackNavigator();
 
@@ -79,13 +77,13 @@ const PrivateRoute = () => {
             name="MyBonusStatusHistory"
             component={MyBonusStatusHistory}
           />
-          {/* <Stack.Screen name="TicketsDriver" component={TicketsDriver} /> */}
+          <Stack.Screen name="TicketsDriver" component={TicketsDriver} />
           <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
 
           <Stack.Screen name="AgentLogin" component={AgentLogin} />
           <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />
           <Stack.Screen name="AgentPanel" component={AgentPanel} />
-          {/* <Stack.Screen name="AgentKyc" component={AgentKy} /> */}
+          <Stack.Screen name="AgentKyc" component={AgentKyc} />
           <Stack.Screen name="AgentTrainig" component={AgentTrainig} />
           <Stack.Screen name="AgentWallet" component={AgentWallet} />
           <Stack.Screen

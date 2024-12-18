@@ -23,6 +23,7 @@ import {AppFont} from '../assets/FontsFamily';
 import {useDispatch, useSelector} from 'react-redux';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
 import store from '../redux/store';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -35,6 +36,8 @@ const moderateScale = (size, factor = 0.5) =>
 
 const CheckDriverOtp = ({navigation, route}) => {
   const dispatch = useDispatch();
+  const insets = useSafeAreaInsets()
+
   const {mobile} = route.params;
   const [fcmtoken, setFcmToken] = useState();
   const [otp, setOtp] = useState('');
@@ -96,15 +99,15 @@ const CheckDriverOtp = ({navigation, route}) => {
   const sendNotificationMessage = async (fcmtoken, jwttoken) => {
     console.log('runnnnn setttttttttttttttttttttttttt');
     // console.log(jwtw);
-    const response = await GET_FCM_TOKEN(
-      {
-        fcm_token: fcmtoken,
-        action: 'save_fcm',
-      },
-      {
-        Authorization: `Bearer ${jwttoken}`,
-      },
-    );
+    // const response = await GET_FCM_TOKEN(
+    //   {
+    //     fcm_token: fcmtoken,
+    //     action: 'save_fcm',
+    //   },
+    //   {
+    //     Authorization: `Bearer ${jwttoken}`,
+    //   },
+    // );
 
     dispatch(
       setUserAuthStates({
@@ -234,8 +237,11 @@ const CheckDriverOtp = ({navigation, route}) => {
   //   }
   // };
 
+
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <View style={{height:insets.top,backgroundColor:AppColors.mainColor}}/>
+
       <Header backButton={true} />
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.contentContainer}>
@@ -346,7 +352,7 @@ const CheckDriverOtp = ({navigation, route}) => {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

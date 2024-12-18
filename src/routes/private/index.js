@@ -24,6 +24,8 @@ import DriverNotifications from '../../screens/DriverNotification';
 import ClearMyDuePayment from '../../screens/ClearMyDuePayment';
 import SplashScreen from '../../screens/SplashScreen';
 import {AppColors} from '../../assets/Colors';
+import DueScreen from '../../screens/DueScreen';
+import DutyReportUpdateScreen from '../../screens/DutyReportUpdateScreen';
 
 const Stack = createStackNavigator();
 
@@ -79,6 +81,8 @@ const PrivateRoute = () => {
           />
           <Stack.Screen name="TicketsDriver" component={TicketsDriver} />
           <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
+          <Stack.Screen name="DutyReportUpdateScreen" component={DutyReportUpdateScreen} />
+          <Stack.Screen name="DueScreen" component={DueScreen} />
 
           <Stack.Screen name="AgentLogin" component={AgentLogin} />
           <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />

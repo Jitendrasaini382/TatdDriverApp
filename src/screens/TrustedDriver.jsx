@@ -476,7 +476,7 @@ const TrustedDriver = ({navigation}) => {
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.navigate('MyBonusStatusHistory')}
+                onPress={() => navigation.navigate('DutyReportUpdateScreen')}
                 style={styles.bottamContent2}>
                 <Text style={styles.mainText}>
                   {languageSwitch == 'english' ? 'My Bonus' : 'मेरा बोनस'}

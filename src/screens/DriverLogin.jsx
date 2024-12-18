@@ -1,258 +1,3 @@
-// // import React, {useEffect, useState} from 'react';
-// // import {
-// //   View,
-// //   Text,
-// //   TouchableOpacity,
-// //   Modal,
-// //   StyleSheet,
-// //   NativeModules,
-// //   Pressable,
-// //   FlatList,
-// //   Image,
-// // } from 'react-native';
-// // import Icon from 'react-native-vector-icons/FontAwesome';
-
-// // import {PermissionsAndroid} from 'react-native';
-// // import {AppColors} from '../assets/Colors';
-// // import {AppFont} from '../assets/FontsFamily';
-// // import {googleLogo} from '../assets/images';
-
-// // const {MyTelephonyModule} = NativeModules;
-// // console.log('MyTelephonyModule:', MyTelephonyModule);
-
-// // async function requestPermissions() {
-// //   if (Platform.OS === 'android') {
-// //     try {
-// //       const granted = await PermissionsAndroid.requestMultiple([
-// //         PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
-// //         PermissionsAndroid.PERMISSIONS.READ_PHONE_NUMBERS,
-// //       ]);
-
-// //       if (
-// //         granted['android.permission.READ_PHONE_STATE'] ===
-// //           PermissionsAndroid.RESULTS.GRANTED &&
-// //         granted['android.permission.READ_PHONE_NUMBERS'] ===
-// //           PermissionsAndroid.RESULTS.GRANTED
-// //       ) {
-// //         console.log('Phone state permissions granted');
-// //         return true;
-// //       } else {
-// //         console.log('Phone state permissions denied');
-// //         return false;
-// //       }
-// //     } catch (err) {
-// //       console.warn(err);
-// //       return false;
-// //     }
-// //   }
-// //   return true;
-// // }
-
-// // const getSimInfo = async () => {
-// //   const hasPermission = await requestPermissions();
-// //   if (hasPermission) {
-// //     try {
-// //       console.log('Fetching SIM information...');
-// //       const simInfo = await MyTelephonyModule.getSimInfo();
-// //       console.log('SIM Information retrieved:', simInfo);
-// //       return simInfo;
-// //     } catch (error) {
-// //       console.error('Error fetching SIM Info:', error);
-// //       return 'Failed to get SIM information';
-// //     }
-// //   } else {
-// //     console.error('Error fetching SIM Info:', error);
-// //   }
-// // };
-
-// // const extractPhoneNumbers = info => {
-// //   return info.match(/Phone Number: [\+\d]+/g).map(match => {
-// //     const phoneNumber = match
-// //       .replace('Phone Number: ', '')
-// //       .replace(/^(\+91|0)/, '');
-// //     return Number(phoneNumber);
-// //   });
-// // };
-
-// // const SimInfoComponent = () => {
-// //   const [simInfo, setSimInfo] = useState([]);
-// //   const [isModalVisible, setModalVisible] = useState(false);
-
-// // const handleClose = () => {
-// //   setModalVisible(false);
-// // };
-// // const handleOpen = () => {
-// //   setModalVisible(true);
-// // };
-// // useEffect(() => {
-// //   fetchSimInfo();
-// // }, []);
-
-// // const fetchSimInfo = async () => {
-// //   try {
-// //     const info = await getSimInfo();
-// //     setSimInfo(extractPhoneNumbers(info));
-// //   } catch (err) {
-// //     setSimInfo('Failed to get SIM information');
-// //   }
-// // };
-
-// //   return (
-// //     <View style={styles.container}>
-// //       <Text style={styles.title}>SIM Information</Text>
-// //       <Text>{simInfo}</Text>
-// //       <TouchableOpacity onPress={handleOpen}>
-// //         <Text style={{color: 'red'}}>hello</Text>
-// //       </TouchableOpacity>
-
-// // <Modal visible={isModalVisible} transparent={true} animationType="slide">
-// //   <View
-// //     style={{
-// //       flex: 1,
-// //       backgroundColor: 'rgba(0, 0, 0, 0.5)',
-// //       justifyContent: 'flex-end',
-// //       alignItems: 'center',
-// //       // alignContent: "space-between"
-// //     }}>
-// //     <View
-// //       style={{
-// //         width: '100%',
-// //         backgroundColor: 'white',
-// //         borderRadius: 10,
-// //         padding: 20,
-// //       }}>
-// //       <View
-// //         style={{
-// //           justifyContent: 'space-between',
-// //           alignContent: 'center',
-// //           flexDirection: 'row',
-// //           marginBottom: 10,
-// //         }}>
-// //         <View
-// //           style={{
-// //             borderRadius: 18,
-// //             height: 36,
-// //             width: 36,
-// //             justifyContent: 'center',
-// //             alignItems: 'center',
-// //             marginRight: 5,
-// //           }}>
-// //           <Image
-// //             style={{
-// //               resizeMode: 'center',
-// //               height: 30,
-// //               width: 30,
-// //             }}
-// //             source={googleLogo}
-// //           />
-// //         </View>
-// //         <TouchableOpacity
-// //           onPress={handleClose}
-// //           style={{
-// //             backgroundColor: 'white',
-// //             borderRadius: 18,
-// //             height: 36,
-// //             width: 36,
-// //             justifyContent: 'center',
-// //             alignItems: 'center',
-// //             marginRight: 5,
-// //           }}>
-// //           <Icon name="close" size={20} color={AppColors.greyColor} />
-// //         </TouchableOpacity>
-// //       </View>
-// //       <Text
-// //         style={{
-// //           fontSize: 18,
-// //           fontWeight: 'bold',
-// //           marginBottom: 10,
-// //           color: 'black',
-// //         }}>
-// //         Choose a phone number
-// //       </Text>
-// //       <Text
-// //         style={{
-// //           fontSize: 14,
-// //           marginBottom: 5,
-// //           color: '#555',
-// //         }}>
-// //         You can choose a phone number that's assigned to your phone, and
-// //         Google will share it only with this app.
-// //       </Text>
-// //       <Text
-// //         style={{
-// //           fontSize: 14,
-// //           marginBottom: 5,
-// //           color: '#555',
-// //         }}>
-// //         Google won't store the phone number that you share with this app
-// //         in your Google Account
-// //       </Text>
-
-// //       <FlatList
-// //         data={simInfo}
-// //         keyExtractor={(item, index) => index.toString()}
-// //         renderItem={({item}) => (
-// //           <View
-// //             style={{
-// //               flexDirection: 'row',
-// //               alignItems: 'center',
-// //               padding: 5,
-// //             }}>
-// //             <View
-// //               style={{
-// //                 backgroundColor: 'grey',
-// //                 borderRadius: 18,
-// //                 height: 36,
-// //                 width: 36,
-// //                 justifyContent: 'center',
-// //                 alignItems: 'center',
-// //                 marginRight: 15,
-// //               }}>
-// //               <Icon name="phone" size={20} color={AppColors.greyColor} />
-// //             </View>
-// //             <TouchableOpacity style={{}}>
-// //               <Text style={{fontSize: 18, color: 'black'}}>{item}</Text>
-// //             </TouchableOpacity>
-// //           </View>
-// //         )}
-// //       />
-
-// //       <Text
-// //         style={{
-// //           fontSize: 12,
-// //           marginTop: 15,
-// //           color: '#555',
-// //         }}>
-// //         You can update your phone number sharing preference in your device
-// //         settings
-// //         {/* <Text style={{color: '#1a73e8'}}> device settings</Text>. */}
-// //       </Text>
-// //     </View>
-// //   </View>
-// // </Modal>
-// //     </View>
-// //   );
-// // };
-
-// // const styles = StyleSheet.create({
-// //   container: {
-// //     flex: 1,
-// //     justifyContent: 'center',
-// //     alignItems: 'center',
-// //     padding: 20,
-// //     backgroundColor: 'white',
-// //   },
-// //   title: {
-// //     fontSize: 24,
-// //     marginBottom: 20,
-// //     color: 'black',
-// //   },
-// // });
-
-// // export default SimInfoComponent;
-
-// /////////////
-
 import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
@@ -279,6 +24,7 @@ import {AppFont} from '../assets/FontsFamily';
 import {DRIVER_LOGIN} from '../apis/Apis';
 import {useNavigation} from '@react-navigation/native';
 import {googleLogo} from '../assets/images';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -329,11 +75,11 @@ const getSimInfo = async () => {
       // console.log('SIM Information retrieved:', simInfo);
       return simInfo;
     } catch (error) {
-      console.error('Error fetching SIM Info:', error);
+      console.log('Error fetching SIM Info:', error);
       return 'Failed to get SIM information';
     }
   } else {
-    console.error('Error fetching SIM Info:', error);
+    console.log('Error fetching SIM Info:', error);
   }
 };
 
@@ -358,8 +104,8 @@ const DriverLogin = () => {
 
   const handleChange = text => {
     setMobile(text);
-    if(text.length == 10){
-      Keyboard.dismiss()
+    if (text.length == 10) {
+      Keyboard.dismiss();
     }
   };
 
@@ -382,7 +128,10 @@ const DriverLogin = () => {
   //   }
   // };
   const handleOpen = () => {
-    if (simInfo.length > 0 && !simInfo.includes('Please Allow The Permission')) {
+    if (
+      simInfo.length > 0 &&
+      !simInfo.includes('Please Allow The Permission')
+    ) {
       if (!hasModalOpened) {
         setModalVisible(true);
         setHasModalOpened(true);
@@ -391,7 +140,7 @@ const DriverLogin = () => {
       console.log('No valid phone numbers available, modal will not open.');
     }
   };
-  
+
   useEffect(() => {
     fetchSimInfo();
   }, []);
@@ -422,7 +171,6 @@ const DriverLogin = () => {
   // },[])
 
   const sendOtp = async number => {
-    
     console.log('send otppp===========================');
     console.log(typeof number, number);
     console.log('send otppp===========================');
@@ -438,7 +186,7 @@ const DriverLogin = () => {
         return;
       }
       setError(null);
-      Keyboard.dismiss()
+      Keyboard.dismiss();
       setLoader(true);
       const response = await DRIVER_LOGIN({mobile: number});
       console.log(response, 'loginnnnnnnnn');
@@ -453,13 +201,16 @@ const DriverLogin = () => {
       console.log(err, 'err');
     }
   };
+  const insets = useSafeAreaInsets()
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <Header backButton={false} />
-      <ScrollView contentContainerStyle={styles.scrollViewContent}
-      keyboardShouldPersistTaps = "always"
-      >
+    <View style={[styles.safeArea]}>
+
+      <View style={{height:insets.top,backgroundColor:AppColors.mainColor}}/>
+      <Header backButtn={false} />
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        keyboardShouldPersistTaps="always">
         <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>
             <View style={styles.mainView}>
@@ -681,7 +432,7 @@ const DriverLogin = () => {
           </View>
         </Modal>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

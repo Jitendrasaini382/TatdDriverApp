@@ -1030,6 +1030,8 @@ PODS:
   - React-Mapbuffer (0.74.2):
     - glog
     - React-debug
+  - react-native-device-number (1.0.9):
+    - React-Core
   - react-native-gif (1.0.3):
     - FLAnimatedImage
     - React
@@ -1289,6 +1291,8 @@ PODS:
     - React-Core
   - RNCMaskedView (0.3.1):
     - React-Core
+  - RNDeviceInfo (13.1.0):
+    - React-Core
   - RNFastImage (8.6.3):
     - React-Core
     - SDWebImage (~> 5.11.1)
@@ -1444,6 +1448,7 @@ DEPENDENCIES:
   - React-jsitracing (from `../node_modules/react-native/ReactCommon/hermes/executor/`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
+  - react-native-device-number (from `../node_modules/react-native-device-number`)
   - react-native-gif (from `../node_modules/react-native-gif`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -1472,6 +1477,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
@@ -1567,6 +1573,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   React-Mapbuffer:
     :path: "../node_modules/react-native/ReactCommon"
+  react-native-device-number:
+    :path: "../node_modules/react-native-device-number"
   react-native-gif:
     :path: "../node_modules/react-native-gif"
   react-native-safe-area-context:
@@ -1623,6 +1631,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCMaskedView:
     :path: "../node_modules/@react-native-masked-view/masked-view"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNFastImage:
     :path: "../node_modules/react-native-fast-image"
   RNFBApp:
@@ -1690,6 +1700,7 @@ SPEC CHECKSUMS:
   React-jsitracing: 0fa7f78d8fdda794667cb2e6f19c874c1cf31d7e
   React-logger: 29fa3e048f5f67fe396bc08af7606426d9bd7b5d
   React-Mapbuffer: bf56147c9775491e53122a94c423ac201417e326
+  react-native-device-number: bdacfe5c5faabbdc04e452e2cb7a5c39a0144f52
   react-native-gif: 844d69f610a60e7fd4d639e203213350cb1ff95b
   react-native-safe-area-context: a240ad4b683349e48b1d51fed1611138d1bdad97
   react-native-webview: 596fb33d67a3cde5a74bf1f6b4c28d3543477fdd
@@ -1718,6 +1729,7 @@ SPEC CHECKSUMS:
   ReactCommon: ecad995f26e0d1e24061f60f4e5d74782f003f12
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
   RNCMaskedView: 090213d32d8b3bb83a4dcb7d12c18f0152591906
+  RNDeviceInfo: e13b7d68878fba693c9fbb13ca4d56ad57d95917
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFBApp: a7aff07a7f212149539fce51a1326c6d208b03ad
   RNFBMessaging: f1fdc7ac62df96e3c8362d516caaf84fab69085d

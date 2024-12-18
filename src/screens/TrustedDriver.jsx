@@ -96,10 +96,19 @@ const TrustedDriver = ({navigation}) => {
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
-  useEffect(async () => {
-    await requestNotificationPermission();
-    await checkVibrationPermission();
-    // await AsyncStorage.removeItem('jwt')
+  useEffect(() => {
+    const initializePermissions = async () => {
+      try {
+        await requestNotificationPermission();
+        await checkVibrationPermission();
+        // Optionally remove JWT for testing
+        // await AsyncStorage.removeItem('jwt');
+      } catch (error) {
+        console.error('Error initializing permissions:', error);
+      }
+    };
+  
+    initializePermissions();  
   }, []);
   const openMyUrl = url => {
     Linking.openURL(url);

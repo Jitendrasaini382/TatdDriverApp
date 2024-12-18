@@ -24,6 +24,8 @@ import AgentLeads from '../../screens/AgentLeads';
 import ClearMyDuePayment from '../../screens/ClearMyDuePayment';
 import SplashScreen from '../../screens/SplashScreen';
 import {AppColors} from '../../assets/Colors';
+import DriverNotifications from '../../screens/DriverNotification';
+import DriverNotice from '../../screens/DriverNotice';
 
 const Stack = createStackNavigator();
 
@@ -47,52 +49,52 @@ const PrivateRoute = () => {
           }}>
           <Stack.Screen name="TrustedDriver" component={TrustedDriver} />
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
-          {/* <Stack.Screen
+          <Stack.Screen
             name="DriverNotifications"
             component={DriverNotifications}
-          /> */}
-          {/* <Stack.Screen
+          />
+          <Stack.Screen
             name="NotificationDetail"  
             component={NotificationDetailScreen}
             options={{
               title: 'Notification',
               headerBackTitle: 'Back',
             }}
-          /> */}
-          {/* <Stack.Screen name="DriverNotice" component={DriverNotice} /> */}
-          {/* <Stack.Screen
+          />
+          <Stack.Screen name="DriverNotice" component={DriverNotice} />
+          <Stack.Screen
             name="NoticeBoardDetail"
             component={NoticeBoardDetailScreen}
             options={{
               title: 'NoticeBoard',
               headerBackTitle: 'Back',
             }}
-          /> */}
-          {/* <Stack.Screen
+          />
+          <Stack.Screen
             name="ClearMyDuePayment"
             component={ClearMyDuePayment}
-          /> */}
-          {/* <Stack.Screen name="DriverEarning" component={DriverEarning} /> */}
-          {/* <Stack.Screen
+          />
+          <Stack.Screen name="DriverEarning" component={DriverEarning} />
+          <Stack.Screen
             name="MyBonusStatusHistory"
             component={MyBonusStatusHistory}
-          /> */}
+          />
           {/* <Stack.Screen name="TicketsDriver" component={TicketsDriver} /> */}
-          {/* <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} /> */}
+          <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
 
-          {/* <Stack.Screen name="AgentLogin" component={AgentLogin} /> */}
-          {/* <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} /> */}
-          {/* <Stack.Screen name="AgentPanel" component={AgentPanel} /> */}
-          {/* <Stack.Screen name="AgentKyc" component={AgentKyc} /> */}
-          {/* <Stack.Screen name="AgentTrainig" component={AgentTrainig} /> */}
-          {/* <Stack.Screen name="AgentWallet" component={AgentWallet} /> */}
-          {/* <Stack.Screen
+          <Stack.Screen name="AgentLogin" component={AgentLogin} />
+          <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />
+          <Stack.Screen name="AgentPanel" component={AgentPanel} />
+          {/* <Stack.Screen name="AgentKyc" component={AgentKy} /> */}
+          <Stack.Screen name="AgentTrainig" component={AgentTrainig} />
+          <Stack.Screen name="AgentWallet" component={AgentWallet} />
+          <Stack.Screen
             name="AgentCommisionAdded"
             component={AgentCommisionAdded}
-          /> */}
-          {/* <Stack.Screen name="SelectYourState" component={SelectYourState} /> */}
-          {/* <Stack.Screen name="SelectYourCity" component={SelectYourCity} /> */}
-          {/* <Stack.Screen name="AgentLeads" component={AgentLeads} /> */}
+          />
+          <Stack.Screen name="SelectYourState" component={SelectYourState} />
+          <Stack.Screen name="SelectYourCity" component={SelectYourCity} />
+          <Stack.Screen name="AgentLeads" component={AgentLeads} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

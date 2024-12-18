@@ -2,8 +2,8 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {API_BASE_URL} from '../constant/path';
 import store from '../redux/store';
-const token = store.getState().userAuth.jwt;
-const refreshToken = store.getState().userAuth.refreshToken;
+
+
 // console.log(jwt);
 const axiosClient = axios.create({
   baseURL: API_BASE_URL,
@@ -16,6 +16,7 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(
   async config => {
     // const token = await AsyncStorage.getItem('jwt');
+    const token = store.getState().userAuth.jwt;  
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -42,6 +43,7 @@ axiosClient.interceptors.response.use(
       originalRequest._retry = true;
       // const refreshToken = await AsyncStorage.getItem('refresh_token');
       console.log('Refresh token:', refreshToken);
+      const refreshToken = store.getState().userAuth.refreshToken;
 
       if (refreshToken) {
         try {
@@ -110,29 +112,6 @@ const _Fetch = (method, path, body, headers = {}) => {
 
 
 
-// const _Fetch = (method, path, body, headers = {}) => {
-//   return new Promise((resolve, reject) => {
-//     axiosClient({
-//       method,
-//       url: path,
-//       data: method !== 'GET' ? body : undefined,
-//       params: method === 'GET' ? body : undefined,
-//       headers: {...axiosClient.defaults.headers.common, ...headers},
-//     })
-//       .then(response => {
-//         console.log('Response data:', response.data);
-//         if (response.data.status_code == 200) {
-//           resolve(response.data);
-//         } else {
-//           reject(response.data.message);
-//         }
-//       })
-//       .catch(err => {
-//         console.error('Request error:', err);
-//         reject(err.response ? err.response.data : err.message);
-//       });
-//   });
-// };
 
 export default _Fetch;
 

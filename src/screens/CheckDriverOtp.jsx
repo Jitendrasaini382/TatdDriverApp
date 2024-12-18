@@ -43,7 +43,7 @@ const CheckDriverOtp = ({navigation, route}) => {
   const [otp, setOtp] = useState('');
   const [error, setError] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
-  const token = useSelector((e)=>e)
+  const token = useSelector(e => e);
   // console.log(token,"dddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
   const [field, setField] = useState({
     mobile: mobile,
@@ -83,9 +83,9 @@ const CheckDriverOtp = ({navigation, route}) => {
     // console.log(token, 'rrrrrrrrrrrrrrrrrrrrrr');
     await AsyncStorage.setItem('refresh_token', token);
   };
-  
+
   const getFcmToken = async () => {
-    console.log(token),"roken from  rewewerew  ee wew r wrwe re wrweredux"
+    console.log(token), 'roken from  rewewerew  ee wew r wrwe re wrweredux';
     console.log('runnnnn getttttttttttttttttttttttttt');
     const token = await messaging().getToken();
     if (token) {
@@ -96,21 +96,23 @@ const CheckDriverOtp = ({navigation, route}) => {
     }
   };
 
-  const sendNotificationMessage = async (fcmtoken,jwttoken) => {
+  const sendNotificationMessage = async (fcmtoken, jwttoken) => {
     console.log('runnnnn setttttttttttttttttttttttttt');
     // console.log(jwtw);
-    const response = await GET_FCM_TOKEN({
-      fcm_token: fcmtoken,
-      action: 'save_fcm',
-    },
-  {
-    "Authorization":`Bearer ${jwttoken}`
-  });
+    const response = await GET_FCM_TOKEN(
+      {
+        fcm_token: fcmtoken,
+        action: 'save_fcm',
+      },
+      {
+        Authorization: `Bearer ${jwttoken}`,
+      },
+    );
 
     dispatch(
       setUserAuthStates({
         key: 'login', // The state key you want to update
-        value: true, // 
+        value: true, //
       }),
     );
     console.log('GET FCM TOKEN response:', response);
@@ -127,40 +129,40 @@ const CheckDriverOtp = ({navigation, route}) => {
         return;
       }
       setLoader(true);
-  
+
       VERIFY_OTP_LOGIN({
         mobile: mobile,
         otp: otp,
       })
-        .then((response) => {
+        .then(response => {
           if (response?.jwt && response?.refresh_token) {
             dispatch(
               setUserAuthStates({
                 key: 'jwt',
                 value: response?.jwt,
-              })
+              }),
             );
           }
           return response;
         })
-        .then((response) => {
+        .then(response => {
           dispatch(
             setUserAuthStates({
               key: 'refreshToken',
               value: response?.refresh_token,
-            })
+            }),
           );
           return response;
         })
-        .then((response) => {
+        .then(response => {
           dispatch(
             setUserAuthStates({
               key: 'userProfile',
               value: jwtDecode(response.jwt),
-            })
+            }),
           );
-          sendNotificationMessage(fcmtoken,response.jwt); // Only call now
-  
+          sendNotificationMessage(fcmtoken, response.jwt); // Only call now
+
           // Wait until JWT is fully dispatched
           // store.subscribe(() => {
           //   const currentJwt = store.getState().userAuth.jwt;
@@ -170,7 +172,7 @@ const CheckDriverOtp = ({navigation, route}) => {
           //   }
           // });
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         })
         .finally(() => {
@@ -182,8 +184,6 @@ const CheckDriverOtp = ({navigation, route}) => {
       setError(err.message || 'OTP verification failed. Please try again.');
     }
   };
-  
-
 
   // const verifyOtp = async () => {
   //   try {
@@ -203,7 +203,7 @@ const CheckDriverOtp = ({navigation, route}) => {
   //         dispatch(
   //           setUserAuthStates({
   //             key: 'jwt', // The state key you want to update
-  //             value: response?.jwt, // 
+  //             value: response?.jwt, //
   //           }),
   //         );
   //       }
@@ -230,8 +230,6 @@ const CheckDriverOtp = ({navigation, route}) => {
   //       setLoader(false)
   //     })
 
-
-     
   //   } catch (err) {
   //     console.error('OTP verification failed:', err);
   //     setLoader(false);

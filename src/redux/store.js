@@ -16,8 +16,8 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage, // You want to store the state in AsyncStorage
-  blacklist: ['trustedDriverSlice'], // You can blacklist this slice if you don't want it persisted
-  whitelist: ['userAuth', 'globalSlice'], // Persist only the 'userAuth' slice
+  blacklist: ['trustedDriverSlice',], // You can blacklist this slice if you don't want it persisted
+  whitelist: ['globalSlice','userAuth'], // Persist only the 'userAuth' slice
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

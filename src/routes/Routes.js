@@ -48,7 +48,7 @@
 
 // export default Routes;
 
-import {useContext} from 'react';
+// import {useContext, useState} from 'react';
 import PrivateRoute from './private';
 import PublicRoute from './public';
 import {useSelector} from 'react-redux';
@@ -56,7 +56,8 @@ import {useSelector} from 'react-redux';
 
 const Routes = () => {
   const isLogin = useSelector(e => e?.userAuth?.login);
-  if(isLogin){
+  const jwt = useSelector((e)=>e?.userAuth?.jwt)
+  if(isLogin&&jwt){
     return <PrivateRoute />;
   }
   else{

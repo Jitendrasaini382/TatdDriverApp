@@ -50,7 +50,15 @@ import {
   requestNotificationPermission,
 } from '../utils/permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { setBookingModal, setCurrentView, setExpressBookingModal, setModalVisible, setMyBookingAgencyModal, setRatingModal, setVideosContent } from '../redux/slices/trustedDriverSlice';
+import {
+  setBookingModal,
+  setCurrentView,
+  setExpressBookingModal,
+  setModalVisible,
+  setMyBookingAgencyModal,
+  setRatingModal,
+  setVideosContent,
+} from '../redux/slices/trustedDriverSlice';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -83,10 +91,10 @@ const TrustedDriver = ({navigation}) => {
     myBookingModal,
   } = useSelector(state => state.trustedDriverSlice);
 
-  const e  = useSelector((e)=>e)
+  const e = useSelector(e => e);
   // console.log(e.userAuth?.userProfile?.data)
-  const decodedToken = useSelector((e)=>e?.userAuth?.userProfile?.data)
-  const languageSwitch = useSelector(((e)=>e?.globalSlice?.languageSwitch))
+  const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   useEffect(async () => {
     await requestNotificationPermission();
@@ -219,10 +227,13 @@ const TrustedDriver = ({navigation}) => {
   // useEffect(() => {
   //   decodeData(jwtToken);
   // }, [jwtToken]);
-
+  const jwt = useSelector(e => e?.userAuth?.jwt);
+  console.log(jwt, 'jwt token FROM TETSED DRVICE SCEEEB');
   useEffect(() => {
-    getPopup();
-  }, []);
+    if (jwt) {
+      getPopup();
+    }
+  }, [jwt]);
 
   const getPopup = async () => {
     try {
@@ -315,15 +326,14 @@ const TrustedDriver = ({navigation}) => {
   ];
 
   const onRefresh = useCallback(() => {
-    console.log(" phleeeeeeeeee " ,refreshData);
-    
+    console.log(' phleeeeeeeeee ', refreshData);
+
     setRefreshing(true);
     // setRefreshData(!refreshData);
     setRefreshing(false);
-    console.log(" badddddddddd " ,refreshData);
-
+    console.log(' badddddddddd ', refreshData);
   }, []);
-// return false
+  // return false
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header extraButton={true} />

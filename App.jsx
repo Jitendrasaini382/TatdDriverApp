@@ -10,11 +10,11 @@ import {PersistGate} from 'redux-persist/integration/react'; // Import PersistGa
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
-
 TextInput.defaultProps = TextInput.defaultProps || {};
 TextInput.defaultProps.allowFontScaling = false;
 const App = () => {
   const persistor = persistStore(store);
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

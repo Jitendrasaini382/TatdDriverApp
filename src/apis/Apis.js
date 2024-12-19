@@ -19,9 +19,9 @@ export const VERIFY_OTP_LOGIN = body => {
 
 // https://www.tatd.in/app-api/driver/login/save-fcm-token-api.php
 
-export const GET_FCM_TOKEN = (body,header) => {
+export const GET_FCM_TOKEN = (body) => {
   console.log(body, 'Get FCM Token');
-  return _Fetch('POST', 'login/save-fcm-token-api.php', {...body},header);
+  return _Fetch('POST', 'login/save-fcm-token-api.php', {...body},{});
 };
 
 // https://www.tatd.in/app-api/driver/faq/driver-faq-api.php

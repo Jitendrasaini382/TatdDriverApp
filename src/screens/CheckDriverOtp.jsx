@@ -10,6 +10,7 @@ import {
   Dimensions,
   Alert,
   Pressable,
+  Platform,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -55,9 +56,6 @@ const CheckDriverOtp = ({navigation, route}) => {
     setOtp(text);
   };
 
-  useEffect(() => {
-    getFcmToken();
-  }, []);
 
   const resendOtp = () => {
     setShowResendOtpText(true);
@@ -74,50 +72,62 @@ const CheckDriverOtp = ({navigation, route}) => {
       });
   };
 
-  const setJwtTokenn = async token => {
-    // console.log(token, 'jjjjjjjjjjjjjjjjjjjjjjjj');
-    await AsyncStorage.setItem('jwt', token);
-  };
 
-  const setRefreshTokenn = async token => {
-    // console.log(token, 'rrrrrrrrrrrrrrrrrrrrrr');
-    await AsyncStorage.setItem('refresh_token', token);
-  };
 
-  const getFcmToken = async () => {
-    console.log(token), 'roken from  rewewerew  ee wew r wrwe re wrweredux';
-    console.log('runnnnn getttttttttttttttttttttttttt');
-    const token = await messaging().getToken();
-    if (token) {
-      console.log('Your Firebase Cloud Messaging token is:', token);
-      setFcmToken(token);
-    } else {
-      console.log('Failed to get FCM token');
-    }
-  };
+  // const getFcmToken = async () => {
+  //   try {
+  //     if (Platform.OS === 'ios') {
+  //       // For iOS, register for remote messages explicitly
+  //       await messaging().registerDeviceForRemoteMessages();
+  //     } else {
+  //       // For Android, ensure the registration for remote messages
+  //       await messaging().registerDeviceForRemoteMessages();
+  //     }
 
-  const sendNotificationMessage = async (fcmtoken, jwttoken) => {
-    console.log('runnnnn setttttttttttttttttttttttttt');
-    // console.log(jwtw);
-    // const response = await GET_FCM_TOKEN(
-    //   {
-    //     fcm_token: fcmtoken,
-    //     action: 'save_fcm',
-    //   },
-    //   {
-    //     Authorization: `Bearer ${jwttoken}`,
-    //   },
-    // );
+  //     // Request notification permissions (only if you plan to display notifications)
+  //     // const authStatus = await messaging().requestPermission();
+  //     // const enabled =
+  //     //   authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+  //     //   authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-    dispatch(
-      setUserAuthStates({
-        key: 'login', // The state key you want to update
-        value: true, //
-      }),
-    );
-    console.log('GET FCM TOKEN response:', response);
-    // setFcmToken();
-  };
+  //     // if (!enabled) {
+  //     //   Alert.alert('Permission not granted for notifications');
+  //     //   return;
+  //     // }
+
+  //     // Retrieve the FCM token
+  //     const tokenvalue = await messaging().getToken();
+  //     console.warn('FCM token generated:', tokenvalue);
+  //     console.log('FCM token generated:', tokenvalue);
+
+  //     // Save the token to AsyncStorage for later use
+  //     await AsyncStorage.setItem('fcmToken', tokenvalue);
+  //   } catch (error) {
+  //     console.log('Error generating FCM token:', error);
+  //     Alert.alert(
+  //       'Error generating FCM token:',
+  //       error?.message || error.toString(),
+  //     );
+  //   }
+  // };
+
+  // const sendNotificationMessage = async (fcmtoken, jwttoken) => {
+  //   console.log('runnnnn setttttttttttttttttttttttttt');
+  //   // console.log(jwtw);
+  //   const response = await GET_FCM_TOKEN(
+  //     {
+  //       fcm_token: fcmtoken,
+  //       action: 'save_fcm',
+  //     },
+  //     {
+  //       Authorization: `Bearer ${jwttoken}`,
+  //     },
+  //   );
+
+   
+  //   console.log('GET FCM TOKEN response:', response);
+  //   // setFcmToken();
+  // };
 
   const verifyOtp = async () => {
     try {
@@ -161,7 +171,13 @@ const CheckDriverOtp = ({navigation, route}) => {
               value: jwtDecode(response.jwt),
             }),
           );
-          sendNotificationMessage(fcmtoken, response.jwt); // Only call now
+          dispatch(
+            setUserAuthStates({
+              key: 'login', // The state key you want to update
+              value: true, //
+            }),
+          );
+          // sendNotificationMessage(fcmtoken, response.jwt); // Only call now
 
           // Wait until JWT is fully dispatched
           // store.subscribe(() => {
@@ -243,7 +259,9 @@ const CheckDriverOtp = ({navigation, route}) => {
       <View style={{height:insets.top,backgroundColor:AppColors.mainColor}}/>
 
       <Header backButton={true} />
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent} 
+      keyboardShouldPersistTaps = "always"
+      >
         <View style={styles.contentContainer}>
           <View style={styles.card}>
             <View style={styles.cardHeader}>

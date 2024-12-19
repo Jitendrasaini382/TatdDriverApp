@@ -14,11 +14,13 @@ import {
 import Modal from 'react-native-modal';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import Header from '../components/Header';
-import {Address, CallingGif} from '../assets/images';
+import {Address, CallingGif, Facebook_Icon} from '../assets/images';
 import {AppColors} from '../assets/Colors';
 import SwipeableButton from '../components/SwipeableButton';
 import RadioButton from '../components/CustomRadioButton';
 import PackageDetailsDutyReportUpdate from '../components/modal/PackageDetailsDutyReportUpdate';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
 
 const RadioButtonWithTitle = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -87,12 +89,13 @@ const CancelBooking = () => {
   );
 };
 
-const AcceptBooking = () => {
+const AcceptBooking = ({modalShow}) => {
   const [packageDetailsDutyReportUpdate, setPackageDetailsDutyReportUpdate] =
     useState(false);
 
   const handleSwipe = () => {
-    Alert.alert('Booking Accepted', 'You have accepted the booking.');
+    // Alert.alert('Booking Accepted', 'You have accepted the booking.');
+    modalShow()
   };
 
   const openPhoneDialer = () => {
@@ -201,6 +204,11 @@ const AcceptBooking = () => {
 
 const DutyReportUpdate = () => {
   const [cancel, setCancel] = useState(false);
+  const [modalVisibleOntheway, setModalVisibleOntheway] = useState(false)
+
+  const modalShow = ()=>{
+    setModalVisibleOntheway(true)
+  }
 
   return (
     <SafeAreaView
@@ -211,7 +219,67 @@ const DutyReportUpdate = () => {
       }}>
       <Header backButton={true} />
 
-      {cancel ? <CancelBooking /> : <AcceptBooking />}
+
+
+      {cancel ? <CancelBooking /> : <AcceptBooking modalShow={modalShow} />}
+
+      <Modal
+            transparent={true}
+            animationType="slide"
+            visible={modalVisibleOntheway}
+            onRequestClose={() => setModalVisibleOntheway(false)}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <ScrollView>
+                  <TouchableOpacity
+                    style={styles.closeModalButton}
+                    onPress={() => handleCloseModal()}>
+                    <Icon name="close" size={20} color="white" />
+                  </TouchableOpacity>
+                  <View style={styles.titleView}>
+                    <Text
+                      style={{
+                        fontFamily: 'Merriweather-Bold',
+                        fontSize: 18,
+                        color: 'white',
+                      }}>
+                      Guests are like God
+                    </Text>
+                  </View>
+                  <View style={{marginVertical: 20}}>
+                    <Text style={[styles.subTitle, {color: '#16588e'}]}>
+                      I will reach on time
+                    </Text>
+                    <Image
+                      source={Facebook_Icon}
+                      resizeMode="contain"
+                      style={{
+                        height: 60,
+                        width: 140,
+                        alignSelf: 'center',
+                        marginVertical: 10,
+                      }}
+                    />
+                  </View>
+                  <Text
+                    style={[
+                      styles.title,
+                      {color: '#16588e', fontWeight: '100', fontSize: 16},
+                    ]}>
+                    Customer's time is very valuable
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.onthewayButton}
+                    // onPress={() => handleCloseModal()}
+                    onPress={() => {
+                      setModalVisibleOntheway(false), setModalVisibleRich(true);
+                    }}>
+                    <Text style={styles.buttonText}>On The Way</Text>
+                  </TouchableOpacity>
+                </ScrollView>
+              </View>
+            </View>
+          </Modal>
     </SafeAreaView>
   );
 };

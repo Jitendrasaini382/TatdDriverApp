@@ -17,6 +17,7 @@ import {
   Alert,
   Linking,
   RefreshControl,
+  Platform,
 } from 'react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -30,12 +31,15 @@ import BookingModal from '../components/modal/BookingModal';
 import BookingView from '../components/BookingView';
 import TrainingVideo from '../components/TrainingVideos';
 import MyBookingAgencyModal from '../components/modal/MyBookingAgencyModal';
+import messaging from '@react-native-firebase/messaging';
+
 import MyBookingModal from '../components/MyBookingModal';
 
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
 import {
   EXPRESS_BOOKING_POPUP,
+  GET_FCM_TOKEN,
   LOGIN_BUTTON,
   ON_DEMAND_BOOKING,
 } from '../apis/Apis';
@@ -53,6 +57,7 @@ import {
   setRatingModal,
   setVideosContent,
 } from '../redux/slices/trustedDriverSlice';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -63,6 +68,8 @@ const TrustedDriver = ({navigation}) => {
   const dispatch = useDispatch();
   const [popupData, setPopupData] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const [fcmtoken, setFcmToken] = useState();
+
 
   const {
     currentView,
@@ -82,23 +89,78 @@ const TrustedDriver = ({navigation}) => {
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
-  useEffect(() => {
-    const initializePermissions = async () => {
-      try {
-        await requestNotificationPermission();
-        await checkVibrationPermission();
-        // Optionally remove JWT for testing
-        // await AsyncStorage.removeItem('jwt');
-      } catch (error) {
-        console.error('Error initializing permissions:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const initializePermissions = async () => {
+  //     try {
+  //       await requestNotificationPermission();
+  //       await checkVibrationPermission();
+  //       // Optionally remove JWT for testing
+  //       // await AsyncStorage.removeItem('jwt');
+  //     } catch (error) {
+  //       console.error('Error initializing permissions:', error);
+  //     }
+  //   };
   
-    initializePermissions();  
-  }, []);
+  //   initializePermissions();  
+  // }, []);
   const openMyUrl = url => {
     Linking.openURL(url);
   };
+
+  useEffect(()=>{
+    getFcmToken()
+  },[])
+
+
+  const getFcmToken = async () => {
+    try {
+      if (Platform.OS === 'ios') {
+        // For iOS, register for remote messages explicitly
+        await messaging().registerDeviceForRemoteMessages();
+      } else {
+        // For Android, ensure the registration for remote messages
+        await requestNotificationPermission();
+      }
+
+      // Request notification permissions (only if you plan to display notifications)
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      if (!enabled) {
+        // Alert.alert('Permission not granted for notifications');
+        return;
+      }
+
+      // Retrieve the FCM token
+      const tokenvalue = await messaging().getToken();
+      // console.warn('FCM token generated:', tokenvalue);
+      sendNotificationMessage(tokenvalue)
+      setFcmToken(tokenvalue)
+      console.log('FCM token generated:', tokenvalue);
+
+      // Save the token to AsyncStorage for later use
+      // await AsyncStorage.setItem('fcmToken', tokenvalue);
+    } catch (error) {
+      console.log('Error generating FCM token:', error);
+      // Alert.alert(
+      //   'Error generating FCM token:',
+      //   error?.message || error.toString(),
+      // );
+    }
+  };
+
+  const sendNotificationMessage = async (fcmtoken) => {
+    console.log('runnnnn setttttttttttttttttttttttttt');
+    const response = await GET_FCM_TOKEN(
+      {
+        fcm_token: fcmtoken,
+        action: 'save_fcm',
+      }
+    );
+  };
+
 
   // const [loginButton, setLoginButton] = useState({
   //   action: 'login_button',
@@ -171,7 +233,6 @@ const TrustedDriver = ({navigation}) => {
     submitR: '1',
     rfd: '0',
   });
-  const timeoutRef = useRef(null);
 
   const handleToggleButton = () => {
     const newRfdValue = isRfdOn ? '0' : '1';
@@ -204,14 +265,6 @@ const TrustedDriver = ({navigation}) => {
     // }
   };
 
-  useEffect(() => {
-    return () => {
-      // Cleanup the timeout when the component is unmounted
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
 
   // const decodeData = token => {
   //   const decoded = jwtDecode(token);
@@ -223,7 +276,7 @@ const TrustedDriver = ({navigation}) => {
   //   decodeData(jwtToken);
   // }, [jwtToken]);
   const jwt = useSelector(e => e?.userAuth?.jwt);
-  console.log(jwt, 'jwt token FROM TETSED DRVICE SCEEEB');
+  // console.log(jwt, 'jwt token FROM TETSED DRVICE SCEEEB');
   useEffect(() => {
     if (jwt) {
       getPopup();
@@ -321,16 +374,18 @@ const TrustedDriver = ({navigation}) => {
   ];
 
   const onRefresh = useCallback(() => {
-    console.log(' phleeeeeeeeee ', refreshData);
 
     setRefreshing(true);
-    // setRefreshData(!refreshData);
     setRefreshing(false);
-    console.log(' badddddddddd ', refreshData);
   }, []);
   // return false
+  const insets = useSafeAreaInsets()
+
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.safeArea}>
+      <View style={{height:insets.top,backgroundColor:AppColors.mainColor}}/>
+      <SafeAreaView style={{flex:1}}>
+
       <Header extraButton={true} />
       {myBookingModal && <MyBookingModal />}
 
@@ -395,7 +450,7 @@ const TrustedDriver = ({navigation}) => {
                       onColor={AppColors.mainColor}
                       offColor={AppColors.greyColor}
                       size="medium"
-                      onToggle={handleToggleButton}
+                      // onToggle={handleToggleButton}
                       // disabled={isDisabled}
                     />
                   </View>
@@ -476,7 +531,9 @@ const TrustedDriver = ({navigation}) => {
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.navigate('DutyReportUpdateScreen')}
+                // onPress={() => navigation.navigate('DutyReportUpdateScreen')}
+                onPress={() => navigation.navigate('DutyReportUpdate')}
+                
                 style={styles.bottamContent2}>
                 <Text style={styles.mainText}>
                   {languageSwitch == 'english' ? 'My Bonus' : 'मेरा बोनस'}
@@ -587,7 +644,8 @@ const TrustedDriver = ({navigation}) => {
         isVisible={expressBookingModal}>
         <ExpressBookingModal />
       </Modal>
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 };
 

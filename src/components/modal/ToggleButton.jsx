@@ -12,9 +12,9 @@ const ToggleButton = ({button1Label, button2Label, onToggle}) => {
   
 
 
-const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
+// const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
 
-  console.log(languageSwitch, ': language Switch Console');
+//   // console.log(languageSwitch, ': language Switch Console');
 
   const handlePress = async label => {
     setCurrentState(label);

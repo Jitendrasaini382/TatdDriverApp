@@ -42,7 +42,7 @@ axiosClient.interceptors.response.use(
     ) {
       originalRequest._retry = true;
       // const refreshToken = await AsyncStorage.getItem('refresh_token');
-      console.log('Refresh token:', refreshToken);
+      // console.log('Refresh token:', refreshToken);
       const refreshToken = store.getState().userAuth.refreshToken;
 
       if (refreshToken) {

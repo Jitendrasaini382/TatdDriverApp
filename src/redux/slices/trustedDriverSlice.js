@@ -11,6 +11,7 @@ const initialState = {
   bookingModal: false,
   ratingModal: false,
   myBookingModal: false,
+  splash: true,
 };
 
 const trustedDriverSlice = createSlice({
@@ -58,6 +59,9 @@ const trustedDriverSlice = createSlice({
         state.videosContent = false;
       }
     },
+    setSplash: (state, action) => {
+      state.splash = action.payload;
+    },
   },
 });
 
@@ -73,6 +77,7 @@ export const {
   setRatingModal,
   setMyBookingModal,
   mainToggleHandle,
+  setSplash,
 } = trustedDriverSlice.actions;
 
 export default trustedDriverSlice.reducer;

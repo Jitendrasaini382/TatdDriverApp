@@ -3,15 +3,20 @@ import {View, Image, StyleSheet} from 'react-native';
 import { AppColors } from '../assets/Colors';
 import { whitelogo } from '../assets/images';
 import { useIsFocused } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { setSplash } from '../redux/slices/trustedDriverSlice';
 
 const SplashScreen = ({navigation}) => {
   const isFocused = useIsFocused();
+  const dispatch = useDispatch()
 
   useEffect(() => {
     let timer;
     if (isFocused) {
       timer = setTimeout(() => {
-        navigation.navigate('DriverLogin');
+        // navigation.navigate('DriverLogin');
+        dispatch(setSplash(false))
+
       }, 1000);
     }
     return () => clearTimeout(timer);

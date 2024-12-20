@@ -30,11 +30,12 @@ import ReviewScreen from '../../screens/ReviewScreen';
 import RatingScreen from '../../screens/RatingScreen';
 import OnTimeReach from '../../screens/OnTimeReach';
 import Feedback from '../../screens/Feedback';
-import DriverLogin from '../../screens/DriverLogin';
+import {useSelector} from 'react-redux';
 
 const Stack = createStackNavigator();
 
 const PrivateRoute = () => {
+  const isSplash = useSelector(e => e?.trustedDriverSlice?.splash);
   return (
     <>
       <StatusBar
@@ -48,25 +49,26 @@ const PrivateRoute = () => {
 
       <NavigationContainer>
         <Stack.Navigator
-          // initialRouteName={initialRoute}
+          initialRouteName={SplashScreen}
           screenOptions={{
             headerShown: false,
           }}>
+          {isSplash && (
+            <Stack.Screen name="SplashScreen" component={SplashScreen} />
+          )}
           <Stack.Screen name="TrustedDriver" component={TrustedDriver} />
-          <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen
             name="DriverNotifications"
             component={DriverNotifications}
           />
           <Stack.Screen
-            name="NotificationDetail"  
+            name="NotificationDetail"
             component={NotificationDetailScreen}
             options={{
               title: 'Notification',
               headerBackTitle: 'Back',
             }}
           />
-          {/* <Stack.Screen name="DriverLogin" component={DriverLogin} /> */}
 
           <Stack.Screen name="DriverNotice" component={DriverNotice} />
           <Stack.Screen
@@ -88,7 +90,10 @@ const PrivateRoute = () => {
           />
           <Stack.Screen name="TicketsDriver" component={TicketsDriver} />
           <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
-          <Stack.Screen name="DutyReportUpdateScreen" component={DutyReportUpdateScreen} />
+          <Stack.Screen
+            name="DutyReportUpdateScreen"
+            component={DutyReportUpdateScreen}
+          />
           <Stack.Screen name="DueScreen" component={DueScreen} />
 
           <Stack.Screen name="AgentLogin" component={AgentLogin} />
@@ -102,8 +107,7 @@ const PrivateRoute = () => {
           <Stack.Screen name="OnTimeReach" component={OnTimeReach} />
           <Stack.Screen name="RatingScreen" component={RatingScreen} />
           <Stack.Screen name="ReviewScreen" component={ReviewScreen} />
-          
-          
+
           <Stack.Screen
             name="AgentCommisionAdded"
             component={AgentCommisionAdded}

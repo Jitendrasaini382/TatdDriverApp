@@ -70,18 +70,36 @@ const TrustedDriver = ({navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
   const [fcmtoken, setFcmToken] = useState();
 
-  const {
-    currentView,
-    toggleButton,
-    expressBookingModal,
-    mainToggleContent,
-    videosContent,
-    myBookingAgencyModal,
-    isModalVisible,
-    bookingModal,
-    ratingModal,
-    myBookingModal,
-  } = useSelector(state => state.trustedDriverSlice);
+  const currentView = useSelector(
+    state => state.trustedDriverSlice.currentView,
+  );
+  const toggleButton = useSelector(
+    state => state.trustedDriverSlice.toggleButton,
+  );
+  const expressBookingModal = useSelector(
+    state => state.trustedDriverSlice.expressBookingModal,
+  );
+  const mainToggleContent = useSelector(
+    state => state.trustedDriverSlice.mainToggleContent,
+  );
+  const videosContent = useSelector(
+    state => state.trustedDriverSlice.videosContent,
+  );
+  const myBookingAgencyModal = useSelector(
+    state => state.trustedDriverSlice.myBookingAgencyModal,
+  );
+  const isModalVisible = useSelector(
+    state => state.trustedDriverSlice.isModalVisible,
+  );
+  const bookingModal = useSelector(
+    state => state.trustedDriverSlice.bookingModal,
+  );
+  const ratingModal = useSelector(
+    state => state.trustedDriverSlice.ratingModal,
+  );
+  const myBookingModal = useSelector(
+    state => state.trustedDriverSlice.myBookingModal,
+  );
 
   const e = useSelector(e => e);
   // console.log(e.userAuth?.userProfile?.data)
@@ -106,8 +124,9 @@ const TrustedDriver = ({navigation}) => {
     Linking.openURL(url);
   };
 
+  const isFcmSent = useSelector(e => e?.userAuth?.isFcmSent);
   useEffect(() => {
-    getFcmToken();
+    if (!isFcmSent) getFcmToken();
   }, []);
 
   // const getFcmToken = async () => {

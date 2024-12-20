@@ -28,14 +28,13 @@ const {width} = Dimensions.get('window');
 
 const BookingView = () => {
   const dispatch = useDispatch();
- 
+  const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
+  const driverMobileNumber = useSelector(
+    e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
+  );
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
-    const  decodedToken = useSelector((e)=>e?.userAuth?.userProfile)
-    const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
- 
-
-
-  // console.log(decodedToken, 'datatataatatattatatat');
+  // console.log(driverMobileNumber, 'driverMobileNumberdriverMobileNumberdriverMobileNumber');
 
   const [agentPanelViewData, setAgentPanelViewData] = useState([]);
 
@@ -112,7 +111,7 @@ const BookingView = () => {
       </View>
       <RoundTripBookingView />
       <PermanentBookingView />
-      <FlexibleBookingView/>
+      <FlexibleBookingView />
     </View>
   );
 };

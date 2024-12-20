@@ -289,7 +289,7 @@ const AcceptBooking = ({modalShow, booking}) => {
 
 const DutyReportUpdate = ({route, navigation}) => {
   const {booking} = route?.params;
-  const [cancel, setCancel] = useState(false);
+  const [cancel, setCancel] = useState(true);
   const [modalVisibleOntheway, setModalVisibleOntheway] = useState(false);
   const [modalVisibleRich, setModalVisibleRich] = useState(false);
   const [inputValue, setInputValue] = useState('');

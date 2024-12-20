@@ -1,12 +1,13 @@
 // src/redux/slices/userAuthSlice.js
 
-import { createSlice } from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   jwt: null,
   refreshToken: null,
   login: false,
   userProfile: null,
+  isFcmSent: false,
 };
 
 const userAuth = createSlice({
@@ -15,12 +16,12 @@ const userAuth = createSlice({
   reducers: {
     // Action to update specific state keys dynamically
     setUserAuthStates: (state, action) => {
-      const { key, value } = action.payload;
+      const {key, value} = action.payload;
       state[key] = value;
     },
   },
 });
 
-export const { setUserAuthStates } = userAuth.actions;
+export const {setUserAuthStates} = userAuth.actions;
 
 export default userAuth.reducer;

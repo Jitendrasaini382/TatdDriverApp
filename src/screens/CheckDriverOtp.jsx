@@ -25,7 +25,7 @@ import {AppFont} from '../assets/FontsFamily';
 import {useDispatch, useSelector} from 'react-redux';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
 import store from '../redux/store';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -38,15 +38,12 @@ const moderateScale = (size, factor = 0.5) =>
 
 const CheckDriverOtp = ({navigation, route}) => {
   const dispatch = useDispatch();
-  const insets = useSafeAreaInsets()
+  const insets = useSafeAreaInsets();
 
   const {mobile} = route.params;
-  const [fcmtoken, setFcmToken] = useState();
   const [otp, setOtp] = useState('');
   const [error, setError] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
-  const token = useSelector(e => e);
-  // console.log(token,"dddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
   const [field, setField] = useState({
     mobile: mobile,
   });
@@ -55,11 +52,10 @@ const CheckDriverOtp = ({navigation, route}) => {
 
   const handleChange = text => {
     setOtp(text);
-    if(text.length >= 4){
-      Keyboard.dismiss()
+    if (text.length >= 4) {
+      Keyboard.dismiss();
     }
   };
-
 
   const resendOtp = () => {
     setShowResendOtpText(true);
@@ -75,8 +71,6 @@ const CheckDriverOtp = ({navigation, route}) => {
         Alert.alert('Network Error');
       });
   };
-
-
 
   // const getFcmToken = async () => {
   //   try {
@@ -128,7 +122,6 @@ const CheckDriverOtp = ({navigation, route}) => {
   //     },
   //   );
 
-   
   //   console.log('GET FCM TOKEN response:', response);
   //   // setFcmToken();
   // };
@@ -143,7 +136,7 @@ const CheckDriverOtp = ({navigation, route}) => {
         return;
       }
       setLoader(true);
-      Keyboard.dismiss()
+      Keyboard.dismiss();
 
       VERIFY_OTP_LOGIN({
         mobile: mobile,
@@ -155,6 +148,12 @@ const CheckDriverOtp = ({navigation, route}) => {
               setUserAuthStates({
                 key: 'jwt',
                 value: response?.jwt,
+              }),
+            );
+            dispatch(
+              setUserAuthStates({
+                key: 'isFcmSent',
+                value: true,
               }),
             );
           }
@@ -258,15 +257,16 @@ const CheckDriverOtp = ({navigation, route}) => {
   //   }
   // };
 
-
   return (
     <View style={styles.container}>
-      <View style={{height:insets.top,backgroundColor:AppColors.mainColor}}/>
+      <View
+        style={{height: insets.top, backgroundColor: AppColors.mainColor}}
+      />
 
       <Header backButton={true} />
-      <ScrollView contentContainerStyle={styles.scrollViewContent} 
-      keyboardShouldPersistTaps = "always"
-      >
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        keyboardShouldPersistTaps="always">
         <View style={styles.contentContainer}>
           <View style={styles.card}>
             <View style={styles.cardHeader}>

@@ -5,10 +5,13 @@ import DriverLogin from '../../screens/DriverLogin';
 import CheckDriverOtp from '../../screens/CheckDriverOtp';
 import SplashScreen from '../../screens/SplashScreen';
 import { AppColors } from '../../assets/Colors';
+import { useSelector } from 'react-redux';
 
 const Stack = createStackNavigator();
 
 const PublicRoute = () => {
+  const isSplash = useSelector(e => e?.trustedDriverSlice?.splash);
+
   return (
     <>
       <StatusBar
@@ -24,7 +27,9 @@ const PublicRoute = () => {
           screenOptions={{
             headerShown: false,
           }}>
-          <Stack.Screen name="SplashScreen" component={SplashScreen} />
+             {isSplash && (
+            <Stack.Screen name="SplashScreen" component={SplashScreen} />
+          )}
 
           <Stack.Screen name="DriverLogin" component={DriverLogin} />
           <Stack.Screen name="CheckDriverOtp" component={CheckDriverOtp} />

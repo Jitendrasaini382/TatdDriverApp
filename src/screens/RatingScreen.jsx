@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, Alert, SafeAreaView} from 'react-native';
 import Header from '../components/Header';
 import {AirbnbRating} from 'react-native-ratings';
-import { AppColors } from '../assets/Colors';
+import {AppColors} from '../assets/Colors';
 
 const RatingScreen = ({navigation, route}) => {
   const [rating, setRating] = useState(0);
@@ -10,9 +10,9 @@ const RatingScreen = ({navigation, route}) => {
   const [error, setError] = useState();
 
   return (
-    <SafeAreaView  style={{flex: 1}}>
-        <Header backButton={true} />
-        <View style={{justifyContent: 'center', alignItems: 'center', flex: 3}}>
+    <SafeAreaView style={{flex: 1}}>
+      <Header backButton={true} />
+      <View style={{justifyContent: 'center', alignItems: 'center', flex: 3}}>
         <View
           style={{
             backgroundColor: AppColors.mainColor,
@@ -63,7 +63,7 @@ const RatingScreen = ({navigation, route}) => {
             </View>
           </View>
           <TouchableOpacity
-            //onPress={fetchRatingExperience}
+            onPress={() => navigation.navigate('ReviewScreen')}
             style={{
               justifyContent: 'flex-end',
               alignItems: 'flex-end',

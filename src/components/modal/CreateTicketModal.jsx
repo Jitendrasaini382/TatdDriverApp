@@ -12,7 +12,7 @@ import {
 import React, {useContext, useEffect, useState} from 'react';
 import {AppColors} from '../../assets/Colors';
 import {TICKETS_DRIVER} from '../../apis/Apis';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setButtonShow, setShowButtonText, setTicketsData } from '../../redux/slices/globalSlice';
 
 const CreateTicketModal = ({setCreateTicketModal}) => {

@@ -16,10 +16,10 @@ import {TICKETS_DRIVER} from '../apis/Apis';
 import TicketDetails from '../components/modal/TicketDetailsModal';
 import AccordionData from '../components/AccordianData';
 import CreateTicketModal from '../components/modal/CreateTicketModal';
-import {useDispatch} from 'react-redux';
-import {setButtonShow, setShowButtonText} from '../redux/slices/globalSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {setButtonShow, setShowButtonText, setTicketsData} from '../redux/slices/globalSlice';
 
-const TicketsDriver = () => {
+const TicketsDriver = ({navigation}) => {
   const dispatch = useDispatch();
   const [createTicketModal, setCreateTicketModal] = useState(false);
   const [ticketDetailsModal, setTicketDetailsModal] = useState(false);
@@ -31,7 +31,7 @@ const TicketsDriver = () => {
   const showDriverTicket = useCallback(async () => {
     try {
       const response = await TICKETS_DRIVER({action: 'show_driver_ticket'});
-      dispatch(setTicketData(response.tickets));
+      dispatch(setTicketsData(response.tickets));
     } catch (err) {
       console.error('Show Driver Ticket Error:', err);
     }
@@ -149,7 +149,7 @@ const TicketsDriver = () => {
               <Text style={styles.headerText}>Status</Text>
             </View>
           </View>
-          {ticketsData && ticketsData.map(renderItem)}
+          {/* {ticketsData && ticketsData.map(renderItem)} */}
         </View>
       </ScrollView>
     </SafeAreaView>

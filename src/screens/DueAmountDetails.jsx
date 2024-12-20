@@ -12,47 +12,11 @@ import Header from '../components/Header';
 import {Triangle_Icon} from '../assets/images';
 import {DRIVER_BOOKING_INVOICE} from '../apis/Apis';
 
-const InvoiceScreen = () => {
-  const bookingNumber = '642971';
-  const [allInvoiceData, setAllInvoiceData] = useState({
-    charges: [
-      {charges: 0, description: 'Package', igst: 0, total_amount: 0, unit: ' '},
-    ],
-    invoice_data: {
-      balance_amount: null,
-      booking_number: '642971',
-      business_name: null,
-      category: null,
-      company_details:
-        'EXECUTION FORCE PRIVATE LIMITED Office No G-39, /n Vardhman Grand Market, Sector 3, /n Dwarka, New Delhi- 110078, GST- 07AAFCE8543G1ZJ',
-      company_details_1: 'EXECUTION FORCE PRIVATE LIMITED',
-      company_details_2:
-        'Office No G-39, Vardhman Grand Market, Sector 3, Dwarka,',
-      company_details_3: 'New Delhi-110078, GST- 07AAFCE8543G1ZJ',
-      customer_name: null,
-      discount: [],
-      drop_address: '',
-      end_date: '01 Jan,1970',
-      end_kms: null,
-      end_time: '05:30 AM',
-      gstin: null,
-      igst_total: {igst: 0, igst_without_price: 0},
-      paid: null,
-      payment_mode: 'Cash',
-      pickup_address: 'Chennai testing team ',
-      reach_time: '05:30 AM',
-      schedule_time: '05:30 AM',
-      start_date: '01 Jan,1970',
-      start_kms: null,
-      start_time: '05:30 AM',
-      tax_headers: ['IGST 5%'],
-      total_charges: 0,
-    },
-    message: 'success',
-    success_code: 200,
-  });
+const DueAmountDetails = ({route, navigation}) => {
+  const {bookingNumber} = route?.params;
+  const [allInvoiceData, setAllInvoiceData] = useState();
   useEffect(() => {
-    // getInvoiceData(bookingNumber);
+    getInvoiceData(bookingNumber);
   }, []);
 
   const getInvoiceData = async number => {
@@ -62,8 +26,8 @@ const InvoiceScreen = () => {
         booking_number: number,
       });
 
-      setAllInvoiceData(response?.data);
-      console.log(response.data, 'getInvoiceData Api response');
+      setAllInvoiceData(response);
+      console.log(response, 'getInvoiceData Api response');
     } catch (response) {
       setAllInvoiceData(response.data);
       console.log(error, 'getInvoiceData Api error - Error');
@@ -110,7 +74,7 @@ const InvoiceScreen = () => {
                     fontSize: 12,
                     paddingVertical: 3,
                   }}>
-                  Private Driver
+                  {allInvoiceData?.invoice_data?.category}
                 </Text>
                 <View
                   style={{
@@ -193,7 +157,9 @@ const InvoiceScreen = () => {
             <View style={styles.timingsRow}>
               <View style={styles.timingColumn}>
                 <Text style={styles.timingLabel}>Reporting</Text>
-                <Text style={styles.timingValue}>08:00 PM</Text>
+                <Text style={styles.timingValue}>
+                  {allInvoiceData?.invoice_data?.schedule_time}
+                </Text>
               </View>
               <View style={styles.timingColumn}>
                 <Text style={styles.timingLabel}>Reach</Text>
@@ -303,7 +269,7 @@ const InvoiceScreen = () => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => console.log('Rate Your Experience')}
+          onPress={() => navigation.navigate('RatingScreen')}
           style={{
             backgroundColor: '#16588e',
             padding: 10,
@@ -494,4 +460,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InvoiceScreen;
+export default DueAmountDetails;

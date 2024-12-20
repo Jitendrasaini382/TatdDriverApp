@@ -143,6 +143,7 @@ const _Fetch = (method, path, body, headers = {}) => {
     })
       .then(response => {
         console.log('Response data:', response.data);
+        
         if (response.data.status_code == 200) {
           resolve(response.data);
         } else {

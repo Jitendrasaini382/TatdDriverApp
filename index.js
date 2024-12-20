@@ -26,7 +26,7 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
   await createNotificationChannel();    
 
   // Request necessary permissions (Android 13+ for notifications and vibration)
-  // await requestNotificationPermission();  // Request notification permission for Android 13+
+  await requestNotificationPermission();  // Request notification permission for Android 13+
   await checkVibrationPermission();       // Check if vibration permission is granted
 
   // Play sound in the background or foreground

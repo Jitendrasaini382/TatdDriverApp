@@ -26,17 +26,17 @@ export const GET_FCM_TOKEN = body => {
 
 // https://www.tatd.in/app-api/driver/faq/driver-faq-api.php
 
-// export const DRIVER_FAQ = body => {
-//   console.log(body, 'DRIVER_FAQ Body');
-//   return _Fetch('POST', 'faq/driver-faq-api.php', {...body}, {});
-// };
+export const DRIVER_FAQ = body => {
+  console.log(body, 'DRIVER_FAQ Body');
+  return _Fetch('POST', 'faq/driver-faq-api.php', {...body}, {});
+};
 
 // https://www.tatd.in/app-api/driver/tickets/tickets-driver-api.php
 
-// export const TICKETS_DRIVER = body => {
-//   console.log(body, 'CREATE_TICKET_DRIVER Body');
-//   return _Fetch('POST', 'tickets/tickets-driver-api.php', {...body}, {});
-// };
+export const TICKETS_DRIVER = body => {
+  console.log(body, 'CREATE_TICKET_DRIVER Body');
+  return _Fetch('POST', 'tickets/tickets-driver-api.php', {...body}, {});
+};
 
 // https://www.tatd.in/app-api/driver/trusted-driver/login-button-trusted.php
 
@@ -274,7 +274,7 @@ export const WAITING_MINUTE_INSERT = body => {
 //  https://www.tatd.in/app-api/driver/duty-report/due_amount_api.php
 
 export const DUE_AMOUNT = body => {
-  return _Fetch('POST', 'driver/duty-report/due_amount_api.php', {...body}, {});
+  return _Fetch('POST', 'duty-report/due_amount_api.php', {...body}, {});
 };
 
 // https://www.tatd.in/app-api/driver/duty-report/driver_booking_invoice_api.php
@@ -294,6 +294,28 @@ export const TRIP_STATUS_POPUP = body => {
   return _Fetch(
     'POST',
     'duty-report/duty_report_trip_status_popup_view.php',
+    {...body},
+    {},
+  );
+};
+
+// 	https://www.tatd.in/app-api/driver/duty-report/check-booking-is-upcoming.php
+
+export const CHECK_UPCOMING_BOOKING = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/check-booking-is-upcoming.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/duty-report/rate_us_at_social_media_api.php
+
+export const RATE_US_SOCIAL_MEDIA = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/rate_us_at_social_media_api.php',
     {...body},
     {},
   );

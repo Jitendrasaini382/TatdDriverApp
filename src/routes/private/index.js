@@ -24,14 +24,14 @@ import DriverNotifications from '../../screens/DriverNotification';
 import ClearMyDuePayment from '../../screens/ClearMyDuePayment';
 import SplashScreen from '../../screens/SplashScreen';
 import {AppColors} from '../../assets/Colors';
-import DueScreen from '../../screens/DueScreen';
+import DueAmount from '../../screens/DueAmount';
 import DutyReportUpdateScreen from '../../screens/DutyReportUpdateScreen';
 import ReviewScreen from '../../screens/ReviewScreen';
 import RatingScreen from '../../screens/RatingScreen';
 import OnTimeReach from '../../screens/OnTimeReach';
 import Feedback from '../../screens/Feedback';
 import {useSelector} from 'react-redux';
-import InvoiceScreen from '../../screens/InvoiceScreen';
+import DueAmountDetails from '../../screens/DueAmountDetails';
 
 const Stack = createStackNavigator();
 
@@ -72,7 +72,7 @@ const PrivateRoute = () => {
           />
 
           <Stack.Screen name="DriverNotice" component={DriverNotice} />
-          <Stack.Screen name="InvoiceScreen" component={InvoiceScreen} />
+          <Stack.Screen name="DueAmountDetails" component={DueAmountDetails} />
           
           <Stack.Screen
             name="NoticeBoardDetail"
@@ -97,7 +97,7 @@ const PrivateRoute = () => {
             name="DutyReportUpdateScreen"
             component={DutyReportUpdateScreen}
           />
-          <Stack.Screen name="DueScreen" component={DueScreen} />
+          <Stack.Screen name="DueAmount" component={DueAmount} />
 
           <Stack.Screen name="AgentLogin" component={AgentLogin} />
           <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />

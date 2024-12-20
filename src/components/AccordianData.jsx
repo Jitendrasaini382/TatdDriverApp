@@ -12,7 +12,7 @@ import React, {useContext, useEffect, useState, useCallback} from 'react';
 import {AppColors} from '../assets/Colors';
 import {DRIVER_FAQ} from '../apis/Apis';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import {useDispatch} from 'react-redux';
+import {useDispatch,useSelector} from 'react-redux';
 import {setFaqData} from '../redux/slices/globalSlice';
 
 const AccordionItem = React.memo(

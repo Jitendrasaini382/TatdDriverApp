@@ -1,11 +1,53 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, Image, SafeAreaView} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+  Linking,
+} from 'react-native';
 import Header from '../components/Header';
 import {Triangle_Icon} from '../assets/images';
-import { AppColors } from '../assets/Colors';
+import {AppColors} from '../assets/Colors';
+import {DUE_AMOUNT} from '../apis/Apis';
+import {useSelector} from 'react-redux';
 
-const DueScreen = () => {
+const DueAmount = ({route, navigation}) => {
   const [textWidth, setTextWidth] = useState(0);
+  const [dueData, setDueData] = useState({});
+
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+
+  useEffect(() => {
+    getDueAmount('643069');
+  }, []);
+
+  const getDueAmount = async bookingNumber => {
+    console.log(
+      'Function getDueAmount called with bookingNumber:',
+      bookingNumber,
+    );
+
+    try {
+      const response = await DUE_AMOUNT({
+        booking_number: bookingNumber,
+        current_language: languageSwitch,
+      });
+      console.log(response, 'Response from DUE_AMOUNT');
+
+      if (response.status_code == 200) {
+        console.log('Response status_code is 200');
+        setDueData(response.data);
+        console.log('setDueData called with:', response.data);
+      } else {
+        console.log('Response status_code is not 200:', response.status_code);
+      }
+    } catch (error) {
+      console.log(error, 'Error caught in getDueAmount');
+    }
+  };
+
   return (
     <SafeAreaView>
       <Header backButton={true} />
@@ -13,7 +55,7 @@ const DueScreen = () => {
         <View style={styles.dueContainer}>
           <View style={styles.header}>
             <View style={styles.trustedContainer}>
-              <Text style={styles.trustedText}>Trusted & Trained Driver</Text>
+              <Text style={styles.trustedText}>{dueData?.category}</Text>
               <View style={styles.iconContainer}>
                 <Image
                   source={Triangle_Icon}
@@ -32,14 +74,19 @@ const DueScreen = () => {
               justifyContent: 'center',
               marginVertical: 60,
             }}>
-            <Text style={styles.duePrice}>₹ 159</Text>
+            <Text style={styles.duePrice}>₹ {dueData?.balance_amount}</Text>
             <Text
               style={{color: 'blue'}}
+              onPress={() =>
+                navigation.navigate('DueAmountDetails', {
+                  bookingNumber: dueData?.booking_number,
+                })
+              }
               onLayout={event => {
                 const {width} = event.nativeEvent.layout;
                 setTextWidth(width);
               }}>
-              View Invoice
+              {dueData?.invoice_text}
             </Text>
             <View style={[styles.dividerInput, {width: textWidth}]} />
             <View
@@ -56,7 +103,7 @@ const DueScreen = () => {
                   fontWeight: '600',
                   paddingHorizontal: 10,
                 }}>
-                Collect ₹159 from the customer
+                {dueData?.action_text}
               </Text>
             </View>
           </View>
@@ -66,7 +113,7 @@ const DueScreen = () => {
   );
 };
 
-export default DueScreen;
+export default DueAmount;
 
 const styles = StyleSheet.create({
   mainContainer: {

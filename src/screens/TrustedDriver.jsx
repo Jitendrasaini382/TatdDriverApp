@@ -124,8 +124,8 @@ const TrustedDriver = ({navigation}) => {
   };
 
   const isFcmSent = useSelector(e => e?.userAuth?.isFcmSent);
-  console.log(isFcmSent,"isFcmSentisFcmSentisFcmSentisFcmSentisFcmSent");
-  
+  console.log(isFcmSent, 'isFcmSentisFcmSentisFcmSentisFcmSentisFcmSent');
+
   useEffect(() => {
     if (!isFcmSent) getFcmToken();
   }, []);
@@ -186,10 +186,13 @@ const TrustedDriver = ({navigation}) => {
         }
 
         tokenvalue = await messaging().getToken();
+        console.log(tokenvalue, 'ios tokenios token');
       } else {
         // For Android, directly get the token without requiring permission
         await requestNotificationPermission();
         tokenvalue = await messaging().getToken();
+        console.log(tokenvalue, 'Android tokenAndroid token');
+
       }
 
       if (tokenvalue) {
@@ -590,14 +593,14 @@ const TrustedDriver = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   // onPress={() => navigation.navigate('MyBonusStatusHistory')}
-                  onPress={() => navigation.navigate('InvoiceScreen')}
+                  // onPress={() => navigation.navigate('DueAmountDetails')}
                   // onPress={() => navigation.navigate('DutyReportUpdateScreen')}
                   // onPress={() => navigation.navigate('Feedback')}
                   // onPress={() => navigation.navigate('OnTimeReach')}
                   // onPress={() => navigation.navigate('RatingScreen')}
                   // onPress={() => navigation.navigate('ReviewScreen')}
                   // onPress={() => navigation.navigate('DutyReportUpdate')}
-                  // onPress={() => navigation.navigate('DueScreen')}
+                  onPress={() => navigation.navigate('DueAmount')}
 
                   style={styles.bottamContent2}>
                   <Text style={styles.mainText}>

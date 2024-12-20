@@ -289,7 +289,7 @@ const AcceptBooking = ({modalShow, booking}) => {
 
 const DutyReportUpdate = ({route, navigation}) => {
   const {booking} = route?.params;
-  const [cancel, setCancel] = useState(true);
+  const [cancel, setCancel] = useState(false);
   const [modalVisibleOntheway, setModalVisibleOntheway] = useState(false);
   const [modalVisibleRich, setModalVisibleRich] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -298,7 +298,9 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [textWidth, setTextWidth] = useState(0);
   const [modalVisibleEnd, setModalVisibleEnd] = useState(false);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
-
+  const driverMobileNumber = useSelector(
+    e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
+  );
   console.log(
     booking,
     'bookingbookingbookingbookingbookingbookingbookingbooking',
@@ -316,7 +318,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     GetAllBookingInfo(booking?.booking_id);
   }, []);
 
-  const GetAllBookingInfo = async (number) => {
+  const GetAllBookingInfo = async number => {
     try {
       if (!booking?.booking_id) {
         console.log('Invalid booking object: booking_id is missing');
@@ -324,7 +326,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       }
 
       const response = await GET_BOOKING_INFO({
-        driver_mobile_number: '8118813148',
+        driver_mobile_number: driverMobileNumber,
         booking_number: number,
         current_language: languageSwitch,
       });

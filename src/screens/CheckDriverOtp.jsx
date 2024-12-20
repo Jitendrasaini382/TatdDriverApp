@@ -327,15 +327,13 @@ const CheckDriverOtp = ({navigation, route}) => {
               <Text style={styles.otpInfoText}>
                 An OTP is sent to {mobile}{' '}
               </Text>
-              <TouchableOpacity onPress={resendOtp}>
-                <Text
-                  style={[
-                    styles.resendText,
-
-                    {borderBottomWidth: showResendOtpText ? 0 : 0.5},
-                  ]}>
-                  Resend OTP ?
-                </Text>
+              <TouchableOpacity
+                style={{
+                  borderBottomWidth: showResendOtpText ? 0 : 0.5,
+                  borderBottomColor: AppColors.black,
+                }}
+                onPress={resendOtp}>
+                <Text style={[styles.resendText, ,]}>Resend OTP ?</Text>
               </TouchableOpacity>
             </View>
 
@@ -407,8 +405,8 @@ const CheckDriverOtp = ({navigation, route}) => {
             </Pressable>
           </View>
         </View>
+        <Toast visibilityTime={3000} />
       </ScrollView>
-      <Toast visibilityTime={3000} />
     </View>
   );
 };

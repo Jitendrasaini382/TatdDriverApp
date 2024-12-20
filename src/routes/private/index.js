@@ -31,6 +31,7 @@ import RatingScreen from '../../screens/RatingScreen';
 import OnTimeReach from '../../screens/OnTimeReach';
 import Feedback from '../../screens/Feedback';
 import {useSelector} from 'react-redux';
+import InvoiceScreen from '../../screens/InvoiceScreen';
 
 const Stack = createStackNavigator();
 
@@ -71,6 +72,8 @@ const PrivateRoute = () => {
           />
 
           <Stack.Screen name="DriverNotice" component={DriverNotice} />
+          <Stack.Screen name="InvoiceScreen" component={InvoiceScreen} />
+          
           <Stack.Screen
             name="NoticeBoardDetail"
             component={NoticeBoardDetailScreen}

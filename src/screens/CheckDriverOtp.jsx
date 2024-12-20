@@ -17,6 +17,8 @@ import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AppColors} from '../assets/Colors';
 import {CommonActions, useRoute} from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
+
 import {DRIVER_LOGIN, GET_FCM_TOKEN, VERIFY_OTP_LOGIN} from '../apis/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {jwtDecode} from 'jwt-decode';
@@ -55,21 +57,6 @@ const CheckDriverOtp = ({navigation, route}) => {
     if (text.length >= 4) {
       Keyboard.dismiss();
     }
-  };
-
-  const resendOtp = () => {
-    setShowResendOtpText(true);
-    DRIVER_LOGIN(field)
-      .then(e => {
-        if (e.status_code == 200) {
-          setShowResendOtpText(false);
-        } else {
-          setShowResendOtpText(false);
-        }
-      })
-      .catch(err => {
-        Alert.alert('Network Error');
-      });
   };
 
   // const getFcmToken = async () => {
@@ -126,6 +113,58 @@ const CheckDriverOtp = ({navigation, route}) => {
   //   // setFcmToken();
   // };
 
+  // const resendOtp = () => {
+  //   Toast.show({
+  //     type: 'info',
+  //     text1: 'This is an info message'
+  //   });
+  //   setShowResendOtpText(true);
+  //   DRIVER_LOGIN(field)
+  //     .then(e => {
+  //       if (e.status_code == 200) {
+  //         setShowResendOtpText(false);
+  //         Toast.show({
+  //           type: 'success',
+  //           text1: 'Hello',
+  //           text2: 'This is some something 👋'
+  //         });
+  //       } else {
+  //         setShowResendOtpText(false);
+  //       }
+  //     })
+  //     .catch(err => {
+  //       Alert.alert('Network Error');
+  //     });
+  // };
+
+  const resendOtp = () => {
+    setShowResendOtpText(true);
+    DRIVER_LOGIN(field)
+      .then(e => {
+        if (e.status_code == 200) {
+          Toast.show({
+            type: 'success',
+            text1: 'Success',
+            text2: e.message,
+          });
+          setShowResendOtpText(false);
+        } else {
+          setShowResendOtpText(false);
+        }
+      })
+      .catch(err => {
+        // Alert.alert('Network Error');
+        console.log(err);
+
+        Toast.show({
+          type: 'error',
+          text1: 'error',
+          text2: err,
+        });
+        setShowResendOtpText(false);
+      });
+  };
+
   const verifyOtp = async () => {
     try {
       if (!otp) {
@@ -148,12 +187,6 @@ const CheckDriverOtp = ({navigation, route}) => {
               setUserAuthStates({
                 key: 'jwt',
                 value: response?.jwt,
-              }),
-            );
-            dispatch(
-              setUserAuthStates({
-                key: 'isFcmSent',
-                value: true,
               }),
             );
           }
@@ -320,7 +353,7 @@ const CheckDriverOtp = ({navigation, route}) => {
                     color: AppColors.mainColor,
                     fontFamily: AppFont.regularFont,
                   }}>
-                  {showResendOtpText ? `OTP is Resend to +91${mobile}` : ''}
+                  {/* {showResendOtpText ? `OTP is Resend to +91${mobile}` : ''} */}
                 </Text>
               </View>
               <View style={styles.inputContainer}>
@@ -375,6 +408,7 @@ const CheckDriverOtp = ({navigation, route}) => {
           </View>
         </View>
       </ScrollView>
+      <Toast visibilityTime={3000} />
     </View>
   );
 };

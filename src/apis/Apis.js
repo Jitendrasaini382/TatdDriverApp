@@ -243,12 +243,57 @@ export const TALK_TO_CUSTOMER = body => {
   );
 };
 
-// https://www.tatd.in/app-api/driver/duty-report/duty_report_booking_info_api.php
+// https://www.tatd.in/app-api/driver/duty-report/customer_not_picking_phone_api.php
 
-export const DUTY_REPORT_BOOKING_INFO = body => {
+export const CUSTOMER_NOT_PICKUP_PHONE = body => {
   return _Fetch(
     'POST',
-    'duty-report/duty_report_booking_info_api.php',
+    'duty-report/customer_not_picking_phone_api.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/duty-report/customer_want_to_cancel_api.php
+
+export const CUSTOMER_WANT_TO_CANCEL = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/customer_want_to_cancel_api.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/duty-report/waiting_minute_insert_api.php
+
+export const WAITING_MINUTE_INSERT = body => {
+  return _Fetch('GET', 'duty-report/waiting_minute_insert_api.php');
+};
+
+//  https://www.tatd.in/app-api/driver/duty-report/due_amount_api.php
+
+export const DUE_AMOUNT = body => {
+  return _Fetch('POST', 'driver/duty-report/due_amount_api.php', {...body}, {});
+};
+
+// https://www.tatd.in/app-api/driver/duty-report/driver_booking_invoice_api.php
+
+export const DRIVER_BOOKING_INVOICE = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/driver_booking_invoice_api.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/duty-report/duty_report_trip_status_popup_view.php
+
+export const TRIP_STATUS_POPUP = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/duty_report_trip_status_popup_view.php',
     {...body},
     {},
   );

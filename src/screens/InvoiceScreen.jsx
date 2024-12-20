@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,13 +8,71 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
-import Header from '../../components/Header';
+import Header from '../components/Header';
+import {Triangle_Icon} from '../assets/images';
+import {DRIVER_BOOKING_INVOICE} from '../apis/Apis';
 
 const InvoiceScreen = () => {
+  const bookingNumber = '642971';
+  const [allInvoiceData, setAllInvoiceData] = useState({
+    charges: [
+      {charges: 0, description: 'Package', igst: 0, total_amount: 0, unit: ' '},
+    ],
+    invoice_data: {
+      balance_amount: null,
+      booking_number: '642971',
+      business_name: null,
+      category: null,
+      company_details:
+        'EXECUTION FORCE PRIVATE LIMITED Office No G-39, /n Vardhman Grand Market, Sector 3, /n Dwarka, New Delhi- 110078, GST- 07AAFCE8543G1ZJ',
+      company_details_1: 'EXECUTION FORCE PRIVATE LIMITED',
+      company_details_2:
+        'Office No G-39, Vardhman Grand Market, Sector 3, Dwarka,',
+      company_details_3: 'New Delhi-110078, GST- 07AAFCE8543G1ZJ',
+      customer_name: null,
+      discount: [],
+      drop_address: '',
+      end_date: '01 Jan,1970',
+      end_kms: null,
+      end_time: '05:30 AM',
+      gstin: null,
+      igst_total: {igst: 0, igst_without_price: 0},
+      paid: null,
+      payment_mode: 'Cash',
+      pickup_address: 'Chennai testing team ',
+      reach_time: '05:30 AM',
+      schedule_time: '05:30 AM',
+      start_date: '01 Jan,1970',
+      start_kms: null,
+      start_time: '05:30 AM',
+      tax_headers: ['IGST 5%'],
+      total_charges: 0,
+    },
+    message: 'success',
+    success_code: 200,
+  });
+  useEffect(() => {
+    // getInvoiceData(bookingNumber);
+  }, []);
+
+  const getInvoiceData = async number => {
+    try {
+      const response = await DRIVER_BOOKING_INVOICE({
+        action: 'view_invoice',
+        booking_number: number,
+      });
+
+      setAllInvoiceData(response?.data);
+      console.log(response.data, 'getInvoiceData Api response');
+    } catch (response) {
+      setAllInvoiceData(response.data);
+      console.log(error, 'getInvoiceData Api error - Error');
+    }
+  };
   return (
     <SafeAreaView>
       <ScrollView style={styles.container}>
-        <Header />
+        <Header backButton={true} />
         <View
           style={{
             borderColor: '#16588e',
@@ -40,7 +98,6 @@ const InvoiceScreen = () => {
               }}>
               <View
                 style={{
-                  //marginVertical: 7,
                   height: 20,
                   width: '48%',
                   backgroundColor: '#ffffff',
@@ -62,7 +119,7 @@ const InvoiceScreen = () => {
                     left: 20,
                   }}>
                   <Image
-                    source={require('../../assets/images/rt_icon.png')}
+                    source={Triangle_Icon}
                     resizeMode={'cover'}
                     style={{
                       width: 20,
@@ -79,9 +136,13 @@ const InvoiceScreen = () => {
                   marginHorizontal: 20,
                   alignItems: 'center',
                 }}>
-                <Text style={{color: '#ffffff', fontSize: 12}}>Start Date</Text>
+                <Text style={{color: '#ffffff', fontSize: 12}}>
+                  {allInvoiceData?.invoice_data?.start_date}
+                </Text>
                 <View style={{marginHorizontal: 20, paddingTop: 5}}>
-                  <Text style={{color: '#ffffff', fontSize: 16}}>123456</Text>
+                  <Text style={{color: '#ffffff', fontSize: 16}}>
+                    {allInvoiceData?.invoice_data?.booking_number}
+                  </Text>
                   <Text style={{color: '#ffffff', fontSize: 12}}>
                     Booking ID
                   </Text>
@@ -97,7 +158,7 @@ const InvoiceScreen = () => {
                   fontSize: 12,
                   marginLeft: 10,
                 }}>
-                Pickup Address
+                {allInvoiceData?.invoice_data?.pickup_address}
               </Text>
             </View>
             <View
@@ -110,7 +171,7 @@ const InvoiceScreen = () => {
                 To:
               </Text>
               <Text style={{color: '#ffffff', fontSize: 12, marginLeft: 10}}>
-                Drop Address
+                {allInvoiceData?.invoice_data?.drop_address}
               </Text>
             </View>
           </View>
@@ -119,12 +180,14 @@ const InvoiceScreen = () => {
           <View style={styles.timingsSection}>
             <View style={styles.dateRow}>
               <View style={{alignItems: 'center'}}>
-                <Text style={styles.dateText}>19 Dec</Text>
-                <Text style={styles.dateText}>2024</Text>
+                <Text style={styles.dateText}>
+                  {allInvoiceData?.invoice_data?.start_date}
+                </Text>
               </View>
               <View style={{alignItems: 'center'}}>
-                <Text style={styles.dateText}>19 Dec</Text>
-                <Text style={styles.dateText}>2024</Text>
+                <Text style={styles.dateText}>
+                  {allInvoiceData?.invoice_data?.end_date}
+                </Text>
               </View>
             </View>
             <View style={styles.timingsRow}>
@@ -134,15 +197,21 @@ const InvoiceScreen = () => {
               </View>
               <View style={styles.timingColumn}>
                 <Text style={styles.timingLabel}>Reach</Text>
-                <Text style={styles.timingValue}>10:38 AM</Text>
+                <Text style={styles.timingValue}>
+                  {allInvoiceData?.invoice_data?.reach_time}
+                </Text>
               </View>
               <View style={styles.timingColumn}>
                 <Text style={styles.timingLabel}>Start</Text>
-                <Text style={styles.timingValue}>10:39 AM</Text>
+                <Text style={styles.timingValue}>
+                  {allInvoiceData?.invoice_data?.start_time}
+                </Text>
               </View>
               <View style={styles.timingColumn}>
                 <Text style={styles.timingLabel}>End</Text>
-                <Text style={styles.timingValue}>10:39 AM</Text>
+                <Text style={styles.timingValue}>
+                  {allInvoiceData?.invoice_data?.end_time}
+                </Text>
               </View>
             </View>
           </View>
@@ -211,7 +280,9 @@ const InvoiceScreen = () => {
           {/* Balance Section */}
           <View style={styles.balanceSection}>
             <Text style={styles.balanceLabel}>Balance Amount</Text>
-            <Text style={styles.balanceValue}>₹259</Text>
+            <Text style={styles.balanceValue}>
+              {allInvoiceData?.invoice_data?.total_charges}
+            </Text>
           </View>
           <View
             style={[
@@ -225,9 +296,10 @@ const InvoiceScreen = () => {
               color: 'black',
               fontSize: 10,
               alignSelf: 'center',
+              textAlign: 'center',
               marginVertical: 15,
             }}>
-            EXECUTION FORCE PRIVATE LIMITED
+            {allInvoiceData?.invoice_data?.company_details}
           </Text>
         </View>
         <TouchableOpacity

@@ -58,6 +58,7 @@ import {
   setVideosContent,
 } from '../redux/slices/trustedDriverSlice';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {setUserAuthStates} from '../redux/slices/userAuthSlice';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -101,8 +102,6 @@ const TrustedDriver = ({navigation}) => {
     state => state.trustedDriverSlice.myBookingModal,
   );
 
-  const e = useSelector(e => e);
-  // console.log(e.userAuth?.userProfile?.data)
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
@@ -125,6 +124,8 @@ const TrustedDriver = ({navigation}) => {
   };
 
   const isFcmSent = useSelector(e => e?.userAuth?.isFcmSent);
+  console.log(isFcmSent,"isFcmSentisFcmSentisFcmSentisFcmSentisFcmSent");
+  
   useEffect(() => {
     if (!isFcmSent) getFcmToken();
   }, []);
@@ -204,11 +205,16 @@ const TrustedDriver = ({navigation}) => {
   };
 
   const sendNotificationMessage = async fcmtoken => {
-    console.log('runnnnn setttttttttttttttttttttttttt');
     const response = await GET_FCM_TOKEN({
       fcm_token: fcmtoken,
       action: 'save_fcm',
     });
+    dispatch(
+      setUserAuthStates({
+        key: 'isFcmSent',
+        value: true,
+      }),
+    );
   };
 
   // const [loginButton, setLoginButton] = useState({
@@ -583,7 +589,8 @@ const TrustedDriver = ({navigation}) => {
                   </View>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('MyBonusStatusHistory')}
+                  // onPress={() => navigation.navigate('MyBonusStatusHistory')}
+                  onPress={() => navigation.navigate('InvoiceScreen')}
                   // onPress={() => navigation.navigate('DutyReportUpdateScreen')}
                   // onPress={() => navigation.navigate('Feedback')}
                   // onPress={() => navigation.navigate('OnTimeReach')}

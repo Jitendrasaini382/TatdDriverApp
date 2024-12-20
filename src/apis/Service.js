@@ -3,8 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {API_BASE_URL} from '../constant/path';
 import store from '../redux/store';
 
-
-// console.log(jwt);
+// Axios axiosClient configure
 const axiosClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -13,14 +12,13 @@ const axiosClient = axios.create({
   },
 });
 
+// Request interceptors
 axiosClient.interceptors.request.use(
   async config => {
-    // const token = await AsyncStorage.getItem('jwt');
     const token = store.getState().userAuth.jwt;  
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-    // console.log('Request headers Service:', config.headers);
     return config;
   },
   error => {
@@ -28,56 +26,147 @@ axiosClient.interceptors.request.use(
   },
 );
 
+// Response interceptors
 axiosClient.interceptors.response.use(
   response => response,
   async error => {
     const originalRequest = error.config;
-    console.log('Error response:', error.response);
 
     if (
-      error.response.status === 401 ||
-      error.response.status === 400 ||
-      (error.response.data.message === 'Token has expired' &&
-        !originalRequest._retry)
+      error.response?.status == 401 ||
+      error.response?.status == 400 ||
+      (error.response?.data?.message === 'Token has expired' && !originalRequest._retry)
     ) {
-      originalRequest._retry = true;
-      // const refreshToken = await AsyncStorage.getItem('refresh_token');
-      // console.log('Refresh token:', refreshToken);
+      originalRequest._retry = true; 
+      
       const refreshToken = store.getState().userAuth.refreshToken;
 
       if (refreshToken) {
         try {
           const res = await axios.post(
             'https://www.tatd.in/app-api/driver/login/refresh_token.php',
-            {refresh_token: refreshToken},
+            { refresh_token: refreshToken }
           );
 
-          if (res.data.jwt) {
-            console.log('New JWT:', res.data.jwt);
-            // await AsyncStorage.setItem('jwt', res.data.jwt);
+          if (res.data?.jwt) {
+            // store new Jwt 
             store.dispatch({
               type: 'jwt',
-              payload: res?.data?.jwt,
+              payload: res.data.jwt,
             });
-            axiosClient.defaults.headers.common[
-              'Authorization'
-            ] = `Bearer ${res.data.jwt}`;
+
+            // add new jwt in header
+            axiosClient.defaults.headers.common['Authorization'] = `Bearer ${res.data.jwt}`;
             originalRequest.headers['Authorization'] = `Bearer ${res.data.jwt}`;
 
+            // run retry
             return axiosClient(originalRequest);
           } else {
             console.error('Failed to refresh token:', res.data);
           }
         } catch (refreshError) {
           console.error('Error refreshing token:', refreshError);
+          // logout user
+          store.dispatch({ type: 'LOGOUT' });
           return Promise.reject(refreshError);
         }
+      } else {
+        console.error('Refresh token not available.');
+        store.dispatch({ type: 'LOGOUT' });
       }
     }
 
     return Promise.reject(error);
-  },
+  }
 );
+
+
+
+
+
+
+
+
+// import axios from 'axios';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import {API_BASE_URL} from '../constant/path';
+// import store from '../redux/store';
+
+
+// // console.log(jwt);
+// const axiosClient = axios.create({
+//   baseURL: API_BASE_URL,
+//   headers: {
+//     Accept: 'application/json',
+//     'Content-Type': 'application/json',
+//   },
+// });
+
+// axiosClient.interceptors.request.use(
+//   async config => {
+//     // const token = await AsyncStorage.getItem('jwt');
+//     const token = store.getState().userAuth.jwt;  
+//     if (token) {
+//       config.headers['Authorization'] = `Bearer ${token}`;
+//     }
+//     // console.log('Request headers Service:', config.headers);
+//     return config;
+//   },
+//   error => {
+//     return Promise.reject(error);
+//   },
+// );
+
+// axiosClient.interceptors.response.use(
+//   response => response,
+//   async error => {
+//     const originalRequest = error.config;
+//     console.log('Error response:', error.response);
+
+//     if (
+//       error.response.status === 401 ||
+//       error.response.status === 400 ||
+//       (error.response.data.message === 'Token has expired' &&
+//         !originalRequest._retry)
+//     ) {
+//       originalRequest._retry = true;
+//       // const refreshToken = await AsyncStorage.getItem('refresh_token');
+//       // console.log('Refresh token:', refreshToken);
+//       const refreshToken = store.getState().userAuth.refreshToken;
+
+//       if (refreshToken) {
+//         try {
+//           const res = await axios.post(
+//             'https://www.tatd.in/app-api/driver/login/refresh_token.php',
+//             {refresh_token: refreshToken},
+//           );
+
+//           if (res.data.jwt) {
+//             console.log('New JWT:', res.data.jwt);
+//             // await AsyncStorage.setItem('jwt', res.data.jwt);
+//             store.dispatch({
+//               type: 'jwt',
+//               payload: res?.data?.jwt,
+//             });
+//             axiosClient.defaults.headers.common[
+//               'Authorization'
+//             ] = `Bearer ${res.data.jwt}`;
+//             originalRequest.headers['Authorization'] = `Bearer ${res.data.jwt}`;
+
+//             return axiosClient(originalRequest);
+//           } else {
+//             console.error('Failed to refresh token:', res.data);
+//           }
+//         } catch (refreshError) {
+//           console.error('Error refreshing token:', refreshError);
+//           return Promise.reject(refreshError);
+//         }
+//       }
+//     }
+
+//     return Promise.reject(error);
+//   },
+// );
 
 
 const _Fetch = (method, path, body, headers = {}) => {

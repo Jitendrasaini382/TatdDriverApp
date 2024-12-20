@@ -9,16 +9,18 @@ import {
   TextInput,
   Modal,
   Animated,
+  SafeAreaView,
 } from 'react-native';
+import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import YoutubePlayer from 'react-native-youtube-iframe';
+
 import {
   GestureHandlerRootView,
   PanGestureHandler,
 } from 'react-native-gesture-handler';
-import YoutubePlayer from 'react-native-youtube-iframe';
-
-import Header from '../components/Header';
-import {Address, CallingGif, Facebook_Icon} from '../assets/images';
+import {Address, CallingGif, Mask} from '../assets/images';
+import { AppColors } from '../assets/Colors';
 const DutyReportUpdateScreen = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -28,8 +30,8 @@ const DutyReportUpdateScreen = () => {
   const [modalVisibleinput, setModalVisibleinput] = useState(false);
   const [modalVisibleonTimeRich, setModalVisibleonTimeRich] = useState(false);
   const [textWidth, setTextWidth] = useState(0);
+  const [modalVisibleEnd, setModalVisibleEnd] = useState(false);
   const translateX = new Animated.Value(0);
-
   const [swiped, setSwiped] = useState(false);
 
   useEffect(() => {
@@ -67,10 +69,9 @@ const DutyReportUpdateScreen = () => {
     setSwiped(false);
   };
   return (
-    <View style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1}}>
       <Header backButton={true} />
-      <ScrollView
-        style={{backgroundColor: 'white', marginBottom: 20, height: '100%'}}>
+      <ScrollView style={{backgroundColor: 'white', marginBottom: 20, flex: 1}}>
         {/* //modal */}
         <View style={styles.mainModalcontainer}>
           <Modal
@@ -164,7 +165,7 @@ const DutyReportUpdateScreen = () => {
                       {
                         width: '50%',
                         marginHorizontal: '25%',
-                        backgroundColor: '#16588e',
+                        backgroundColor: AppColors.mainColor,
                       },
                     ]}
                     onPress={() => setModalVisible(false)}>
@@ -188,7 +189,7 @@ const DutyReportUpdateScreen = () => {
                   <TouchableOpacity
                     style={styles.closeModalButton}
                     onPress={() => handleCloseModal()}>
-                    <Icon name="close" size={20} color="white" />
+                    <Icon name="close" size={20} color={AppColors.white} />
                   </TouchableOpacity>
                   <View style={styles.titleView}>
                     <Text
@@ -201,11 +202,11 @@ const DutyReportUpdateScreen = () => {
                     </Text>
                   </View>
                   <View style={{marginVertical: 20}}>
-                    <Text style={[styles.subTitle, {color: '#16588e'}]}>
+                    <Text style={[styles.subTitle, {color: AppColors.mainColor}]}>
                       I will reach on time
                     </Text>
                     <Image
-                      source={Facebook_Icon}
+                      source={Mask}
                       resizeMode="contain"
                       style={{
                         height: 60,
@@ -218,7 +219,7 @@ const DutyReportUpdateScreen = () => {
                   <Text
                     style={[
                       styles.title,
-                      {color: '#16588e', fontWeight: '100', fontSize: 16},
+                      {color: AppColors.mainColor, fontWeight: 'bold', fontSize: 16},
                     ]}>
                     Customer's time is very valuable
                   </Text>
@@ -248,7 +249,7 @@ const DutyReportUpdateScreen = () => {
                   <TouchableOpacity
                     style={styles.closeModalButton}
                     onPress={() => setModalVisibleRich(false)}>
-                    <Icon name="close" size={20} color="white" />
+                    <Icon name="close" size={20} color = {AppColors.white}  />
                   </TouchableOpacity>
                   <View style={styles.titleView}>
                     <Text
@@ -261,7 +262,7 @@ const DutyReportUpdateScreen = () => {
                     </Text>
                   </View>
                   <View style={{marginVertical: 20}}>
-                    <Text style={[styles.subTitle, {color: '#16588e'}]}>
+                    <Text style={[styles.subTitle, {color: AppColors.mainColor}]}>
                       I have reached the customer's address.
                     </Text>
                   </View>
@@ -269,7 +270,7 @@ const DutyReportUpdateScreen = () => {
                     <Text
                       style={[
                         styles.title,
-                        {color: 'black', fontWeight: '100', fontSize: 16},
+                        {color: 'black', fontWeight: 'bold', fontSize: 16},
                       ]}>
                       And ready to provide excellent service.
                     </Text>
@@ -299,7 +300,7 @@ const DutyReportUpdateScreen = () => {
                   <TouchableOpacity
                     style={styles.closeModalButton}
                     onPress={() => setModalVisibleinput(false)}>
-                    <Icon name="close" size={20} color="white" />
+                    <Icon name="close" size={20} color={AppColors.white} />
                   </TouchableOpacity>
                   <View style={styles.titleView}>
                     <Text
@@ -332,7 +333,9 @@ const DutyReportUpdateScreen = () => {
                     </View>
                     <TouchableOpacity
                       style={[styles.onthewayButton, {marginTop: '40%'}]}
-                      onPress={() => setModalVisibleinput(false)}>
+                      onPress={() => {
+                        setModalVisibleinput(false), setModalVisibleEnd(true);
+                      }}>
                       <Text style={[styles.buttonText]}>Start</Text>
                     </TouchableOpacity>
                   </View>
@@ -353,7 +356,7 @@ const DutyReportUpdateScreen = () => {
                 <TouchableOpacity
                   style={styles.closeModalButton}
                   onPress={() => setModalVisibleonTimeRich(false)}>
-                  <Icon name="close" size={20} color="white" />
+                  <Icon name="close" size={20} color={AppColors.white} />
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -365,6 +368,52 @@ const DutyReportUpdateScreen = () => {
             </View>
           </View>
         </Modal>
+        {/* end modal */}
+        <View style={styles.mainModalcontainer}>
+          <Modal
+            transparent={true}
+            animationType="slide"
+            visible={modalVisibleEnd}
+            onRequestClose={() => modalVisibleEnd(false)}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <ScrollView>
+                  <TouchableOpacity
+                    style={styles.closeModalButton}
+                    onPress={() => setModalVisibleEnd(false)}>
+                    <Icon name="close" size={20} color={AppColors.white} />
+                  </TouchableOpacity>
+                  <View style={styles.titleView}>
+                    <Text
+                      style={{
+                        fontFamily: 'Merriweather-Bold',
+                        fontSize: 18,
+                        color: 'white',
+                      }}>
+                      Guests are like God
+                    </Text>
+                  </View>
+                  <View style={{marginVertical: 20}}>
+                    <Text style={[styles.subTitle, {color: AppColors.mainColor}]}>
+                      I Know that our work is challenging. Despite this, I made
+                      sure to provide excellent service to the customer like a
+                      pprofessional partner
+                    </Text>
+                  </View>
+                  <View style={{marginVertical: 30}}>
+                    <TouchableOpacity
+                      style={styles.onthewayButton}
+                      onPress={() => {
+                        setModalVisibleinput(false), setModalVisibleEnd(false);
+                      }}>
+                      <Text style={styles.buttonText}>End</Text>
+                    </TouchableOpacity>
+                  </View>
+                </ScrollView>
+              </View>
+            </View>
+          </Modal>
+        </View>
         {/* modal end */}
         <View style={styles.container}>
           <Text
@@ -434,14 +483,6 @@ const DutyReportUpdateScreen = () => {
                 style={{height: 50, width: 50}}
               />
             </View>
-            {/* <View style={{flexDirection:'row',alignItems:'center'}}>
-<Image
- source={require('../../assets/images/interview/calling.gif')}
- resizeMode="contain"
- style={{height: 50, width: 50}}
- />
- <Text style={{color:'black',fontFamily: "Merriweather-Bold",}}>Testing Testing</Text>
-</View> */}
           </View>
           <View
             style={{
@@ -506,7 +547,6 @@ const DutyReportUpdateScreen = () => {
             <GestureHandlerRootView style={{}}>
               <View style={styles.swipeButtoncontainer}>
                 <View style={styles.swipeButton}>
-                  {/* Swipable Icon */}
                   <PanGestureHandler
                     onGestureEvent={onGestureEvent}
                     onHandlerStateChange={onHandlerStateChange}>
@@ -516,7 +556,7 @@ const DutyReportUpdateScreen = () => {
                         {transform: [{translateX: translateX}]},
                       ]}>
                       <View style={styles.iconWrapper}>
-                        <Icon name="east" size={20} color="white" />
+                        <Icon name="east" size={20} color={AppColors.white} />
                       </View>
                     </Animated.View>
                   </PanGestureHandler>
@@ -534,19 +574,19 @@ const DutyReportUpdateScreen = () => {
                 {/* Success Message */}
                 {/* {swiped && setModalVisibleOntheway(true)} */}
               </View>
-
-              <View style={{margin: 20}}>
-                <YoutubePlayer
-                  height={200}
-                  // autoPlay={false}
-                  videoId={'SsG_qwb0zLs'}
-                />
-              </View>
             </GestureHandlerRootView>
+
+            <View style={{marginHorizontal: 10}}>
+              <YoutubePlayer
+                height={200}
+                // autoPlay={false}
+                videoId={'SsG_qwb0zLs'}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -562,6 +602,7 @@ const styles = StyleSheet.create({
     color: '#333',
     backgroundColor: '#fff',
     marginTop: 20,
+    padding: 10,
   },
   container: {
     margin: 10,
@@ -626,7 +667,7 @@ const styles = StyleSheet.create({
   radioText: {
     fontSize: 14,
     color: '#000',
-    fontWeight: '400',
+    fontWeight: '500',
     marginHorizontal: 10,
     fontFamily: 'Merriweather-Bold',
   },
@@ -706,7 +747,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   closeModalButton: {
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     borderRadius: 20,
     marginBottom: 20,
     alignSelf: 'flex-end',
@@ -716,7 +757,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   onthewayButton: {
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     marginTop: 20,
     padding: 12,
     borderRadius: 6,
@@ -746,20 +787,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,
-    overflow: 'hidden',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 5,
     marginVertical: 20,
     paddingVertical: 20,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
+
   iconContainer: {
     position: 'absolute',
     zIndex: 1,
   },
   iconWrapper: {
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     borderRadius: 50,
     padding: 32,
     alignItems: 'center',
@@ -786,7 +834,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   titleView: {
-    backgroundColor: '#16588e',
+    backgroundColor: AppColors.mainColor,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',

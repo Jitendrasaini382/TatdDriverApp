@@ -13,16 +13,16 @@ import {AppColors} from '../assets/Colors';
 import {useDispatch, useSelector} from 'react-redux';
 import {setMyBookingModal} from '../redux/slices/trustedDriverSlice';
 import {MY_BOOKING_TOP_NAVBAR} from '../apis/Apis';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const MyBookingModal = ({}) => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const [myBookingStyle, setMyBookingStyle] = useState(true);
   const dispatch = useDispatch();
   const [myBookingData, setMyBookingData] = useState({});
 
-  const decodedToken = useSelector((e)=>e?.userAuth?.userProfile?.data)
-  const languageSwitch = "Hindi"
+  const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
+  const languageSwitch = 'Hindi';
 
   console.log(languageSwitch, 'my booking lang switchhhhhh');
 
@@ -86,10 +86,11 @@ const MyBookingModal = ({}) => {
                 ? myBookingData.bookings.map((booking, index) => (
                     <TouchableOpacity
                       key={index}
-                      // onPress={() => navigation.navigate('DutyReportUpdate')}
-                      onPress={() => openMyUrl(booking.url)}
-                      
-                      >
+                      onPress={() => navigation.navigate('DutyReportUpdate', {booking:booking})}
+                      // onPress={() => navigation.navigate('DutyReportUpdateScreen')}
+
+                      // onPress={() => openMyUrl(booking.url)}
+                    >
                       <View
                         style={[
                           styles.bookingCard,
@@ -98,6 +99,7 @@ const MyBookingModal = ({}) => {
                         <Text
                           style={[styles.bookingText, {color: booking.color}]}>
                           {booking.booking_id} - {booking.booking_date}
+                          {/* 999 */}
                         </Text>
                         <Image
                           resizeMode="center"
@@ -132,8 +134,7 @@ const MyBookingModal = ({}) => {
                           style={[
                             styles.bookingText,
                             styles.activeBookingText,
-                            {fontWeight: "700"}
-
+                            {fontWeight: '700'},
                           ]}>
                           {booking.booking_id}
                         </Text>
@@ -141,7 +142,7 @@ const MyBookingModal = ({}) => {
                           style={[
                             styles.bookingText,
                             styles.activeBookingText,
-                            {fontWeight: "700"}
+                            {fontWeight: '700'},
                           ]}>
                           {'        '}+ {booking.amount}
                         </Text>
@@ -211,7 +212,7 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:'flex-start',
+    justifyContent: 'flex-start',
   },
   tabItem: {
     margin: 10,

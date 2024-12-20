@@ -2,21 +2,49 @@ import {Platform, Vibration} from 'react-native';
 import {request, check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 // Request notification permission for Android 13+
+// export const requestNotificationPermission = async () => {
+//   if (Platform.OS === 'android' && Platform.Version >= 33) {
+//     const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
+//     if (result === RESULTS.GRANTED) {
+//       console.log('Notification permission granted');
+//     } else if (result === RESULTS.DENIED) {
+//       console.log('Notification permission denied');
+//     } else if (result === RESULTS.BLOCKED) {
+//       console.log('Notification permission blocked');
+//     }
+//   } else {
+//     console.log('Notification permission not required for this Android version');
+//   }
+// };
+
 export const requestNotificationPermission = async () => {
-  if (Platform.OS === 'android' && Platform.Version >= 33) {
-    const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
-    if (result === RESULTS.GRANTED) {
-      console.log('Notification permission granted');
-    } else if (result === RESULTS.DENIED) {
-      console.log('Notification permission denied');
-    } else if (result === RESULTS.BLOCKED) {
-      console.log('Notification permission blocked');
+  if (Platform.OS === 'android') {
+    if (Platform.Version >= 33) {
+      try {
+        const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
+        if (result === RESULTS.GRANTED) {
+          console.log('Notification permission granted');
+          return true; // Permission granted
+        } else if (result === RESULTS.DENIED) {
+          console.log('Notification permission denied');
+          return false; // Permission denied
+        } else if (result === RESULTS.BLOCKED) {
+          console.log('Notification permission blocked');
+          return false; // Permission blocked
+        }
+      } catch (error) {
+        console.log('Error requesting notification permission:', error);
+        return false; // Error occurred
+      }
+    } else {
+      console.log('Notification permission not required for this Android version');
+      return true; // For Android versions below 33
     }
   } else {
-    console.log('Notification permission not required for this Android version');
+    console.log('Notification permission not applicable on this platform');
+    return true; // Non-Android platforms
   }
 };
-
 // Check vibration permission
 
 export const checkVibrationPermission = async () => {

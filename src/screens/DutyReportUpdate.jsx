@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -10,20 +10,69 @@ import {
   StyleSheet,
   Alert,
   Platform,
+  Modal,
+  TextInput,
 } from 'react-native';
-import Modal from 'react-native-modal';
+// import Modal from 'react-native-modal';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import Header from '../components/Header';
-import {Address, CallingGif, Facebook_Icon} from '../assets/images';
+import {Address, CallingGif, Facebook_Icon, Mask} from '../assets/images';
 import {AppColors} from '../assets/Colors';
 import SwipeableButton from '../components/SwipeableButton';
 import RadioButton from '../components/CustomRadioButton';
 import PackageDetailsDutyReportUpdate from '../components/modal/PackageDetailsDutyReportUpdate';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {GET_BOOKING_INFO, TALK_TO_CUSTOMER} from '../apis/Apis';
+import {useSelector} from 'react-redux';
 
+// const RadioButtonWithTitle = ({booking}) => {
+//   const [selectedOption, setSelectedOption] = useState(null);
 
-const RadioButtonWithTitle = () => {
+//   const options = [
+//     {id: '1', label: 'Have you talked to the customer ?'},
+//     {id: '2', label: 'Is the customer not picking up the phone ?'},
+//     {id: '3', label: 'The customer wants to cancel ?'},
+//   ];
+
+//   const handleSelect = id => {
+//     setSelectedOption(id);
+
+//   };
+
+//   return (
+//     <View style={styles.radioButtonView}>
+//       {options.map(option => (
+//         <RadioButton
+//           key={option.id}
+//           label={option.label}
+//           selected={selectedOption === option.id}
+//           onSelect={() => handleSelect(option.id)}
+//         />
+//       ))}
+//     </View>
+//   );
+// };
+
+const RadioButtonWithTitle = ({booking}) => {
   const [selectedOption, setSelectedOption] = useState(null);
+
+  const talkToCustomer = async () => {
+    try {
+      if (!booking?.booking_id) {
+        console.log('Invalid booking object: booking_id is missing');
+        return;
+      }
+
+      const response = await TALK_TO_CUSTOMER({
+        action: 'confirm_booking',
+        booking_number: booking.booking_id,
+      });
+
+      console.log(response, 'talk to customer Api response');
+    } catch (error) {
+      console.log(error.message, 'talk to customer Api error - General Error');
+    }
+  };
 
   const options = [
     {id: '1', label: 'Have you talked to the customer ?'},
@@ -31,8 +80,41 @@ const RadioButtonWithTitle = () => {
     {id: '3', label: 'The customer wants to cancel ?'},
   ];
 
+  // Define functions for each option
+  const handleOption1 = () => {
+    console.log('Option 1 selected: Have you talked to the customer?');
+    // Add your logic here
+  };
+
+  const handleOption2 = () => {
+    console.log('Option 2 selected: Is the customer not picking up the phone?');
+    // Add your logic here
+  };
+
+  const handleOption3 = () => {
+    console.log('Option 3 selected: The customer wants to cancel?');
+    // Add your logic here
+  };
+
+  // Function to handle selection
   const handleSelect = id => {
     setSelectedOption(id);
+
+    // Call the appropriate function based on the selected option
+    switch (id) {
+      case '1':
+        // handleOption1();
+        talkToCustomer();
+        break;
+      case '2':
+        handleOption2();
+        break;
+      case '3':
+        handleOption3();
+        break;
+      default:
+        console.log('Invalid option selected');
+    }
   };
 
   return (
@@ -89,13 +171,12 @@ const CancelBooking = () => {
   );
 };
 
-const AcceptBooking = ({modalShow}) => {
+const AcceptBooking = ({modalShow, booking}) => {
   const [packageDetailsDutyReportUpdate, setPackageDetailsDutyReportUpdate] =
     useState(false);
 
   const handleSwipe = () => {
-    // Alert.alert('Booking Accepted', 'You have accepted the booking.');
-    modalShow()
+    modalShow();
   };
 
   const openPhoneDialer = () => {
@@ -115,7 +196,7 @@ const AcceptBooking = ({modalShow}) => {
         {/* top */}
         <View style={styles.topSection}>
           <Text style={styles.interviewTimeText}>
-            Interview Time- 10:00 AM, 26 Jun,2024
+            Interview Time- {booking.booking_date}
           </Text>
         </View>
         <View style={styles.bookingSection}>
@@ -129,11 +210,10 @@ const AcceptBooking = ({modalShow}) => {
           </TouchableOpacity>
         </View>
         <Modal
-          backdropOpacity={0}
-          onBackdropPress={() => setPackageDetailsDutyReportUpdate(false)}
-          animationIn={'fadeInDown'}
-          animationOut={'fadeOutUp'}
-          isVisible={packageDetailsDutyReportUpdate}>
+          transparent={true}
+          animationType="slide"
+          visible={packageDetailsDutyReportUpdate}
+          onRequestClose={() => setPackageDetailsDutyReportUpdate(false)}>
           <PackageDetailsDutyReportUpdate
             setPackageDetailsDutyReportUpdate={
               setPackageDetailsDutyReportUpdate
@@ -166,16 +246,21 @@ const AcceptBooking = ({modalShow}) => {
                 <Text style={styles.addressText}>Noida Floor</Text>
               </View>
             </View>
-            <TouchableOpacity onPress={openPhoneDialer}>
+
+            <TouchableOpacity
+              style={styles.callingGif}
+              onPress={openPhoneDialer}>
+              {/* <View style={styles.callingGif}> */}
               <Image
-                style={styles.callingGif}
+                style={{width: '100%', height: '100%'}}
                 source={CallingGif}
                 resizeMode="cover"
               />
+              {/* </View> */}
             </TouchableOpacity>
           </View>
         </View>
-        
+
         {/* bottom */}
         <View
           style={{
@@ -186,12 +271,12 @@ const AcceptBooking = ({modalShow}) => {
             borderColor: '#ccc',
             padding: 15,
           }}>
-          <RadioButtonWithTitle />
+          <RadioButtonWithTitle booking={booking} />
           <SwipeableButton onSwipe={handleSwipe} />
 
           <View style={{marginTop: 20}}>
             <YoutubePlayer
-              height={500}
+              height={200}
               // autoPlay={false}
               videoId={'SsG_qwb0zLs'}
             />
@@ -202,13 +287,53 @@ const AcceptBooking = ({modalShow}) => {
   );
 };
 
-const DutyReportUpdate = () => {
+const DutyReportUpdate = ({route, navigation}) => {
+  const {booking} = route?.params;
   const [cancel, setCancel] = useState(false);
-  const [modalVisibleOntheway, setModalVisibleOntheway] = useState(false)
+  const [modalVisibleOntheway, setModalVisibleOntheway] = useState(false);
+  const [modalVisibleRich, setModalVisibleRich] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [modalVisibleinput, setModalVisibleinput] = useState(false);
+  const [modalVisibleonTimeRich, setModalVisibleonTimeRich] = useState(false);
+  const [textWidth, setTextWidth] = useState(0);
+  const [modalVisibleEnd, setModalVisibleEnd] = useState(false);
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
-  const modalShow = ()=>{
-    setModalVisibleOntheway(true)
-  }
+  console.log(
+    booking,
+    'bookingbookingbookingbookingbookingbookingbookingbooking',
+  );
+
+  const closeModal = () => {
+    setModalVisibleOntheway(false);
+  };
+
+  const showModal = () => {
+    setModalVisibleOntheway(true);
+  };
+
+  useEffect(() => {
+    GetAllBookingInfo(booking?.booking_id);
+  }, []);
+
+  const GetAllBookingInfo = async (number) => {
+    try {
+      if (!booking?.booking_id) {
+        console.log('Invalid booking object: booking_id is missing');
+        return;
+      }
+
+      const response = await GET_BOOKING_INFO({
+        driver_mobile_number: '8118813148',
+        booking_number: number,
+        current_language: languageSwitch,
+      });
+
+      console.log(response, 'GetAllBookingInfo Api response');
+    } catch (error) {
+      console.log(error, 'GetAllBookingInfo Api error - Error');
+    }
+  };
 
   return (
     <SafeAreaView
@@ -219,67 +344,524 @@ const DutyReportUpdate = () => {
       }}>
       <Header backButton={true} />
 
-
-
-      {cancel ? <CancelBooking /> : <AcceptBooking modalShow={modalShow} />}
+      {cancel ? (
+        <CancelBooking />
+      ) : (
+        <AcceptBooking modalShow={showModal} booking={booking} />
+      )}
 
       <Modal
-            transparent={true}
-            animationType="slide"
-            visible={modalVisibleOntheway}
-            onRequestClose={() => setModalVisibleOntheway(false)}>
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                <ScrollView>
-                  <TouchableOpacity
-                    style={styles.closeModalButton}
-                    onPress={() => handleCloseModal()}>
-                    <Icon name="close" size={20} color="white" />
-                  </TouchableOpacity>
-                  <View style={styles.titleView}>
-                    <Text
-                      style={{
-                        fontFamily: 'Merriweather-Bold',
-                        fontSize: 18,
-                        color: 'white',
-                      }}>
-                      Guests are like God
-                    </Text>
-                  </View>
-                  <View style={{marginVertical: 20}}>
-                    <Text style={[styles.subTitle, {color: '#16588e'}]}>
-                      I will reach on time
-                    </Text>
-                    <Image
-                      source={Facebook_Icon}
-                      resizeMode="contain"
-                      style={{
-                        height: 60,
-                        width: 140,
-                        alignSelf: 'center',
-                        marginVertical: 10,
-                      }}
-                    />
-                  </View>
-                  <Text
-                    style={[
-                      styles.title,
-                      {color: '#16588e', fontWeight: '100', fontSize: 16},
-                    ]}>
-                    Customer's time is very valuable
-                  </Text>
-                  <TouchableOpacity
-                    style={styles.onthewayButton}
-                    // onPress={() => handleCloseModal()}
-                    onPress={() => {
-                      setModalVisibleOntheway(false), setModalVisibleRich(true);
-                    }}>
-                    <Text style={styles.buttonText}>On The Way</Text>
-                  </TouchableOpacity>
-                </ScrollView>
+        transparent={true}
+        animationType="slide"
+        visible={modalVisibleOntheway}
+        onRequestClose={closeModal}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              width: '90%',
+              borderRadius: 10,
+              padding: 20,
+              elevation: 5,
+            }}>
+            <ScrollView>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: AppColors.mainColor,
+                  borderRadius: 20,
+                  marginBottom: 20,
+                  alignSelf: 'flex-end',
+                  width: 40,
+                  height: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onPress={closeModal}>
+                <Icon name="close" size={20} color={AppColors.white} />
+              </TouchableOpacity>
+              <View
+                style={{
+                  backgroundColor: AppColors.mainColor,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                  width: '100%',
+                  padding: 20,
+                  borderRadius: 5,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Merriweather-Bold',
+                    fontSize: 18,
+                    color: 'white',
+                  }}>
+                  Guests are like God
+                </Text>
               </View>
-            </View>
-          </Modal>
+              <View style={{marginVertical: 20}}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    color: AppColors.mainColor,
+                  }}>
+                  I will reach on time
+                </Text>
+                <Image
+                  source={Mask}
+                  resizeMode="contain"
+                  style={{
+                    height: 60,
+                    width: 140,
+                    alignSelf: 'center',
+                    marginVertical: 10,
+                  }}
+                />
+              </View>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                  color: AppColors.mainColor,
+                }}>
+                Customer's time is very valuable
+              </Text>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: AppColors.mainColor,
+                  marginTop: 20,
+                  padding: 12,
+                  borderRadius: 6,
+                  width: '60%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginHorizontal: '20%',
+                  marginBottom: 120,
+                }}
+                onPress={() => {
+                  setModalVisibleOntheway(false), setModalVisibleRich(true);
+                }}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontWeight: '600',
+                    textAlign: 'center',
+                  }}>
+                  On The Way
+                </Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={modalVisibleRich}
+        onRequestClose={() => setModalVisibleRich(false)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              width: '90%',
+              borderRadius: 10,
+              padding: 20,
+              elevation: 5,
+            }}>
+            <ScrollView>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#16588e',
+                  borderRadius: 20,
+                  marginBottom: 20,
+                  alignSelf: 'flex-end',
+                  width: 40,
+                  height: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onPress={() => {
+                  setModalVisibleRich(false);
+                }}>
+                <Icon name="close" size={20} color={AppColors.white} />
+              </TouchableOpacity>
+              <View
+                style={{
+                  backgroundColor: '#16588e',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                  width: '100%',
+                  padding: 20,
+                  borderRadius: 5,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Merriweather-Bold',
+                    fontSize: 18,
+                    color: 'white',
+                  }}>
+                  Guests are like God
+                </Text>
+              </View>
+              <View style={{marginVertical: 20}}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    color: AppColors.mainColor,
+                  }}>
+                  I have reached the customer's address.
+                </Text>
+              </View>
+              <View style={{marginVertical: 30}}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    color: 'black',
+                  }}>
+                  And ready to provide excellent service.
+                </Text>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#16588e',
+                    marginTop: 20,
+                    padding: 12,
+                    borderRadius: 6,
+                    width: '60%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginHorizontal: '20%',
+                    marginBottom: 120,
+                  }}
+                  onPress={() => {
+                    setModalVisibleRich(false);
+                    setModalVisibleinput(true);
+                  }}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontWeight: '600',
+                      textAlign: 'center',
+                    }}>
+                    Reach
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={modalVisibleinput}
+        onRequestClose={() => setModalVisibleinput(false)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              width: '90%',
+              borderRadius: 10,
+              padding: 20,
+              elevation: 5,
+            }}>
+            <ScrollView>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#16588e',
+                  borderRadius: 20,
+                  marginBottom: 20,
+                  alignSelf: 'flex-end',
+                  width: 40,
+                  height: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onPress={() => setModalVisibleinput(false)}>
+                <Icon name="close" size={20} color={AppColors.white} />
+              </TouchableOpacity>
+              <View
+                style={{
+                  backgroundColor: '#16588e',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                  width: '100%',
+                  padding: 20,
+                  borderRadius: 5,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Merriweather-Bold',
+                    fontSize: 18,
+                    color: 'white',
+                  }}>
+                  Guests are like God
+                </Text>
+              </View>
+              <TextInput
+                style={{
+                  borderColor: '#c4c4be',
+                  borderWidth: 1.5,
+                  borderRadius: 8,
+                  paddingHorizontal: 10,
+                  fontSize: 16,
+                  color: '#333',
+                  backgroundColor: '#fff',
+                  marginTop: 20,
+                  padding: 10,
+                }}
+                placeholder="Enter Otp"
+                placeholderTextColor="#aaa"
+                value={inputValue}
+                onChangeText={text => setInputValue(text)}
+              />
+              <View style={{marginVertical: 5}}>
+                <View
+                  style={{
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: '400',
+                      color: 'black',
+                    }}
+                    onLayout={event => {
+                      const {width} = event.nativeEvent.layout;
+                      setTextWidth(width);
+                    }}>
+                    Resend OTP?
+                  </Text>
+                  <View
+                    style={{
+                      marginTop: 2,
+                      height: 1,
+                      backgroundColor: 'black',
+                      width: textWidth,
+                    }}
+                  />
+                </View>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#16588e',
+                    marginTop: '40%',
+                    padding: 12,
+                    borderRadius: 6,
+                    width: '60%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginHorizontal: '20%',
+                    marginBottom: 120,
+                  }}
+                  onPress={() => {
+                    setModalVisibleinput(false);
+                    setModalVisibleEnd(true);
+                  }}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontWeight: '600',
+                      textAlign: 'center',
+                    }}>
+                    Start
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={modalVisibleonTimeRich}
+        onRequestClose={() => setModalVisibleonTimeRich(false)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              width: '90%',
+              borderRadius: 10,
+              padding: 20,
+              elevation: 5,
+            }}>
+            <ScrollView>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#16588e',
+                  borderRadius: 20,
+                  marginBottom: 20,
+                  alignSelf: 'flex-end',
+                  width: 40,
+                  height: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onPress={() => setModalVisibleonTimeRich(false)}>
+                <Icon name="close" size={20} color={AppColors.white} />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#16588e',
+                  marginTop: 20,
+                  padding: 12,
+                  borderRadius: 6,
+                  width: '60%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginHorizontal: '20%',
+                  marginBottom: 120,
+                }}
+                onPress={() => {
+                  setModalVisibleonTimeRich(false);
+                }}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontWeight: '600',
+                    textAlign: 'center',
+                  }}>
+                  Reach
+                </Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={modalVisibleEnd}
+        onRequestClose={() => setModalVisibleEnd(false)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              width: '90%',
+              borderRadius: 10,
+              padding: 20,
+              elevation: 5,
+            }}>
+            <ScrollView>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#16588e',
+                  borderRadius: 20,
+                  marginBottom: 20,
+                  alignSelf: 'flex-end',
+                  width: 40,
+                  height: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onPress={() => setModalVisibleEnd(false)}>
+                <Icon name="close" size={20} color={AppColors.white} />
+              </TouchableOpacity>
+              <View
+                style={{
+                  backgroundColor: '#16588e',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                  width: '100%',
+                  padding: 20,
+                  borderRadius: 5,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Merriweather-Bold',
+                    fontSize: 18,
+                    color: 'white',
+                  }}>
+                  Guests are like God
+                </Text>
+              </View>
+              <View style={{marginVertical: 20}}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    color: AppColors.mainColor,
+                  }}>
+                  I Know that our work is challenging. Despite this, I made sure
+                  to provide excellent service to the customer like a
+                  professional partner
+                </Text>
+              </View>
+              <View style={{marginVertical: 30}}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#16588e',
+                    marginTop: 20,
+                    padding: 12,
+                    borderRadius: 6,
+                    width: '60%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginHorizontal: '20%',
+                    marginBottom: 120,
+                  }}
+                  onPress={() => {
+                    setModalVisibleinput(false);
+                    setModalVisibleEnd(false);
+                  }}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontWeight: '600',
+                      textAlign: 'center',
+                    }}>
+                    End
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -380,8 +962,9 @@ const styles = StyleSheet.create({
   callingGif: {
     width: 40,
     height: 40,
-    borderColor: 'greyLight',
-    borderWidth: 1,
+    backgroundColor: 'white',
     borderRadius: 20,
+    overflow: 'hidden',
+    elevation: 5,
   },
 });

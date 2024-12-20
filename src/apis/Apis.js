@@ -19,9 +19,9 @@ export const VERIFY_OTP_LOGIN = body => {
 
 // https://www.tatd.in/app-api/driver/login/save-fcm-token-api.php
 
-export const GET_FCM_TOKEN = (body) => {
+export const GET_FCM_TOKEN = body => {
   console.log(body, 'Get FCM Token');
-  return _Fetch('POST', 'login/save-fcm-token-api.php', {...body},{});
+  return _Fetch('POST', 'login/save-fcm-token-api.php', {...body}, {});
 };
 
 // https://www.tatd.in/app-api/driver/faq/driver-faq-api.php
@@ -216,6 +216,39 @@ export const APPLY_PERMANENT_BOOKING = body => {
   return _Fetch(
     'POST',
     'trusted-driver/permanent-booking-apply.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/duty-report/duty_report_booking_info_api.php
+
+export const GET_BOOKING_INFO = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/duty_report_booking_info_api.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/duty-report/have_your_talk_to_customer_api.php
+
+export const TALK_TO_CUSTOMER = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/have_your_talk_to_customer_api.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/duty-report/duty_report_booking_info_api.php
+
+export const DUTY_REPORT_BOOKING_INFO = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/duty_report_booking_info_api.php',
     {...body},
     {},
   );

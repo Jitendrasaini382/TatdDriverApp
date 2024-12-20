@@ -11,6 +11,7 @@ import {
   Alert,
   Pressable,
   Platform,
+  Keyboard,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -54,6 +55,9 @@ const CheckDriverOtp = ({navigation, route}) => {
 
   const handleChange = text => {
     setOtp(text);
+    if(text.length >= 4){
+      Keyboard.dismiss()
+    }
   };
 
 
@@ -139,6 +143,7 @@ const CheckDriverOtp = ({navigation, route}) => {
         return;
       }
       setLoader(true);
+      Keyboard.dismiss()
 
       VERIFY_OTP_LOGIN({
         mobile: mobile,

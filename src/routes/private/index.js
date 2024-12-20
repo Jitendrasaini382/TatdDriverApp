@@ -26,6 +26,11 @@ import SplashScreen from '../../screens/SplashScreen';
 import {AppColors} from '../../assets/Colors';
 import DueScreen from '../../screens/DueScreen';
 import DutyReportUpdateScreen from '../../screens/DutyReportUpdateScreen';
+import ReviewScreen from '../../screens/ReviewScreen';
+import RatingScreen from '../../screens/RatingScreen';
+import OnTimeReach from '../../screens/OnTimeReach';
+import Feedback from '../../screens/Feedback';
+import DriverLogin from '../../screens/DriverLogin';
 
 const Stack = createStackNavigator();
 
@@ -61,6 +66,8 @@ const PrivateRoute = () => {
               headerBackTitle: 'Back',
             }}
           />
+          {/* <Stack.Screen name="DriverLogin" component={DriverLogin} /> */}
+
           <Stack.Screen name="DriverNotice" component={DriverNotice} />
           <Stack.Screen
             name="NoticeBoardDetail"
@@ -90,6 +97,13 @@ const PrivateRoute = () => {
           <Stack.Screen name="AgentKyc" component={AgentKyc} />
           <Stack.Screen name="AgentTrainig" component={AgentTrainig} />
           <Stack.Screen name="AgentWallet" component={AgentWallet} />
+
+          <Stack.Screen name="Feedback" component={Feedback} />
+          <Stack.Screen name="OnTimeReach" component={OnTimeReach} />
+          <Stack.Screen name="RatingScreen" component={RatingScreen} />
+          <Stack.Screen name="ReviewScreen" component={ReviewScreen} />
+          
+          
           <Stack.Screen
             name="AgentCommisionAdded"
             component={AgentCommisionAdded}

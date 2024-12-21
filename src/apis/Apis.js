@@ -310,6 +310,17 @@ export const CHECK_UPCOMING_BOOKING = body => {
   );
 };
 
+// https://www.tatd.in/app-api/driver/duty-report/rate_us_at_social_media_view_api.php
+
+export const RATE_US_SOCIAL_MEDIA_VIEW_DATA = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/rate_us_at_social_media_view_api.php',
+    {...body},
+    {},
+  );
+};
+
 // https://www.tatd.in/app-api/driver/duty-report/rate_us_at_social_media_api.php
 
 export const RATE_US_SOCIAL_MEDIA = body => {

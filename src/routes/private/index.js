@@ -24,14 +24,14 @@ import DriverNotifications from '../../screens/DriverNotification';
 import ClearMyDuePayment from '../../screens/ClearMyDuePayment';
 import SplashScreen from '../../screens/SplashScreen';
 import {AppColors} from '../../assets/Colors';
-import DueAmount from '../../screens/DueAmount';
 import DutyReportUpdateScreen from '../../screens/DutyReportUpdateScreen';
 import ReviewScreen from '../../screens/ReviewScreen';
 import RatingScreen from '../../screens/RatingScreen';
 import OnTimeReach from '../../screens/OnTimeReach';
-import Feedback from '../../screens/Feedback';
+import Feedback from '../../screens/RateUsAtSocialMedia';
 import {useSelector} from 'react-redux';
 import DueAmountDetails from '../../screens/DueAmountDetails';
+import RateUsAtSocialMedia from '../../screens/RateUsAtSocialMedia';
 
 const Stack = createStackNavigator();
 
@@ -73,7 +73,7 @@ const PrivateRoute = () => {
 
           <Stack.Screen name="DriverNotice" component={DriverNotice} />
           <Stack.Screen name="DueAmountDetails" component={DueAmountDetails} />
-          
+
           <Stack.Screen
             name="NoticeBoardDetail"
             component={NoticeBoardDetailScreen}
@@ -97,7 +97,6 @@ const PrivateRoute = () => {
             name="DutyReportUpdateScreen"
             component={DutyReportUpdateScreen}
           />
-          <Stack.Screen name="DueAmount" component={DueAmount} />
 
           <Stack.Screen name="AgentLogin" component={AgentLogin} />
           <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />
@@ -106,7 +105,10 @@ const PrivateRoute = () => {
           <Stack.Screen name="AgentTrainig" component={AgentTrainig} />
           <Stack.Screen name="AgentWallet" component={AgentWallet} />
 
-          <Stack.Screen name="Feedback" component={Feedback} />
+          <Stack.Screen
+            name="RateUsAtSocialMedia"
+            component={RateUsAtSocialMedia}
+          />
           <Stack.Screen name="OnTimeReach" component={OnTimeReach} />
           <Stack.Screen name="RatingScreen" component={RatingScreen} />
           <Stack.Screen name="ReviewScreen" component={ReviewScreen} />

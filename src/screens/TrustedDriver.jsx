@@ -192,7 +192,6 @@ const TrustedDriver = ({navigation}) => {
         await requestNotificationPermission();
         tokenvalue = await messaging().getToken();
         console.log(tokenvalue, 'Android tokenAndroid token');
-
       }
 
       if (tokenvalue) {
@@ -595,12 +594,12 @@ const TrustedDriver = ({navigation}) => {
                   // onPress={() => navigation.navigate('MyBonusStatusHistory')}
                   // onPress={() => navigation.navigate('DueAmountDetails')}
                   // onPress={() => navigation.navigate('DutyReportUpdateScreen')}
-                  // onPress={() => navigation.navigate('Feedback')}
+                  onPress={() => navigation.navigate('RateUsAtSocialMedia')}
                   // onPress={() => navigation.navigate('OnTimeReach')}
                   // onPress={() => navigation.navigate('RatingScreen')}
                   // onPress={() => navigation.navigate('ReviewScreen')}
                   // onPress={() => navigation.navigate('DutyReportUpdate')}
-                  onPress={() => navigation.navigate('DueAmount')}
+                  // onPress={() => navigation.navigate('DueAmount')}
 
                   style={styles.bottamContent2}>
                   <Text style={styles.mainText}>

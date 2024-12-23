@@ -105,6 +105,13 @@ const TrustedDriver = ({navigation}) => {
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
+  const jwt = useSelector(e => e?.userAuth?.jwt);
+  useEffect(() => {
+    if (jwt) {
+      getPopup();
+    }
+  }, [jwt]);
+
   // useEffect(() => {
   //   const initializePermissions = async () => {
   //     try {
@@ -331,13 +338,6 @@ const TrustedDriver = ({navigation}) => {
   // useEffect(() => {
   //   decodeData(jwtToken);
   // }, [jwtToken]);
-  const jwt = useSelector(e => e?.userAuth?.jwt);
-  // console.log(jwt, 'jwt token FROM TETSED DRVICE SCEEEB');
-  useEffect(() => {
-    if (jwt) {
-      getPopup();
-    }
-  }, [jwt]);
 
   const getPopup = async () => {
     try {

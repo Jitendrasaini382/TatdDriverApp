@@ -50,6 +50,8 @@ axiosClient.interceptors.response.use(
           );
 
           if (res.data?.jwt) {
+            console.log("new jwt change new jwt change new jwt change new jwt change new jwt change new jwt change new jwt change new jwt change ");
+            
             store.dispatch(
               setUserAuthStates({
                 key: 'jwt',
@@ -143,7 +145,7 @@ const _Fetch = (method, path, body, headers = {}) => {
     })
       .then(response => {
         console.log('Response data:', response.data);
-        
+
         if (response.data.status_code == 200) {
           resolve(response.data);
         } else {

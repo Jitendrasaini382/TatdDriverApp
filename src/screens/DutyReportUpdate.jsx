@@ -24,6 +24,7 @@ import PackageDetailsDutyReportUpdate from '../components/modal/PackageDetailsDu
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {GET_BOOKING_INFO, TALK_TO_CUSTOMER} from '../apis/Apis';
 import {useSelector} from 'react-redux';
+import { useRoute } from '@react-navigation/native';
 
 // const RadioButtonWithTitle = ({booking}) => {
 //   const [selectedOption, setSelectedOption] = useState(null);
@@ -288,7 +289,9 @@ const AcceptBooking = ({modalShow, booking}) => {
 };
 
 const DutyReportUpdate = ({route, navigation}) => {
-  const {booking} = route?.params;
+  // const {booking} = route?.params;
+  const booking = "642971"
+
   const [cancel, setCancel] = useState(false);
   const [modalVisibleOntheway, setModalVisibleOntheway] = useState(false);
   const [modalVisibleRich, setModalVisibleRich] = useState(false);
@@ -315,15 +318,15 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
 
   useEffect(() => {
-    GetAllBookingInfo(booking?.booking_id);
+    // GetAllBookingInfo(booking?.booking_id);
   }, []);
 
   const GetAllBookingInfo = async number => {
     try {
-      if (!booking?.booking_id) {
-        console.log('Invalid booking object: booking_id is missing');
-        return;
-      }
+      // if (!booking?.booking_id) {
+      //   console.log('Invalid booking object: booking_id is missing');
+      //   return;
+      // }
 
       const response = await GET_BOOKING_INFO({
         driver_mobile_number: driverMobileNumber,

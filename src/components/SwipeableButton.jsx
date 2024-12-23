@@ -4,7 +4,7 @@ import {PanGestureHandler, State} from 'react-native-gesture-handler';
 import {AppColors} from '../assets/Colors';
 import RightArrowIcon from 'react-native-vector-icons/AntDesign';
 
-const SwipeableButton = ({onSwipe}) => {
+const SwipeableButton = ({onSwipe, data}) => {
   const translateX = useRef(new Animated.Value(0)).current;
 
   const onGestureEvent = Animated.event(
@@ -39,7 +39,7 @@ const SwipeableButton = ({onSwipe}) => {
         </Animated.View>
       </PanGestureHandler>
       <View style={styles.textContainer}>
-        <Text style={styles.text}>Please accept the booking</Text>
+        <Text style={styles.text}>{data?.next_booking_status_text}</Text>
         {/* <Text style={{
 
     fontSize: 16,

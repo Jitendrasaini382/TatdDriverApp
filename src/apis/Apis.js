@@ -331,3 +331,10 @@ export const RATE_US_SOCIAL_MEDIA = body => {
     {},
   );
 };
+
+// https://www.tatd.in/app-api/driver/duty-report/duty_report_booking_info_api.php
+
+
+export const PACKAGE_DETAILS_DUTY_REPORT = body => {
+  return _Fetch('POST', 'duty-report/package-detail-api.php', {...body}, {});
+};

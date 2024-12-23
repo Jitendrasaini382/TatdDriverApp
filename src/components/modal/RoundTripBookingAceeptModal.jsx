@@ -60,8 +60,13 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   };
 
   const acceptBooking = async () => {
+    console.log(booking_number, 'accept booking number');
     console.log('final accepttttt');
-    navigation.navigate('DutyReportUpdate', {booking: booking_number});
+    navigation.navigate('DutyReportUpdate', {
+      booking: booking_number,
+      tripStatus: '0',
+    });
+    setOpenModal(false);
     // try {
     //   const response = await ON_DEMAND_BOOKING({
     //     action: 'ondemand_driver_consent_popup_view',

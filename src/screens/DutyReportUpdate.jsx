@@ -26,13 +26,35 @@ import {
   CUSTOMER_NOT_PICKUP_PHONE,
   CUSTOMER_WANT_TO_CANCEL,
   GET_BOOKING_INFO,
+  PACKAGE_DETAILS_DUTY_REPORT,
   TALK_TO_CUSTOMER,
 } from '../apis/Apis';
 import {useSelector} from 'react-redux';
 
-const RadioButtonWithTitle = ({booking}) => {
-  const [selectedOption, setSelectedOption] = useState(null);
+// const RadioButtonWithTitle = ({booking}) => {
+
+//   return (
+
+//   );
+// };
+
+const DutyReportUpdate = ({route, navigation}) => {
+  const {booking, tripStatus} = route?.params;
+  console.log(booking, 'bookingggg');
+  console.log(tripStatus, 'trip status');
+
+  // const booking = '642971';
+
+  const [cancel, setCancel] = useState(false);
+  const [modalVisibleOntheway, setModalVisibleOntheway] = useState(false);
+  const [modalVisibleRich, setModalVisibleRich] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [modalVisibleinput, setModalVisibleinput] = useState(false);
+  const [modalVisibleonTimeRich, setModalVisibleonTimeRich] = useState(false);
+  const [textWidth, setTextWidth] = useState(0);
+  const [modalVisibleEnd, setModalVisibleEnd] = useState(false);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  const [selectedOption, setSelectedOption] = useState(null);
   const [loader, setLoader] = useState(false);
 
   console.log(booking, languageSwitch, 'radio button Booking');
@@ -44,7 +66,8 @@ const RadioButtonWithTitle = ({booking}) => {
         action: 'confirm_booking',
         booking_number: booking,
       });
-
+      console.log(response,"talkToCustomer API uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu ")
+      GetAllBookingInfo();
       console.log(response, 'talk to customer Api response');
     } catch (error) {
       setLoader(false);
@@ -60,11 +83,12 @@ const RadioButtonWithTitle = ({booking}) => {
     try {
       const response = await CUSTOMER_NOT_PICKUP_PHONE({
         action: 'duty_report_send_sms',
-        booking_number: booking,
+        booking_id: booking,
         current_language: languageSwitch,
         sub_status: 'Not Picking Call',
       });
 
+      // GetAllBookingInfo()
       console.log(response, 'talk to customer Api response');
     } catch (error) {
       console.log(error.message, 'talk to customer Api error - General Error');
@@ -78,9 +102,10 @@ const RadioButtonWithTitle = ({booking}) => {
     try {
       const response = await CUSTOMER_WANT_TO_CANCEL({
         action: 'duty_report_send_cancel_sms',
-        booking_number: booking,
+        booking_id: booking,
         sub_status: 'Cancel Booking',
       });
+      GetAllBookingInfo()
       console.log(response, 'talk to customer Api response');
     } catch (error) {
       console.log(error.message, 'talk to customer Api error - General Error');
@@ -117,204 +142,21 @@ const RadioButtonWithTitle = ({booking}) => {
 
     // Call the appropriate function based on the selected option
     switch (id) {
-      case '1':
+      case 1:
         // handleOption1();
         talkToCustomer();
         break;
-      case '2':
+      case 2:
         notPickupPhoneCustomer();
         break;
-      case '3':
+      case 3:
         customerWantToCancel();
         break;
       default:
         console.log('Invalid option selected');
     }
   };
-
-  return (
-    <View style={styles.radioButtonView}>
-      {options.map(option => (
-        <RadioButton
-          key={option.id}
-          label={option.label}
-          selected={selectedOption === option.id}
-          onSelect={() => handleSelect(option.id)}
-        />
-      ))}
-    </View>
-  );
-};
-
-// const CancelBooking = () => {
-//   return (
-//     <View
-//       style={{
-//         marginTop: 30,
-//         padding: 10,
-//       }}>
-//       <View
-//         style={{
-//           borderColor: 'rgb(128,128,128)',
-//           backgroundColor: AppColors.white,
-//           borderWidth: 1,
-//           borderStyle: 'solid',
-//           borderRadius: 8,
-//           lineHeight: 20,
-//           shadowColor: 'rgb(128,128,128)',
-//           shadowOffset: {width: 5, height: 4},
-//           shadowOpacity: 5,
-//           elevation: 5,
-//           shadowRadius: 5,
-//           marginBottom: 20,
-//           padding: 10,
-//         }}>
-//         <View style={{padding: 14, alignItems: 'flex-start'}}>
-//           <Text
-//             style={{
-//               textAlign: 'auto',
-//               color: AppColors.black,
-//               fontWeight: '700',
-//               fontSize: 21,
-//               fontFamily: 'Poppins',
-//             }}>
-//             Booking is Already Cancelled{' '}
-//           </Text>
-//         </View>
-//       </View>
-//     </View>
-//   );
-// };
-
-// const AcceptBooking = ({modalShow, booking}) => {
-//   const [packageDetailsDutyReportUpdate, setPackageDetailsDutyReportUpdate] =
-//     useState(false);
-
-//   const handleSwipe = () => {
-//     modalShow();
-//   };
-
-//   const openPhoneDialer = () => {
-//     const phoneNumber = '9810360792';
-//     let url = `tel:${phoneNumber}`;
-
-//     Linking.openURL(url)
-//       .then(() => console.log('Phone dialer opened successfully'))
-//       .catch(err => {
-//         console.error('Error opening phone dialer:', err);
-//       });
-//   };
-
-//   return (
-//     <ScrollView style={{flex: 1}}>
-//       <View style={styles.mainView}>
-//         {/* top */}
-//         <View style={styles.topSection}>
-//           <Text style={styles.interviewTimeText}>
-//             Interview Time- {booking.booking_date}
-//           </Text>
-//         </View>
-//         <View style={styles.bookingSection}>
-//           <View>
-//             <Text style={styles.bookingNoText}>Booking No : #431062</Text>
-//           </View>
-//           <TouchableOpacity
-//             onPress={() => setPackageDetailsDutyReportUpdate(true)}
-//             style={styles.packageDetailsButton}>
-//             <Text style={styles.packageDetailsText}>Package Details</Text>
-//           </TouchableOpacity>
-//         </View>
-//         <Modal
-//           transparent={true}
-//           animationType="slide"
-//           visible={packageDetailsDutyReportUpdate}
-//           onRequestClose={() => setPackageDetailsDutyReportUpdate(false)}>
-//           <PackageDetailsDutyReportUpdate
-//             setPackageDetailsDutyReportUpdate={
-//               setPackageDetailsDutyReportUpdate
-//             }
-//             // tripDetails={selectedTrip}
-//           />
-//         </Modal>
-//         {/* middle */}
-//         <View style={styles.middleSection}>
-//           <View style={styles.nameTypeContainer}>
-//             <Text style={styles.nameText}>Sagar Saxena</Text>
-//             <Text style={styles.typeText}>Permanent</Text>
-//           </View>
-//           <View style={styles.addressCallContainer}>
-//             <View>
-//               <View style={styles.addressContainer}>
-//                 <Image
-//                   source={Address}
-//                   resizeMode="contain"
-//                   style={styles.addressIcon}
-//                 />
-//                 <Text style={styles.addressText}>D-51 A 2nd Floor</Text>
-//               </View>
-//               <View style={styles.addressContainer}>
-//                 <Image
-//                   source={Address}
-//                   resizeMode="contain"
-//                   style={styles.addressIcon}
-//                 />
-//                 <Text style={styles.addressText}>Noida Floor</Text>
-//               </View>
-//             </View>
-
-//             <TouchableOpacity
-//               style={styles.callingGif}
-//               onPress={openPhoneDialer}>
-//               {/* <View style={styles.callingGif}> */}
-//               <Image
-//                 style={{width: '100%', height: '100%'}}
-//                 source={CallingGif}
-//                 resizeMode="cover"
-//               />
-//               {/* </View> */}
-//             </TouchableOpacity>
-//           </View>
-//         </View>
-
-//         {/* bottom */}
-//         <View
-//           style={{
-//             elevation: 1,
-//             borderRadius: 5,
-//             borderWidth: 1,
-//             backgroundColor: '#f7f7f7',
-//             borderColor: '#ccc',
-//             padding: 15,
-//           }}>
-//           <RadioButtonWithTitle booking={booking} />
-//           <SwipeableButton onSwipe={handleSwipe} />
-
-//           <View style={{marginTop: 20}}>
-//             <YoutubePlayer
-//               height={200}
-//               // autoPlay={false}
-//               videoId={'SsG_qwb0zLs'}
-//             />
-//           </View>
-//         </View>
-//       </View>
-//     </ScrollView>
-//   );
-// };
-
-const DutyReportUpdate = ({route, navigation}) => {
-  const {booking} = route?.params;
-  // const booking = '642971';
-
-  const [cancel, setCancel] = useState(false);
-  const [modalVisibleOntheway, setModalVisibleOntheway] = useState(false);
-  const [modalVisibleRich, setModalVisibleRich] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-  const [modalVisibleinput, setModalVisibleinput] = useState(false);
-  const [modalVisibleonTimeRich, setModalVisibleonTimeRich] = useState(false);
-  const [textWidth, setTextWidth] = useState(0);
-  const [modalVisibleEnd, setModalVisibleEnd] = useState(false);
-  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  // const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
   const driverMobileNumber = useSelector(
     e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
   );
@@ -322,12 +164,13 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [packageDetailsDutyReportUpdate, setPackageDetailsDutyReportUpdate] =
     useState(false);
 
+  const [bookingInfo, setbookingInfo] = useState({});
   const handleSwipe = () => {
     setModalVisibleOntheway(true);
   };
 
-  const openPhoneDialer = () => {
-    const phoneNumber = '9810360792';
+  const openPhoneDialer = phoneNumber => {
+    // const phoneNumber = '9810360792';
     let url = `tel:${phoneNumber}`;
 
     Linking.openURL(url)
@@ -342,10 +185,10 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
 
   useEffect(() => {
-    // GetAllBookingInfo(booking?.booking_id);
+    GetAllBookingInfo();
   }, []);
 
-  const GetAllBookingInfo = async number => {
+  const GetAllBookingInfo = async () => {
     try {
       // if (!booking?.booking_id) {
       //   console.log('Invalid booking object: booking_id is missing');
@@ -353,14 +196,50 @@ const DutyReportUpdate = ({route, navigation}) => {
       // }
 
       const response = await GET_BOOKING_INFO({
-        driver_mobile_number: driverMobileNumber,
-        booking_number: booking,
+        action: 'duty_report_booking_info',
+        booking_id: booking,
         current_language: languageSwitch,
+        trip_status: tripStatus,
       });
 
-      console.log(response, 'GetAllBookingInfo Api response');
+      console.log(
+        {
+          action: 'duty_report_booking_info',
+          booking_id: booking,
+          current_language: languageSwitch,
+          trip_status: tripStatus,
+        },
+        'send action',
+      );
+
+      setbookingInfo(response?.duty_report_booking_info);
+      console.log(
+        response?.duty_report_booking_info,
+        'GetAllBookingInfo Api response',
+      );
     } catch (error) {
       console.log(error, 'GetAllBookingInfo Api error - Error');
+    }
+  };
+  useEffect(() => {
+    packageDetails();
+  }, []);
+  const [packageDetailsData, setPackageDetailsData] = useState({});
+  const packageDetails = async () => {
+    setLoader(true);
+    try {
+      const response = await PACKAGE_DETAILS_DUTY_REPORT({
+        booking_number: booking,
+      });
+
+      console.log(response, 'talk to customer Api response');
+      setPackageDetailsData(response);
+    } catch (error) {
+      setLoader(false);
+
+      console.log(error.message, 'talk to customer Api error - General Error');
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -415,18 +294,23 @@ const DutyReportUpdate = ({route, navigation}) => {
             {/* top */}
             <View style={styles.topSection}>
               <Text style={styles.interviewTimeText}>
-                Interview Time- {booking.booking_date}
+                {bookingInfo?.data?.duty_time_heading}{' '}
+                {bookingInfo?.data?.duty_time_text}
               </Text>
             </View>
             <View style={styles.bookingSection}>
               <View>
-                <Text style={styles.bookingNoText}>Booking No : #431062</Text>
+                <Text style={styles.bookingNoText}>
+                  Booking No : #{bookingInfo?.data?.booking_id}
+                </Text>
               </View>
-              <TouchableOpacity
-                onPress={() => setPackageDetailsDutyReportUpdate(true)}
-                style={styles.packageDetailsButton}>
-                <Text style={styles.packageDetailsText}>Package Details</Text>
-              </TouchableOpacity>
+              {bookingInfo?.condition?.eligibility_package_details == 1 && (
+                <TouchableOpacity
+                  onPress={() => setPackageDetailsDutyReportUpdate(true)}
+                  style={styles.packageDetailsButton}>
+                  <Text style={styles.packageDetailsText}>Package Details</Text>
+                </TouchableOpacity>
+              )}
             </View>
             <Modal
               transparent={true}
@@ -437,38 +321,53 @@ const DutyReportUpdate = ({route, navigation}) => {
                 setPackageDetailsDutyReportUpdate={
                   setPackageDetailsDutyReportUpdate
                 }
-                // tripDetails={selectedTrip}
+                data={packageDetailsData}
               />
             </Modal>
             {/* middle */}
             <View style={styles.middleSection}>
               <View style={styles.nameTypeContainer}>
-                <Text style={styles.nameText}>Sagar Saxena</Text>
-                <Text style={styles.typeText}>Permanent</Text>
+                <Text style={styles.nameText}>
+                  {bookingInfo?.data?.customer_name}
+                </Text>
+                <Text style={styles.typeText}>
+                  {bookingInfo?.data?.way_type}
+                </Text>
               </View>
               <View style={styles.addressCallContainer}>
                 <View>
-                  <View style={styles.addressContainer}>
-                    <Image
-                      source={Address}
-                      resizeMode="contain"
-                      style={styles.addressIcon}
-                    />
-                    <Text style={styles.addressText}>D-51 A 2nd Floor</Text>
-                  </View>
-                  <View style={styles.addressContainer}>
-                    <Image
-                      source={Address}
-                      resizeMode="contain"
-                      style={styles.addressIcon}
-                    />
-                    <Text style={styles.addressText}>Noida Floor</Text>
-                  </View>
+                  {bookingInfo?.data?.pickup_address && (
+                    <View style={styles.addressContainer}>
+                      <Image
+                        source={Address}
+                        resizeMode="contain"
+                        style={styles.addressIcon}
+                      />
+                      <Text style={styles.addressText}>
+                        {bookingInfo?.data?.pickup_address}
+                      </Text>
+                    </View>
+                  )}
+
+                  {bookingInfo?.data?.drop_address && (
+                    <View style={styles.addressContainer}>
+                      <Image
+                        source={Address}
+                        resizeMode="contain"
+                        style={styles.addressIcon}
+                      />
+                      <Text style={styles.addressText}>
+                        {bookingInfo?.data?.drop_address}
+                      </Text>
+                    </View>
+                  )}
                 </View>
 
                 <TouchableOpacity
                   style={styles.callingGif}
-                  onPress={openPhoneDialer}>
+                  onPress={() => {
+                    openPhoneDialer(bookingInfo?.data?.circle_phone);
+                  }}>
                   {/* <View style={styles.callingGif}> */}
                   <Image
                     style={{width: '100%', height: '100%'}}
@@ -490,21 +389,58 @@ const DutyReportUpdate = ({route, navigation}) => {
                 borderColor: '#ccc',
                 padding: 15,
               }}>
-              <RadioButtonWithTitle booking={booking} />
-              <SwipeableButton onSwipe={handleSwipe} />
+              {/* <RadioButtonWithTitle booking={bookingInfo?.condition} /> */}
 
-              <View style={{marginTop: 20}}>
-                <YoutubePlayer
-                  height={200}
-                  // initialPlayerParams={{
+              <View style={styles.radioButtonView}>
+                {bookingInfo?.condition?.customer_talk_done_eligibility ==
+                  0 && (
+                  <RadioButton
+                    // key={option.id}
+                    label={'Have you talked to the customer'}
+                    selected={selectedOption === 1}
+                    onSelect={() => handleSelect(1)}
+                  />
+                )}
 
-                  //   controls:false
-                  // }
-                  // }
-                  autoPlay={false}
-                  videoId={'SsG_qwb0zLs'}
-                />
+                {bookingInfo?.condition?.customer_not_pick_phone_eligibility ==
+                  0 && (
+                  <RadioButton
+                    // key={option.id}
+                    label={'Is the customer not picking up the phone ?'}
+                    selected={selectedOption === 2}
+                    onSelect={() => handleSelect(2)}
+                  />
+                )}
+
+                {bookingInfo?.condition?.customer_want_to_cancel_eligibility ==
+                  0 && (
+                  <RadioButton
+                    // key={option.id}
+                    label={'The customer wants to cancel ?'}
+                    selected={selectedOption === 3}
+                    onSelect={() => handleSelect(3)}
+                  />
+                )}
               </View>
+              <SwipeableButton
+                onSwipe={handleSwipe}
+                data={bookingInfo?.condition}
+              />
+
+              {bookingInfo?.data?.youtube_video && (
+                <View style={{marginTop: 20}}>
+                  <YoutubePlayer
+                    height={200}
+                    // initialPlayerParams={{
+
+                    //   controls:false
+                    // }
+                    // }
+                    autoPlay={false}
+                    videoId={bookingInfo?.data?.youtube_video}
+                  />
+                </View>
+              )}
             </View>
           </View>
         </ScrollView>

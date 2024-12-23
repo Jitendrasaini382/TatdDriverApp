@@ -136,11 +136,12 @@ const MyBookingModal = ({}) => {
                     ? myBookingData.bookings.map((booking, index) => (
                         <TouchableOpacity
                           key={index}
-                          onPress={() =>
-                            navigation.navigate('DutyReportUpdate', {
-                              booking: booking,
-                            })
-                          }
+                          // onPress={() =>
+                          //   navigation.navigate('DutyReportUpdate', {
+                          //     booking: booking,
+                          //     tripStatus:"10"
+                          //   })
+                          // }
                           // onPress={() => navigation.navigate('DutyReportUpdateScreen')}
 
                           // onPress={() => openMyUrl(booking.url)}

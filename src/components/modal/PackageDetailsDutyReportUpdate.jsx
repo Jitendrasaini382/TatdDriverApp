@@ -12,7 +12,9 @@ import {AppFont} from '../../assets/FontsFamily';
 
 const PackageDetailsDutyReportUpdate = ({
   setPackageDetailsDutyReportUpdate,
+  data,
 }) => {
+   
   return (
     <TouchableWithoutFeedback
       onPress={() => setPackageDetailsDutyReportUpdate(false)}>
@@ -86,7 +88,7 @@ const PackageDetailsDutyReportUpdate = ({
                   fontSize: 13,
                 }}>
                 {/* {tripDetails.type} */}
-                Round Trip
+                {data?.trip_type}
               </Text>
             </View>
             <View
@@ -111,7 +113,7 @@ const PackageDetailsDutyReportUpdate = ({
                   fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
-                10 Hours
+                {data?.package}
               </Text>
             </View>
             <View
@@ -127,7 +129,7 @@ const PackageDetailsDutyReportUpdate = ({
                   fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
-                Package Price : Cash
+                Package Price : {data?.payment_mode}
               </Text>
               <Text
                 style={{
@@ -136,7 +138,7 @@ const PackageDetailsDutyReportUpdate = ({
                   fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
-                100
+                {data?.package_price}
               </Text>
             </View>
             <View
@@ -161,7 +163,7 @@ const PackageDetailsDutyReportUpdate = ({
                   fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
-                Rs 61
+                Rs {data?.gst_amount}
               </Text>
             </View>
             <View
@@ -177,7 +179,7 @@ const PackageDetailsDutyReportUpdate = ({
                   fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
-                Commission : 20%
+                Commission : {data?.commission}
               </Text>
               <Text
                 style={{
@@ -186,7 +188,7 @@ const PackageDetailsDutyReportUpdate = ({
                   fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
-                Rs 246
+                Rs {data?.commision_amount}
               </Text>
             </View>
             <View
@@ -214,7 +216,7 @@ const PackageDetailsDutyReportUpdate = ({
                   fontFamily: AppFont.regularFont,
                   fontSize: 13,
                 }}>
-                Rs 985
+                Rs {data?.supply_cost}
               </Text>
             </View>
             <View
@@ -245,17 +247,14 @@ const PackageDetailsDutyReportUpdate = ({
                     fontFamily: AppFont.regularFont,
                     fontWeight: 'bold',
                   }}>
-                  Overtime Charges- Rs 2 Per Minute
+                  {data?.Overtime_Charges}
                 </Text>
               </View>
 
               <View style={styles.container}>
                 <View style={styles.bullet} />
                 <View style={styles.textContainer}>
-                  <Text style={styles.text}>
-                    Night Charges - Rs 200 Applied only incase you travel in
-                    between 10:00 PM to 06:00 AM
-                  </Text>
+                  <Text style={styles.text}>{data?.Night_Charges}</Text>
                 </View>
               </View>
 
@@ -280,11 +279,16 @@ const PackageDetailsDutyReportUpdate = ({
                     fontFamily: AppFont.regularFont,
                     fontWeight: 'bold',
                   }}>
-                  Return to TAT D- Rs. 307
+                  {data?.return_to_tatd}
                 </Text>
               </View>
             </View>
-            <View style={{borderBottomWidth: 1, borderColor: '#808080'}}></View>
+            <View
+              style={{
+                borderBottomWidth: 1,
+                borderColor: AppColors.gray,
+              }}
+            />
           </View>
 
           {/* bottam content button  */}

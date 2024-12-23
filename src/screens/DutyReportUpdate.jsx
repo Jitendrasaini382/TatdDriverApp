@@ -22,56 +22,70 @@ import SwipeableButton from '../components/SwipeableButton';
 import RadioButton from '../components/CustomRadioButton';
 import PackageDetailsDutyReportUpdate from '../components/modal/PackageDetailsDutyReportUpdate';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {GET_BOOKING_INFO, TALK_TO_CUSTOMER} from '../apis/Apis';
+import {
+  CUSTOMER_NOT_PICKUP_PHONE,
+  CUSTOMER_WANT_TO_CANCEL,
+  GET_BOOKING_INFO,
+  TALK_TO_CUSTOMER,
+} from '../apis/Apis';
 import {useSelector} from 'react-redux';
-import { useRoute } from '@react-navigation/native';
-
-// const RadioButtonWithTitle = ({booking}) => {
-//   const [selectedOption, setSelectedOption] = useState(null);
-
-//   const options = [
-//     {id: '1', label: 'Have you talked to the customer ?'},
-//     {id: '2', label: 'Is the customer not picking up the phone ?'},
-//     {id: '3', label: 'The customer wants to cancel ?'},
-//   ];
-
-//   const handleSelect = id => {
-//     setSelectedOption(id);
-
-//   };
-
-//   return (
-//     <View style={styles.radioButtonView}>
-//       {options.map(option => (
-//         <RadioButton
-//           key={option.id}
-//           label={option.label}
-//           selected={selectedOption === option.id}
-//           onSelect={() => handleSelect(option.id)}
-//         />
-//       ))}
-//     </View>
-//   );
-// };
 
 const RadioButtonWithTitle = ({booking}) => {
   const [selectedOption, setSelectedOption] = useState(null);
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  const [loader, setLoader] = useState(false);
+
+  console.log(booking, languageSwitch, 'radio button Booking');
 
   const talkToCustomer = async () => {
+    setLoader(true);
     try {
-      if (!booking?.booking_id) {
-        console.log('Invalid booking object: booking_id is missing');
-        return;
-      }
-
       const response = await TALK_TO_CUSTOMER({
         action: 'confirm_booking',
-        booking_number: booking.booking_id,
+        booking_number: booking,
+      });
+
+      console.log(response, 'talk to customer Api response');
+    } catch (error) {
+      setLoader(false);
+
+      console.log(error.message, 'talk to customer Api error - General Error');
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const notPickupPhoneCustomer = async () => {
+    setLoader(true);
+    try {
+      const response = await CUSTOMER_NOT_PICKUP_PHONE({
+        action: 'duty_report_send_sms',
+        booking_number: booking,
+        current_language: languageSwitch,
+        sub_status: 'Not Picking Call',
       });
 
       console.log(response, 'talk to customer Api response');
     } catch (error) {
       console.log(error.message, 'talk to customer Api error - General Error');
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const customerWantToCancel = async () => {
+    setLoader(true);
+    try {
+      const response = await CUSTOMER_WANT_TO_CANCEL({
+        action: 'duty_report_send_cancel_sms',
+        booking_number: booking,
+        sub_status: 'Cancel Booking',
+      });
+      console.log(response, 'talk to customer Api response');
+    } catch (error) {
+      console.log(error.message, 'talk to customer Api error - General Error');
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -82,20 +96,20 @@ const RadioButtonWithTitle = ({booking}) => {
   ];
 
   // Define functions for each option
-  const handleOption1 = () => {
-    console.log('Option 1 selected: Have you talked to the customer?');
-    // Add your logic here
-  };
+  // const handleOption1 = () => {
+  //   console.log('Option 1 selected: Have you talked to the customer?');
+  //   // Add your logic here
+  // };
 
-  const handleOption2 = () => {
-    console.log('Option 2 selected: Is the customer not picking up the phone?');
-    // Add your logic here
-  };
+  // const handleOption2 = () => {
+  //   console.log('Option 2 selected: Is the customer not picking up the phone?');
+  //   // Add your logic here
+  // };
 
-  const handleOption3 = () => {
-    console.log('Option 3 selected: The customer wants to cancel?');
-    // Add your logic here
-  };
+  // const handleOption3 = () => {
+  //   console.log('Option 3 selected: The customer wants to cancel?');
+  //   // Add your logic here
+  // };
 
   // Function to handle selection
   const handleSelect = id => {
@@ -108,10 +122,10 @@ const RadioButtonWithTitle = ({booking}) => {
         talkToCustomer();
         break;
       case '2':
-        handleOption2();
+        notPickupPhoneCustomer();
         break;
       case '3':
-        handleOption3();
+        customerWantToCancel();
         break;
       default:
         console.log('Invalid option selected');
@@ -132,165 +146,165 @@ const RadioButtonWithTitle = ({booking}) => {
   );
 };
 
-const CancelBooking = () => {
-  return (
-    <View
-      style={{
-        marginTop: 30,
-        padding: 10,
-      }}>
-      <View
-        style={{
-          borderColor: 'rgb(128,128,128)',
-          backgroundColor: AppColors.white,
-          borderWidth: 1,
-          borderStyle: 'solid',
-          borderRadius: 8,
-          lineHeight: 20,
-          shadowColor: 'rgb(128,128,128)',
-          shadowOffset: {width: 5, height: 4},
-          shadowOpacity: 5,
-          elevation: 5,
-          shadowRadius: 5,
-          marginBottom: 20,
-          padding: 10,
-        }}>
-        <View style={{padding: 14, alignItems: 'flex-start'}}>
-          <Text
-            style={{
-              textAlign: 'auto',
-              color: AppColors.black,
-              fontWeight: '700',
-              fontSize: 21,
-              fontFamily: 'Poppins',
-            }}>
-            Booking is Already Cancelled{' '}
-          </Text>
-        </View>
-      </View>
-    </View>
-  );
-};
+// const CancelBooking = () => {
+//   return (
+//     <View
+//       style={{
+//         marginTop: 30,
+//         padding: 10,
+//       }}>
+//       <View
+//         style={{
+//           borderColor: 'rgb(128,128,128)',
+//           backgroundColor: AppColors.white,
+//           borderWidth: 1,
+//           borderStyle: 'solid',
+//           borderRadius: 8,
+//           lineHeight: 20,
+//           shadowColor: 'rgb(128,128,128)',
+//           shadowOffset: {width: 5, height: 4},
+//           shadowOpacity: 5,
+//           elevation: 5,
+//           shadowRadius: 5,
+//           marginBottom: 20,
+//           padding: 10,
+//         }}>
+//         <View style={{padding: 14, alignItems: 'flex-start'}}>
+//           <Text
+//             style={{
+//               textAlign: 'auto',
+//               color: AppColors.black,
+//               fontWeight: '700',
+//               fontSize: 21,
+//               fontFamily: 'Poppins',
+//             }}>
+//             Booking is Already Cancelled{' '}
+//           </Text>
+//         </View>
+//       </View>
+//     </View>
+//   );
+// };
 
-const AcceptBooking = ({modalShow, booking}) => {
-  const [packageDetailsDutyReportUpdate, setPackageDetailsDutyReportUpdate] =
-    useState(false);
+// const AcceptBooking = ({modalShow, booking}) => {
+//   const [packageDetailsDutyReportUpdate, setPackageDetailsDutyReportUpdate] =
+//     useState(false);
 
-  const handleSwipe = () => {
-    modalShow();
-  };
+//   const handleSwipe = () => {
+//     modalShow();
+//   };
 
-  const openPhoneDialer = () => {
-    const phoneNumber = '9810360792';
-    let url = `tel:${phoneNumber}`;
+//   const openPhoneDialer = () => {
+//     const phoneNumber = '9810360792';
+//     let url = `tel:${phoneNumber}`;
 
-    Linking.openURL(url)
-      .then(() => console.log('Phone dialer opened successfully'))
-      .catch(err => {
-        console.error('Error opening phone dialer:', err);
-      });
-  };
+//     Linking.openURL(url)
+//       .then(() => console.log('Phone dialer opened successfully'))
+//       .catch(err => {
+//         console.error('Error opening phone dialer:', err);
+//       });
+//   };
 
-  return (
-    <ScrollView>
-      <View style={styles.mainView}>
-        {/* top */}
-        <View style={styles.topSection}>
-          <Text style={styles.interviewTimeText}>
-            Interview Time- {booking.booking_date}
-          </Text>
-        </View>
-        <View style={styles.bookingSection}>
-          <View>
-            <Text style={styles.bookingNoText}>Booking No : #431062</Text>
-          </View>
-          <TouchableOpacity
-            onPress={() => setPackageDetailsDutyReportUpdate(true)}
-            style={styles.packageDetailsButton}>
-            <Text style={styles.packageDetailsText}>Package Details</Text>
-          </TouchableOpacity>
-        </View>
-        <Modal
-          transparent={true}
-          animationType="slide"
-          visible={packageDetailsDutyReportUpdate}
-          onRequestClose={() => setPackageDetailsDutyReportUpdate(false)}>
-          <PackageDetailsDutyReportUpdate
-            setPackageDetailsDutyReportUpdate={
-              setPackageDetailsDutyReportUpdate
-            }
-            // tripDetails={selectedTrip}
-          />
-        </Modal>
-        {/* middle */}
-        <View style={styles.middleSection}>
-          <View style={styles.nameTypeContainer}>
-            <Text style={styles.nameText}>Sagar Saxena</Text>
-            <Text style={styles.typeText}>Permanent</Text>
-          </View>
-          <View style={styles.addressCallContainer}>
-            <View>
-              <View style={styles.addressContainer}>
-                <Image
-                  source={Address}
-                  resizeMode="contain"
-                  style={styles.addressIcon}
-                />
-                <Text style={styles.addressText}>D-51 A 2nd Floor</Text>
-              </View>
-              <View style={styles.addressContainer}>
-                <Image
-                  source={Address}
-                  resizeMode="contain"
-                  style={styles.addressIcon}
-                />
-                <Text style={styles.addressText}>Noida Floor</Text>
-              </View>
-            </View>
+//   return (
+//     <ScrollView style={{flex: 1}}>
+//       <View style={styles.mainView}>
+//         {/* top */}
+//         <View style={styles.topSection}>
+//           <Text style={styles.interviewTimeText}>
+//             Interview Time- {booking.booking_date}
+//           </Text>
+//         </View>
+//         <View style={styles.bookingSection}>
+//           <View>
+//             <Text style={styles.bookingNoText}>Booking No : #431062</Text>
+//           </View>
+//           <TouchableOpacity
+//             onPress={() => setPackageDetailsDutyReportUpdate(true)}
+//             style={styles.packageDetailsButton}>
+//             <Text style={styles.packageDetailsText}>Package Details</Text>
+//           </TouchableOpacity>
+//         </View>
+//         <Modal
+//           transparent={true}
+//           animationType="slide"
+//           visible={packageDetailsDutyReportUpdate}
+//           onRequestClose={() => setPackageDetailsDutyReportUpdate(false)}>
+//           <PackageDetailsDutyReportUpdate
+//             setPackageDetailsDutyReportUpdate={
+//               setPackageDetailsDutyReportUpdate
+//             }
+//             // tripDetails={selectedTrip}
+//           />
+//         </Modal>
+//         {/* middle */}
+//         <View style={styles.middleSection}>
+//           <View style={styles.nameTypeContainer}>
+//             <Text style={styles.nameText}>Sagar Saxena</Text>
+//             <Text style={styles.typeText}>Permanent</Text>
+//           </View>
+//           <View style={styles.addressCallContainer}>
+//             <View>
+//               <View style={styles.addressContainer}>
+//                 <Image
+//                   source={Address}
+//                   resizeMode="contain"
+//                   style={styles.addressIcon}
+//                 />
+//                 <Text style={styles.addressText}>D-51 A 2nd Floor</Text>
+//               </View>
+//               <View style={styles.addressContainer}>
+//                 <Image
+//                   source={Address}
+//                   resizeMode="contain"
+//                   style={styles.addressIcon}
+//                 />
+//                 <Text style={styles.addressText}>Noida Floor</Text>
+//               </View>
+//             </View>
 
-            <TouchableOpacity
-              style={styles.callingGif}
-              onPress={openPhoneDialer}>
-              {/* <View style={styles.callingGif}> */}
-              <Image
-                style={{width: '100%', height: '100%'}}
-                source={CallingGif}
-                resizeMode="cover"
-              />
-              {/* </View> */}
-            </TouchableOpacity>
-          </View>
-        </View>
+//             <TouchableOpacity
+//               style={styles.callingGif}
+//               onPress={openPhoneDialer}>
+//               {/* <View style={styles.callingGif}> */}
+//               <Image
+//                 style={{width: '100%', height: '100%'}}
+//                 source={CallingGif}
+//                 resizeMode="cover"
+//               />
+//               {/* </View> */}
+//             </TouchableOpacity>
+//           </View>
+//         </View>
 
-        {/* bottom */}
-        <View
-          style={{
-            elevation: 1,
-            borderRadius: 5,
-            borderWidth: 1,
-            backgroundColor: '#f7f7f7',
-            borderColor: '#ccc',
-            padding: 15,
-          }}>
-          <RadioButtonWithTitle booking={booking} />
-          <SwipeableButton onSwipe={handleSwipe} />
+//         {/* bottom */}
+//         <View
+//           style={{
+//             elevation: 1,
+//             borderRadius: 5,
+//             borderWidth: 1,
+//             backgroundColor: '#f7f7f7',
+//             borderColor: '#ccc',
+//             padding: 15,
+//           }}>
+//           <RadioButtonWithTitle booking={booking} />
+//           <SwipeableButton onSwipe={handleSwipe} />
 
-          <View style={{marginTop: 20}}>
-            <YoutubePlayer
-              height={200}
-              // autoPlay={false}
-              videoId={'SsG_qwb0zLs'}
-            />
-          </View>
-        </View>
-      </View>
-    </ScrollView>
-  );
-};
+//           <View style={{marginTop: 20}}>
+//             <YoutubePlayer
+//               height={200}
+//               // autoPlay={false}
+//               videoId={'SsG_qwb0zLs'}
+//             />
+//           </View>
+//         </View>
+//       </View>
+//     </ScrollView>
+//   );
+// };
 
 const DutyReportUpdate = ({route, navigation}) => {
   // const {booking} = route?.params;
-  const booking = "642971"
+  const booking = '642971';
 
   const [cancel, setCancel] = useState(false);
   const [modalVisibleOntheway, setModalVisibleOntheway] = useState(false);
@@ -304,17 +318,27 @@ const DutyReportUpdate = ({route, navigation}) => {
   const driverMobileNumber = useSelector(
     e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
   );
-  console.log(
-    booking,
-    'bookingbookingbookingbookingbookingbookingbookingbooking',
-  );
+
+  const [packageDetailsDutyReportUpdate, setPackageDetailsDutyReportUpdate] =
+    useState(false);
+
+  const handleSwipe = () => {
+    setModalVisibleOntheway(true);
+  };
+
+  const openPhoneDialer = () => {
+    const phoneNumber = '9810360792';
+    let url = `tel:${phoneNumber}`;
+
+    Linking.openURL(url)
+      .then(() => console.log('Phone dialer opened successfully'))
+      .catch(err => {
+        console.error('Error opening phone dialer:', err);
+      });
+  };
 
   const closeModal = () => {
     setModalVisibleOntheway(false);
-  };
-
-  const showModal = () => {
-    setModalVisibleOntheway(true);
   };
 
   useEffect(() => {
@@ -349,11 +373,139 @@ const DutyReportUpdate = ({route, navigation}) => {
       }}>
       <Header backButton={true} />
 
-      {cancel ? (
-        <CancelBooking />
-      ) : (
-        <AcceptBooking modalShow={showModal} booking={booking} />
-      )}
+      {
+        cancel ? (
+          <View
+            style={{
+              marginTop: 30,
+              padding: 10,
+            }}>
+            <View
+              style={{
+                borderColor: 'rgb(128,128,128)',
+                backgroundColor: AppColors.white,
+                borderWidth: 1,
+                borderStyle: 'solid',
+                borderRadius: 8,
+                lineHeight: 20,
+                shadowColor: 'rgb(128,128,128)',
+                shadowOffset: {width: 5, height: 4},
+                shadowOpacity: 5,
+                elevation: 5,
+                shadowRadius: 5,
+                marginBottom: 20,
+                padding: 10,
+              }}>
+              <View style={{padding: 14, alignItems: 'flex-start'}}>
+                <Text
+                  style={{
+                    textAlign: 'auto',
+                    color: AppColors.black,
+                    fontWeight: '700',
+                    fontSize: 21,
+                    fontFamily: 'Poppins',
+                  }}>
+                  Booking is Already Cancelled{' '}
+                </Text>
+              </View>
+            </View>
+          </View>
+        ) : (
+          <ScrollView style={{flex: 1}}>
+            <View style={styles.mainView}>
+              {/* top */}
+              <View style={styles.topSection}>
+                <Text style={styles.interviewTimeText}>
+                  Interview Time- {booking.booking_date}
+                </Text>
+              </View>
+              <View style={styles.bookingSection}>
+                <View>
+                  <Text style={styles.bookingNoText}>Booking No : #431062</Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => setPackageDetailsDutyReportUpdate(true)}
+                  style={styles.packageDetailsButton}>
+                  <Text style={styles.packageDetailsText}>Package Details</Text>
+                </TouchableOpacity>
+              </View>
+              <Modal
+                transparent={true}
+                animationType="slide"
+                visible={packageDetailsDutyReportUpdate}
+                onRequestClose={() => setPackageDetailsDutyReportUpdate(false)}>
+                <PackageDetailsDutyReportUpdate
+                  setPackageDetailsDutyReportUpdate={
+                    setPackageDetailsDutyReportUpdate
+                  }
+                  // tripDetails={selectedTrip}
+                />
+              </Modal>
+              {/* middle */}
+              <View style={styles.middleSection}>
+                <View style={styles.nameTypeContainer}>
+                  <Text style={styles.nameText}>Sagar Saxena</Text>
+                  <Text style={styles.typeText}>Permanent</Text>
+                </View>
+                <View style={styles.addressCallContainer}>
+                  <View>
+                    <View style={styles.addressContainer}>
+                      <Image
+                        source={Address}
+                        resizeMode="contain"
+                        style={styles.addressIcon}
+                      />
+                      <Text style={styles.addressText}>D-51 A 2nd Floor</Text>
+                    </View>
+                    <View style={styles.addressContainer}>
+                      <Image
+                        source={Address}
+                        resizeMode="contain"
+                        style={styles.addressIcon}
+                      />
+                      <Text style={styles.addressText}>Noida Floor</Text>
+                    </View>
+                  </View>
+
+                  <TouchableOpacity
+                    style={styles.callingGif}
+                    onPress={openPhoneDialer}>
+                    {/* <View style={styles.callingGif}> */}
+                    <Image
+                      style={{width: '100%', height: '100%'}}
+                      source={CallingGif}
+                      resizeMode="cover"
+                    />
+                    {/* </View> */}
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {/* bottom */}
+              <View
+                style={{
+                  elevation: 1,
+                  borderRadius: 5,
+                  borderWidth: 1,
+                  backgroundColor: '#f7f7f7',
+                  borderColor: '#ccc',
+                  padding: 15,
+                }}>
+                <RadioButtonWithTitle booking={booking} />
+                <SwipeableButton onSwipe={handleSwipe} />
+
+                <View style={{marginTop: 20}}>
+                  <YoutubePlayer
+                    height={200}
+                    // autoPlay={false}
+                    videoId={'SsG_qwb0zLs'}
+                  />
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+        )
+      }
 
       <Modal
         transparent={true}

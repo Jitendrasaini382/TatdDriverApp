@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import {AppColors} from '../../assets/Colors';
-import { AppFont } from '../../assets/FontsFamily';
+import {AppFont} from '../../assets/FontsFamily';
 
 const PackageDetailsDutyReportUpdate = ({
   setPackageDetailsDutyReportUpdate,
@@ -24,6 +24,7 @@ const PackageDetailsDutyReportUpdate = ({
             borderWidth: 2,
             borderRadius: 10,
             borderColor: AppColors.mainColor,
+            margin: 5,
           }}>
           {/* top content */}
 

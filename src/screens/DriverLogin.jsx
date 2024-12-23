@@ -149,7 +149,7 @@ const DriverLogin = () => {
     try {
       const info = await getSimInfo();
       setSimInfo(extractPhoneNumbers(info));
-      console.log(extractPhoneNumbers(info), 'fghjkkjhgfdfghj');
+      console.log(extractPhoneNumbers(info), 'Get numbers From Phone');
     } catch (err) {
       setSimInfo(['Please Allow The Permission']);
     }

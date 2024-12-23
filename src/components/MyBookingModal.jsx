@@ -22,9 +22,7 @@ const MyBookingModal = ({}) => {
   const [myBookingData, setMyBookingData] = useState({});
 
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
-  const languageSwitch = 'Hindi';
-
-  console.log(languageSwitch, 'my booking lang switchhhhhh');
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   useEffect(() => {
     getMyAllBookings();
@@ -86,7 +84,11 @@ const MyBookingModal = ({}) => {
                 ? myBookingData.bookings.map((booking, index) => (
                     <TouchableOpacity
                       key={index}
-                      onPress={() => navigation.navigate('DutyReportUpdate', {booking:booking})}
+                      onPress={() =>
+                        navigation.navigate('DutyReportUpdate', {
+                          booking: booking,
+                        })
+                      }
                       // onPress={() => navigation.navigate('DutyReportUpdateScreen')}
 
                       // onPress={() => openMyUrl(booking.url)}
@@ -117,12 +119,12 @@ const MyBookingModal = ({}) => {
       ) : (
         <>
           <View style={styles.bookingContainer}>
-            {console.log(decodedToken.driver_mobile_number, 'jwt dta')}
             {
               myBookingData.clear_my_due_bookings &&
               myBookingData.clear_my_due_bookings.length > 0
                 ? myBookingData.clear_my_due_bookings.map((booking, index) => (
                     <Pressable
+                      key={index}
                       onPress={() =>
                         openMyUrl(
                           `https://www.tatd.in/duty-report-login.php?action=dologin&driver_mobile_number=${decodedToken?.driver_mobile_number}&booking_number=${booking.booking_id}`,

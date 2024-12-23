@@ -7,6 +7,9 @@ import {
   Image,
   Linking,
   Pressable,
+  Modal,
+  TouchableWithoutFeedback,
+  FlatList,
 } from 'react-native';
 import {RightArrow} from '../assets/images';
 import {AppColors} from '../assets/Colors';
@@ -14,6 +17,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setMyBookingModal} from '../redux/slices/trustedDriverSlice';
 import {MY_BOOKING_TOP_NAVBAR} from '../apis/Apis';
 import {useNavigation} from '@react-navigation/native';
+import {Skeleton} from '@rneui/themed';
 
 const MyBookingModal = ({}) => {
   const navigation = useNavigation();
@@ -34,7 +38,9 @@ const MyBookingModal = ({}) => {
     Linking.openURL(url);
   };
 
+  const [loader, setLoader] = useState(false);
   const getMyAllBookings = () => {
+    setLoader(true);
     MY_BOOKING_TOP_NAVBAR({
       action: 'my_booking',
       current_language: languageSwitch,
@@ -45,142 +51,202 @@ const MyBookingModal = ({}) => {
       })
       .catch(err => {
         console.log(err, 'MY_BOOKING_TOP_NAVBAR erroraaaaaaaaa');
+      })
+      .finally(e => {
+        setLoader(false);
       });
   };
+  const myBookingModal = useSelector(
+    state => state.trustedDriverSlice.myBookingModal,
+  );
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => dispatch(setMyBookingModal(false))}>
-        <View style={styles.closeButtonContainer}>
-          <Text style={styles.closeButtonText}>x</Text>
+    <Modal transparent visible={myBookingModal}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => dispatch(setMyBookingModal(false))}
+        style={{flex: 1, position: 'relative'}}>
+        <View style={styles.container}>
+          <TouchableOpacity onPress={() => dispatch(setMyBookingModal(false))}>
+            <View style={styles.closeButtonContainer}>
+              <Text style={styles.closeButtonText}>x</Text>
+            </View>
+          </TouchableOpacity>
+
+          <View style={styles.tabContainer}>
+            <TouchableOpacity onPress={() => setMyBookingStyle(true)}>
+              <View
+                style={[styles.tabItem, myBookingStyle && styles.activeTab]}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    myBookingStyle && styles.activeTabText,
+                  ]}>
+                  {myBookingData.mybooking_txt}
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setMyBookingStyle(false)}>
+              <View
+                style={[styles.tabItem, !myBookingStyle && styles.activeTab]}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    !myBookingStyle && styles.activeTabText,
+                  ]}>
+                  {myBookingData.due_txt}
+                  {myBookingData.total}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          {loader && (
+            <FlatList
+              data={[{}, {}, {}]}
+              renderItem={({item, index}) => {
+                return (
+                  <>
+                    <Skeleton
+                      width={220}
+                      height={40}
+                      style={{
+                        borderRadius: 10,
+                        // backgroundColor: AppColors.white,
+                        // flexDirection: 'row',
+                        // alignItems: 'center',
+                        padding: 10,
+                        marginVertical: 5,
+                        marginHorizontal: 5,
+                        // justifyContent: 'space-between',
+                      }}
+                      animation={'wave'}
+                    />
+                  </>
+                );
+              }}
+            />
+          )}
+
+          {myBookingStyle && !loader ? (
+            <>
+              <View style={styles.bookingContainer}>
+                {
+                  myBookingData.bookings && myBookingData.bookings.length > 0
+                    ? myBookingData.bookings.map((booking, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() =>
+                            navigation.navigate('DutyReportUpdate', {
+                              booking: booking,
+                            })
+                          }
+                          // onPress={() => navigation.navigate('DutyReportUpdateScreen')}
+
+                          // onPress={() => openMyUrl(booking.url)}
+                        >
+                          <View
+                            style={[
+                              styles.bookingCard,
+                              {backgroundColor: booking.bg},
+                            ]}>
+                            <Text
+                              style={[
+                                styles.bookingText,
+                                {color: booking.color},
+                              ]}>
+                              {booking.booking_id} - {booking.booking_date}
+                              {/* 999 */}
+                            </Text>
+                            <Image
+                              resizeMode="center"
+                              style={styles.arrowIcon}
+                              source={RightArrow}
+                            />
+                          </View>
+                        </TouchableOpacity>
+                      ))
+                    : null
+                  // <Text>No bookings available</Text>
+                }
+              </View>
+            </>
+          ) : (
+            !loader && (
+              <>
+                <View style={styles.bookingContainer}>
+                  {
+                    myBookingData.clear_my_due_bookings &&
+                    myBookingData.clear_my_due_bookings.length > 0
+                      ? myBookingData.clear_my_due_bookings.map(
+                          (booking, index) => (
+                            <Pressable
+                              key={index}
+                              onPress={() =>
+                                openMyUrl(
+                                  `https://www.tatd.in/duty-report-login.php?action=dologin&driver_mobile_number=${decodedToken?.driver_mobile_number}&booking_number=${booking.booking_id}`,
+                                )
+                              }>
+                              <View
+                                style={[
+                                  styles.bookingCard,
+                                  styles.activeBookingCard,
+                                ]}>
+                                <Text
+                                  style={[
+                                    styles.bookingText,
+                                    styles.activeBookingText,
+                                    {fontWeight: '700'},
+                                  ]}>
+                                  {booking.booking_id}
+                                </Text>
+                                <Text
+                                  style={[
+                                    styles.bookingText,
+                                    styles.activeBookingText,
+                                    {fontWeight: '700'},
+                                  ]}>
+                                  {'        '}+ {booking.amount}
+                                </Text>
+                                <Image
+                                  resizeMode="center"
+                                  style={styles.arrowIcon}
+                                  source={RightArrow}
+                                />
+                              </View>
+                            </Pressable>
+                          ),
+                        )
+                      : null
+                    // <Text>No bookings available</Text>
+                  }
+
+                  <Pressable
+                    onPress={() =>
+                      openMyUrl(
+                        `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                      )
+                    }>
+                    <View
+                      style={[styles.bookingCard, styles.activeBookingCard]}>
+                      <Text
+                        style={[styles.bookingText, styles.activeBookingText]}>
+                        {myBookingData.clear_my_due_txt}
+                      </Text>
+                      <Image
+                        resizeMode="center"
+                        style={styles.arrowIcon}
+                        source={RightArrow}
+                      />
+                    </View>
+                  </Pressable>
+                </View>
+              </>
+            )
+          )}
         </View>
       </TouchableOpacity>
-
-      <View style={styles.tabContainer}>
-        <TouchableOpacity onPress={() => setMyBookingStyle(true)}>
-          <View style={[styles.tabItem, myBookingStyle && styles.activeTab]}>
-            <Text
-              style={[styles.tabText, myBookingStyle && styles.activeTabText]}>
-              {myBookingData.mybooking_txt}
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setMyBookingStyle(false)}>
-          <View style={[styles.tabItem, !myBookingStyle && styles.activeTab]}>
-            <Text
-              style={[styles.tabText, !myBookingStyle && styles.activeTabText]}>
-              {myBookingData.due_txt}
-              {myBookingData.total}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-
-      {myBookingStyle ? (
-        <>
-          <View style={styles.bookingContainer}>
-            {
-              myBookingData.bookings && myBookingData.bookings.length > 0
-                ? myBookingData.bookings.map((booking, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() =>
-                        navigation.navigate('DutyReportUpdate', {
-                          booking: booking,
-                        })
-                      }
-                      // onPress={() => navigation.navigate('DutyReportUpdateScreen')}
-
-                      // onPress={() => openMyUrl(booking.url)}
-                    >
-                      <View
-                        style={[
-                          styles.bookingCard,
-                          {backgroundColor: booking.bg},
-                        ]}>
-                        <Text
-                          style={[styles.bookingText, {color: booking.color}]}>
-                          {booking.booking_id} - {booking.booking_date}
-                          {/* 999 */}
-                        </Text>
-                        <Image
-                          resizeMode="center"
-                          style={styles.arrowIcon}
-                          source={RightArrow}
-                        />
-                      </View>
-                    </TouchableOpacity>
-                  ))
-                : null
-              // <Text>No bookings available</Text>
-            }
-          </View>
-        </>
-      ) : (
-        <>
-          <View style={styles.bookingContainer}>
-            {
-              myBookingData.clear_my_due_bookings &&
-              myBookingData.clear_my_due_bookings.length > 0
-                ? myBookingData.clear_my_due_bookings.map((booking, index) => (
-                    <Pressable
-                      key={index}
-                      onPress={() =>
-                        openMyUrl(
-                          `https://www.tatd.in/duty-report-login.php?action=dologin&driver_mobile_number=${decodedToken?.driver_mobile_number}&booking_number=${booking.booking_id}`,
-                        )
-                      }>
-                      <View
-                        style={[styles.bookingCard, styles.activeBookingCard]}>
-                        <Text
-                          style={[
-                            styles.bookingText,
-                            styles.activeBookingText,
-                            {fontWeight: '700'},
-                          ]}>
-                          {booking.booking_id}
-                        </Text>
-                        <Text
-                          style={[
-                            styles.bookingText,
-                            styles.activeBookingText,
-                            {fontWeight: '700'},
-                          ]}>
-                          {'        '}+ {booking.amount}
-                        </Text>
-                        <Image
-                          resizeMode="center"
-                          style={styles.arrowIcon}
-                          source={RightArrow}
-                        />
-                      </View>
-                    </Pressable>
-                  ))
-                : null
-              // <Text>No bookings available</Text>
-            }
-
-            <Pressable
-              onPress={() =>
-                openMyUrl(
-                  `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                )
-              }>
-              <View style={[styles.bookingCard, styles.activeBookingCard]}>
-                <Text style={[styles.bookingText, styles.activeBookingText]}>
-                  {myBookingData.clear_my_due_txt}
-                </Text>
-                <Image
-                  resizeMode="center"
-                  style={styles.arrowIcon}
-                  source={RightArrow}
-                />
-              </View>
-            </Pressable>
-          </View>
-        </>
-      )}
-    </View>
+    </Modal>
   );
 };
 
@@ -199,7 +265,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 5,
-    zIndex: 1000,
+    // zIndex: 1000,
     backgroundColor: 'grey',
     borderRadius: 8,
     overflow: 'hidden',

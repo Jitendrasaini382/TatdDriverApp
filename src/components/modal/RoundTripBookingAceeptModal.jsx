@@ -9,21 +9,34 @@ import {
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {ON_DEMAND_BOOKING} from '../../apis/Apis';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
 const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
+  const navigation = useNavigation();
   const [checked1, setChecked1] = useState(false);
   const [checked2, setChecked2] = useState(false);
   const [driverConsent, setDriverConsent] = useState({});
-  const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
-  console.log(trip, "popuop datatattatatat");
+  console.log(trip, 'popuop datatattatatat');
 
-  const {booking_number, incentive, incentive_eligibility_fullfillment, incentive_eligible_amount_fullfillment, driver_assignment_in_10_minutes_incentive} = trip
- 
-  
-  console.log(booking_number, incentive, incentive_eligibility_fullfillment, incentive_eligible_amount_fullfillment, driver_assignment_in_10_minutes_incentive, "all recieve Data");
-  
+  const {
+    booking_number,
+    incentive,
+    incentive_eligibility_fullfillment,
+    incentive_eligible_amount_fullfillment,
+    driver_assignment_in_10_minutes_incentive,
+  } = trip;
+
+  console.log(
+    booking_number,
+    incentive,
+    incentive_eligibility_fullfillment,
+    incentive_eligible_amount_fullfillment,
+    driver_assignment_in_10_minutes_incentive,
+    'all recieve Data',
+  );
 
   useEffect(() => {
     driverConsentPopupView();
@@ -46,8 +59,9 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
     }
   };
 
-  const acceptBooking = async ()=>{
-    console.log("final accepttttt");
+  const acceptBooking = async () => {
+    console.log('final accepttttt');
+    navigation.navigate('DutyReportUpdate', {booking: booking_number});
     // try {
     //   const response = await ON_DEMAND_BOOKING({
     //     action: 'ondemand_driver_consent_popup_view',
@@ -63,9 +77,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
     // } catch (error) {
     //   console.log(error, 'ondemand_driver_consent_popup_view Error');
     // }
-    
-  }
-
+  };
 
   return (
     <View style={styles.container}>
@@ -117,9 +129,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
         </View>
       </View>
       <TouchableOpacity
-        onPress={() => 
-          acceptBooking()
-        }
+        onPress={() => acceptBooking()}
         disabled={!(checked1 && checked2)}
         style={[
           styles.acceptButton,

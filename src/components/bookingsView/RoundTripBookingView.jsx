@@ -12,7 +12,7 @@ import {AppColors} from '../../assets/Colors';
 // import Modal from 'react-native-modal';
 import RoundTripBookingAceeptModal from '../modal/RoundTripBookingAceeptModal';
 import {ON_DEMAND_BOOKING} from '../../apis/Apis';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 
 const TripCard = ({trip}) => {
   // console.log(trip, 'jjjjjjjjjjjj');
@@ -22,7 +22,11 @@ const TripCard = ({trip}) => {
     <View style={styles.card}>
       <View style={styles.header}>
         <Text style={styles.time}>
-          {trip.Btime} <Text style={{fontSize: 15}}>{trip.BDate}</Text>
+          {trip.Btime} <Text style={{fontSize: 16}}>{trip.BDate}</Text>{' '}
+          <Icon color={AppColors.white} name="car" size={17} />{' '}
+          <Text style={styles.vehicleType}>
+            {trip.vehicle_type} {trip.vehicle_model}
+          </Text>
         </Text>
         <View
           style={{
@@ -30,12 +34,7 @@ const TripCard = ({trip}) => {
             justifyContent: 'center',
             flexDirection: 'row',
             // padding: 10,
-          }}>
-          <Icon color={AppColors.white} name="car" />
-          <Text style={styles.vehicleType}>
-            {trip.vehicle_type} {trip.vehicle_model}
-          </Text>
-        </View>
+          }}></View>
       </View>
       <View style={styles.contentWrapper}>
         <View style={styles.leftContent}>
@@ -79,29 +78,41 @@ const TripCard = ({trip}) => {
           <View style={styles.paymentDetails}>
             {/* {console.log(trip.incentive_eligibility_fullfillment) } */}
             {trip.night_charge > 0 ? (
-              <View style={[styles.incentiveBox, {backgroundColor : "#FF8C00"}]}>
-                <Text style={[styles.incentiveText, {color :AppColors.white}]}>
+              <View style={[styles.incentiveBox, {backgroundColor: '#FF8C00'}]}>
+                <Text style={[styles.incentiveText, {color: AppColors.white}]}>
                   + ₹ {trip.night_charge} Night Charge
                 </Text>
               </View>
             ) : null}
             {trip.surge > 0 ? (
-              <View style={[styles.incentiveBox, {backgroundColor : AppColors.orange}]}>
-                <Text style={[styles.incentiveText, {color :AppColors.white}]}>
+              <View
+                style={[
+                  styles.incentiveBox,
+                  {backgroundColor: AppColors.orange},
+                ]}>
+                <Text style={[styles.incentiveText, {color: AppColors.white}]}>
                   + ₹ {trip.surge} Surge
                 </Text>
               </View>
             ) : null}
             {trip.chauffeur_service > 0 ? (
-              <View style={[styles.incentiveBox, {backgroundColor : AppColors.orange}]}>
-                <Text style={[styles.incentiveText, {color :AppColors.white}]}>
+              <View
+                style={[
+                  styles.incentiveBox,
+                  {backgroundColor: AppColors.orange},
+                ]}>
+                <Text style={[styles.incentiveText, {color: AppColors.white}]}>
                   + ₹ {trip.chauffeur_service} Chauffeur Service
                 </Text>
               </View>
             ) : null}
             {trip.washing_service > 0 ? (
-              <View style={[styles.incentiveBox, {backgroundColor : AppColors.orange}]}>
-                <Text style={[styles.incentiveText, {color :AppColors.white}]}>
+              <View
+                style={[
+                  styles.incentiveBox,
+                  {backgroundColor: AppColors.orange},
+                ]}>
+                <Text style={[styles.incentiveText, {color: AppColors.white}]}>
                   + ₹ {trip.washing_service} Washing Service
                 </Text>
               </View>
@@ -121,7 +132,7 @@ const TripCard = ({trip}) => {
               </View>
             ) : null}
 
-              {trip.incentive_eligible_amount_fullfillment > 0 ? (
+            {trip.incentive_eligible_amount_fullfillment > 0 ? (
               <View style={styles.incentiveBox}>
                 <Text style={styles.incentiveText}>
                   + Incentive ₹ {trip.incentive_eligible_amount_fullfillment}
@@ -148,7 +159,10 @@ const TripCard = ({trip}) => {
             transparent={false}
             onRequestClose={() => setOpenModal(false)}
             visible={openModal}>
-            <RoundTripBookingAceeptModal setOpenModal={setOpenModal} trip={trip} />
+            <RoundTripBookingAceeptModal
+              setOpenModal={setOpenModal}
+              trip={trip}
+            />
           </Modal>
           {/* <Modal
             backdropOpacity={.6}
@@ -171,9 +185,7 @@ const RoundTripBookingView = () => {
     [],
   );
 
-
-  const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
-
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   const getIncityOneWayBookings = async data => {
     console.log(data, 'runnnnnnnnnnn');
@@ -268,7 +280,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   vehicleType: {
-    fontSize: 17,
+    fontSize: 18,
     color: AppColors.white,
     marginLeft: 6,
   },
@@ -344,4 +356,3 @@ const styles = StyleSheet.create({
 });
 
 export default RoundTripBookingView;
-

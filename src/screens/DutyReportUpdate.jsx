@@ -422,7 +422,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                 </Text>
               </View>
               <View style={styles.addressCallContainer}>
-                <View>
+                <View style={{flex: 1}}>
                   {bookingInfo?.data?.pickup_address && (
                     <View style={styles.addressContainer}>
                       <Image
@@ -450,19 +450,21 @@ const DutyReportUpdate = ({route, navigation}) => {
                   )}
                 </View>
 
-                <TouchableOpacity
-                  style={styles.callingGif}
-                  onPress={() => {
-                    openPhoneDialer(bookingInfo?.data?.circle_phone);
-                  }}>
-                  {/* <View style={styles.callingGif}> */}
-                  <Image
-                    style={{width: '100%', height: '100%'}}
-                    source={CallingGif}
-                    resizeMode="cover"
-                  />
-                  {/* </View> */}
-                </TouchableOpacity>
+                <View style={{flex: 0.2, alignItems: 'flex-end'}}>
+                  <TouchableOpacity
+                    style={styles.callingGif}
+                    onPress={() => {
+                      openPhoneDialer(bookingInfo?.data?.circle_phone);
+                    }}>
+                    {/* <View style={styles.callingGif}> */}
+                    <Image
+                      style={{width: '100%', height: '100%'}}
+                      source={CallingGif}
+                      resizeMode="cover"
+                    />
+                    {/* </View> */}
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
 

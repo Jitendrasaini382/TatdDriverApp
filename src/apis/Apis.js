@@ -334,7 +334,39 @@ export const RATE_US_SOCIAL_MEDIA = body => {
 
 // https://www.tatd.in/app-api/driver/duty-report/duty_report_booking_info_api.php
 
-
 export const PACKAGE_DETAILS_DUTY_REPORT = body => {
   return _Fetch('POST', 'duty-report/package-detail-api.php', {...body}, {});
+};
+
+// https://www.tatd.in/app-api/driver/duty-report/duty_report_booking_accept.php
+
+export const DUTY_REPORT_BOOKING_ACCEPT = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/duty_report_booking_accept.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/duty-report/duty_report_trip_status_popup_view.php
+
+export const DUTY_REPORT_TRIP_STATUS_POPUP_VIEW = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/duty_report_trip_status_popup_view.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/duty-report/rate_your_customer_insert_api.php
+
+export const RATE_YOUR_CUSTOMER = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/rate_your_customer_insert_api.php',
+    {...body},
+    {},
+  );
 };

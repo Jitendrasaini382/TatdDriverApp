@@ -25,6 +25,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   CUSTOMER_NOT_PICKUP_PHONE,
   CUSTOMER_WANT_TO_CANCEL,
+  DUTY_REPORT_BOOKING_ACCEPT,
+  DUTY_REPORT_TRIP_STATUS_POPUP_VIEW,
   GET_BOOKING_INFO,
   PACKAGE_DETAILS_DUTY_REPORT,
   TALK_TO_CUSTOMER,
@@ -42,8 +44,6 @@ const DutyReportUpdate = ({route, navigation}) => {
   const {booking, tripStatus} = route?.params;
   console.log(booking, 'bookingggg');
   console.log(tripStatus, 'trip status');
-
-  // const booking = '642971';
 
   const [cancel, setCancel] = useState(false);
   const [modalVisibleOntheway, setModalVisibleOntheway] = useState(false);
@@ -66,7 +66,10 @@ const DutyReportUpdate = ({route, navigation}) => {
         action: 'confirm_booking',
         booking_number: booking,
       });
-      console.log(response,"talkToCustomer API uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu ")
+      console.log(
+        response,
+        'talkToCustomer API uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu ',
+      );
       GetAllBookingInfo();
       console.log(response, 'talk to customer Api response');
     } catch (error) {
@@ -105,7 +108,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         booking_id: booking,
         sub_status: 'Cancel Booking',
       });
-      GetAllBookingInfo()
+      GetAllBookingInfo();
       console.log(response, 'talk to customer Api response');
     } catch (error) {
       console.log(error.message, 'talk to customer Api error - General Error');
@@ -157,9 +160,9 @@ const DutyReportUpdate = ({route, navigation}) => {
     }
   };
   // const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
-  const driverMobileNumber = useSelector(
-    e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
-  );
+  // const driverMobileNumber = useSelector(
+  //   e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
+  // );
 
   const [packageDetailsDutyReportUpdate, setPackageDetailsDutyReportUpdate] =
     useState(false);
@@ -190,11 +193,6 @@ const DutyReportUpdate = ({route, navigation}) => {
 
   const GetAllBookingInfo = async () => {
     try {
-      // if (!booking?.booking_id) {
-      //   console.log('Invalid booking object: booking_id is missing');
-      //   return;
-      // }
-
       const response = await GET_BOOKING_INFO({
         action: 'duty_report_booking_info',
         booking_id: booking,
@@ -232,12 +230,48 @@ const DutyReportUpdate = ({route, navigation}) => {
         booking_number: booking,
       });
 
-      console.log(response, 'talk to customer Api response');
+      console.log(response, 'packageDetails Api response');
       setPackageDetailsData(response);
     } catch (error) {
       setLoader(false);
 
-      console.log(error.message, 'talk to customer Api error - General Error');
+      console.log(error.message, 'packageDetails Api error - General Error');
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const dutyReportBookingAccept = async () => {
+    setLoader(true);
+    try {
+      const response = await DUTY_REPORT_BOOKING_ACCEPT({
+        action: 'duty_report_booking_accept',
+        booking_id: booking,
+        current_language: languageSwitch,
+        trip_status: 10,
+      });
+
+      console.log(response, 'dutyReportBookingAccept Api response');
+    } catch (error) {
+      console.log(error, 'dutyReportBookingAccept Api error - General Error');
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const dutyReportTripStatusPopup = async () => {
+    setLoader(true);
+    try {
+      const response = await DUTY_REPORT_TRIP_STATUS_POPUP_VIEW({
+        action: 'duty_report_trip_status_popup_view',
+        booking_id: booking,
+        booking_status_id: '15',
+        current_language: languageSwitch,
+      });
+
+      console.log(response, 'dutyReportTripStatusPopup Api response');
+    } catch (error) {
+      console.log(error, 'dutyReportTripStatusPopup Api error - General Error');
     } finally {
       setLoader(false);
     }

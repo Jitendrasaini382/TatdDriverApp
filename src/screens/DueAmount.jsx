@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Image,
   SafeAreaView,
-  Linking,
 } from 'react-native';
 import Header from '../components/Header';
 import {Triangle_Icon} from '../assets/images';
@@ -20,7 +19,7 @@ const DueAmount = ({route, navigation}) => {
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   useEffect(() => {
-    getDueAmount('643069');
+    getDueAmount(646092);
   }, []);
 
   const getDueAmount = async bookingNumber => {

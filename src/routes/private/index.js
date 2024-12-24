@@ -32,6 +32,7 @@ import Feedback from '../../screens/RateUsAtSocialMedia';
 import {useSelector} from 'react-redux';
 import DueAmountDetails from '../../screens/DueAmountDetails';
 import RateUsAtSocialMedia from '../../screens/RateUsAtSocialMedia';
+import DueAmount from '../../screens/DueAmount';
 
 const Stack = createStackNavigator();
 
@@ -104,7 +105,8 @@ const PrivateRoute = () => {
           <Stack.Screen name="AgentKyc" component={AgentKyc} />
           <Stack.Screen name="AgentTrainig" component={AgentTrainig} />
           <Stack.Screen name="AgentWallet" component={AgentWallet} />
-
+          <Stack.Screen name="DueAmount" component={DueAmount} />
+          
           <Stack.Screen
             name="RateUsAtSocialMedia"
             component={RateUsAtSocialMedia}

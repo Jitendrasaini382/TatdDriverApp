@@ -23,8 +23,11 @@ import RadioButton from '../components/CustomRadioButton';
 import PackageDetailsDutyReportUpdate from '../components/modal/PackageDetailsDutyReportUpdate';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
+  CHECK_IS_BOOKING_IS_UPCOMMING,
   CUSTOMER_NOT_PICKUP_PHONE,
   CUSTOMER_WANT_TO_CANCEL,
+  DRIVER_BOOKING_REACH,
+  DRIVER_ON_THE_WAY,
   DUTY_REPORT_BOOKING_ACCEPT,
   DUTY_REPORT_TRIP_STATUS_POPUP_VIEW,
   GET_BOOKING_INFO,
@@ -41,9 +44,13 @@ import {useSelector} from 'react-redux';
 // };
 
 const DutyReportUpdate = ({route, navigation}) => {
-  const {booking, tripStatus, state} = route?.params;
-  console.log(booking, 'bookingggg');
-  console.log(tripStatus, 'trip status');
+  const {
+    bookingNumber,
+    //  tripStatus,
+    state,
+  } = route?.params;
+  console.log(bookingNumber, 'bookingggg');
+  // console.log(tripStatus, 'trip status');
 
   const [cancel, setCancel] = useState(false);
   const [completeBooking, setCompleteBooking] = useState(false);
@@ -58,14 +65,14 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [loader, setLoader] = useState(false);
 
-  console.log(booking, languageSwitch, 'radio button Booking');
+  console.log(bookingNumber, languageSwitch, 'radio button Booking');
 
   const talkToCustomer = async () => {
     setLoader(true);
     try {
       const response = await TALK_TO_CUSTOMER({
         action: 'confirm_booking',
-        booking_number: booking,
+        booking_number: bookingNumber,
       });
       console.log(
         response,
@@ -87,7 +94,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     try {
       const response = await CUSTOMER_NOT_PICKUP_PHONE({
         action: 'duty_report_send_sms',
-        booking_id: booking,
+        booking_id: bookingNumber,
         current_language: languageSwitch,
         sub_status: 'Not Picking Call',
       });
@@ -106,7 +113,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     try {
       const response = await CUSTOMER_WANT_TO_CANCEL({
         action: 'duty_report_send_cancel_sms',
-        booking_id: booking,
+        booking_id: bookingNumber,
         sub_status: 'Cancel Booking',
       });
       GetAllBookingInfo();
@@ -170,7 +177,10 @@ const DutyReportUpdate = ({route, navigation}) => {
 
   const [bookingInfo, setbookingInfo] = useState({});
   const handleSwipe = () => {
-    setModalVisibleOntheway(true);
+    if (bookingInfo?.condition?.next_booking_status_name == 'End') {
+      setModalVisibleEnd(true);
+    }
+    // setModalVisibleOntheway(true);
   };
 
   const openPhoneDialer = phoneNumber => {
@@ -198,22 +208,27 @@ const DutyReportUpdate = ({route, navigation}) => {
     try {
       const response = await GET_BOOKING_INFO({
         action: 'duty_report_booking_info',
-        booking_id: booking,
+        booking_id: bookingNumber,
         current_language: languageSwitch,
-        trip_status: tripStatus,
+        // trip_status: 0,
       });
 
-      console.log(
-        {
-          action: 'duty_report_booking_info',
-          booking_id: booking,
-          current_language: languageSwitch,
-          trip_status: tripStatus,
-        },
-        'send action',
-      );
+      // console.log(
+      //   {
+      //     action: 'duty_report_booking_info',
+      //     booking_id: bookingNumber,
+      //     current_language: languageSwitch,
+      //     // trip_status: tripStatus,
+      //   },
+      //   'send action',
+      // );
 
       setbookingInfo(response?.duty_report_booking_info);
+
+      // console.log(
+      //   response?.duty_report_booking_info,
+      //   'GetAllBookingInfo success',
+      // );
       console.log(
         response?.duty_report_booking_info,
         'GetAllBookingInfo Api response',
@@ -230,7 +245,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     setLoader(true);
     try {
       const response = await PACKAGE_DETAILS_DUTY_REPORT({
-        booking_number: booking,
+        booking_number: bookingNumber,
       });
 
       console.log(response, 'packageDetails Api response');
@@ -249,7 +264,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     try {
       const response = await DUTY_REPORT_BOOKING_ACCEPT({
         action: 'duty_report_booking_accept',
-        booking_id: booking,
+        booking_id: bookingNumber,
         current_language: languageSwitch,
         trip_status: 10,
       });
@@ -267,7 +282,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     try {
       const response = await DUTY_REPORT_TRIP_STATUS_POPUP_VIEW({
         action: 'duty_report_trip_status_popup_view',
-        booking_id: booking,
+        booking_id: bookingNumber,
         booking_status_id: '15',
         current_language: languageSwitch,
       });
@@ -277,6 +292,80 @@ const DutyReportUpdate = ({route, navigation}) => {
       console.log(error, 'dutyReportTripStatusPopup Api error - General Error');
     } finally {
       setLoader(false);
+    }
+  };
+  const isBookingUpcomming = async () => {
+    try {
+      const res = await CHECK_IS_BOOKING_IS_UPCOMMING({
+        action: 'check_future_booking',
+        booking_id: bookingNumber,
+        current_language: languageSwitch,
+      });
+
+      if (res?.upcoming_booking_data?.upcoming_booking_eligibility == 1) {
+        Alert.alert(res?.upcoming_booking_data?.upcoming_booking_error_msg);
+        return false;
+      } else {
+        driverOnTheWay();
+      }
+      console.log(res, 'isBookingChkApi Responseeeeeeeeeeeeeeeeeeee');
+    } catch (err) {
+      console.log(err, 'isBookingUpcommingApiErrrrrrrr');
+    }
+  };
+  const driverOnTheWay = async () => {
+    // console.log(
+    //   {
+    //     action: 'duty_report_booking_ontheway',
+    //     booking_id: bookingNumber,
+    //     current_language: languageSwitch,
+    //     trip_status: bookingInfo?.condition?.next_booking_status_id,
+    //   },
+    //   'on the way body data',
+    // );
+    // return false
+    try {
+      const onTheWayApi = await DRIVER_ON_THE_WAY({
+        action: 'duty_report_booking_ontheway',
+        booking_id: bookingNumber,
+        current_language: languageSwitch,
+        trip_status: 15,
+      });
+
+      // console.log({
+      //   action: 'duty_report_booking_ontheway',
+      //   booking_id: bookingNumber,
+      //   current_language: languageSwitch,
+      //   trip_status: bookingInfo?.condition?.next_booking_status_id,
+      // }," send on the way action");
+
+      console.log(
+        onTheWayApi,
+        'onTheWayApi Responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee ',
+      );
+      GetAllBookingInfo();
+      setModalVisibleOntheway(false), setModalVisibleRich(true);
+    } catch (err) {
+      console.log(
+        err,
+        'onTheWayApi Response errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',
+      );
+    }
+  };
+
+  const driverBookingReach = async () => {
+    try {
+      const res = await DRIVER_BOOKING_REACH({
+        action: 'duty_report_booking_reach',
+        booking_id: bookingNumber,
+        current_language: languageSwitch,
+        trip_status: bookingInfo?.condition?.next_booking_status_id,
+      });
+      console.log(res, 'duty_report_booking_reach Responseeeeee');
+      setModalVisibleRich(false);
+      setModalVisibleinput(true);
+    } catch (err) {
+      console.log(err, 'duty_report_booking_reach Errrrrrrrrrrrrrrrr');
     }
   };
 
@@ -325,7 +414,7 @@ const DutyReportUpdate = ({route, navigation}) => {
             </View>
           </View>
         </View>
-      ) : state === 'complete' ? (
+      ) : bookingInfo?.condition?.eligibility_view_invoice == 1 ? (
         <View
           style={{
             backgroundColor: '#fff',
@@ -346,7 +435,8 @@ const DutyReportUpdate = ({route, navigation}) => {
               marginBottom: 10,
               textAlign: 'center',
             }}>
-            Duty Time - 11:30 AM, 17 Dec, 2024
+            {bookingInfo?.data?.duty_time_heading}{' '}
+            {bookingInfo?.data?.duty_time_text}
           </Text>
           <Text
             style={{
@@ -482,35 +572,40 @@ const DutyReportUpdate = ({route, navigation}) => {
 
               <View style={styles.radioButtonView}>
                 {bookingInfo?.condition?.customer_talk_done_eligibility ==
-                  0 && (
+                  1 && (
                   <RadioButton
                     // key={option.id}
-                    label={'Have you talked to the customer'}
+                    label={bookingInfo?.condition?.customer_talk_done || ''}
                     selected={selectedOption === 1}
                     onSelect={() => handleSelect(1)}
                   />
                 )}
 
                 {bookingInfo?.condition?.customer_not_pick_phone_eligibility ==
-                  0 && (
+                  1 && (
                   <RadioButton
                     // key={option.id}
-                    label={'Is the customer not picking up the phone ?'}
+                    label={
+                      bookingInfo?.condition?.customer_not_pick_phone || ''
+                    }
                     selected={selectedOption === 2}
                     onSelect={() => handleSelect(2)}
                   />
                 )}
 
                 {bookingInfo?.condition?.customer_want_to_cancel_eligibility ==
-                  0 && (
+                  1 && (
                   <RadioButton
                     // key={option.id}
-                    label={'The customer wants to cancel ?'}
+                    label={
+                      bookingInfo?.condition?.customer_want_to_cancel || ''
+                    }
                     selected={selectedOption === 3}
                     onSelect={() => handleSelect(3)}
                   />
                 )}
               </View>
+
               <SwipeableButton
                 onSwipe={handleSwipe}
                 data={bookingInfo?.condition}
@@ -632,7 +727,8 @@ const DutyReportUpdate = ({route, navigation}) => {
                   marginBottom: 120,
                 }}
                 onPress={() => {
-                  setModalVisibleOntheway(false), setModalVisibleRich(true);
+                  // driverOnTheWay();
+                  isBookingUpcomming();
                 }}>
                 <Text
                   style={{
@@ -738,8 +834,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                     marginBottom: 120,
                   }}
                   onPress={() => {
-                    setModalVisibleRich(false);
-                    setModalVisibleinput(true);
+                    driverBookingReach();
                   }}>
                   <Text
                     style={{

@@ -10,13 +10,50 @@ import {
   SafeAreaView,
 } from 'react-native';
 import Header from '../components/Header';
-import { AppColors } from '../assets/Colors';
-const ReviewScreen = () => {
+import {AppColors} from '../assets/Colors';
+import {RATE_YOUR_CUSTOMER} from '../apis/Apis';
+import {useSelector} from 'react-redux';
+
+const ReviewScreen = ({navigation, route}) => {
+  const {rate, bookingNumber} = route?.params;
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+
   const [message, setMessage] = useState('');
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
+
+  const submitRating = async () => {
+    if (!message.trim()) {
+      alert('Please enter a message before submitting.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await RATE_YOUR_CUSTOMER({
+        action: 'rating_detail',
+        booking_id: bookingNumber,
+        rate: rate,
+        current_language: languageSwitch,
+        message: message.trim(),
+      });
+
+      console.log(response, 'submitRating API response');
+      setLoading(false);
+      if (response?.status_code == 200) {
+        navigation.navigate('RateUsAtSocialMedia', {
+          bookingNumber: bookingNumber,
+        });
+      }
+    } catch (err) {
+      console.log(err, 'submitRating API error');
+      setError('Something went wrong. Please try again later.');
+      setLoading(false);
+    }
+  };
+
   return (
-    <SafeAreaView   style={{flex: 1}} >
+    <SafeAreaView style={{flex: 1}}>
       <View style={{backgroundColor: 'white', height: '100%'}}>
         <Header backButton={true} />
         <KeyboardAvoidingView
@@ -47,12 +84,6 @@ const ReviewScreen = () => {
                       }}>
                       What did the TAT D impress you with ?
                     </Text>
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontSize: 22,
-                        fontWeight: '600',
-                      }}></Text>
                   </View>
                 </View>
                 <View
@@ -83,7 +114,7 @@ const ReviewScreen = () => {
                     />
                   </View>
                   <TouchableOpacity
-                    // onPress={fetchRatingDetails}
+                    onPress={submitRating}
                     style={{
                       justifyContent: 'flex-end',
                       alignItems: 'flex-end',

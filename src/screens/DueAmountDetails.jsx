@@ -11,6 +11,7 @@ import {
 import Header from '../components/Header';
 import {Triangle_Icon} from '../assets/images';
 import {DRIVER_BOOKING_INVOICE} from '../apis/Apis';
+import {AppColors} from '../assets/Colors';
 
 const DueAmountDetails = ({route, navigation}) => {
   const {bookingNumber} = route?.params;
@@ -39,18 +40,18 @@ const DueAmountDetails = ({route, navigation}) => {
         <Header backButton={true} />
         <View
           style={{
-            borderColor: '#16588e',
+            borderColor: AppColors.mainColor,
             borderWidth: 2,
             margin: 10,
             borderRadius: 10,
           }}>
           <View
             style={{
-              backgroundColor: '#16588e',
+              backgroundColor: AppColors.mainColor,
               justifyContent: 'space-between',
               borderTopLeftRadius: 5,
               borderTopRightRadius: 5,
-              borderColor: '#16588e',
+              borderColor: AppColors.mainColor,
               padding: 10,
               //margin:10,
             }}>
@@ -69,7 +70,7 @@ const DueAmountDetails = ({route, navigation}) => {
                 <Text
                   style={{
                     position: 'absolute',
-                    color: '#16588e',
+                    color: AppColors.mainColor,
                     marginLeft: 5,
                     fontSize: 12,
                     paddingVertical: 3,
@@ -269,9 +270,11 @@ const DueAmountDetails = ({route, navigation}) => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate('RatingScreen')}
+          onPress={() =>
+            navigation.navigate('RatingScreen', {bookingNumber: bookingNumber})
+          }
           style={{
-            backgroundColor: '#16588e',
+            backgroundColor: AppColors.mainColor,
             padding: 10,
             alignItems: 'center',
             borderRadius: 5,

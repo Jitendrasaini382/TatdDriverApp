@@ -56,31 +56,24 @@ const MyBookingModal = ({}) => {
         setLoader(false);
       });
   };
+
   const myBookingModal = useSelector(
     state => state.trustedDriverSlice.myBookingModal,
   );
 
   const handleSubmit = booking => {
     console.log(booking, 'handleSubmit Booking');
-    if (booking?.bg === 'white') {
-      navigation.navigate('DutyReportUpdate', {
-        bookingNumber: booking?.booking_id,
-        state: 'running',
-        tripStatus :"10"
-      });
-    } else if (booking?.bg === 'red') {
+    if (booking?.bg === 'red') {
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking?.booking_id,
         state: 'cancel',
-        tripStatus :""
-
+        // tripStatus: '',
       });
-    } else if (booking?.bg === '#16588e') {
+    } else {
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking?.booking_id,
-        state: 'complete',
-        tripStatus :"10"
-
+        state: '',
+        // tripStatus: '0',
       });
     }
   };

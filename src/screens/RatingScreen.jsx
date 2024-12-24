@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, Alert, SafeAreaView} from 'react-native';
+import {View, Text, TouchableOpacity, SafeAreaView} from 'react-native';
 import Header from '../components/Header';
 import {AirbnbRating} from 'react-native-ratings';
 import {AppColors} from '../assets/Colors';
@@ -7,7 +7,27 @@ import {AppColors} from '../assets/Colors';
 const RatingScreen = ({navigation, route}) => {
   const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState();
+
+  //   const {bookingNumber} = route?.params;
+
+  const bookingNumber = 649863;
+
+  const handleRatingCompleted = selectedRating => {
+    setRating(selectedRating);
+  };
+
+  const handleSubmit = () => {
+    if (rating === 0) {
+      alert('Please select a rating before submitting.');
+      return;
+    }
+    setLoading(true);
+    navigation.navigate('ReviewScreen', {
+      rate: rating,
+      bookingNumber: bookingNumber,
+    });
+    setLoading(false);
+  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -58,20 +78,19 @@ const RatingScreen = ({navigation, route}) => {
                 reviews={['VERY BAD', 'Bad', 'AVERAGE', 'GOOD', 'LOVED IT']}
                 defaultRating={0}
                 size={20}
-                //onFinishRating={ratingCompleted}
+                onFinishRating={handleRatingCompleted}
               />
             </View>
           </View>
           <TouchableOpacity
-            onPress={() => navigation.navigate('ReviewScreen')}
+            onPress={handleSubmit}
             style={{
               justifyContent: 'flex-end',
               alignItems: 'flex-end',
               marginHorizontal: 20,
               marginBottom: 20,
               opacity: loading ? 0.5 : 1,
-            }}
-            disabled={loading}>
+            }}>
             <Text style={{color: 'grey', fontSize: 16}}>
               {loading ? 'Please wait...' : 'SUBMIT'}
             </Text>

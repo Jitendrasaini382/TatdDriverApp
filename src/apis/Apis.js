@@ -370,3 +370,35 @@ export const RATE_YOUR_CUSTOMER = body => {
     {},
   );
 };
+
+export const DRIVER_ON_THE_WAY = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/duty_report_booking_ontheway.php',
+    {...body},
+    {},
+  );
+};
+
+export const DRIVER_BOOKING_REACH = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/duty_report_booking_reach.php',
+    {...body},
+    {},
+  );
+};
+
+
+export const CHECK_IS_BOOKING_IS_UPCOMMING = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/check-booking-is-upcoming.php',
+    {...body},
+    {},
+  );
+};
+
+
+
+

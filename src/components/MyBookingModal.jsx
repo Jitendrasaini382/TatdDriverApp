@@ -60,6 +60,31 @@ const MyBookingModal = ({}) => {
     state => state.trustedDriverSlice.myBookingModal,
   );
 
+  const handleSubmit = booking => {
+    console.log(booking, 'handleSubmit Booking');
+    if (booking?.bg === 'white') {
+      navigation.navigate('DutyReportUpdate', {
+        bookingNumber: booking?.booking_id,
+        state: 'running',
+        tripStatus :"10"
+      });
+    } else if (booking?.bg === 'red') {
+      navigation.navigate('DutyReportUpdate', {
+        bookingNumber: booking?.booking_id,
+        state: 'cancel',
+        tripStatus :""
+
+      });
+    } else if (booking?.bg === '#16588e') {
+      navigation.navigate('DutyReportUpdate', {
+        bookingNumber: booking?.booking_id,
+        state: 'complete',
+        tripStatus :"10"
+
+      });
+    }
+  };
+
   return (
     <Modal transparent visible={myBookingModal}>
       <TouchableOpacity
@@ -136,12 +161,7 @@ const MyBookingModal = ({}) => {
                     ? myBookingData.bookings.map((booking, index) => (
                         <TouchableOpacity
                           key={index}
-                          // onPress={() =>
-                          //   navigation.navigate('DutyReportUpdate', {
-                          //     booking: booking,
-                          //     tripStatus:"10"
-                          //   })
-                          // }
+                          onPress={() => handleSubmit(booking)}
                           // onPress={() => navigation.navigate('DutyReportUpdateScreen')}
 
                           // onPress={() => openMyUrl(booking.url)}

@@ -107,6 +107,7 @@ const PrivateRoute = () => {
           <Stack.Screen name="AgentWallet" component={AgentWallet} />
           <Stack.Screen name="DueAmount" component={DueAmount} />
           
+          
           <Stack.Screen
             name="RateUsAtSocialMedia"
             component={RateUsAtSocialMedia}

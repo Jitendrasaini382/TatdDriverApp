@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  SafeAreaView,
-} from 'react-native';
+import {View, Text, StyleSheet, Image, SafeAreaView} from 'react-native';
 import Header from '../components/Header';
 import {Triangle_Icon} from '../assets/images';
 import {AppColors} from '../assets/Colors';
@@ -15,11 +9,12 @@ import {useSelector} from 'react-redux';
 const DueAmount = ({route, navigation}) => {
   const [textWidth, setTextWidth] = useState(0);
   const [dueData, setDueData] = useState({});
+  const {bookingNumber} = route?.params;
 
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   useEffect(() => {
-    getDueAmount(646092);
+    getDueAmount(bookingNumber);
   }, []);
 
   const getDueAmount = async bookingNumber => {

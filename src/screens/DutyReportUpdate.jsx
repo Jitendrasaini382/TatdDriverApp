@@ -41,11 +41,12 @@ import {useSelector} from 'react-redux';
 // };
 
 const DutyReportUpdate = ({route, navigation}) => {
-  const {booking, tripStatus} = route?.params;
+  const {booking, tripStatus, state} = route?.params;
   console.log(booking, 'bookingggg');
   console.log(tripStatus, 'trip status');
 
   const [cancel, setCancel] = useState(false);
+  const [completeBooking, setCompleteBooking] = useState(false);
   const [modalVisibleOntheway, setModalVisibleOntheway] = useState(false);
   const [modalVisibleRich, setModalVisibleRich] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -188,7 +189,9 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
 
   useEffect(() => {
-    GetAllBookingInfo();
+    if (state !== 'cancel') {
+      GetAllBookingInfo();
+    }
   }, []);
 
   const GetAllBookingInfo = async () => {
@@ -286,7 +289,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       }}>
       <Header backButton={true} />
 
-      {cancel ? (
+      {state === 'cancel' ? (
         <View
           style={{
             marginTop: 30,
@@ -321,6 +324,56 @@ const DutyReportUpdate = ({route, navigation}) => {
               </Text>
             </View>
           </View>
+        </View>
+      ) : state === 'complete' ? (
+        <View
+          style={{
+            backgroundColor: '#fff',
+            borderRadius: 10,
+            padding: 20,
+            margin: 10,
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.2,
+            shadowRadius: 4,
+            elevation: 3,
+            alignItems: 'center',
+          }}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: 'bold',
+              marginBottom: 10,
+              textAlign: 'center',
+            }}>
+            Duty Time - 11:30 AM, 17 Dec, 2024
+          </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              marginBottom: 20,
+              textAlign: 'center',
+            }}>
+            Booking No: #642971
+          </Text>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#4CAF50',
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              borderRadius: 5,
+              elevation: 2,
+            }}>
+            <Text
+              style={{
+                color: '#fff',
+                fontSize: 14,
+                fontWeight: 'bold',
+                textAlign: 'center',
+              }}>
+              View Invoice
+            </Text>
+          </TouchableOpacity>
         </View>
       ) : (
         <ScrollView style={{flex: 1}}>

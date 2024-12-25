@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   SafeAreaView,
   ScrollView,
@@ -19,11 +19,11 @@ import {
   RefreshControl,
   Platform,
 } from 'react-native';
-import {Marquee} from '@animatereactnative/marquee';
+import { Marquee } from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import ToggleSwitch from 'toggle-switch-react-native';
 import Modal from 'react-native-modal';
-import {AppColors} from '../assets/Colors';
+import { AppColors } from '../assets/Colors';
 import Header from '../components/Header';
 import OtrModal from '../components/modal/OtrModal';
 import RatingModal from '../components/modal/RatingModal';
@@ -35,7 +35,7 @@ import messaging from '@react-native-firebase/messaging';
 
 import MyBookingModal from '../components/MyBookingModal';
 
-import {AppFont} from '../assets/FontsFamily';
+import { AppFont } from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
 import {
   EXPRESS_BOOKING_POPUP,
@@ -57,15 +57,15 @@ import {
   setRatingModal,
   setVideosContent,
 } from '../redux/slices/trustedDriverSlice';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {setUserAuthStates} from '../redux/slices/userAuthSlice';
-const {width} = Dimensions.get('window');
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { setUserAuthStates } from '../redux/slices/userAuthSlice';
+const { width } = Dimensions.get('window');
 
 const responsiveSize = size => {
   return (width / 411.42857142857144) * size;
 };
 
-const TrustedDriver = ({navigation}) => {
+const TrustedDriver = ({ navigation }) => {
   const dispatch = useDispatch();
   const [popupData, setPopupData] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
@@ -301,7 +301,7 @@ const TrustedDriver = ({navigation}) => {
   const handleToggleButton = () => {
     const newRfdValue = isRfdOn ? '0' : '1';
     setIsRfdOn(!isRfdOn);
-    setLoginButton(prevState => ({...prevState, rfd: newRfdValue}));
+    setLoginButton(prevState => ({ ...prevState, rfd: newRfdValue }));
 
     // if (newRfdValue == '1') {
     //   // Start the 30 minute timer
@@ -311,7 +311,7 @@ const TrustedDriver = ({navigation}) => {
     //     Alert.alert('Toggle switched off after 30 minutes');
     //   }, 1800000); // 30 minutes in milliseconds (1800000 ms)
 
-    LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
+    LOGIN_BUTTON({ ...loginButton, rfd: newRfdValue })
       .then(response => {
         console.log(response, 'LOGIN API RESPONSE');
         // Alert.alert(response.message, response.data.redirect);
@@ -439,9 +439,9 @@ const TrustedDriver = ({navigation}) => {
   return (
     <View style={styles.safeArea}>
       <View
-        style={{height: insets.top, backgroundColor: AppColors.mainColor}}
+        style={{ height: insets.top, backgroundColor: AppColors.mainColor }}
       />
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1 }}>
         <Header extraButton={true} />
         {myBookingModal && <MyBookingModal />}
 
@@ -510,7 +510,7 @@ const TrustedDriver = ({navigation}) => {
                         offColor={AppColors.greyColor}
                         size="medium"
                         onToggle={() => handleToggleButton()}
-                        // disabled={isDisabled}
+                      // disabled={isDisabled}
                       />
                     </View>
                   </View>
@@ -570,21 +570,21 @@ const TrustedDriver = ({navigation}) => {
                   onPress={() => dispatch(setVideosContent(!videosContent))}
                   style={[
                     styles.bottamContent1,
-                    videosContent && {backgroundColor: AppColors.mainColor},
+                    videosContent && { backgroundColor: AppColors.mainColor },
                   ]}>
                   <Text style={styles.absoulteText}>5</Text>
                   <View style={styles.absoulteView}>
                     <Text
                       style={[
                         styles.bottamContent1Text,
-                        videosContent && {color: AppColors.white},
+                        videosContent && { color: AppColors.white },
                       ]}>
                       {languageSwitch == 'english' ? 'Training' : 'ट्रेनिंग'}
                     </Text>
                     <Text
                       style={[
                         styles.bottamContent1Text,
-                        videosContent && {color: AppColors.white},
+                        videosContent && { color: AppColors.white },
                       ]}>
                       {languageSwitch == 'english' ? 'Videos' : 'वीडियो'}
                     </Text>
@@ -671,7 +671,7 @@ const TrustedDriver = ({navigation}) => {
           onBackdropPress={() => dispatch(setModalVisible(false))}
           animationIn={'fadeInDown'}
           animationOut={'fadeOutUp'}
-          style={{justifyContent: 'center', alignItems: 'center'}}
+          style={{ justifyContent: 'center', alignItems: 'center' }}
           isVisible={isModalVisible}>
           <OtrModal />
         </Modal>
@@ -896,7 +896,7 @@ const styles = StyleSheet.create({
     left: 0,
     paddingVertical: 2,
   },
-  absoulteView: {justifyContent: 'center', alignItems: 'center'},
+  absoulteView: { justifyContent: 'center', alignItems: 'center' },
   bottamContent1Text: {
     color: AppColors.mainColor,
     fontSize: 9,

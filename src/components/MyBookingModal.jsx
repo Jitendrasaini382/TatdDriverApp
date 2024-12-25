@@ -70,6 +70,8 @@ const MyBookingModal = ({}) => {
         // tripStatus: '',
       });
     } else {
+      // navigation.navigate("DueAmount",{bookingNumber:booking?.booking_id})
+// return false
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking?.booking_id,
         state: '',

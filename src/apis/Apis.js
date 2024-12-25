@@ -389,7 +389,6 @@ export const DRIVER_BOOKING_REACH = body => {
   );
 };
 
-
 export const CHECK_IS_BOOKING_IS_UPCOMMING = body => {
   return _Fetch(
     'POST',
@@ -399,6 +398,37 @@ export const CHECK_IS_BOOKING_IS_UPCOMMING = body => {
   );
 };
 
+export const DRIVER_REACH = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/duty_report_booking_reach.php',
+    {...body},
+    {},
+  );
+};
 
-
+export const DRIVE_START = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/duty_report_booking_start.php',
+    {...body},
+    {},
+  );
+};
+export const DRIVE_END = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/duty_report_booking_end.php',
+    {...body},
+    {},
+  );
+};
+export const FINAL_ACCEPT_BOOKING = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/ondemand-accept-booking-api.php',
+    {...body},
+    {},
+  );
+};
 

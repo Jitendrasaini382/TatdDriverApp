@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
-import {ON_DEMAND_BOOKING} from '../../apis/Apis';
+import {FINAL_ACCEPT_BOOKING, ON_DEMAND_BOOKING} from '../../apis/Apis';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
@@ -62,26 +62,22 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   const acceptBooking = async () => {
     console.log(booking_number, 'accept booking number');
     console.log('final accepttttt');
-    // navigation.navigate('DutyReportUpdate', {
-    //   booking: booking_number,
-    //   tripStatus: '0',
-    // });
-    setOpenModal(false);
-    // try {
-    //   const response = await ON_DEMAND_BOOKING({
-    //     action: 'ondemand_driver_consent_popup_view',
-    //     current_language: languageSwitch,
-    //     booking_id : booking_number
-    //   });
 
-    //   console.log(
-    //     response?.ondemand_driver_consent_popup_data,
-    //     'ondemand_driver_consent_popup_view response',
-    //   );
-    //   setDriverConsent(response?.ondemand_driver_consent_popup_data);
-    // } catch (error) {
-    //   console.log(error, 'ondemand_driver_consent_popup_view Error');
-    // }
+    try {
+      const response = await FINAL_ACCEPT_BOOKING({
+        action: 'accept_booking',
+        booking_id: booking_number,
+        current_language: languageSwitch,
+      });
+
+      console.log(response, 'acceptBooking response');
+
+      navigation.navigate('DutyReportUpdate', {
+        bookingNumber: booking_number,
+      });
+    } catch (error) {
+      console.log(error, 'acceptBooking Error');
+    }
   };
 
   return (

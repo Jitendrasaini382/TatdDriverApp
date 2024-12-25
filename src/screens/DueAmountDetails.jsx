@@ -12,12 +12,121 @@ import Header from '../components/Header';
 import {Triangle_Icon} from '../assets/images';
 import {DRIVER_BOOKING_INVOICE} from '../apis/Apis';
 import {AppColors} from '../assets/Colors';
+import {AppFont} from '../assets/FontsFamily';
 
 const DueAmountDetails = ({route, navigation}) => {
   const {bookingNumber} = route?.params;
-  const [allInvoiceData, setAllInvoiceData] = useState();
+  const [allInvoiceData, setAllInvoiceData] = useState(
+    {
+      status_code: 200,
+      msg_type: 'success',
+      invoice_data: {
+        category: 'Private Driver',
+        customer_name: 'Kartik ',
+        booking_number: '645254',
+        pickup_address:
+          'A-77, Shanti kunj Main Vasant Kunj New Delhi, Delhi 110070\r\n',
+        drop_address: '',
+        business_name: '',
+        gstin: '',
+        start_date: '19 Dec,2024',
+        end_date: '20 Dec,2024',
+        start_time: '08:34 PM',
+        end_time: '12:18 AM',
+        schedule_time: '06:00 PM',
+        reach_time: '05:51 PM',
+        start_kms: 0,
+        end_kms: 0,
+        total_charges: 1308,
+        payment_mode: 'Cash',
+        discount: [],
+        igst_total: {
+          igst_without_price: 1245.7100000000000363797880709171295166015625,
+          igst: 62.28999999999999914734871708787977695465087890625,
+        },
+        paid: 0,
+        balance_amount: 1308,
+        company_details:
+          'EXECUTION FORCE PRIVATE LIMITED \n Office No G-39, Vardhman Grand Market, Sector 3, Dwarka, \n New Delhi- 110078, GST- 07AAFCE8543G1ZJ',
+        company_details_1: 'EXECUTION FORCE PRIVATE LIMITED',
+        company_details_2:
+          'Office No G-39, Vardhman Grand Market, Sector 3, Dwarka,',
+        company_details_3: 'New Delhi- 110078, GST- 07AAFCE8543G1ZJ',
+        tax_headers: ['SGST 2.5%', 'CGST 2.5%'],
+      },
+      charges: [
+        {
+          description: 'Package',
+          unit: '8 hours',
+          charges: 769.51999999999998181010596454143524169921875,
+          igst: 38.47999999999999687361196265555918216705322265625,
+          total_amount: 808,
+        },
+        {
+          description: 'End Night Charges',
+          unit: '1 Night',
+          charges: 190.479999999999989768184605054557323455810546875,
+          igst: 9.519999999999999573674358543939888477325439453125,
+          total_amount: 200,
+        },
+        {
+          description: 'Chauffeur Service',
+          unit: 1,
+          charges: 285.70999999999997953636921010911464691162109375,
+          igst: 14.28999999999999914734871708787977695465087890625,
+          total_amount: '300',
+        },
+      ],
+    },
+    // {
+    //   status_code: 200,
+    //   msg_type: 'success',
+    //   invoice_data: {
+    //     category: 'Private Driver',
+    //     customer_name: 'Pooja',
+    //     booking_number: '646092',
+    //     pickup_address: 'TESTING TESTING TESTING TESTING TESTING',
+    //     drop_address: '',
+    //     business_name: '',
+    //     gstin: '',
+    //     start_date: '24 Dec,2024',
+    //     end_date: '24 Dec,2024',
+    //     start_time: '11:32 AM',
+    //     end_time: '11:32 AM',
+    //     schedule_time: '08:00 AM',
+    //     reach_time: '11:31 AM',
+    //     start_kms: 0,
+    //     end_kms: 0,
+    //     total_charges: 610,
+    //     payment_mode: 'Cash',
+    //     discount: [],
+    //     igst_total: {
+    //       igst_without_price: 580.950000000000045474735088646411895751953125,
+    //       igst: 29.050000000000000710542735760100185871124267578125,
+    //     },
+    //     paid: 0,
+    //     balance_amount: 610,
+    //     company_details:
+    //       'EXECUTION FORCE PRIVATE LIMITED \n Office No G-39, Vardhman Grand Market, Sector 3, Dwarka, \n New Delhi- 110078, GST- 07AAFCE8543G1ZJ',
+    //     company_details_1: 'EXECUTION FORCE PRIVATE LIMITED',
+    //     company_details_2:
+    //       'Office No G-39, Vardhman Grand Market, Sector 3, Dwarka,',
+    //     company_details_3: 'New Delhi- 110078, GST- 07AAFCE8543G1ZJ',
+    //     tax_headers: ['IGST 5%'],
+    //   },
+    //   charges: [
+    //     {
+    //       description: 'Package',
+    //       unit: '5 hours',
+    //       charges: 580.950000000000045474735088646411895751953125,
+    //       igst: 29.050000000000000710542735760100185871124267578125,
+    //       total_amount: 610,
+    //     },
+    //   ],
+    // },
+  );
   useEffect(() => {
-    getInvoiceData(bookingNumber);
+    // getInvoiceData(bookingNumber);
   }, []);
 
   const getInvoiceData = async number => {
@@ -155,18 +264,39 @@ const DueAmountDetails = ({route, navigation}) => {
                 </Text>
               </View>
             </View>
+
             <View style={styles.timingsRow}>
-              <View style={styles.timingColumn}>
-                <Text style={styles.timingLabel}>Reporting</Text>
-                <Text style={styles.timingValue}>
-                  {allInvoiceData?.invoice_data?.schedule_time}
-                </Text>
+              <View style={[styles.timingColumn, {gap: 10}]}>
+                <View style={{alignItems: 'center'}}>
+                  <Text style={styles.timingLabel}>Reporting</Text>
+                  <Text style={styles.timingValue}>
+                    {allInvoiceData?.invoice_data?.schedule_time}
+                  </Text>
+                </View>
+                {allInvoiceData?.invoice_data?.start_kms > 0 && (
+                  <View style={{alignItems: 'center'}}>
+                    <Text style={styles.timingLabel}>Start KMS</Text>
+                    <Text style={styles.timingValue}>
+                      {allInvoiceData?.invoice_data?.start_kms}
+                    </Text>
+                  </View>
+                )}
               </View>
-              <View style={styles.timingColumn}>
-                <Text style={styles.timingLabel}>Reach</Text>
-                <Text style={styles.timingValue}>
-                  {allInvoiceData?.invoice_data?.reach_time}
-                </Text>
+              <View style={[styles.timingColumn, {gap: 10}]}>
+                <View style={{alignItems: 'center'}}>
+                  <Text style={styles.timingLabel}>Reach</Text>
+                  <Text style={styles.timingValue}>
+                    {allInvoiceData?.invoice_data?.reach_time}
+                  </Text>
+                </View>
+                {allInvoiceData?.invoice_data?.start_kms > 0 && (
+                  <View style={{alignItems: 'center'}}>
+                    <Text style={styles.timingLabel}>End KMS</Text>
+                    <Text style={styles.timingValue}>
+                      {allInvoiceData?.invoice_data?.start_kms}
+                    </Text>
+                  </View>
+                )}
               </View>
               <View style={styles.timingColumn}>
                 <Text style={styles.timingLabel}>Start</Text>
@@ -183,48 +313,268 @@ const DueAmountDetails = ({route, navigation}) => {
             </View>
           </View>
 
+          <View style={{flexDirection: 'row', marginVertical: 5}}>
+            {/* Description Column */}
+            <View style={{flex: 0.2, alignItems: 'center'}}>
+              <Text></Text>
+            </View>
+
+            {/* Unit Header */}
+            <View style={{flex: 0.16, alignItems: 'center'}}>
+              <Text
+                style={{
+                  color: AppColors.black,
+                  fontFamily: AppFont.regularFont,
+                  fontSize: 14,
+                }}>
+                Unit
+              </Text>
+            </View>
+
+            {/* Charges Header */}
+            <View style={{flex: 0.16, alignItems: 'center'}}>
+              <Text
+                style={{
+                  color: AppColors.black,
+                  fontFamily: AppFont.regularFont,
+                  fontSize: 14,
+                }}>
+                Charges
+              </Text>
+            </View>
+
+            {/* Tax Headers */}
+            <View
+              style={{flex: 0.32, alignItems: 'center', flexDirection: 'row'}}>
+              {allInvoiceData?.invoice_data?.tax_headers?.length == 1 ? (
+                <View
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flex: 1,
+                  }}>
+                  <Text style={styles.chargeHeaderText}>IGST</Text>
+                  <Text style={styles.chargeHeaderText}>5%</Text>
+                </View>
+              ) : (
+                <>
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flex: 1,
+                    }}>
+                    <Text style={styles.chargeHeaderText}>SGST</Text>
+                    <Text style={styles.chargeHeaderText}>2.5%</Text>
+                  </View>
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flex: 1,
+                    }}>
+                    <Text style={styles.chargeHeaderText}>CGST</Text>
+                    <Text style={styles.chargeHeaderText}>2.5%</Text>
+                  </View>
+                </>
+              )}
+            </View>
+
+            {/* Total Header */}
+            <View style={{flex: 0.16, alignItems: 'center'}}>
+              <Text
+                style={{
+                  color: AppColors.black,
+                  fontFamily: AppFont.regularFont,
+                  fontSize: 14,
+                }}>
+                Total
+              </Text>
+            </View>
+          </View>
+
           {/* Charges Section */}
           <View style={styles.chargesSection}>
-            <View style={styles.chargesHeaderRow}>
-              <Text style={styles.chargeHeaderText}>Unit</Text>
-              <Text style={styles.chargeHeaderText}>Charges</Text>
-              <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                <Text style={styles.chargeHeaderText}>SGST</Text>
-                <Text style={styles.chargeHeaderText}>2.5%</Text>
-              </View>
-              <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                <Text style={styles.chargeHeaderText}>CGST</Text>
-                <Text style={styles.chargeHeaderText}>2.5%</Text>
-              </View>
-              <Text style={styles.chargeHeaderText}>Total</Text>
-            </View>
             <View
               style={[
                 styles.divider,
                 {backgroundColor: 'grey', height: 0.5, marginVertical: 10},
               ]}
             />
-            <View style={styles.chargeRow}>
-              <Text style={styles.chargeText}>Package</Text>
-              <View style={{alignItems: 'center'}}>
-                <Text style={styles.chargeText}>1</Text>
-                <Text style={styles.chargeText}>hours</Text>
-              </View>
+            {allInvoiceData?.charges?.map((row, index) => (
+              <>
+                <View
+                  key={index}
+                  style={{
+                    flexDirection: 'row',
+                    marginVertical: 5,
+                    marginHorizontal: 5,
+                  }}>
+                  {/* Description */}
+                  <View style={{flex: 0.2}}>
+                    <Text
+                      // lineBreakMode="tail"
+                      style={{
+                        color: AppColors.black,
+                        fontFamily: AppFont.regularFont,
+                        fontSize: 12,
+                      }}>
+                      {row?.description}
+                    </Text>
+                  </View>
 
-              <Text style={styles.chargeText}>246.67</Text>
-              <Text style={styles.chargeText}>6.17</Text>
-              <Text style={styles.chargeText}>6.17</Text>
-              <Text style={styles.chargeText}>₹259</Text>
-            </View>
-            <View
+                  {/* Unit */}
+                  <View style={{flex: 0.16, alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        color: AppColors.black,
+                        fontFamily: AppFont.regularFont,
+                        fontSize: 14,
+                      }}>
+                      {row?.unit}
+                    </Text>
+                  </View>
+
+                  {/* Charges */}
+                  <View style={{flex: 0.16, alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        color: AppColors.black,
+                        fontFamily: AppFont.regularFont,
+                        fontSize: 14,
+                      }}>
+                      {row?.charges}
+                    </Text>
+                  </View>
+
+                  {/* Taxes */}
+                  <View
+                    style={{
+                      flex: 0.33,
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                    }}>
+                    {allInvoiceData?.invoice_data?.tax_headers?.length == 1 ? (
+                      <View
+                        style={{
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flex: 1,
+                        }}>
+                        <Text style={styles.chargeText}>{row?.igst}</Text>
+                      </View>
+                    ) : (
+                      <>
+                        <View
+                          style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flex: 1,
+                          }}>
+                          <Text style={styles.chargeText}>
+                            {(row?.igst / 2).toFixed(2)}
+                          </Text>
+                        </View>
+                        <View
+                          style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flex: 1,
+                          }}>
+                          <Text style={styles.chargeText}>
+                            {(row?.igst / 2).toFixed(2)}
+                          </Text>
+                        </View>
+                      </>
+                    )}
+                  </View>
+
+                  {/* Total */}
+                  <View style={{flex: 0.16, alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        color: AppColors.black,
+                        fontFamily: AppFont.regularFont,
+                        fontSize: 14,
+                      }}>
+                      ₹ {row?.total_amount}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={[
+                    styles.divider,
+                    {backgroundColor: 'gray', height: 0.5, marginVertical: 10},
+                  ]}
+                />
+              </>
+            ))}
+
+            {/* <View
               style={[
                 styles.divider,
                 {backgroundColor: 'gray', height: 0.5, marginVertical: 10},
               ]}
-            />
-            <View style={styles.totalRow}>
-              <Text style={styles.totalLabel}>Total Charges</Text>
-              <Text style={styles.totalValue}>₹259</Text>
+            /> */}
+            <View
+              style={{
+                flexDirection: 'row',
+                marginVertical: 5,
+                marginHorizontal: 5,
+              }}>
+              {/* Total Charges Label */}
+              <Text style={[styles.chargeText, {flex: 0.2, fontWeight: '600'}]}>
+                Total Charges
+              </Text>
+
+              {/* Empty Unit Column */}
+              <View style={{flex: 0.16, alignItems: 'center'}}>
+                <Text style={[styles.chargeText]}>{''}</Text>
+              </View>
+
+              {/* Charges Column */}
+              <Text
+                style={[styles.chargeText, {flex: 0.16, textAlign: 'center'}]}>
+                {allInvoiceData?.invoice_data?.igst_total?.igst_without_price}
+              </Text>
+
+              {/* Taxes Column */}
+              <View style={{flex: 0.32, flexDirection: 'row'}}>
+                {allInvoiceData?.invoice_data?.tax_headers?.length == 1 ? (
+                  <Text
+                    style={[styles.chargeText, {flex: 1, textAlign: 'center'}]}>
+                    {allInvoiceData?.invoice_data?.igst_total?.igst}
+                  </Text>
+                ) : (
+                  <>
+                    <Text
+                      style={[
+                        styles.chargeText,
+                        {flex: 1, textAlign: 'center'},
+                      ]}>
+                      {(
+                        allInvoiceData?.invoice_data?.igst_total?.igst / 2
+                      ).toFixed(2)}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.chargeText,
+                        {flex: 1, textAlign: 'center'},
+                      ]}>
+                      {(
+                        allInvoiceData?.invoice_data?.igst_total?.igst / 2
+                      ).toFixed(2)}
+                    </Text>
+                  </>
+                )}
+              </View>
+
+              {/* Total Amount Column */}
+              <View style={{flex: 0.16, alignItems: 'center'}}>
+                <Text style={[styles.chargeText, {fontWeight: '600'}]}>
+                  ₹ {allInvoiceData?.invoice_data?.total_charges}
+                </Text>
+              </View>
             </View>
           </View>
           <View
@@ -356,10 +706,11 @@ const styles = StyleSheet.create({
   timingsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 15,
+    marginHorizontal: 5,
   },
   timingColumn: {
     alignItems: 'center',
+    // flex: 1,
   },
   timingLabel: {
     fontSize: 13,
@@ -427,17 +778,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     //borderTopWidth: 1,
     borderColor: '#dddddd',
-    marginHorizontal: 10,
+    // marginHorizontal: 5,
     padding: 10,
     alignItems: 'center',
     marginTop: 30,
   },
   advanceLabel: {
-    fontSize: 12,
+    fontSize: 14,
     color: 'black',
   },
   advanceValue: {
-    fontSize: 12,
+    fontSize: 14,
     color: 'black',
     textAlign: 'right',
   },
@@ -446,18 +797,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     //borderTopWidth: 1,
     borderColor: '#dddddd',
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
     padding: 10,
     alignItems: 'center',
   },
   balanceLabel: {
-    fontSize: 12,
-    fontWeight: '400',
+    fontSize: 14,
+    fontWeight: 'bold',
     color: 'blue',
   },
   balanceValue: {
-    fontSize: 12,
-    fontWeight: '400',
+    fontSize: 14,
+    fontWeight: 'bold',
     color: '#007bff',
     textAlign: 'right',
   },

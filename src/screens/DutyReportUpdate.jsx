@@ -12,6 +12,7 @@ import {
   Platform,
   Modal,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 // import Modal from 'react-native-modal';
 import YoutubePlayer from 'react-native-youtube-iframe';
@@ -26,8 +27,11 @@ import {
   CHECK_IS_BOOKING_IS_UPCOMMING,
   CUSTOMER_NOT_PICKUP_PHONE,
   CUSTOMER_WANT_TO_CANCEL,
+  DRIVE_END,
+  DRIVE_START,
   DRIVER_BOOKING_REACH,
   DRIVER_ON_THE_WAY,
+  DRIVER_REACH,
   DUTY_REPORT_BOOKING_ACCEPT,
   DUTY_REPORT_TRIP_STATUS_POPUP_VIEW,
   GET_BOOKING_INFO,
@@ -35,6 +39,8 @@ import {
   TALK_TO_CUSTOMER,
 } from '../apis/Apis';
 import {useSelector} from 'react-redux';
+import {AppFont} from '../assets/FontsFamily';
+import Toast from 'react-native-toast-message';
 
 // const RadioButtonWithTitle = ({booking}) => {
 
@@ -98,11 +104,15 @@ const DutyReportUpdate = ({route, navigation}) => {
         current_language: languageSwitch,
         sub_status: 'Not Picking Call',
       });
-
-      // GetAllBookingInfo()
+      Toast.show({
+        type: 'success',
+        text1: 'success',
+        text2: response?.alert,
+      });
+      GetAllBookingInfo();
       console.log(response, 'talk to customer Api response');
     } catch (error) {
-      console.log(error.message, 'talk to customer Api error - General Error');
+      console.log(error, 'talk to customer Api error - General Error');
     } finally {
       setLoader(false);
     }
@@ -119,7 +129,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       GetAllBookingInfo();
       console.log(response, 'talk to customer Api response');
     } catch (error) {
-      console.log(error.message, 'talk to customer Api error - General Error');
+      console.log(error.message, 'talk to customder Api error - General Error');
     } finally {
       setLoader(false);
     }
@@ -177,8 +187,24 @@ const DutyReportUpdate = ({route, navigation}) => {
 
   const [bookingInfo, setbookingInfo] = useState({});
   const handleSwipe = () => {
-    if (bookingInfo?.condition?.next_booking_status_name == 'End') {
+    // setModalVisibleRich(true);
+    // setModalVisibleinput(true);
+    // return false
+
+    // return false;
+    if (bookingInfo?.condition?.next_booking_status_name == 'Accept') {
+      setacceptBookingPopup(true);
+    } else if (
+      bookingInfo?.condition?.next_booking_status_name == 'On The Way'
+    ) {
+      setModalVisibleOntheway(true);
+    } else if (bookingInfo?.condition?.next_booking_status_name == 'Reach') {
+      setModalVisibleRich(true);
+    } else if (bookingInfo?.condition?.next_booking_status_name == 'Start') {
+      setModalVisibleinput(true);
+    } else if (bookingInfo?.condition?.next_booking_status_name == 'End') {
       setModalVisibleEnd(true);
+      // return false;
     }
     // setModalVisibleOntheway(true);
   };
@@ -241,6 +267,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     packageDetails();
   }, []);
   const [packageDetailsData, setPackageDetailsData] = useState({});
+
   const packageDetails = async () => {
     setLoader(true);
     try {
@@ -266,12 +293,22 @@ const DutyReportUpdate = ({route, navigation}) => {
         action: 'duty_report_booking_accept',
         booking_id: bookingNumber,
         current_language: languageSwitch,
-        trip_status: 10,
+        trip_status: bookingInfo?.condition?.next_booking_status_id,
+        // trip_status: "10"
       });
-
+      GetAllBookingInfo();
       console.log(response, 'dutyReportBookingAccept Api response');
+      setacceptBookingPopup(false);
     } catch (error) {
       console.log(error, 'dutyReportBookingAccept Api error - General Error');
+      GetAllBookingInfo();
+      setacceptBookingPopup(false);
+      // Toast.show('Success')
+      Toast.show({
+        type: 'success',
+        text1: 'success',
+        text2: error?.popupdata?.success_message,
+      });
     } finally {
       setLoader(false);
     }
@@ -294,6 +331,8 @@ const DutyReportUpdate = ({route, navigation}) => {
       setLoader(false);
     }
   };
+  const [isBookingApiErrPopup, setisBookingApiErrPopup] = useState(false);
+  const [isBookingApiPopupMsge, setisBookingApiPopupMsge] = useState(null);
   const isBookingUpcomming = async () => {
     try {
       const res = await CHECK_IS_BOOKING_IS_UPCOMMING({
@@ -303,7 +342,11 @@ const DutyReportUpdate = ({route, navigation}) => {
       });
 
       if (res?.upcoming_booking_data?.upcoming_booking_eligibility == 1) {
-        Alert.alert(res?.upcoming_booking_data?.upcoming_booking_error_msg);
+        // Alert.alert(res?.upcoming_booking_data?.upcoming_booking_error_msg);
+        setisBookingApiErrPopup(true);
+        setisBookingApiPopupMsge(
+          res?.upcoming_booking_data?.upcoming_booking_error_msg,
+        );
         return false;
       } else {
         driverOnTheWay();
@@ -311,6 +354,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       console.log(res, 'isBookingChkApi Responseeeeeeeeeeeeeeeeeeee');
     } catch (err) {
       console.log(err, 'isBookingUpcommingApiErrrrrrrr');
+      driverOnTheWay();
     }
   };
   const driverOnTheWay = async () => {
@@ -329,7 +373,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         action: 'duty_report_booking_ontheway',
         booking_id: bookingNumber,
         current_language: languageSwitch,
-        trip_status: 15,
+        trip_status: bookingInfo?.condition?.next_booking_status_id,
       });
 
       // console.log({
@@ -344,7 +388,9 @@ const DutyReportUpdate = ({route, navigation}) => {
         'onTheWayApi Responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee ',
       );
       GetAllBookingInfo();
-      setModalVisibleOntheway(false), setModalVisibleRich(true);
+      setModalVisibleOntheway(false);
+
+      // setModalVisibleRich(true);
     } catch (err) {
       console.log(
         err,
@@ -359,16 +405,66 @@ const DutyReportUpdate = ({route, navigation}) => {
         action: 'duty_report_booking_reach',
         booking_id: bookingNumber,
         current_language: languageSwitch,
-        trip_status: bookingInfo?.condition?.next_booking_status_id,
+        // trip_status: bookingInfo?.condition?.next_booking_status_id,
+        trip_status: 20,
       });
       console.log(res, 'duty_report_booking_reach Responseeeeee');
       setModalVisibleRich(false);
       setModalVisibleinput(true);
+      GetAllBookingInfo()
     } catch (err) {
       console.log(err, 'duty_report_booking_reach Errrrrrrrrrrrrrrrr');
     }
   };
+  const [acceptBookingPopup, setacceptBookingPopup] = useState(false);
 
+  const driverReached = async () => {
+    setLoader(true);
+    try {
+      const res = await DRIVE_START({
+        action: 'duty_report_booking_start',
+        booking_id: bookingNumber,
+        current_language: languageSwitch,
+        trip_status: '25',
+        start_kms: null,
+        otp: inputValue,
+      });
+      if (
+        res?.start_booking_message &&
+        Object.keys(res?.start_booking_message).length !== 0
+      ) {
+        setModalVisibleinput(false);
+        // setModalVisibleEnd(true);
+        GetAllBookingInfo();
+      } else {
+        const msge = res?.otp_error_message;
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: msge?.otp_error_message,
+        });
+      }
+      console.log(res, 'duty_report_booking_reach api response');
+    } catch (err) {
+      console.log(err, 'duty_report_booking_reach api ERrrrr');
+    } finally {
+      setLoader(false);
+    }
+  };
+  const bookingEnd = async () => {
+    try {
+      const res = await DRIVE_END({
+        action: 'duty_report_booking_end',
+        booking_id: bookingNumber,
+        current_language: languageSwitch,
+        trip_status: '30',
+      });
+      navigation.navigate("DueAmount",{bookingNumber})
+      console.log(res, 'booking end api response');
+    } catch (err) {
+      console.log(err, 'booking end api Err');
+    }
+  };
   return (
     <SafeAreaView
       style={{
@@ -377,6 +473,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         backgroundColor: AppColors.white,
       }}>
       <Header backButton={true} />
+      <Toast visibilityTime={5000} topOffset={50} />
 
       {state === 'cancel' ? (
         <View
@@ -630,6 +727,130 @@ const DutyReportUpdate = ({route, navigation}) => {
         </ScrollView>
       )}
 
+      {/* accept bookin popup */}
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={acceptBookingPopup}
+        onRequestClose={() => setacceptBookingPopup(false)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              width: '90%',
+              borderRadius: 10,
+              padding: 20,
+              elevation: 5,
+            }}>
+            <ScrollView>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: AppColors.mainColor,
+                  borderRadius: 20,
+                  marginBottom: 20,
+                  alignSelf: 'flex-end',
+                  width: 40,
+                  height: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onPress={() => setacceptBookingPopup(false)}>
+                <Icon name="close" size={20} color={AppColors.white} />
+              </TouchableOpacity>
+              <View
+                style={{
+                  backgroundColor: AppColors.mainColor,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                  width: '100%',
+                  padding: 20,
+                  borderRadius: 5,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Merriweather-Bold',
+                    fontSize: 18,
+                    color: 'white',
+                  }}>
+                  Guests are like God
+                </Text>
+              </View>
+              <View style={{marginVertical: 20}}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    color: AppColors.mainColor,
+                  }}>
+                  I accept this duty.
+                </Text>
+                {/* <Image
+                  source={Mask}
+                  resizeMode="contain"
+                  style={{
+                    height: 60,
+                    width: 140,
+                    alignSelf: 'center',
+                    marginVertical: 10,
+                  }}
+                /> */}
+              </View>
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontFamily: AppFont.regularFont,
+                  textAlign: 'center',
+                  color: AppColors.black,
+                }}>
+                I will reach the customer on time.
+              </Text>
+              <View style={{alignItems: 'center', marginTop: 20}}>
+                <TouchableOpacity
+                  disabled={loader}
+                  style={{
+                    backgroundColor: AppColors.mainColor,
+
+                    // padding: 12,
+                    paddingVertical: 8,
+                    paddingHorizontal: 16,
+                    borderRadius: 4,
+                    // width: '60%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    // marginHorizontal: '20%',
+                    marginBottom: 120,
+                  }}
+                  onPress={() => {
+                    dutyReportBookingAccept();
+                  }}>
+                  <Text
+                    style={{
+                      color: AppColors.white,
+                      // fontWeight: '600',
+                      fontFamily: AppFont.regularFont,
+                      // textAlign: 'center',
+                    }}>
+                    {loader ? (
+                      <ActivityIndicator color={AppColors.white} />
+                    ) : (
+                      'Accept'
+                    )}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+      {/* on the way popup */}
       <Modal
         transparent={true}
         animationType="slide"
@@ -744,6 +965,109 @@ const DutyReportUpdate = ({route, navigation}) => {
         </View>
       </Modal>
 
+      {/* Is booking Err Modal */}
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={isBookingApiErrPopup}
+        onRequestClose={() => setisBookingApiErrPopup(false)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              width: '90%',
+              borderRadius: 10,
+              padding: 20,
+              elevation: 5,
+            }}>
+            <ScrollView>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: AppColors.mainColor,
+                  borderRadius: 20,
+                  marginBottom: 20,
+                  alignSelf: 'flex-end',
+                  width: 40,
+                  height: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onPress={() => setisBookingApiErrPopup(false)}>
+                <Icon name="close" size={20} color={AppColors.white} />
+              </TouchableOpacity>
+              <View
+                style={{
+                  backgroundColor: AppColors.mainColor,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                  width: '100%',
+                  padding: 20,
+                  borderRadius: 5,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Merriweather-Bold',
+                    fontSize: 18,
+                    color: 'white',
+                  }}>
+                  Guests are like God
+                </Text>
+              </View>
+              <View style={{marginVertical: 20}}>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    textAlign: 'center',
+                    fontSize: 14,
+                    fontFamily: AppFont.regularFont,
+                  }}>
+                  {isBookingApiPopupMsge || ''}
+                </Text>
+              </View>
+
+              <View style={{alignItems: 'center'}}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: AppColors.mainColor,
+                    marginTop: 20,
+                    // padding: 12,
+                    paddingVertical: 8,
+                    paddingHorizontal: 16,
+                    borderRadius: 5,
+                    // width: '60%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    // marginHorizontal: '20%',
+                    marginBottom: 120,
+                  }}
+                  onPress={() => {
+                    // driverOnTheWay();
+                    // isBookingUpcomming();
+                    setisBookingApiErrPopup(false);
+                  }}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontWeight: '600',
+                      textAlign: 'center',
+                    }}>
+                    Close
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      {/* reach modal */}
       <Modal
         transparent={true}
         animationType="slide"
@@ -851,6 +1175,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         </View>
       </Modal>
 
+      {/* otp send modal */}
       <Modal
         transparent={true}
         animationType="slide"
@@ -863,6 +1188,7 @@ const DutyReportUpdate = ({route, navigation}) => {
             alignItems: 'center',
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
           }}>
+          <Toast visibilityTime={3000} />
           <View
             style={{
               backgroundColor: 'white',
@@ -961,8 +1287,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                     marginBottom: 120,
                   }}
                   onPress={() => {
-                    setModalVisibleinput(false);
-                    setModalVisibleEnd(true);
+                    driverReached();
                   }}>
                   <Text
                     style={{
@@ -978,7 +1303,7 @@ const DutyReportUpdate = ({route, navigation}) => {
           </View>
         </View>
       </Modal>
-
+      {/* on time reach */}
       <Modal
         transparent={true}
         animationType="slide"
@@ -1028,7 +1353,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                   marginBottom: 120,
                 }}
                 onPress={() => {
-                  setModalVisibleonTimeRich(false);
+                  // driverReached();
                 }}>
                 <Text
                   style={{
@@ -1044,6 +1369,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         </View>
       </Modal>
 
+      {/* End Modal */}
       <Modal
         transparent={true}
         animationType="slide"
@@ -1125,8 +1451,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                     marginBottom: 120,
                   }}
                   onPress={() => {
-                    setModalVisibleinput(false);
-                    setModalVisibleEnd(false);
+                    bookingEnd();
                   }}>
                   <Text
                     style={{

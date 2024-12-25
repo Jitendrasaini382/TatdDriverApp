@@ -1,20 +1,20 @@
-import React, {useRef} from 'react';
-import {View, Text, StyleSheet, Animated, Alert} from 'react-native';
-import {PanGestureHandler, State} from 'react-native-gesture-handler';
-import {AppColors} from '../assets/Colors';
+import React, { useRef } from 'react';
+import { View, Text, StyleSheet, Animated, Alert } from 'react-native';
+import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import { AppColors } from '../assets/Colors';
 import RightArrowIcon from 'react-native-vector-icons/AntDesign';
 
-const SwipeableButton = ({onSwipe, data}) => {
+const SwipeableButton = ({ onSwipe, data }) => {
   const translateX = useRef(new Animated.Value(0)).current;
 
   const onGestureEvent = Animated.event(
-    [{nativeEvent: {translationX: translateX}}],
-    {useNativeDriver: true},
+    [{ nativeEvent: { translationX: translateX } }],
+    { useNativeDriver: true },
   );
 
   const onHandlerStateChange = event => {
     if (event.nativeEvent.oldState === State.ACTIVE) {
-      const {translationX} = event.nativeEvent;
+      const { translationX } = event.nativeEvent;
       console.log(translateX);
       if (translationX > 100) {
         // Swiped far enough to trigger action
@@ -33,14 +33,17 @@ const SwipeableButton = ({onSwipe, data}) => {
       <PanGestureHandler
         onGestureEvent={onGestureEvent}
         onHandlerStateChange={onHandlerStateChange}>
-        <Animated.View style={[styles.circle, {transform: [{translateX}]}]}>
+        <Animated.View style={[styles.circle, { transform: [{ translateX }] }]}>
           {/* <Text style={styles.arrow}></Text> */}
           <RightArrowIcon color={'white'} size={25} name="arrowright" />
         </Animated.View>
       </PanGestureHandler>
       <View style={styles.textContainer}>
         <Text style={styles.text}>{data?.next_booking_status_text}</Text>
+        <Text style={[styles.text, { fontSize: 18 }]}>{data?.next_booking_status_name}</Text>
+
         {/* <Text style={{
+        
 
     fontSize: 16,
     color: AppColors.black,
@@ -60,7 +63,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
     elevation: 2,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     marginVertical: 20,

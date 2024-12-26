@@ -432,3 +432,13 @@ export const FINAL_ACCEPT_BOOKING = body => {
   );
 };
 
+
+// befor start drive
+export const DUTY_REPORT_RESEND_OTP = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/resend_otp_api.php',
+    {...body},
+    {},
+  );
+};

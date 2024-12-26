@@ -33,6 +33,7 @@ import {
   DRIVER_ON_THE_WAY,
   DRIVER_REACH,
   DUTY_REPORT_BOOKING_ACCEPT,
+  DUTY_REPORT_RESEND_OTP,
   DUTY_REPORT_TRIP_STATUS_POPUP_VIEW,
   GET_BOOKING_INFO,
   PACKAGE_DETAILS_DUTY_REPORT,
@@ -127,6 +128,18 @@ const DutyReportUpdate = ({route, navigation}) => {
         sub_status: 'Cancel Booking',
       });
       GetAllBookingInfo();
+      if (response?.msg_type == 'error') {
+        Toast.show({
+          type: 'error',
+          text1: response?.message,
+          text1Style: {
+            flexWrap: 'wrap', // Ensures the text wraps
+            textAlign: 'left', // Align text for better readability
+            fontSize: 14,
+          },
+          // text2:response?.message
+        });
+      }
       console.log(response, 'talk to customer Api response');
     } catch (error) {
       console.log(error.message, 'talk to customder Api error - General Error');
@@ -178,9 +191,9 @@ const DutyReportUpdate = ({route, navigation}) => {
     }
   };
   // const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
-  // const driverMobileNumber = useSelector(
-  //   e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
-  // );
+  const driverMobileNumber = useSelector(
+    e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
+  );
 
   const [packageDetailsDutyReportUpdate, setPackageDetailsDutyReportUpdate] =
     useState(false);
@@ -250,7 +263,11 @@ const DutyReportUpdate = ({route, navigation}) => {
       // );
 
       setbookingInfo(response?.duty_report_booking_info);
-
+      const statusId =
+        response?.duty_report_booking_info?.condition?.next_booking_status_id;
+      // if (statusId == '15') {
+      dutyReportTripStatusPopup(statusId);
+      // }
       // console.log(
       //   response?.duty_report_booking_info,
       //   'GetAllBookingInfo success',
@@ -313,16 +330,18 @@ const DutyReportUpdate = ({route, navigation}) => {
       setLoader(false);
     }
   };
+  const [popupsData, setpopupsData] = useState({});
 
-  const dutyReportTripStatusPopup = async () => {
-    setLoader(true);
+  const dutyReportTripStatusPopup = async statusId => {
+    // setLoader(true);
     try {
       const response = await DUTY_REPORT_TRIP_STATUS_POPUP_VIEW({
         action: 'duty_report_trip_status_popup_view',
         booking_id: bookingNumber,
-        booking_status_id: '15',
+        booking_status_id: statusId,
         current_language: languageSwitch,
       });
+      setpopupsData(response);
 
       console.log(response, 'dutyReportTripStatusPopup Api response');
     } catch (error) {
@@ -344,11 +363,13 @@ const DutyReportUpdate = ({route, navigation}) => {
       if (res?.upcoming_booking_data?.upcoming_booking_eligibility == 1) {
         // Alert.alert(res?.upcoming_booking_data?.upcoming_booking_error_msg);
         setisBookingApiErrPopup(true);
+        setModalVisibleOntheway(false);
         setisBookingApiPopupMsge(
           res?.upcoming_booking_data?.upcoming_booking_error_msg,
         );
         return false;
       } else {
+        // dutyReportTripStatusPopup(20);
         driverOnTheWay();
       }
       console.log(res, 'isBookingChkApi Responseeeeeeeeeeeeeeeeeeee');
@@ -405,8 +426,8 @@ const DutyReportUpdate = ({route, navigation}) => {
         action: 'duty_report_booking_reach',
         booking_id: bookingNumber,
         current_language: languageSwitch,
-        // trip_status: bookingInfo?.condition?.next_booking_status_id,
-        trip_status: 20,
+        trip_status: bookingInfo?.condition?.next_booking_status_id,
+        // trip_status: 20,
       });
       console.log(res, 'duty_report_booking_reach Responseeeeee');
       setModalVisibleRich(false);
@@ -425,10 +446,12 @@ const DutyReportUpdate = ({route, navigation}) => {
         action: 'duty_report_booking_start',
         booking_id: bookingNumber,
         current_language: languageSwitch,
-        trip_status: '25',
+        trip_status: bookingInfo?.condition?.next_booking_status_id,
         start_kms: null,
         otp: inputValue,
       });
+      console.log(res, 'OTPRESPO');
+      // return false
       if (
         res?.start_booking_message &&
         Object.keys(res?.start_booking_message).length !== 0
@@ -457,12 +480,35 @@ const DutyReportUpdate = ({route, navigation}) => {
         action: 'duty_report_booking_end',
         booking_id: bookingNumber,
         current_language: languageSwitch,
-        trip_status: '30',
+        trip_status: bookingInfo?.condition?.next_booking_status_id,
       });
       navigation.navigate('DueAmount', {bookingNumber});
       console.log(res, 'booking end api response');
     } catch (err) {
       console.log(err, 'booking end api Err');
+    }
+  };
+  const dutyReportResendOtp = async () => {
+    try {
+      const res = await DUTY_REPORT_RESEND_OTP({
+        action: 're_send_ontheway_sms',
+        booking_id: bookingNumber,
+        mobile_number: driverMobileNumber,
+      });
+      console.log(
+        {
+          action: 're_send_ontheway_sms',
+          booking_id: bookingNumber,
+        },
+        'resend otp send action',
+      );
+      Toast.show({
+        type: 'success',
+        text1: res?.message,
+      });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
     }
   };
   return (
@@ -523,8 +569,8 @@ const DutyReportUpdate = ({route, navigation}) => {
             shadowOpacity: 0.2,
             shadowRadius: 4,
             elevation: 3,
-            borderWidth:.5,
-            borderColor:AppColors.black
+            borderWidth: 0.5,
+            borderColor: AppColors.black,
             // alignItems: 'center',
           }}>
           <Text
@@ -543,20 +589,21 @@ const DutyReportUpdate = ({route, navigation}) => {
               fontSize: 14,
               marginVertical: 20,
               fontWeight: 'bold',
-              justifyContent:"flex-start",
-              color: AppColors.black
+              justifyContent: 'flex-start',
+              color: AppColors.black,
             }}>
             Booking No: #{bookingNumber}
           </Text>
+
           <TouchableOpacity
-           onPress={()=>navigation.navigate("DueAmount", {bookingNumber})}
+            onPress={() => navigation.navigate('DueAmount', {bookingNumber})}
             style={{
               backgroundColor: 'green',
               paddingVertical: 10,
               paddingHorizontal: 20,
               borderRadius: 5,
               elevation: 2,
-              alignSelf:"center"
+              alignSelf: 'center',
             }}>
             <Text
               style={{
@@ -877,97 +924,106 @@ const DutyReportUpdate = ({route, navigation}) => {
               borderRadius: 10,
               padding: 20,
               elevation: 5,
+              minHeight: '40%',
             }}>
-            <ScrollView>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: AppColors.mainColor,
-                  borderRadius: 20,
-                  marginBottom: 20,
-                  alignSelf: 'flex-end',
-                  width: 40,
-                  height: 40,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                onPress={closeModal}>
-                <Icon name="close" size={20} color={AppColors.white} />
-              </TouchableOpacity>
-              <View
-                style={{
-                  backgroundColor: AppColors.mainColor,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                  width: '100%',
-                  padding: 20,
-                  borderRadius: 5,
-                }}>
-                <Text
+            {loader ? (
+              <ActivityIndicator size={'large'} color={AppColors.mainColor} />
+            ) : (
+              <ScrollView>
+                <TouchableOpacity
                   style={{
-                    fontFamily: 'Merriweather-Bold',
-                    fontSize: 18,
-                    color: 'white',
+                    backgroundColor: AppColors.mainColor,
+                    borderRadius: 20,
+                    marginBottom: 20,
+                    alignSelf: 'flex-end',
+                    width: 40,
+                    height: 40,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  onPress={closeModal}>
+                  <Icon name="close" size={20} color={AppColors.white} />
+                </TouchableOpacity>
+                <View
+                  style={{
+                    backgroundColor: AppColors.mainColor,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    width: '100%',
+                    padding: 20,
+                    borderRadius: 5,
                   }}>
-                  Guests are like God
-                </Text>
-              </View>
-              <View style={{marginVertical: 20}}>
+                  <Text
+                    style={{
+                      fontFamily: 'Merriweather-Bold',
+                      fontSize: 18,
+                      color: 'white',
+                    }}>
+                    {popupsData?.popupdata?.ontheway_alert}
+                  </Text>
+                </View>
+                <View style={{marginVertical: 20}}>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      color: AppColors.mainColor,
+                    }}>
+                    {/* I will reach on time */}
+                    {popupsData?.popupdata?.ontheway_alert_h3}
+                  </Text>
+                  <Image
+                    source={Mask}
+                    resizeMode="contain"
+                    style={{
+                      height: 60,
+                      width: 140,
+                      alignSelf: 'center',
+                      marginVertical: 10,
+                    }}
+                  />
+                </View>
                 <Text
                   style={{
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: 'bold',
                     textAlign: 'center',
                     color: AppColors.mainColor,
                   }}>
-                  I will reach on time
+                  {/* Customer's time is very valuable */}
+                  {popupsData?.popupdata?.ontheway_alert_p}
                 </Text>
-                <Image
-                  source={Mask}
-                  resizeMode="contain"
+                <TouchableOpacity
                   style={{
-                    height: 60,
-                    width: 140,
-                    alignSelf: 'center',
-                    marginVertical: 10,
+                    backgroundColor: AppColors.mainColor,
+                    marginTop: 20,
+                    padding: 12,
+                    borderRadius: 6,
+                    width: '60%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginHorizontal: '20%',
+                    marginBottom: 120,
                   }}
-                />
-              </View>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                  color: AppColors.mainColor,
-                }}>
-                Customer's time is very valuable
-              </Text>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: AppColors.mainColor,
-                  marginTop: 20,
-                  padding: 12,
-                  borderRadius: 6,
-                  width: '60%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginHorizontal: '20%',
-                  marginBottom: 120,
-                }}
-                onPress={() => {
-                  // driverOnTheWay();
-                  isBookingUpcomming();
-                }}>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontWeight: '600',
-                    textAlign: 'center',
+                  onPress={() => {
+                    // driverOnTheWay();
+                    isBookingUpcomming();
                   }}>
-                  On The Way
-                </Text>
-              </TouchableOpacity>
-            </ScrollView>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontWeight: '600',
+                      textAlign: 'center',
+                    }}>
+                    {popupsData?.popupdata?.ontheway_alert_btn}
+
+                    {/* On The Way */}
+                  </Text>
+                </TouchableOpacity>
+              </ScrollView>
+            )}
           </View>
         </View>
       </Modal>
@@ -1128,7 +1184,8 @@ const DutyReportUpdate = ({route, navigation}) => {
                     fontSize: 18,
                     color: 'white',
                   }}>
-                  Guests are like God
+                  {/* Guests are like God */}
+                  {popupsData?.popupdata?.reach_alert}
                 </Text>
               </View>
               <View style={{marginVertical: 20}}>
@@ -1139,7 +1196,8 @@ const DutyReportUpdate = ({route, navigation}) => {
                     textAlign: 'center',
                     color: AppColors.mainColor,
                   }}>
-                  I have reached the customer's address.
+                  {popupsData?.popupdata?.reach_alert_h3}
+                  {/* I have reached the customer's address. */}
                 </Text>
               </View>
               <View style={{marginVertical: 30}}>
@@ -1150,7 +1208,8 @@ const DutyReportUpdate = ({route, navigation}) => {
                     textAlign: 'center',
                     color: 'black',
                   }}>
-                  And ready to provide excellent service.
+                  {/* And ready to provide excellent service. */}
+                  {popupsData?.popupdata?.reach_alert_p}
                 </Text>
                 <TouchableOpacity
                   style={{
@@ -1173,7 +1232,8 @@ const DutyReportUpdate = ({route, navigation}) => {
                       fontWeight: '600',
                       textAlign: 'center',
                     }}>
-                    Reach
+                    {/* Reach */}
+                    {popupsData?.popupdata?.reach_alert_btn}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -1203,110 +1263,141 @@ const DutyReportUpdate = ({route, navigation}) => {
               borderRadius: 10,
               padding: 20,
               elevation: 5,
+              minHeight: 400,
             }}>
-            <ScrollView>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#16588e',
-                  borderRadius: 20,
-                  marginBottom: 20,
-                  alignSelf: 'flex-end',
-                  width: 40,
-                  height: 40,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                onPress={() => setModalVisibleinput(false)}>
-                <Icon name="close" size={20} color={AppColors.white} />
-              </TouchableOpacity>
-              <View
-                style={{
-                  backgroundColor: '#16588e',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                  width: '100%',
-                  padding: 20,
-                  borderRadius: 5,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'Merriweather-Bold',
-                    fontSize: 18,
-                    color: 'white',
-                  }}>
-                  Guests are like God
-                </Text>
-              </View>
-              <TextInput
-                style={{
-                  borderColor: '#c4c4be',
-                  borderWidth: 1.5,
-                  borderRadius: 8,
-                  paddingHorizontal: 10,
-                  fontSize: 16,
-                  color: '#333',
-                  backgroundColor: '#fff',
-                  marginTop: 20,
-                  padding: 10,
-                }}
-                placeholder="Enter Otp"
-                placeholderTextColor="#aaa"
-                value={inputValue}
-                onChangeText={text => setInputValue(text)}
-              />
-              <View style={{marginVertical: 5}}>
-                <View
-                  style={{
-                    alignItems: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: '400',
-                      color: 'black',
-                    }}
-                    onLayout={event => {
-                      const {width} = event.nativeEvent.layout;
-                      setTextWidth(width);
-                    }}>
-                    Resend OTP?
-                  </Text>
-                  <View
-                    style={{
-                      marginTop: 2,
-                      height: 1,
-                      backgroundColor: 'black',
-                      width: textWidth,
-                    }}
-                  />
-                </View>
+            {loader ? (
+              <ActivityIndicator color={AppColors.mainColor} size={40} />
+            ) : (
+              <ScrollView>
                 <TouchableOpacity
                   style={{
                     backgroundColor: '#16588e',
-                    marginTop: '40%',
-                    padding: 12,
-                    borderRadius: 6,
-                    width: '60%',
+                    borderRadius: 20,
+                    marginBottom: 20,
+                    alignSelf: 'flex-end',
+                    width: 40,
+                    height: 40,
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginHorizontal: '20%',
-                    marginBottom: 120,
                   }}
-                  onPress={() => {
-                    driverReached();
+                  onPress={() => setModalVisibleinput(false)}>
+                  <Icon name="close" size={20} color={AppColors.white} />
+                </TouchableOpacity>
+                <View
+                  style={{
+                    backgroundColor: '#16588e',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    width: '100%',
+                    padding: 20,
+                    borderRadius: 5,
                   }}>
                   <Text
                     style={{
+                      fontFamily: 'Merriweather-Bold',
+                      fontSize: 18,
                       color: 'white',
-                      fontWeight: '600',
-                      textAlign: 'center',
                     }}>
-                    Start
+                    {/* Guests are like God */}
+                    {popupsData?.popupdata?.start_alert}
                   </Text>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
+                </View>
+                <TextInput
+                  style={{
+                    borderColor: '#c4c4be',
+                    borderWidth: 1.5,
+                    borderRadius: 8,
+                    paddingHorizontal: 10,
+                    fontSize: 16,
+                    color: '#333',
+                    backgroundColor: '#fff',
+                    marginTop: 20,
+                    padding: 10,
+                  }}
+                  placeholder="Enter Otp"
+                  placeholderTextColor="#aaa"
+                  value={inputValue}
+                  onChangeText={text => setInputValue(text)}
+                />
+                <View style={{marginVertical: 5}}>
+                  <View
+                    style={{
+                      alignItems: 'center',
+                    }}>
+                    <TouchableOpacity onPress={() => dutyReportResendOtp()}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontWeight: '400',
+                          color: 'black',
+                        }}
+                        onLayout={event => {
+                          const {width} = event.nativeEvent.layout;
+                          setTextWidth(width);
+                        }}>
+                        {/* Resend OTP? */}
+                        {popupsData?.popupdata?.resend_otp_text}
+                      </Text>
+                    </TouchableOpacity>
+                    <View
+                      style={{
+                        marginTop: 2,
+                        height: 1,
+                        backgroundColor: 'black',
+                        width: textWidth,
+                      }}
+                    />
+                  </View>
+                  <View>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        color: AppColors.black,
+                        fontFamily: AppFont.mainFont,
+                        textAlign: 'center',
+                        marginTop: 15,
+                      }}>
+                      {popupsData?.popupdata?.start_alert_h3}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: AppColors.black,
+                        fontFamily: AppFont.mainFont,
+                        textAlign: 'center',
+                        marginTop: 15,
+                      }}>
+                      {popupsData?.popupdata?.start_alert_p}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: '#16588e',
+                      marginTop: '40%',
+                      padding: 12,
+                      borderRadius: 6,
+                      width: '60%',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginHorizontal: '20%',
+                      marginBottom: 120,
+                    }}
+                    onPress={() => {
+                      driverReached();
+                    }}>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontWeight: '600',
+                        textAlign: 'center',
+                      }}>
+                      Start
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
+            )}
           </View>
         </View>
       </Modal>
@@ -1428,7 +1519,8 @@ const DutyReportUpdate = ({route, navigation}) => {
                     fontSize: 18,
                     color: 'white',
                   }}>
-                  Guests are like God
+                  {/* Guests are like God */}
+                  {popupsData?.popupdata?.end_alert}
                 </Text>
               </View>
               <View style={{marginVertical: 20}}>
@@ -1439,9 +1531,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                     textAlign: 'center',
                     color: AppColors.mainColor,
                   }}>
-                  I Know that our work is challenging. Despite this, I made sure
-                  to provide excellent service to the customer like a
-                  professional partner
+                  {popupsData?.popupdata?.end_alert_h3}
                 </Text>
               </View>
               <View style={{marginVertical: 30}}>
@@ -1466,7 +1556,8 @@ const DutyReportUpdate = ({route, navigation}) => {
                       fontWeight: '600',
                       textAlign: 'center',
                     }}>
-                    End
+                    {/* End */}
+                    {popupsData?.popupdata?.end_alert_btn}
                   </Text>
                 </TouchableOpacity>
               </View>

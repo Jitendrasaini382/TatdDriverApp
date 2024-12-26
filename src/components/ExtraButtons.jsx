@@ -20,8 +20,8 @@ const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
   return (
     <View style={styles.mainView}>
       <View style={styles.leftView}>
-        <TouchableOpacity onPress={openNeedHelp}>
-        {/* <TouchableOpacity onPress={()=>navigation.navigate("TicketsDriver")}> */}
+        {/* <TouchableOpacity onPress={openNeedHelp}> */}
+        <TouchableOpacity onPress={()=>navigation.navigate("TicketsDriver")}>
           {/* <Text style={styles.leftText}>Need Help?</Text> */}
           <Text style={styles.leftText}>{languageSwitch == "english" ?"Need Help?" : " मदद चाहिए?"}</Text>
          

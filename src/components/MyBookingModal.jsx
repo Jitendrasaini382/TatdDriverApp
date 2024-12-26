@@ -199,9 +199,10 @@ const MyBookingModal = ({}) => {
                             <Pressable
                               key={index}
                               onPress={() =>
-                                openMyUrl(
-                                  `https://www.tatd.in/duty-report-login.php?action=dologin&driver_mobile_number=${decodedToken?.driver_mobile_number}&booking_number=${booking.booking_id}`,
-                                )
+                                navigation.navigate('DutyReportUpdate', {
+                                  bookingNumber: booking.booking_id,
+                                  state: '',
+                                })
                               }>
                               <View
                                 style={[

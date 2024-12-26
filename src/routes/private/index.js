@@ -25,8 +25,8 @@ import ClearMyDuePayment from '../../screens/ClearMyDuePayment';
 import SplashScreen from '../../screens/SplashScreen';
 import {AppColors} from '../../assets/Colors';
 import DutyReportUpdateScreen from '../../screens/DutyReportUpdateScreen';
-import ReviewScreen from '../../screens/ReviewScreen';
-import RatingScreen from '../../screens/RatingScreen';
+import RateYourCustomerFeedback from '../../screens/RateYourCustomerFeedback';
+import RateYourCustomer from '../../screens/RateYourCustomer';
 import OnTimeReach from '../../screens/OnTimeReach';
 import Feedback from '../../screens/RateUsAtSocialMedia';
 import {useSelector} from 'react-redux';
@@ -113,8 +113,8 @@ const PrivateRoute = () => {
             component={RateUsAtSocialMedia}
           />
           <Stack.Screen name="OnTimeReach" component={OnTimeReach} />
-          <Stack.Screen name="RatingScreen" component={RatingScreen} />
-          <Stack.Screen name="ReviewScreen" component={ReviewScreen} />
+          <Stack.Screen name="RateYourCustomer" component={RateYourCustomer} />
+          <Stack.Screen name="RateYourCustomerFeedback" component={RateYourCustomerFeedback} />
 
           <Stack.Screen
             name="AgentCommisionAdded"

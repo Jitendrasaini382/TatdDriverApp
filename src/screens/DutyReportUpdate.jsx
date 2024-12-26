@@ -411,7 +411,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       console.log(res, 'duty_report_booking_reach Responseeeeee');
       setModalVisibleRich(false);
       setModalVisibleinput(true);
-      GetAllBookingInfo()
+      GetAllBookingInfo();
     } catch (err) {
       console.log(err, 'duty_report_booking_reach Errrrrrrrrrrrrrrrr');
     }
@@ -459,7 +459,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         current_language: languageSwitch,
         trip_status: '30',
       });
-      navigation.navigate("DueAmount",{bookingNumber})
+      navigation.navigate('DueAmount', {bookingNumber});
       console.log(res, 'booking end api response');
     } catch (err) {
       console.log(err, 'booking end api Err');
@@ -523,13 +523,16 @@ const DutyReportUpdate = ({route, navigation}) => {
             shadowOpacity: 0.2,
             shadowRadius: 4,
             elevation: 3,
-            alignItems: 'center',
+            borderWidth:.5,
+            borderColor:AppColors.black
+            // alignItems: 'center',
           }}>
           <Text
             style={{
               fontSize: 16,
               fontWeight: 'bold',
-              marginBottom: 10,
+              color: AppColors.black,
+              marginVertical: 10,
               textAlign: 'center',
             }}>
             {bookingInfo?.data?.duty_time_heading}{' '}
@@ -538,23 +541,27 @@ const DutyReportUpdate = ({route, navigation}) => {
           <Text
             style={{
               fontSize: 14,
-              marginBottom: 20,
-              textAlign: 'center',
+              marginVertical: 20,
+              fontWeight: 'bold',
+              justifyContent:"flex-start",
+              color: AppColors.black
             }}>
-            Booking No: #642971
+            Booking No: #{bookingNumber}
           </Text>
           <TouchableOpacity
+           onPress={()=>navigation.navigate("DueAmount", {bookingNumber})}
             style={{
-              backgroundColor: '#4CAF50',
+              backgroundColor: 'green',
               paddingVertical: 10,
               paddingHorizontal: 20,
               borderRadius: 5,
               elevation: 2,
+              alignSelf:"center"
             }}>
             <Text
               style={{
                 color: '#fff',
-                fontSize: 14,
+                fontSize: 18,
                 fontWeight: 'bold',
                 textAlign: 'center',
               }}>

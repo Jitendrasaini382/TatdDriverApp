@@ -4,7 +4,7 @@ import Header from '../components/Header';
 import {AirbnbRating} from 'react-native-ratings';
 import {AppColors} from '../assets/Colors';
 
-const RatingScreen = ({navigation, route}) => {
+const RateYourCustomer = ({navigation, route}) => {
   const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -22,7 +22,7 @@ const RatingScreen = ({navigation, route}) => {
       return;
     }
     setLoading(true);
-    navigation.navigate('ReviewScreen', {
+    navigation.navigate('RateYourCustomerFeedback', {
       rate: rating,
       bookingNumber: bookingNumber,
     });
@@ -101,4 +101,4 @@ const RatingScreen = ({navigation, route}) => {
   );
 };
 
-export default RatingScreen;
+export default RateYourCustomer;

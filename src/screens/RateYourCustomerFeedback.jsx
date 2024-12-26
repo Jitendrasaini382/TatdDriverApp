@@ -14,7 +14,7 @@ import {AppColors} from '../assets/Colors';
 import {RATE_YOUR_CUSTOMER} from '../apis/Apis';
 import {useSelector} from 'react-redux';
 
-const ReviewScreen = ({navigation, route}) => {
+const RateYourCustomerFeedback = ({navigation, route}) => {
   const {rate, bookingNumber} = route?.params;
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
@@ -136,4 +136,4 @@ const ReviewScreen = ({navigation, route}) => {
   );
 };
 
-export default ReviewScreen;
+export default RateYourCustomerFeedback;

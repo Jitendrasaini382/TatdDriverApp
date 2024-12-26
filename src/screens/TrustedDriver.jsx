@@ -596,8 +596,8 @@ const TrustedDriver = ({ navigation }) => {
                   // onPress={() => navigation.navigate('DutyReportUpdateScreen')}
                   // onPress={() => navigation.navigate('RateUsAtSocialMedia')}
                   // onPress={() => navigation.navigate('OnTimeReach')}
-                  // onPress={() => navigation.navigate('RatingScreen')}
-                  // onPress={() => navigation.navigate('ReviewScreen')}
+                  // onPress={() => navigation.navigate('RateYourCustomer')}
+                  // onPress={() => navigation.navigate('RateYourCustomerFeedback')}
                   // onPress={() => navigation.navigate('DutyReportUpdate')}
 
                   style={styles.bottamContent2}>

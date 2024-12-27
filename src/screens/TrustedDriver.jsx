@@ -18,6 +18,7 @@ import {
   Linking,
   RefreshControl,
   Platform,
+  Image,
 } from 'react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -59,6 +60,7 @@ import {
 } from '../redux/slices/trustedDriverSlice';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
+import { Facebook_Icon } from '../assets/images';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -300,22 +302,22 @@ const TrustedDriver = ({navigation}) => {
 
   const handleToggleButton = async () => {
     console.log('Function handleToggleButton called');
-  
+
     console.log('Initial isRfdOn:', isRfdOn);
     const newRfdValue = isRfdOn ? '0' : '1';
     console.log('New RFD Value:', newRfdValue);
-  
+
     // Toggle isRfdOn state
     setIsRfdOn(!isRfdOn);
     console.log('Toggled isRfdOn (setState):', !isRfdOn);
-  
+
     // Create updated login button payload
     const updatedLoginButton = {
       ...loginButton,
       rfd: newRfdValue,
     };
     console.log('Updated loginButton payload:', updatedLoginButton);
-  
+
     try {
       console.log('Calling LOGIN_BUTTON API with payload:', updatedLoginButton);
       const response = await LOGIN_BUTTON(updatedLoginButton);
@@ -330,7 +332,6 @@ const TrustedDriver = ({navigation}) => {
       console.log('Finally block executed');
     }
   };
-  
 
   // const handleToggleButton = () => {
   //   const newRfdValue = isRfdOn ? '0' : '1';
@@ -530,8 +531,9 @@ const TrustedDriver = ({navigation}) => {
                       //   )
                       // }
 
-                      onPress={()=>navigation.navigate("DriverNotifications")}
-                    >
+                      onPress={() =>
+                        navigation.navigate('DriverNotifications')
+                      }>
                       <View style={styles.notification}>
                         <Icon
                           color={AppColors.white}
@@ -657,10 +659,14 @@ const TrustedDriver = ({navigation}) => {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() =>
-                    openMyUrl(
-                      `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                    )
+                  onPress={
+                    () =>
+                      navigation.navigate('CommanWebview', {
+                        url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                      })
+                    // openMyUrl(
+                    //   `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                    // )
                   }
                   // onPress={() => navigation.navigate('ClearMyDuePayment')}
                   style={styles.bottamContent4}>
@@ -693,6 +699,78 @@ const TrustedDriver = ({navigation}) => {
             {videosContent ? <TrainingVideo data={Item} /> : null}
           </View>
         </ScrollView>
+
+        <View style={{justifyContent: 'flex-end'}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              paddingVertical: 20,
+              elevation: 20,
+              backgroundColor: '#fff',
+            }}>
+            {/* Agent Panel */}
+            <TouchableOpacity
+              onPress={() => {
+                openMyUrl('https://www.tatd.in/agent-login.php');
+              }}
+              style={{alignItems: 'center', justifyContent: 'center'}}>
+              <Image
+                source={Facebook_Icon} // Replace with your actual image path
+                style={{width: 30, height: 30, marginBottom: 10}}
+              />
+              <Text
+                style={{
+                  fontSize: 12,
+
+                  color: '#000',
+                }}>
+                AGENT PANEL
+              </Text>
+            </TouchableOpacity>
+
+            {/* Premium Driver */}
+            <TouchableOpacity
+              onPress={() => {
+                openMyUrl('https://www.tatd.in/premium-driver.php?step=1');
+              }}
+              style={{alignItems: 'center', justifyContent: 'center'}}>
+              <Image
+                source={Facebook_Icon} // Replace with your actual image path
+                style={{width: 30, height: 30, marginBottom: 10}}
+              />
+              <Text
+                style={{
+                  fontSize: 12,
+
+                  color: '#000',
+                }}>
+                PREMIUM DRIVER
+              </Text>
+            </TouchableOpacity>
+
+            {/* Trusted Partner */}
+            <TouchableOpacity
+              onPress={() => {
+                openMyUrl('https://www.tatd.in/trusted-driver.php');
+              }}
+              style={{alignItems: 'center', justifyContent: 'center'}}>
+              <Image
+                source={Facebook_Icon} // Replace with your actual image path
+                style={{width: 30, height: 30, marginBottom: 10}}
+              />
+              <Text
+                style={{
+                  fontSize: 12,
+
+                  color: '#000',
+                }}>
+                TRUSTED PARTNER
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
 
         {/* Modals */}
 

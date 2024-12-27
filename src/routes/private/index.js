@@ -33,6 +33,7 @@ import {useSelector} from 'react-redux';
 import DueAmountDetails from '../../screens/DueAmountDetails';
 import RateUsAtSocialMedia from '../../screens/RateUsAtSocialMedia';
 import DueAmount from '../../screens/DueAmount';
+import CommanWebview from '../../screens/Webview';
 
 const Stack = createStackNavigator();
 
@@ -123,6 +124,7 @@ const PrivateRoute = () => {
           <Stack.Screen name="SelectYourState" component={SelectYourState} />
           <Stack.Screen name="SelectYourCity" component={SelectYourCity} />
           <Stack.Screen name="AgentLeads" component={AgentLeads} />
+          <Stack.Screen name='CommanWebview' component={CommanWebview}/>
         </Stack.Navigator>
       </NavigationContainer>
     </>

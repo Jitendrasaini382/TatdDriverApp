@@ -1282,7 +1282,6 @@ const DutyReportUpdate = ({route, navigation}) => {
             alignItems: 'center',
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
           }}>
-          <Toast visibilityTime={3000} />
           <View
             style={{
               backgroundColor: 'white',
@@ -1426,6 +1425,7 @@ const DutyReportUpdate = ({route, navigation}) => {
               </ScrollView>
             )}
           </View>
+          <Toast visibilityTime={3000} />
         </View>
       </Modal>
       {/* on time reach */}

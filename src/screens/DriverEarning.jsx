@@ -47,7 +47,7 @@ const DriverEarning = () => {
       });
       console.log(response.bookings, ' : fetching all earnings ');
       setBookingsData(response.bookings);
-      // setIsLoading(false);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching all earnings:', error);
     } finally {
@@ -55,10 +55,17 @@ const DriverEarning = () => {
     }
   }, []);
 
+  // useEffect(() => {
+  //   fetchEarningData();
+  //   fetchAllEarnings();
+  // }, [fetchEarningData, fetchAllEarnings]);
+
+
   useEffect(() => {
     fetchEarningData();
     fetchAllEarnings();
-  }, [fetchEarningData, fetchAllEarnings]);
+  }, []);
+
 
   const handleEyeIconPress = useCallback(bookingNumber => {
     setSelectedBookingNumber(bookingNumber);

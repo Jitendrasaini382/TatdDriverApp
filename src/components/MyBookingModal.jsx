@@ -63,6 +63,7 @@ const MyBookingModal = ({}) => {
 
   const handleSubmit = booking => {
     console.log(booking, 'handleSubmit Booking');
+    dispatch(setMyBookingModal(false))
     if (booking?.bg === 'red') {
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking?.booking_id,

@@ -43,17 +43,10 @@ import {useSelector} from 'react-redux';
 import {AppFont} from '../assets/FontsFamily';
 import Toast from 'react-native-toast-message';
 
-// const RadioButtonWithTitle = ({booking}) => {
-
-//   return (
-
-//   );
-// };
-
 const DutyReportUpdate = ({route, navigation}) => {
   const {
     bookingNumber,
-    //  tripStatus,
+    // tripStatus,
     state,
   } = route?.params;
   console.log(bookingNumber, 'bookingggg');
@@ -71,6 +64,7 @@ const DutyReportUpdate = ({route, navigation}) => {
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
   const [selectedOption, setSelectedOption] = useState(null);
   const [loader, setLoader] = useState(false);
+  const [mainLoader, setMainLoader] = useState(false);
 
   console.log(bookingNumber, languageSwitch, 'radio button Booking');
 
@@ -156,18 +150,18 @@ const DutyReportUpdate = ({route, navigation}) => {
 
   // Define functions for each option
   // const handleOption1 = () => {
-  //   console.log('Option 1 selected: Have you talked to the customer?');
-  //   // Add your logic here
+  // console.log('Option 1 selected: Have you talked to the customer?');
+  // // Add your logic here
   // };
 
   // const handleOption2 = () => {
-  //   console.log('Option 2 selected: Is the customer not picking up the phone?');
-  //   // Add your logic here
+  // console.log('Option 2 selected: Is the customer not picking up the phone?');
+  // // Add your logic here
   // };
 
   // const handleOption3 = () => {
-  //   console.log('Option 3 selected: The customer wants to cancel?');
-  //   // Add your logic here
+  // console.log('Option 3 selected: The customer wants to cancel?');
+  // // Add your logic here
   // };
 
   // Function to handle selection
@@ -239,6 +233,7 @@ const DutyReportUpdate = ({route, navigation}) => {
 
   useEffect(() => {
     if (state !== 'cancel') {
+      setMainLoader(true);
       GetAllBookingInfo();
     }
   }, []);
@@ -252,25 +247,26 @@ const DutyReportUpdate = ({route, navigation}) => {
         // trip_status: 0,
       });
 
-      // console.log(
-      //   {
-      //     action: 'duty_report_booking_info',
-      //     booking_id: bookingNumber,
-      //     current_language: languageSwitch,
-      //     // trip_status: tripStatus,
-      //   },
-      //   'send action',
-      // );
+      console.log(
+        {
+          action: 'duty_report_booking_info',
+          booking_id: bookingNumber,
+          current_language: languageSwitch,
+          // trip_status: tripStatus,
+        },
+        'send action',
+      );
 
       setbookingInfo(response?.duty_report_booking_info);
       const statusId =
         response?.duty_report_booking_info?.condition?.next_booking_status_id;
       // if (statusId == '15') {
-      dutyReportTripStatusPopup(statusId);
+      if (statusId != '') dutyReportTripStatusPopup(statusId);
+
       // }
       // console.log(
-      //   response?.duty_report_booking_info,
-      //   'GetAllBookingInfo success',
+      // response?.duty_report_booking_info,
+      // 'GetAllBookingInfo success',
       // );
       console.log(
         response?.duty_report_booking_info,
@@ -278,6 +274,8 @@ const DutyReportUpdate = ({route, navigation}) => {
       );
     } catch (error) {
       console.log(error, 'GetAllBookingInfo Api error - Error');
+    } finally {
+      setMainLoader(false);
     }
   };
   useEffect(() => {
@@ -380,13 +378,13 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
   const driverOnTheWay = async () => {
     // console.log(
-    //   {
-    //     action: 'duty_report_booking_ontheway',
-    //     booking_id: bookingNumber,
-    //     current_language: languageSwitch,
-    //     trip_status: bookingInfo?.condition?.next_booking_status_id,
-    //   },
-    //   'on the way body data',
+    // {
+    // action: 'duty_report_booking_ontheway',
+    // booking_id: bookingNumber,
+    // current_language: languageSwitch,
+    // trip_status: bookingInfo?.condition?.next_booking_status_id,
+    // },
+    // 'on the way body data',
     // );
     // return false
     try {
@@ -398,10 +396,10 @@ const DutyReportUpdate = ({route, navigation}) => {
       });
 
       // console.log({
-      //   action: 'duty_report_booking_ontheway',
-      //   booking_id: bookingNumber,
-      //   current_language: languageSwitch,
-      //   trip_status: bookingInfo?.condition?.next_booking_status_id,
+      // action: 'duty_report_booking_ontheway',
+      // booking_id: bookingNumber,
+      // current_language: languageSwitch,
+      // trip_status: bookingInfo?.condition?.next_booking_status_id,
       // }," send on the way action");
 
       console.log(
@@ -520,8 +518,11 @@ const DutyReportUpdate = ({route, navigation}) => {
       }}>
       <Header backButton={true} />
       <Toast visibilityTime={5000} topOffset={50} />
-
-      {state === 'cancel' ? (
+      {mainLoader ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size={'large'} color={AppColors.mainColor} />
+        </View>
+      ) : state === 'cancel' ? (
         <View
           style={{
             marginTop: 30,
@@ -768,7 +769,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                     height={200}
                     // initialPlayerParams={{
 
-                    //   controls:false
+                    // controls:false
                     // }
                     // }
                     autoPlay={false}
@@ -780,7 +781,6 @@ const DutyReportUpdate = ({route, navigation}) => {
           </View>
         </ScrollView>
       )}
-
       {/* accept bookin popup */}
       <Modal
         transparent={true}
@@ -847,15 +847,15 @@ const DutyReportUpdate = ({route, navigation}) => {
                   I accept this duty.
                 </Text>
                 {/* <Image
-                  source={Mask}
-                  resizeMode="contain"
-                  style={{
-                    height: 60,
-                    width: 140,
-                    alignSelf: 'center',
-                    marginVertical: 10,
-                  }}
-                /> */}
+ source={Mask}
+ resizeMode="contain"
+ style={{
+ height: 60,
+ width: 140,
+ alignSelf: 'center',
+ marginVertical: 10,
+ }}
+ /> */}
               </View>
               <Text
                 style={{

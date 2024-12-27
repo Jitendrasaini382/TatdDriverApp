@@ -1,291 +1,4 @@
-// import React, {useContext, useEffect, useState, useCallback} from 'react';
-// import {
-//   View,
-//   Text,
-//   SafeAreaView,
-//   ScrollView,
-//   StyleSheet,
-//   TouchableOpacity,
-// } from 'react-native';
-// import Modal from 'react-native-modal';
-
-// import Header from '../components/Header';
-// import {AppFont} from '../assets/FontsFamily';
-// import {AppColors} from '../assets/Colors';
-// import {TICKETS_DRIVER} from '../apis/Apis';
-// import TicketDetails from '../components/modal/TicketDetailsModal';
-// import AccordionData from '../components/AccordianData';
-// import CreateTicketModal from '../components/modal/CreateTicketModal';
-// import {useDispatch, useSelector} from 'react-redux';
-// import {setButtonShow, setShowButtonText, setTicketsData} from '../redux/slices/globalSlice';
-
-// const TicketsDriver = ({navigation}) => {
-//   const dispatch = useDispatch();
-//   const [createTicketModal, setCreateTicketModal] = useState(false);
-//   const [ticketDetailsModal, setTicketDetailsModal] = useState(false);
-//   const [selectedTicketId, setSelectedTicketId] = useState(null);
-//   const ticketsData = useSelector(e => e?.globalSlice?.ticketsData);
-//   const buttonShow = useSelector(e => e?.globalSlice?.buttonShow);
-//   const showButtonText = useSelector(e => e?.globalSlice?.showButtonText);
-
-//   const showDriverTicket = useCallback(async () => {
-//     try {
-//       const response = await TICKETS_DRIVER({action: 'show_driver_ticket'});
-//       dispatch(setTicketsData(response.tickets));
-//     } catch (err) {
-//       console.error('Show Driver Ticket Error:', err);
-//     }
-//   }, [ticketsData]);
-
-//   const checkOpenTicket = useCallback(async () => {
-//     try {
-//       const response = await TICKETS_DRIVER({action: 'open_ticket'});
-//       if (
-//         response.status_code == 200 &&
-//         response.message === 'no_open_ticket_found'
-//       ) {
-//         dispatch(setButtonShow(true));
-//         dispatch(setShowButtonText(''));
-//       } else {
-//         dispatch(setButtonShow(false));
-//         dispatch(setShowButtonText(response.message));
-//       }
-//     } catch (err) {
-//       console.error('Network Error:', err);
-//     }
-//   }, [setButtonShow, setShowButtonText]);
-
-//   useEffect(() => {
-//     checkOpenTicket();
-//     showDriverTicket();
-//   }, [checkOpenTicket, showDriverTicket]);
-
-//   const handleTicketPress = useCallback(
-//     id => {
-//       setTicketDetailsModal(true);
-//       setSelectedTicketId(id);
-//     },
-//     [setSelectedTicketId],
-//   );
-
-//   const renderItem = useCallback(
-//     ({id, timestamp, ticket_status}, index) => (
-//       <View key={id} style={[styles.row, index === 0 && styles.firstRow]}>
-//         <TouchableOpacity
-//           onPress={() => handleTicketPress(id)}
-//           style={styles.cell}>
-//           <Text style={styles.cellText}>{id}</Text>
-//         </TouchableOpacity>
-//         <View style={[styles.cell2, styles.middleCell]}>
-//           <Text style={styles.cellText}>{timestamp}</Text>
-//         </View>
-//         <View style={styles.cell}>
-//           <View
-//             style={[
-//               styles.statusButton,
-//               index === 0 && styles.firstStatusButton,
-//             ]}>
-//             <Text
-//               style={[
-//                 styles.statusText,
-//                 index === 0 && styles.firstStatusText,
-//               ]}>
-//               {ticket_status}
-//             </Text>
-//           </View>
-//         </View>
-//       </View>
-//     ),
-//     [handleTicketPress],
-//   );
-
-//   return (
-//     <SafeAreaView style={styles.safeAreaView}>
-//       <Header backButton={true} />
-//       <ScrollView style={styles.scrollView}>
-//         <AccordionData />
-//         {buttonShow ? (
-//           <TouchableOpacity
-//             onPress={() => setCreateTicketModal(true)}
-//             style={styles.button}>
-//             <Text style={styles.buttonText}>Create Ticket</Text>
-//           </TouchableOpacity>
-//         ) : (
-//           <View style={styles.showButtonView}>
-//             <Text style={styles.showbtnText}>{showButtonText}</Text>
-//           </View>
-//         )}
-
-//         <Modal
-//           backdropOpacity={0}
-//           onBackdropPress={() => setCreateTicketModal(false)}
-//           animationIn="fadeInDown"
-//           animationOut="fadeOutUp"
-//           isVisible={createTicketModal}>
-//           <CreateTicketModal setCreateTicketModal={setCreateTicketModal} />
-//         </Modal>
-
-//         <Modal
-//           backdropOpacity={0}
-//           onBackdropPress={() => setTicketDetailsModal(false)}
-//           animationIn="fadeInDown"
-//           animationOut="fadeOutUp"
-//           isVisible={ticketDetailsModal}>
-//           <TicketDetails
-//             setTicketDetailsModal={setTicketDetailsModal}
-//             ticketId={selectedTicketId}
-//           />
-//         </Modal>
-
-//         <View style={styles.container}>
-//           <View style={styles.header}>
-//             <View style={styles.headerCell1}>
-//               <Text style={styles.headerText}>Ticket ID</Text>
-//             </View>
-//             <View style={[styles.headerCell2, styles.middleHeaderCell]}>
-//               <Text style={styles.headerText}>Created Date</Text>
-//             </View>
-//             <View style={styles.headerCell3}>
-//               <Text style={styles.headerText}>Status</Text>
-//             </View>
-//           </View>
-//           {/* {ticketsData && ticketsData.map(renderItem)} */}
-//         </View>
-//       </ScrollView>
-//     </SafeAreaView>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   scrollView: {
-//     margin: 15,
-//   },
-//   safeAreaView: {
-//     display: 'flex',
-//     flexDirection: 'column',
-//     flex: 1,
-//     backgroundColor: AppColors.white,
-//   },
-//   container: {
-//     borderWidth: 1,
-//     marginTop: 10,
-//     flex: 1,
-//     borderColor: AppColors.borderColor,
-//     backgroundColor: AppColors.white,
-//   },
-//   header: {
-//     flexDirection: 'row',
-//     flex: 1,
-//     borderBottomWidth: 1,
-//     borderColor: AppColors.borderColor,
-
-//     backgroundColor: '#f8f8f8',
-//   },
-//   headerCell1: {
-//     flex: 1,
-//     padding: 10,
-//   },
-//   headerCell2: {
-//     flex: 1.8,
-//     padding: 10,
-//   },
-//   headerCell3: {
-//     flex: 1,
-//     padding: 10,
-//   },
-//   middleHeaderCell: {
-//     borderLeftWidth: 1,
-//     borderRightWidth: 1,
-//     borderColor: AppColors.borderColor,
-//   },
-//   headerText: {
-//     color: '#888',
-//     fontWeight: 'bold',
-//   },
-//   row: {
-//     flexDirection: 'row',
-//     borderBottomWidth: 1,
-//     borderColor: AppColors.borderColor,
-//   },
-//   firstRow: {
-//     backgroundColor: '#f0f8ff',
-//   },
-//   cell: {
-//     flex: 1,
-//     padding: 10,
-//     justifyContent: 'center',
-//   },
-//   cell2: {
-//     flex: 1.8,
-//     padding: 10,
-//     justifyContent: 'center',
-//   },
-
-//   middleCell: {
-//     borderLeftWidth: 1,
-//     borderRightWidth: 1,
-//     borderColor: AppColors.borderColor,
-//   },
-//   cellText: {
-//     color: '#333',
-//   },
-//   statusButton: {
-//     backgroundColor: '#f0f0f0',
-//     borderRadius: 5,
-//     borderWidth: 0.5,
-//     borderColor: '#ccc',
-//     paddingVertical: 8,
-//     paddingHorizontal: 8,
-//     alignItems: 'center',
-//   },
-//   firstStatusButton: {
-//     backgroundColor: '#1e90ff',
-//   },
-//   statusText: {
-//     color: '#333',
-//     fontSize: 15,
-//   },
-//   firstStatusText: {
-//     color: AppColors.white,
-//   },
-
-//   bottamView: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-around',
-//     borderWidth: 1,
-//     backgroundColor: '#f7f7f7',
-//     borderColor: AppColors.borderColor,
-//   },
-//   bottamText: {
-//     color: 'rgb(65, 84, 98)',
-//     fontFamily: AppFont.regularFont,
-//     padding: 5,
-//   },
-//   button: {
-//     backgroundColor: '#00A1E0',
-//     padding: 15,
-//     borderRadius: 5,
-//     alignItems: 'center',
-//     marginBottom: 5,
-//     marginTop: 15,
-//   },
-//   buttonText: {
-//     color: AppColors.white,
-//     fontSize: 16,
-//     fontWeight: 'bold',
-//   },
-//   showButtonView: {
-//     borderWidth: 1,
-//     borderColor: '#e0e0e0',
-//     padding: 5,
-//     backgroundColor: '#e0e0e0',
-//   },
-//   showbtnText: {color: AppColors.black, fontWeight: '500', fontSize: 15},
-// });
-
-// export default TicketsDriver;
-
-import React, {useContext, useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -294,6 +7,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  TextInput,
+  Alert,
+  RefreshControl,
+  Keyboard,
 } from 'react-native';
 import Modal from 'react-native-modal';
 
@@ -304,25 +21,36 @@ import {TICKETS_DRIVER} from '../apis/Apis';
 import TicketDetails from '../components/modal/TicketDetailsModal';
 import AccordionData from '../components/AccordianData';
 import CreateTicketModal from '../components/modal/CreateTicketModal';
-import {useDispatch, useSelector} from 'react-redux';
-import {
-  setButtonShow,
-  setShowButtonText,
-  setTicketsData,
-} from '../redux/slices/globalSlice';
+import {useDispatch} from 'react-redux';
+
 import {Skeleton} from '@rneui/base';
 
 const TicketsDriver = ({navigation}) => {
-  const dispatch = useDispatch();
   const [createTicketModal, setCreateTicketModal] = useState(false);
   const [ticketDetailsModal, setTicketDetailsModal] = useState(false);
   const [selectedTicketId, setSelectedTicketId] = useState(null);
   const [ticketData, setTicketData] = useState([]);
   const [loader, setLoader] = useState(false);
-  const buttonShow = useSelector(e => e?.globalSlice?.buttonShow);
-  const showButtonText = useSelector(e => e?.globalSlice?.showButtonText);
+  const [refreshing, setRefreshing] = useState(false);
+  const [buttonShow, setButtonShow] = useState(false);
+  const [showButtonText, setShowButtonText] = useState('');
 
-  const showDriverTicket = useCallback(async () => {
+  const [field, setField] = useState({
+    action: 'create_driver_ticket',
+    remarks: '',
+    tbooking_id: '',
+  });
+  const [checkField, setCheckField] = useState({
+    action: 'check_booking_number',
+    tbooking_id: '',
+  });
+
+  const handleChange = (name, value) => {
+    setField({...field, [name]: value});
+    setCheckField({...checkField, [name]: value});
+  };
+
+  const showDriverTicket = async () => {
     setLoader(true);
     try {
       const response = await TICKETS_DRIVER({action: 'show_driver_ticket'});
@@ -335,30 +63,49 @@ const TicketsDriver = ({navigation}) => {
     } finally {
       setLoader(false);
     }
-  }, [ticketData]);
+  };
 
-  const checkOpenTicket = useCallback(async () => {
+  const checkOpenTicket = async () => {
     try {
       const response = await TICKETS_DRIVER({action: 'open_ticket'});
       if (
         response.status_code == 200 &&
         response.message === 'no_open_ticket_found'
       ) {
-        dispatch(setButtonShow(true));
-        dispatch(setShowButtonText(''));
+        setButtonShow(true);
+        setShowButtonText('');
       } else {
-        dispatch(setButtonShow(false));
-        dispatch(setShowButtonText(response.message));
+        setButtonShow(false);
+        setShowButtonText(response.message);
       }
     } catch (err) {
       console.error('Network Error:', err);
     }
-  }, [setButtonShow, setShowButtonText]);
+  };
+
+  useEffect(() => {
+    showDriverTicket();
+  }, []);
 
   useEffect(() => {
     checkOpenTicket();
-    showDriverTicket();
-  }, []);
+  }, [
+    showButtonText,
+    buttonShow,
+    createTicketModal,
+    ticketDetailsModal,
+    selectedTicketId,
+    field,
+    checkField,
+  ]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([showDriverTicket(), checkOpenTicket()]).catch(
+      console.log('Error refreshing'),
+    );
+    setRefreshing(false);
+  };
 
   const handleTicketPress = useCallback(
     id => {
@@ -367,6 +114,50 @@ const TicketsDriver = ({navigation}) => {
     },
     [setSelectedTicketId],
   );
+
+  const handleCreateTicket = async () => {
+    if (!field.tbooking_id) {
+      Alert.alert('Error', 'Please enter the booking ID');
+      return;
+    }
+    if (!field.remarks) {
+      Alert.alert('Error', 'Please enter remarks');
+      return;
+    }
+
+    Keyboard.dismiss();
+    try {
+      const checkResponse = await TICKETS_DRIVER(checkField);
+
+   
+
+      if (
+        checkResponse.status_code === 200 &&
+        checkResponse?.message == 'valid_booking_id'
+      ) {
+        const createResponse = await TICKETS_DRIVER(field);
+        if (createResponse.status_code === 200) {
+          checkOpenTicket();
+          setCreateTicketModal(false);
+
+          Alert.alert('Success', createResponse.message, [
+            {
+              text: 'OK',
+              onPress: () => {
+                setCreateTicketModal(false);
+              },
+            },
+          ]);
+        } else {
+          Alert.alert('Error', 'Failed to create ticket.');
+        }
+      } else {
+        Alert.alert('Error', checkResponse.message);
+      }
+    } catch (error) {
+      console.log('Error', error || 'Network error occurred.');
+    }
+  };
 
   const renderItem = useCallback(
     ({id, timestamp, ticket_status}, index) => (
@@ -402,7 +193,12 @@ const TicketsDriver = ({navigation}) => {
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <Header backButton={true} />
-      <ScrollView style={styles.scrollView}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        keyboardShouldPersistTaps="always"
+        style={styles.scrollView}>
         <AccordionData />
         {buttonShow ? (
           <TouchableOpacity
@@ -416,13 +212,130 @@ const TicketsDriver = ({navigation}) => {
           </View>
         )}
 
-        <Modal
+        {/* <Modal
           backdropOpacity={0}
           onBackdropPress={() => setCreateTicketModal(false)}
           animationIn="fadeInDown"
           animationOut="fadeOutUp"
           isVisible={createTicketModal}>
           <CreateTicketModal setCreateTicketModal={setCreateTicketModal} />
+        </Modal> */}
+
+        <Modal
+          backdropOpacity={0}
+          onBackdropPress={() => setCreateTicketModal(false)}
+          animationIn="fadeInDown"
+          animationOut="fadeOutUp"
+          isVisible={createTicketModal}>
+          <View
+            style={{
+              flex: 1,
+              //   height: 'auto',
+              justifyContent: 'flex-start',
+
+              backgroundColor: AppColors.white,
+              padding: 10,
+              borderWidth: 2,
+              borderRadius: 10,
+              borderColor: '#e7e7e7',
+            }}>
+            <View
+              style={{
+                margin: 10,
+                borderRadius: 20,
+                borderWidth: 1,
+                borderColor: '#e7e7e7',
+                padding: 20,
+                position: 'relative',
+              }}>
+              <TouchableOpacity
+                onPress={() => setCreateTicketModal(false)}
+                style={{
+                  position: 'absolute',
+                  top: 5,
+                  right: 5,
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  backgroundColor: '#e0e0e0',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{fontSize: 15, color: '#333', fontWeight: 'bold'}}>
+                  ×
+                </Text>
+              </TouchableOpacity>
+              <Text
+                style={{
+                  fontSize: 24,
+                  fontWeight: 'bold',
+                  marginBottom: 20,
+                  color: '#333',
+                  fontFamily: 'Roboto-Medium',
+                }}>
+                Create Ticket
+              </Text>
+
+              <Text style={{fontSize: 16, marginBottom: 5, color: '#666'}}>
+                Booking Number:
+              </Text>
+              <TextInput
+                style={{
+                  borderRadius: 5,
+                  padding: 10,
+                  marginBottom: 15,
+                  borderWidth: 1,
+                  fontSize: 18,
+                  borderColor: '#e7e7e7',
+                  color: AppColors.black,
+                }}
+                placeholder="Share Your Booking Number"
+                onChangeText={value => handleChange('tbooking_id', value)}
+                placeholderTextColor="#6c757d"
+                value={field.tbooking_id}
+              />
+
+              <Text style={{fontSize: 16, marginBottom: 5, color: '#666'}}>
+                Description:
+              </Text>
+              <TextInput
+                style={{
+                  borderRadius: 5,
+                  padding: 10,
+                  marginBottom: 15,
+                  borderWidth: 1,
+                  fontSize: 18,
+                  height: 100,
+                  textAlignVertical: 'top',
+                  borderColor: '#e7e7e7',
+                  color: AppColors.black,
+                }}
+                placeholder="Please provide detailed information about your issue. We will promptly address your inquiry."
+                placeholderTextColor={AppColors.silverGrey}
+                multiline
+                value={field.remarks}
+                onChangeText={value => handleChange('remarks', value)}
+              />
+
+              <TouchableOpacity
+                onPress={handleCreateTicket}
+                style={{
+                  backgroundColor: '#007bff',
+                  borderRadius: 5,
+                  padding: 15,
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    color: AppColors.white,
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                  }}>
+                  Create
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </Modal>
 
         <Modal
@@ -469,13 +382,11 @@ const TicketsDriver = ({navigation}) => {
                     <>
                       <Skeleton
                         animation="pulse"
-                        // width={'100%'}
                         key={index}
                         height={60}
                         style={{
                           flex: 1,
                           borderRadius: 10,
-                          //   marginHorizontal: 10,
                         }}
                       />
                     </>
@@ -495,6 +406,7 @@ const TicketsDriver = ({navigation}) => {
 const styles = StyleSheet.create({
   scrollView: {
     margin: 15,
+    flex: 1,
   },
   safeAreaView: {
     display: 'flex',

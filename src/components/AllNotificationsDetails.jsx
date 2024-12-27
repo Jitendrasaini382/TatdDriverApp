@@ -18,18 +18,20 @@ import Header from './Header';
 import {DRIVER_NOTIFICATION} from '../apis/Apis';
 import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
-import { useDispatch, useSelector } from 'react-redux';
-import { setNotificationData, setStoredRating } from '../redux/slices/globalSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  setNotificationData,
+  setStoredRating,
+} from '../redux/slices/globalSlice';
 
 const AllNotificationComponent = () => {
   const navigation = useNavigation();
-  const dispatch = useDispatch()
-   const  notificationData = useSelector((e)=>e?.globalSlice?.notificationData)
-  
+  const dispatch = useDispatch();
+  const notificationData = useSelector(e => e?.globalSlice?.notificationData);
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleNotificationPress = useCallback( 
+  const handleNotificationPress = useCallback(
     notification => {
       navigation.navigate('NotificationDetail', {
         notificationId: notification.id,
@@ -43,8 +45,7 @@ const AllNotificationComponent = () => {
       setIsLoading(true);
       try {
         const response = await DRIVER_NOTIFICATION(data);
-        dispatch(setNotificationData(response.notifications))
-
+        dispatch(setNotificationData(response.notifications));
       } catch (error) {
         console.error('DRIVER NOTIFICATION error:', error);
       } finally {
@@ -58,11 +59,11 @@ const AllNotificationComponent = () => {
     getAllNotification({
       action: 'view_all_notifications',
     });
-  }, [getAllNotification]);
+  }, []);
 
   if (isLoading) {
     return (
-      <View style={styles.loadingContainer}>
+      <View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>
         <ActivityIndicator size="large" color={AppColors.whatsAppIconColor} />
       </View>
     );
@@ -101,12 +102,11 @@ const AllNotificationComponent = () => {
 };
 
 export const NotificationDetailScreen = ({route}) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const {notificationId} = route.params;
   const [notification, setNotification] = useState({});
 
-const storeRating = useSelector((e)=>e?.globalSlice?.storeRating)
-
+  const storeRating = useSelector(e => e?.globalSlice?.storeRating);
 
   const [feedback, setFeedback] = useState('');
   const [currentDateTime, setCurrentDateTime] = useState('');

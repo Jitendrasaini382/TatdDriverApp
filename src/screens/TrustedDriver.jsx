@@ -524,13 +524,13 @@ const TrustedDriver = ({navigation}) => {
                       </View>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() =>
-                        openMyUrl(
-                          'https://www.tatd.in/driver-notifications.php',
-                        )
-                      }
+                      // onPress={() =>
+                      //   openMyUrl(
+                      //     'https://www.tatd.in/driver-notifications.php',
+                      //   )
+                      // }
 
-                      // onPress={()=>navigation.navigate("DriverNotifications")}
+                      onPress={()=>navigation.navigate("DriverNotifications")}
                     >
                       <View style={styles.notification}>
                         <Icon

@@ -8,6 +8,7 @@ import {
   ScrollView,
   Alert,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import {CloseEnvelop, OpenEnvelop} from '../assets/images';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
@@ -19,8 +20,10 @@ import {AppFont} from '../assets/FontsFamily';
 const AllNoticeBoardComponent = () => {
   const navigation = useNavigation();
   const [noticeBoardData, setNoticeBoardData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const getAllDriverNotice = useCallback(async () => {
+    setIsLoading(true);
     try {
       const response = await DRIVER_NOTICE({
         action: 'view_all_notice',
@@ -28,7 +31,10 @@ const AllNoticeBoardComponent = () => {
       setNoticeBoardData(response.awareness_data);
     } catch (error) {
       console.error('Driver Notice error:', error);
-      Alert.alert('Error', 'Failed to fetch notices. Please try again.');
+      setIsLoading(false);
+      // Alert.alert('Error', 'Failed to fetch notices. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -46,6 +52,14 @@ const AllNoticeBoardComponent = () => {
     },
     [navigation],
   );
+
+  if (isLoading) {
+    return (
+      <View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>
+        <ActivityIndicator size="large" color={AppColors.whatsAppIconColor} />
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.container}>

@@ -276,17 +276,7 @@ const DueAmountDetails = ({route, navigation}) => {
                 placeholderTextColor={AppColors.black}
               />
             </View>
-            {/* <View style={{marginVertical: 20}}>
- <Text
- style={{
- fontSize: 18,
- fontWeight: 'bold',
- textAlign: 'center',
- color: '#16588e',
- }}>
- End Alert Subheading
- </Text>
- </View> */}
+
             <View style={{marginVertical: 30}}>
               <TouchableOpacity
                 disabled={!inputValue && inputValue?.length == 0}
@@ -329,24 +319,29 @@ const DueAmountDetails = ({route, navigation}) => {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <TouchableOpacity
-            onPress={() => setisShowExtraMinutesModal(true)}
-            style={{
-              paddingVertical: 6,
-              paddingHorizontal: 12,
-              backgroundColor: AppColors.mainColor,
-              borderRadius: 6,
-            }}>
-            <Text
-              style={{
-                color: AppColors.white,
-                fontSize: 14,
-                fontWeight: 'bold',
-                fontFamily: AppFont.regularFont,
-              }}>
-              <AddIcon size={14} name="pluscircleo" /> Waiting Minutes
-            </Text>
-          </TouchableOpacity>
+          <View>
+            {console.log(allInvoiceData?.invoice_data?.waiting_minutes_eligibility,"allInvoiceData?.invoice_data?.waiting_minutes_eligibility")}
+            {allInvoiceData?.invoice_data?.waiting_minutes_eligibility == 1 && (
+              <TouchableOpacity
+                onPress={() => setisShowExtraMinutesModal(true)}
+                style={{
+                  paddingVertical: 6,
+                  paddingHorizontal: 12,
+                  backgroundColor: AppColors.mainColor,
+                  borderRadius: 6,
+                }}>
+                <Text
+                  style={{
+                    color: AppColors.white,
+                    fontSize: 14,
+                    fontWeight: 'bold',
+                    fontFamily: AppFont.regularFont,
+                  }}>
+                  <AddIcon size={14} name="pluscircleo" /> Waiting Minutes
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
           <Text
             style={{
               color: AppColors.black,

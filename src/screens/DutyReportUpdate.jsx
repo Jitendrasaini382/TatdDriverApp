@@ -99,19 +99,46 @@ const DutyReportUpdate = ({route, navigation}) => {
         current_language: languageSwitch,
         sub_status: 'Not Picking Call',
       });
-      Toast.show({
-        type: 'success',
-        text1: 'success',
-        text2: response?.alert,
-      });
-      GetAllBookingInfo();
-      console.log(response, 'talk to customer Api response');
+      if (response?.msg_type == 'error') {
+        Alert.alert(response?.message);
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: 'success',
+          text2: response?.message,
+        });
+        GetAllBookingInfo();
+        console.log(response, 'talk to customer Api response');
+      }
     } catch (error) {
       console.log(error, 'talk to customer Api error - General Error');
     } finally {
       setLoader(false);
     }
   };
+
+  // const notPickupPhoneCustomer = async () => {
+  //   setLoader(true);
+  //   try {
+  //     const response = await CUSTOMER_NOT_PICKUP_PHONE({
+  //       action: 'duty_report_send_sms',
+  //       booking_id: bookingNumber,
+  //       current_language: languageSwitch,
+  //       sub_status: 'Not Picking Call',
+  //     });
+  //     Toast.show({
+  //       type: 'success',
+  //       text1: 'success',
+  //       text2: response?.alert,
+  //     });
+  //     GetAllBookingInfo();
+  //     console.log(response, 'talk to customer Api response');
+  //   } catch (error) {
+  //     console.log(error, 'talk to customer Api error - General Error');
+  //   } finally {
+  //     setLoader(false);
+  //   }
+  // };
 
   const customerWantToCancel = async () => {
     setLoader(true);

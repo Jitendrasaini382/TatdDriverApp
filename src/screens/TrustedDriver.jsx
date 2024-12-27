@@ -60,7 +60,7 @@ import {
 } from '../redux/slices/trustedDriverSlice';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
-import { Facebook_Icon } from '../assets/images';
+import { Agent_Icon, Facebook_Icon } from '../assets/images';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -661,12 +661,12 @@ const TrustedDriver = ({navigation}) => {
                 <TouchableOpacity
                   onPress={
                     () =>
-                      navigation.navigate('CommanWebview', {
-                        url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                      })
-                    // openMyUrl(
-                    //   `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                    // )
+                      // navigation.navigate('CommanWebview', {
+                      //   url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                      // })
+                    openMyUrl(
+                      `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                    )
                   }
                   // onPress={() => navigation.navigate('ClearMyDuePayment')}
                   style={styles.bottamContent4}>
@@ -717,7 +717,7 @@ const TrustedDriver = ({navigation}) => {
               }}
               style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
-                source={Facebook_Icon} // Replace with your actual image path
+                source={Agent_Icon} // Replace with your actual image path
                 style={{width: 30, height: 30, marginBottom: 10}}
               />
               <Text
@@ -737,7 +737,7 @@ const TrustedDriver = ({navigation}) => {
               }}
               style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
-                source={Facebook_Icon} // Replace with your actual image path
+                source={Agent_Icon} // Replace with your actual image path
                 style={{width: 30, height: 30, marginBottom: 10}}
               />
               <Text
@@ -757,7 +757,7 @@ const TrustedDriver = ({navigation}) => {
               }}
               style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
-                source={Facebook_Icon} // Replace with your actual image path
+                source={Agent_Icon} // Replace with your actual image path
                 style={{width: 30, height: 30, marginBottom: 10}}
               />
               <Text

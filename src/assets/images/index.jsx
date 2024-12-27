@@ -21,4 +21,4 @@ export const Headerlogo = require('./headerLogo.png')
 export const googleLogo = require('./google.png')
 export const Mask = require('./mask.png')
 export const Triangle_Icon = require('./rt_icon.png')
-
+export const Agent_Icon = require('./agentPanel.png')

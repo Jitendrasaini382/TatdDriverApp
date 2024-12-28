@@ -86,21 +86,23 @@ const BookingView = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.connectContainer}>
-        <Pressable
-          // onPress={() => {
-          //  dispatch( setMyBookingAgencyModal(true));
-          // }}
-          onPress={handleLoginPress}
-          style={styles.connectButton}>
-          <Icon color={AppColors.white} size={15} name="plus" />
-          <Image style={styles.rightArrow} source={LeftArrow} />
-        </Pressable>
-        <Text style={styles.connectText}>
-          {/* Connect the driver to your network using this button and earn Rs 250. */}
-          {agentPanelViewData}
-        </Text>
-      </View>
+      {agentPanelViewData && (
+        <View style={styles.connectContainer}>
+          <Pressable
+            // onPress={() => {
+            //  dispatch( setMyBookingAgencyModal(true));
+            // }}
+            onPress={handleLoginPress}
+            style={styles.connectButton}>
+            <Icon color={AppColors.white} size={15} name="plus" />
+            <Image style={styles.rightArrow} source={LeftArrow} />
+          </Pressable>
+          <Text style={styles.connectText}>
+            {/* Connect the driver to your network using this button and earn Rs 250. */}
+            {agentPanelViewData}
+          </Text>
+        </View>
+      )}
 
       <View style={styles.notificationContainer}>
         <Text style={styles.notificationText}>

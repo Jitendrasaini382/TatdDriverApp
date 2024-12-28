@@ -38,6 +38,18 @@ export const TICKETS_DRIVER = body => {
   return _Fetch('POST', 'tickets/tickets-driver-api.php', {...body}, {});
 };
 
+// https://www.tatd.in/app-api/driver/trusted-driver/headline_message_api.php
+
+export const DRIVER_HEADLINE = body => {
+  console.log(body, 'DRIVER_HEADLINE Body');
+  return _Fetch(
+    'POST',
+    'trusted-driver/headline_message_api.php?action=headline_message',
+    {...body},
+    {},
+  );
+};
+
 // https://www.tatd.in/app-api/driver/trusted-driver/login-button-trusted.php
 
 export const LOGIN_BUTTON = body => {
@@ -432,13 +444,7 @@ export const FINAL_ACCEPT_BOOKING = body => {
   );
 };
 
-
 // befor start drive
 export const DUTY_REPORT_RESEND_OTP = body => {
-  return _Fetch(
-    'POST',
-    'duty-report/resend_otp_api.php',
-    {...body},
-    {},
-  );
+  return _Fetch('POST', 'duty-report/resend_otp_api.php', {...body}, {});
 };

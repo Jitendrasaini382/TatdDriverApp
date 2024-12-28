@@ -12,7 +12,7 @@ import React, {useContext, useEffect, useState, useCallback} from 'react';
 import {AppColors} from '../assets/Colors';
 import {DRIVER_FAQ} from '../apis/Apis';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import {useDispatch,useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setFaqData} from '../redux/slices/globalSlice';
 
 const AccordionItem = React.memo(
@@ -57,6 +57,7 @@ const Accordion = React.memo(({data, expandedIndexes, toggleIndex}) => (
 
 const AccordionData = () => {
   const dispatch = useDispatch();
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
   const [expandedParentIndexes, setExpandedParentIndexes] = useState([]);
   const [expandedChildIndexes, setExpandedChildIndexes] = useState({});
 
@@ -65,6 +66,7 @@ const AccordionData = () => {
   const getFaqData = useCallback(() => {
     DRIVER_FAQ({
       action: 'driver_faq',
+      current_language: languageSwitch,
     })
       .then(e => {
         if (e.status_code === '200') {

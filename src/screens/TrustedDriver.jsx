@@ -39,6 +39,7 @@ import MyBookingModal from '../components/MyBookingModal';
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
 import {
+  DRIVER_HEADLINE,
   EXPRESS_BOOKING_POPUP,
   GET_FCM_TOKEN,
   LOGIN_BUTTON,
@@ -113,6 +114,7 @@ const TrustedDriver = ({navigation}) => {
   useEffect(() => {
     if (jwt) {
       getPopup();
+      getHeadlineData()
     }
   }, [jwt]);
 
@@ -415,6 +417,30 @@ const TrustedDriver = ({navigation}) => {
       console.log(error, 'GET_POPUPGET_POPUP Error');
     }
   };
+
+  const getHeadlineData = async () => {
+    console.log('Starting to fetch headline data...');
+    
+    try {
+      console.log('Sending request to DRIVER_HEADLINE with:', {
+        action: 'headline_message',
+        current_language: languageSwitch
+      });
+  
+      const response = await DRIVER_HEADLINE({
+        action: 'headline_message',
+        current_language: languageSwitch,
+      });
+  
+      console.log('GET_POPUP Response:', response);
+  
+    } catch (error) {
+      console.log('DRIVER_HEADLINE Error:', error);
+    }
+  };
+  
+
+  
 
   const [showBookingView, setBookingView] = useState(1);
 

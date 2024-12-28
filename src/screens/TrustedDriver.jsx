@@ -62,7 +62,7 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
 import {Agent_Icon, Facebook_Icon} from '../assets/images';
-import { useRoute } from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -114,7 +114,7 @@ const TrustedDriver = ({navigation}) => {
   useEffect(() => {
     if (jwt) {
       getPopup();
-      getHeadlineData()
+      getHeadlineData();
     }
   }, [jwt]);
 
@@ -144,8 +144,8 @@ const TrustedDriver = ({navigation}) => {
   }, []);
 
   const currentRoute = route.name;
-  console.log(currentRoute,"currenttttttt");
-  
+  console.log(currentRoute, 'currenttttttt');
+
   const [selected, setSelected] = useState(currentRoute);
 
   const handlePress = icon => {
@@ -158,7 +158,7 @@ const TrustedDriver = ({navigation}) => {
       navigation.navigate('CommanWebview', {
         url: `https://www.tatd.in/premium-driver.php?step=1`,
       });
-    } else if (icon === 'TrustedPartner' || "TrustedDriver" ) {
+    } else if (icon === 'TrustedPartner' || 'TrustedDriver') {
       navigation.navigate('TrustedDriver');
     }
   };
@@ -317,6 +317,8 @@ const TrustedDriver = ({navigation}) => {
   //   };
   // }, []);
 
+  const [headLineData, setHeadLineData] = useState({});
+
   const [isRfdOn, setIsRfdOn] = useState(false);
   const [loginButton, setLoginButton] = useState({
     action: 'login_button',
@@ -420,27 +422,23 @@ const TrustedDriver = ({navigation}) => {
 
   const getHeadlineData = async () => {
     console.log('Starting to fetch headline data...');
-    
+
     try {
       console.log('Sending request to DRIVER_HEADLINE with:', {
         action: 'headline_message',
-        current_language: languageSwitch
-      });
-  
-      const response = await DRIVER_HEADLINE({
-        action: 'headline_message',
         current_language: languageSwitch,
       });
-  
-      console.log('GET_POPUP Response:', response);
-  
+
+      const response = await DRIVER_HEADLINE({
+        current_language: languageSwitch,
+      });
+
+      console.log('DRIVER_HEADLINE Response:', response);
+      setHeadLineData(response);
     } catch (error) {
       console.log('DRIVER_HEADLINE Error:', error);
     }
   };
-  
-
-  
 
   const [showBookingView, setBookingView] = useState(1);
 
@@ -774,7 +772,9 @@ const TrustedDriver = ({navigation}) => {
                   height: 30,
                   marginBottom: 10,
                   tintColor:
-                    selected === 'Agent' ? AppColors.mainColor : AppColors.black,
+                    selected === 'Agent'
+                      ? AppColors.mainColor
+                      : AppColors.black,
                 }}
               />
               <Text
@@ -797,7 +797,9 @@ const TrustedDriver = ({navigation}) => {
                   height: 30,
                   marginBottom: 10,
                   tintColor:
-                    selected === 'PremiumDriver' ? AppColors.mainColor : AppColors.black,
+                    selected === 'PremiumDriver'
+                      ? AppColors.mainColor
+                      : AppColors.black,
                 }}
               />
               <Text

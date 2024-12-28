@@ -661,12 +661,12 @@ const TrustedDriver = ({navigation}) => {
                 <TouchableOpacity
                   onPress={
                     () =>
-                      // navigation.navigate('CommanWebview', {
-                      //   url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                      // })
-                    openMyUrl(
-                      `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                    )
+                      navigation.navigate('CommanWebview', {
+                        url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                      })
+                    // openMyUrl(
+                    //   `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                    // )
                   }
                   // onPress={() => navigation.navigate('ClearMyDuePayment')}
                   style={styles.bottamContent4}>

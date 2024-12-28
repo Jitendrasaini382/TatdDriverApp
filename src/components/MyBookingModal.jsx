@@ -63,7 +63,7 @@ const MyBookingModal = ({}) => {
 
   const handleSubmit = booking => {
     console.log(booking, 'handleSubmit Booking');
-    dispatch(setMyBookingModal(false))
+    dispatch(setMyBookingModal(false));
     if (booking?.bg === 'red') {
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking?.booking_id,
@@ -72,7 +72,7 @@ const MyBookingModal = ({}) => {
       });
     } else {
       // navigation.navigate("DueAmount",{bookingNumber:booking?.booking_id})
-// return false
+      // return false
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking?.booking_id,
         state: '',
@@ -240,10 +240,16 @@ const MyBookingModal = ({}) => {
                   }
 
                   <Pressable
+                    // onPress={() =>
+                    //   openMyUrl(
+                    // `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                    //   )
+                    // }
+
                     onPress={() =>
-                      openMyUrl(
-                        `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                      )
+                      navigation.navigate('CommanWebview', {
+                        url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                      })
                     }>
                     <View
                       style={[styles.bookingCard, styles.activeBookingCard]}>

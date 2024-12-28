@@ -23,10 +23,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setMyBookingAgencyModal} from '../redux/slices/trustedDriverSlice';
 import {Buffer} from 'buffer';
 import {ON_DEMAND_BOOKING} from '../apis/Apis';
+import { useNavigation } from '@react-navigation/native';
 
 const {width} = Dimensions.get('window');
 
 const BookingView = () => {
+  const navigation = useNavigation()
   const dispatch = useDispatch();
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
   const driverMobileNumber = useSelector(
@@ -75,9 +77,12 @@ const BookingView = () => {
       const url = `https://www.tatd.in/agent-login.php?dologin=${encodedMobile}`;
 
       console.log('Generated URL:', url);
-      Linking.openURL(url).catch(err => {
-        // Alert.alert('An error occurred while opening the URL', err.message);
-        console.error('Error opening URL:', err);
+      // Linking.openURL(url).catch(err => {
+      //   // Alert.alert('An error occurred while opening the URL', err.message);
+      //   console.error('Error opening URL:', err);
+      // });
+      navigation.navigate('CommanWebview', {
+        url: url,
       });
     } catch (error) {
       console.error('Caught error:', error);

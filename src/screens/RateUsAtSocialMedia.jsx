@@ -93,7 +93,12 @@ const RateUsAtSocialMedia = ({route, navigation}) => {
             {viewData?.content3}
           </Text>
           <TouchableOpacity
-            onPress={() => submitRating(viewData?.social_link)}
+            // onPress={() => submitRating(viewData?.social_link)}
+            onPress={() =>
+              navigation.navigate('CommanWebview', {
+                url: viewData?.social_link,
+              })
+            }
             style={styles.button}>
             <Text style={styles.buttonText}>Review as at Google</Text>
           </TouchableOpacity>

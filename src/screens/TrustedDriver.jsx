@@ -60,7 +60,7 @@ import {
 } from '../redux/slices/trustedDriverSlice';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
-import { Agent_Icon, Facebook_Icon } from '../assets/images';
+import {Agent_Icon, Facebook_Icon} from '../assets/images';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -649,7 +649,12 @@ const TrustedDriver = ({navigation}) => {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('AgentLogin')}
+                  // onPress={() => navigation.navigate('AgentLogin')}
+                  onPress={() =>
+                    navigation.navigate('CommanWebview', {
+                      url: `https://www.tatd.in/agent-login.php`,
+                    })
+                  }
                   style={styles.bottamContent3}>
                   <Text style={styles.mainText}>
                     {languageSwitch == 'english' ? 'Agent panel' : 'एजेंट पैनल'}
@@ -712,9 +717,11 @@ const TrustedDriver = ({navigation}) => {
             }}>
             {/* Agent Panel */}
             <TouchableOpacity
-              onPress={() => {
-                openMyUrl('https://www.tatd.in/agent-login.php');
-              }}
+              onPress={() =>
+                navigation.navigate('CommanWebview', {
+                  url: `https://www.tatd.in/agent-login.php`,
+                })
+              }
               style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
                 source={Agent_Icon} // Replace with your actual image path
@@ -732,9 +739,11 @@ const TrustedDriver = ({navigation}) => {
 
             {/* Premium Driver */}
             <TouchableOpacity
-              onPress={() => {
-                openMyUrl('https://www.tatd.in/premium-driver.php?step=1');
-              }}
+              onPress={() =>
+                navigation.navigate('CommanWebview', {
+                  url: `https://www.tatd.in/agent-login.php`,
+                })
+              }
               style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
                 source={Agent_Icon} // Replace with your actual image path
@@ -752,9 +761,11 @@ const TrustedDriver = ({navigation}) => {
 
             {/* Trusted Partner */}
             <TouchableOpacity
-              onPress={() => {
-                openMyUrl('https://www.tatd.in/trusted-driver.php');
-              }}
+              onPress={() =>
+                navigation.navigate('CommanWebview', {
+                  url: `https://www.tatd.in/agent-login.php`,
+                })
+              }
               style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
                 source={Agent_Icon} // Replace with your actual image path

@@ -17,6 +17,14 @@ const CommanWebview = () => {
   true; // Required for Android
 `;
 
+const removeHeader = () => {
+  setTimeout(() => {
+    if (webviewRef?.current) {
+      webviewRef.current.injectJavaScript(removeClassesScript); 
+    }
+  }, 0);
+}
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <Header backButton={true} />
@@ -25,7 +33,7 @@ const CommanWebview = () => {
         style={{flex: 1}}
         source={{uri: url}}
         startInLoadingState={true}
-        injectedJavaScript={removeClassesScript}
+        onLoadEnd={()=>removeHeader()}
         onNavigationStateChange={navState => {
           console.log('Navigating to:', navState.url);
         }}

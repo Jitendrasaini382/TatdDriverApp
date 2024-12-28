@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Image, SafeAreaView} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+  ActivityIndicator,
+} from 'react-native';
 import Header from '../components/Header';
 import {Triangle_Icon} from '../assets/images';
 import {AppColors} from '../assets/Colors';
@@ -10,10 +17,12 @@ const DueAmount = ({route, navigation}) => {
   const [textWidth, setTextWidth] = useState(0);
   const [dueData, setDueData] = useState({});
   const {bookingNumber} = route?.params;
+  const [loading, setLoading] = useState(false);
 
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   useEffect(() => {
+    setLoading(true);
     getDueAmount(bookingNumber);
   }, []);
 
@@ -33,76 +42,86 @@ const DueAmount = ({route, navigation}) => {
       if (response.status_code == 200) {
         console.log('Response status_code is 200');
         setDueData(response.data);
+
         console.log('setDueData called with:', response.data);
+        setLoading(false);
       } else {
         console.log('Response status_code is not 200:', response.status_code);
       }
     } catch (error) {
       console.log(error, 'Error caught in getDueAmount');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex: 1}}>
       <Header backButton={true} />
-      <View style={styles.mainContainer}>
-        <View style={styles.dueContainer}>
-          <View style={styles.header}>
-            <View style={styles.trustedContainer}>
-              <Text style={styles.trustedText}>{dueData?.category}</Text>
-              <View style={styles.iconContainer}>
-                <Image
-                  source={Triangle_Icon}
-                  resizeMode={'cover'}
-                  style={styles.icon}
-                />
+      {loading ? (
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <ActivityIndicator size={'large'} color={AppColors.mainColor} />
+        </View>
+      ) : (
+        <View style={styles.mainContainer}>
+          <View style={styles.dueContainer}>
+            <View style={styles.header}>
+              <View style={styles.trustedContainer}>
+                <Text style={styles.trustedText}>{dueData?.category}</Text>
+                <View style={styles.iconContainer}>
+                  <Image
+                    source={Triangle_Icon}
+                    resizeMode={'cover'}
+                    style={styles.icon}
+                  />
+                </View>
+              </View>
+              <View style={styles.dueTextContainer}>
+                <Text style={styles.dueText}>Due</Text>
               </View>
             </View>
-            <View style={styles.dueTextContainer}>
-              <Text style={styles.dueText}>Due</Text>
-            </View>
-          </View>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginVertical: 60,
-            }}>
-            <Text style={styles.duePrice}>₹ {dueData?.balance_amount}</Text>
-            <Text
-              style={{color: 'blue'}}
-              onPress={() =>
-                navigation.navigate('DueAmountDetails', {
-                  bookingNumber: dueData?.booking_number,
-                })
-              }
-              onLayout={event => {
-                const {width} = event.nativeEvent.layout;
-                setTextWidth(width);
-              }}>
-              {dueData?.invoice_text}
-            </Text>
-            <View style={[styles.dividerInput, {width: textWidth}]} />
             <View
               style={{
-                borderWidth: 1,
-                borderColor: 'grey',
-                marginTop: 20,
-                borderRadius: 5,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginVertical: 60,
               }}>
+              <Text style={styles.duePrice}>₹ {dueData?.balance_amount}</Text>
               <Text
-                style={{
-                  color: 'black',
-                  margin: 5,
-                  fontWeight: '600',
-                  paddingHorizontal: 10,
+                style={{color: 'blue'}}
+                onPress={() =>
+                  navigation.navigate('DueAmountDetails', {
+                    bookingNumber: dueData?.booking_number,
+                  })
+                }
+                onLayout={event => {
+                  const {width} = event.nativeEvent.layout;
+                  setTextWidth(width);
                 }}>
-                {dueData?.action_text}
+                {dueData?.invoice_text}
               </Text>
+              <View style={[styles.dividerInput, {width: textWidth}]} />
+              <View
+                style={{
+                  borderWidth: 1,
+                  borderColor: 'grey',
+                  marginTop: 20,
+                  borderRadius: 5,
+                }}>
+                <Text
+                  style={{
+                    color: 'black',
+                    margin: 5,
+                    fontWeight: '600',
+                    paddingHorizontal: 10,
+                  }}>
+                  {dueData?.action_text}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      )}
     </SafeAreaView>
   );
 };

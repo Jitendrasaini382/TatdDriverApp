@@ -61,6 +61,7 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
 import {Agent_Icon, Facebook_Icon} from '../assets/images';
+import { useRoute } from '@react-navigation/native';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -68,6 +69,7 @@ const responsiveSize = size => {
 };
 
 const TrustedDriver = ({navigation}) => {
+  const route = useRoute();
   const dispatch = useDispatch();
   const [popupData, setPopupData] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
@@ -138,6 +140,26 @@ const TrustedDriver = ({navigation}) => {
   useEffect(() => {
     if (!isFcmSent) getFcmToken();
   }, []);
+
+  const currentRoute = route.name;
+  console.log(currentRoute,"currenttttttt");
+  
+  const [selected, setSelected] = useState(currentRoute);
+
+  const handlePress = icon => {
+    setSelected(icon); // Set the selected icon
+    if (icon === 'Agent') {
+      navigation.navigate('CommanWebview', {
+        url: `https://www.tatd.in/agent-login.php`,
+      });
+    } else if (icon === 'PremiumDriver') {
+      navigation.navigate('CommanWebview', {
+        url: `https://www.tatd.in/premium-driver.php?step=1`,
+      });
+    } else if (icon === 'TrustedPartner' || "TrustedDriver" ) {
+      navigation.navigate('TrustedDriver');
+    }
+  };
 
   // const getFcmToken = async () => {
   //   try {
@@ -717,6 +739,88 @@ const TrustedDriver = ({navigation}) => {
             }}>
             {/* Agent Panel */}
             <TouchableOpacity
+              onPress={() => handlePress('Agent')}
+              style={{alignItems: 'center', justifyContent: 'center'}}>
+              <Image
+                source={Agent_Icon} // Replace with your actual image path
+                style={{
+                  width: 30,
+                  height: 30,
+                  marginBottom: 10,
+                  tintColor:
+                    selected === 'Agent' ? AppColors.mainColor : AppColors.black,
+                }}
+              />
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: '#000',
+                }}>
+                AGENT PANEL
+              </Text>
+            </TouchableOpacity>
+
+            {/* Premium Driver */}
+            <TouchableOpacity
+              onPress={() => handlePress('PremiumDriver')}
+              style={{alignItems: 'center', justifyContent: 'center'}}>
+              <Image
+                source={Agent_Icon} // Replace with your actual image path
+                style={{
+                  width: 30,
+                  height: 30,
+                  marginBottom: 10,
+                  tintColor:
+                    selected === 'PremiumDriver' ? AppColors.mainColor : AppColors.black,
+                }}
+              />
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: '#000',
+                }}>
+                PREMIUM DRIVER
+              </Text>
+            </TouchableOpacity>
+
+            {/* Trusted Partner */}
+            <TouchableOpacity
+              onPress={() => handlePress('TrustedPartner')}
+              style={{alignItems: 'center', justifyContent: 'center'}}>
+              <Image
+                source={Agent_Icon} // Replace with your actual image path
+                style={{
+                  width: 30,
+                  height: 30,
+                  marginBottom: 10,
+                  tintColor:
+                    selected === 'TrustedPartner'
+                      ? AppColors.mainColor
+                      : AppColors.black,
+                }}
+              />
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: '#000',
+                }}>
+                TRUSTED PARTNER
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* <View style={{justifyContent: 'flex-end'}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              paddingVertical: 20,
+              elevation: 20,
+              backgroundColor: '#fff',
+            }}>
+            <TouchableOpacity
               onPress={() =>
                 navigation.navigate('CommanWebview', {
                   url: `https://www.tatd.in/agent-login.php`,
@@ -725,7 +829,12 @@ const TrustedDriver = ({navigation}) => {
               style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
                 source={Agent_Icon} // Replace with your actual image path
-                style={{width: 30, height: 30, marginBottom: 10}}
+                style={{
+                  width: 30,
+                  height: 30,
+                  marginBottom: 10,
+                  tintColor: AppColors.mainColor,
+                }}
               />
               <Text
                 style={{
@@ -737,17 +846,21 @@ const TrustedDriver = ({navigation}) => {
               </Text>
             </TouchableOpacity>
 
-            {/* Premium Driver */}
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('CommanWebview', {
-                  url: `https://www.tatd.in/agent-login.php`,
+                  url: `https://www.tatd.in/premium-driver.php?step=1`,
                 })
               }
               style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
                 source={Agent_Icon} // Replace with your actual image path
-                style={{width: 30, height: 30, marginBottom: 10}}
+                style={{
+                  width: 30,
+                  height: 30,
+                  marginBottom: 10,
+                  tintColor: AppColors.mainColor,
+                }}
               />
               <Text
                 style={{
@@ -758,18 +871,22 @@ const TrustedDriver = ({navigation}) => {
                 PREMIUM DRIVER
               </Text>
             </TouchableOpacity>
-
-            {/* Trusted Partner */}
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('CommanWebview', {
-                  url: `https://www.tatd.in/agent-login.php`,
-                })
-              }
+              // onPress={() =>
+              //   navigation.navigate('CommanWebview', {
+              //     url: `https://www.tatd.in/agent-login.php`,
+              //   })
+              // }
+              onPress={() => navigation.navigate('TrustedDriver')}
               style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
                 source={Agent_Icon} // Replace with your actual image path
-                style={{width: 30, height: 30, marginBottom: 10}}
+                style={{
+                  width: 30,
+                  height: 30,
+                  marginBottom: 10,
+                  tintColor: AppColors.mainColor,
+                }}
               />
               <Text
                 style={{
@@ -781,7 +898,7 @@ const TrustedDriver = ({navigation}) => {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </View> */}
 
         {/* Modals */}
 

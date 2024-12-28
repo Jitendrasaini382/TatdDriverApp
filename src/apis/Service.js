@@ -50,8 +50,10 @@ axiosClient.interceptors.response.use(
           );
 
           if (res.data?.jwt) {
-            console.log("new jwt change new jwt change new jwt change new jwt change new jwt change new jwt change new jwt change new jwt change ");
-            
+            console.log(
+              'new jwt change new jwt change new jwt change new jwt change new jwt change new jwt change new jwt change new jwt change ',
+            );
+
             store.dispatch(
               setUserAuthStates({
                 key: 'jwt',
@@ -129,6 +131,13 @@ axiosClient.interceptors.response.use(
 );
 
 const _Fetch = (method, path, body, headers = {}) => {
+  const languageSwitch = store.getState().globalSlice?.languageSwitch;
+
+  console.log(
+    languageSwitch,
+    'languageSwitchlanguageSwitchlanguageSwitch, service',
+  );
+
   return new Promise((resolve, reject) => {
     // Merge headers: If headers are passed, merge with default headers
     const finalHeaders = {
@@ -139,7 +148,10 @@ const _Fetch = (method, path, body, headers = {}) => {
     axiosClient({
       method,
       url: path,
-      data: method !== 'GET' ? body : undefined,
+      data:
+        method !== 'GET'
+          ? {...body, current_language: languageSwitch}
+          : undefined,
       params: method === 'GET' ? body : undefined,
       headers: finalHeaders, // Pass merged headers
     })

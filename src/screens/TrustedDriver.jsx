@@ -47,7 +47,7 @@ import {
 } from '../apis/Apis';
 import ExpressBookingModal from '../components/modal/ExpressBookingModal';
 import {
-  checkVibrationPermission,
+  // checkVibrationPermission,
   requestNotificationPermission,
 } from '../utils/permissions';
 import {
@@ -63,6 +63,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
 import {Agent_Icon, Facebook_Icon} from '../assets/images';
 import {useRoute} from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -334,13 +335,14 @@ const TrustedDriver = ({navigation}) => {
     console.log('New RFD Value:', newRfdValue);
 
     // Toggle isRfdOn state
-    setIsRfdOn(!isRfdOn);
+    // setIsRfdOn(!isRfdOn);
     console.log('Toggled isRfdOn (setState):', !isRfdOn);
 
     // Create updated login button payload
     const updatedLoginButton = {
       ...loginButton,
       rfd: newRfdValue,
+      current_language: languageSwitch,
     };
     console.log('Updated loginButton payload:', updatedLoginButton);
 
@@ -348,6 +350,14 @@ const TrustedDriver = ({navigation}) => {
       console.log('Calling LOGIN_BUTTON API with payload:', updatedLoginButton);
       const response = await LOGIN_BUTTON(updatedLoginButton);
       console.log('LOGIN API RESPONSE:', response);
+      setIsRfdOn(response?.login_status);
+      if (response?.message !== '') {
+        Toast.show({
+          type: 'success',
+          text1: response?.message,
+        });
+      }
+      // Navigation remainig
     } catch (error) {
       console.log('LOGIN API ERROR:', error);
       if (error.response) {
@@ -535,9 +545,10 @@ const TrustedDriver = ({navigation}) => {
             <View style={styles.marqueeView}>
               <Marquee spacing={20} speed={0.5}>
                 <Text style={styles.marqueeText}>
-                  Please watch the remaining training videos in a quiet place.
+                  {headLineData?.driver_panel_messages?.outstanding_message}
+                  {/* Please watch the remaining training videos in a quiet place.
                   After watching the videos, your ID will be unlocked following
-                  a question and answer session.
+                  a question and answer session.*/}
                 </Text>
               </Marquee>
             </View>
@@ -982,6 +993,7 @@ const TrustedDriver = ({navigation}) => {
           isVisible={expressBookingModal}>
           <ExpressBookingModal />
         </Modal>
+        <Toast visibilityTime={3000} topOffset={20} />
       </SafeAreaView>
     </View>
   );

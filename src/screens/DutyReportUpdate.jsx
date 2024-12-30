@@ -42,6 +42,7 @@ import {
 import {useSelector} from 'react-redux';
 import {AppFont} from '../assets/FontsFamily';
 import Toast from 'react-native-toast-message';
+import {useRoute} from '@react-navigation/native';
 
 const DutyReportUpdate = ({route, navigation}) => {
   const {
@@ -49,6 +50,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     // tripStatus,
     state,
   } = route?.params;
+  const isFirstTimeVisit = route?.params?.isFirstTime;
   console.log(bookingNumber, 'bookingggg');
   // console.log(tripStatus, 'trip status');
 
@@ -65,6 +67,8 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [loader, setLoader] = useState(false);
   const [mainLoader, setMainLoader] = useState(false);
+  const [firstTimePopup, setfirstTimePopup] = useState(false);
+  const [firstTimePopupData, setfirstTimePopupData] = useState({});
 
   console.log(bookingNumber, languageSwitch, 'radio button Booking');
 
@@ -536,6 +540,31 @@ const DutyReportUpdate = ({route, navigation}) => {
       console.log(err);
     }
   };
+  const getFirstTimePopupFn = async statusId => {
+    try {
+      const response = await DUTY_REPORT_TRIP_STATUS_POPUP_VIEW({
+        action: 'duty_report_trip_status_popup_view',
+        booking_id: bookingNumber,
+        booking_status_id: statusId,
+        current_language: languageSwitch,
+      });
+      setfirstTimePopupData(response);
+      console.log(response, 'First time popup Response');
+    } catch (error) {
+      console.log(error, 'dutyReportTripStatusPopup Api error - General Error');
+    } finally {
+      setLoader(false);
+    }
+  };
+  useEffect(() => {
+    if (isFirstTimeVisit) {
+      getFirstTimePopupFn(10);
+      setfirstTimePopup(true);
+      setLoader(true);
+    } else {
+      setfirstTimePopup(false);
+    }
+  }, []);
   return (
     <SafeAreaView
       style={{
@@ -808,6 +837,134 @@ const DutyReportUpdate = ({route, navigation}) => {
           </View>
         </ScrollView>
       )}
+      {/* First time popup */}
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={firstTimePopup}
+        onRequestClose={() => setfirstTimePopup(false)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              width: '90%',
+              borderRadius: 10,
+              padding: 20,
+              elevation: 5,
+            }}>
+            <ScrollView>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: AppColors.mainColor,
+                  borderRadius: 20,
+                  marginBottom: 20,
+                  alignSelf: 'flex-end',
+                  width: 40,
+                  height: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onPress={() => setfirstTimePopup(false)}>
+                <Icon name="close" size={20} color={AppColors.white} />
+              </TouchableOpacity>
+              <View
+                style={{
+                  backgroundColor: AppColors.mainColor,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                  width: '100%',
+                  padding: 20,
+                  borderRadius: 5,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Merriweather-Bold',
+                    fontSize: 18,
+                    color: 'white',
+                  }}>
+                  {/* Guests are like God */}
+                  {firstTimePopupData?.popupdata?.accept_alert}
+                </Text>
+              </View>
+              <View style={{marginVertical: 20}}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    color: AppColors.mainColor,
+                  }}>
+                  {/* I accept this duty. */}
+                  {firstTimePopupData?.popupdata?.accept_alert_h3}
+                </Text>
+                {/* <Image
+ source={Mask}
+ resizeMode="contain"
+ style={{
+ height: 60,
+ width: 140,
+ alignSelf: 'center',
+ marginVertical: 10,
+ }}
+ /> */}
+              </View>
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontFamily: AppFont.regularFont,
+                  textAlign: 'center',
+                  color: AppColors.black,
+                }}>
+                {/* I will reach the customer on time. */}
+                {firstTimePopup?.popupdata?.accept_alert_p}
+              </Text>
+              <View style={{alignItems: 'center', marginTop: 20}}>
+                <TouchableOpacity
+                  disabled={loader}
+                  style={{
+                    backgroundColor: AppColors.mainColor,
+
+                    // padding: 12,
+                    paddingVertical: 8,
+                    paddingHorizontal: 16,
+                    borderRadius: 4,
+                    // width: '60%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    // marginHorizontal: '20%',
+                    marginBottom: 120,
+                  }}
+                  onPress={() => {
+                    // dutyReportBookingAccept();
+                    setfirstTimePopup(false);
+                  }}>
+                  <Text
+                    style={{
+                      color: AppColors.white,
+                      // fontWeight: '600',
+                      fontFamily: AppFont.regularFont,
+                      // textAlign: 'center',
+                    }}>
+                    {loader ? (
+                      <ActivityIndicator color={AppColors.white} />
+                    ) : 
+                    firstTimePopupData?.popupdata?.accept_alert_btn
+                    }
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
       {/* accept bookin popup */}
       <Modal
         transparent={true}

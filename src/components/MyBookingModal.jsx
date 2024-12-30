@@ -76,6 +76,8 @@ const MyBookingModal = ({}) => {
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking?.booking_id,
         state: '',
+        // isFirstTime:true
+
         // tripStatus: '0',
       });
     }

@@ -22,7 +22,7 @@ class NotificationService {
         console.warn('[NotificationService] Notification permission denied.');
       }
     } else if (Platform.OS === 'android') {
-      if (Platform.Version >= 33) {
+      if (Platform.Version >= 33) { 
         const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
         if (result === RESULTS.GRANTED) {
           console.log('[NotificationService] Notification permission granted.');

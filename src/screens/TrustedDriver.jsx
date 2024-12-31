@@ -352,7 +352,8 @@ const TrustedDriver = ({navigation}) => {
       const response = await LOGIN_BUTTON(updatedLoginButton);
       console.log('LOGIN API RESPONSE:', response);
       setIsRfdOn(response?.login_status);
-      if (response?.message !== '') {
+      if (response?.message.length <= 30) {
+        setLoginMessage('');
         Toast.show({
           type: 'success',
           text1: response?.message,
@@ -365,7 +366,7 @@ const TrustedDriver = ({navigation}) => {
         navigation.navigate('TrustedDriver');
       }
       // Navigation remainig
-      setLoginMessage(response?.message);
+      if (response?.message?.length >= 30) setLoginMessage(response?.message);
     } catch (error) {
       console.log('LOGIN API ERROR:', error);
       if (error.response) {
@@ -553,7 +554,7 @@ const TrustedDriver = ({navigation}) => {
             <View style={styles.marqueeView}>
               <Marquee spacing={20} speed={0.5}>
                 <Text style={styles.marqueeText}>
-                  {headLineData?.driver_panel_messages?.outstanding_message}
+                  {headLineData?.headlines_data?.message}
                   {/* Please watch the remaining training videos in a quiet place.
                   After watching the videos, your ID will be unlocked following
                   a question and answer session.*/}
@@ -763,7 +764,9 @@ const TrustedDriver = ({navigation}) => {
             {/* <ViewAwarenessData /> */}
             {/* <RoundTripBookingView /> */}
             {/* <BookingView /> */}
-            <Text style={{color: AppColors.red, margin: 5}}>{loginMessage}</Text>
+            <Text style={{color: AppColors.red, margin: 5}}>
+              {loginMessage}
+            </Text>
 
             {/* Main Toggle Content */}
             <>{isRfdOn ? <BookingView /> : null}</>

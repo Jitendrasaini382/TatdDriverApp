@@ -607,9 +607,10 @@ const DutyReportUpdate = ({route, navigation}) => {
                   color: AppColors.black,
                   fontWeight: '700',
                   fontSize: 21,
-                  fontFamily: 'Poppins',
                 }}>
-                Booking is Already Cancelled{' '}
+                {languageSwitch === 'english'
+                  ? 'Booking is Already Cancelled'
+                  : 'बुकिंग पहले ही Cancelled कर दी गई है।'}
               </Text>
             </View>
           </View>
@@ -954,9 +955,9 @@ const DutyReportUpdate = ({route, navigation}) => {
                     }}>
                     {loader ? (
                       <ActivityIndicator color={AppColors.white} />
-                    ) : 
-                    firstTimePopupData?.popupdata?.accept_alert_btn
-                    }
+                    ) : (
+                      firstTimePopupData?.popupdata?.accept_alert_btn
+                    )}
                   </Text>
                 </TouchableOpacity>
               </View>

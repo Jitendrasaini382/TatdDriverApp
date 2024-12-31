@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: AppColors.black,
     height: 1,
-    backgroundColor: 'red',
+    backgroundColor: AppColors.red,
     width: 110,
     marginTop: 5,
     marginRight: 20,

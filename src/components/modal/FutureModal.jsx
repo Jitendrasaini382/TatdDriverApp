@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { AppColors } from '../../assets/Colors';
 const FutureModal = () => {
   const [futureModal, setFutureModal] = useState(true);
   return (
@@ -148,7 +149,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Merriweather-Bold',
   },
   delayText: {
-    color: 'red',
+    color: AppColors.red,
     fontFamily: 'Merriweather-Bold',
     fontSize: 12,
   },

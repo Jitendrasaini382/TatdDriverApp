@@ -321,6 +321,7 @@ const TrustedDriver = ({navigation}) => {
   const [headLineData, setHeadLineData] = useState({});
 
   const [isRfdOn, setIsRfdOn] = useState(false);
+  const [loginMessage, setLoginMessage] = useState('');
   const [loginButton, setLoginButton] = useState({
     action: 'login_button',
     submitR: '1',
@@ -356,8 +357,15 @@ const TrustedDriver = ({navigation}) => {
           type: 'success',
           text1: response?.message,
         });
+      } else if (response?.redirect == 'clear-my-due-payment') {
+        navigation.navigate('CommanWebview', {
+          url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+        });
+      } else if (response?.redirect == 'trusted-driver') {
+        navigation.navigate('TrustedDriver');
       }
       // Navigation remainig
+      setLoginMessage(response?.message);
     } catch (error) {
       console.log('LOGIN API ERROR:', error);
       if (error.response) {
@@ -755,6 +763,7 @@ const TrustedDriver = ({navigation}) => {
             {/* <ViewAwarenessData /> */}
             {/* <RoundTripBookingView /> */}
             {/* <BookingView /> */}
+            <Text style={{color: AppColors.red, margin: 5}}>{loginMessage}</Text>
 
             {/* Main Toggle Content */}
             <>{isRfdOn ? <BookingView /> : null}</>

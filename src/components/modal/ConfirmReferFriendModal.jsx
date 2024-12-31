@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   warning: {
-    color: 'red',
+    color: AppColors.red,
     fontWeight: '500',
   },
   buttonContainer: {

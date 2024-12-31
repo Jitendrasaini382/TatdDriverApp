@@ -8,5 +8,6 @@ export const AppColors ={
     orange : "#ff8b00",
     borderColor : "#ccc",
     whatsAppIconColor : "#34a728",
-    gray : "#d9d9d9"
+    gray : "#d9d9d9",
+    red : "red"
 }

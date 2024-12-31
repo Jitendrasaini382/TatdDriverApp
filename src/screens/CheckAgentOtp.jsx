@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
     marginHorizontal: moderateScale(30),
     marginBottom: verticalScale(30),
   },
-  errorText: {color: 'red', fontSize: 15, marginTop: 0},
+  errorText: {color: AppColors.red, fontSize: 15, marginTop: 0},
   verifyButton: {
     backgroundColor: AppColors.mainColor,
     alignItems: 'center',

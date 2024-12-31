@@ -129,7 +129,7 @@ const AgentLogin = ({navigation}) => {
                 </View> */}
               </View>
               <View style={{marginHorizontal: moderateScale(30)}}>
-                <Text style={{color: 'red', fontSize: 12}}>{error}</Text>
+                <Text style={{color:AppColors.red, fontSize: 12}}>{error}</Text>
               </View>
               <Pressable style={styles.btnView} disabled={loader} onPress={sendOtp}>
                 <Text style={styles.btnText}>{ loader ? "Sending OTP" :"Submit"}</Text>

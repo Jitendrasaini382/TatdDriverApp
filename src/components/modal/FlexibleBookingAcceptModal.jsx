@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   warningText: {
-    color: 'red',
+    color: AppColors.red,
     fontWeight: 'bold',
     fontFamily: AppFont.regularFont,
   },

@@ -279,7 +279,7 @@ const DriverLogin = () => {
                 </View>
               </View>
               <View style={{marginHorizontal: moderateScale(30)}}>
-                <Text style={{color: 'red', fontSize: 12}}>{error}</Text>
+                <Text style={{color:AppColors.red, fontSize: 12}}>{error}</Text>
               </View>
 
               <Pressable

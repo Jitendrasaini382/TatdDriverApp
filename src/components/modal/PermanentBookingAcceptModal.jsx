@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     color: AppColors.black,
   },
   warning: {
-    color: 'red',
+    color: AppColors.red,
     fontWeight: '600',
     marginBottom: 15,
     fontSize: 18,

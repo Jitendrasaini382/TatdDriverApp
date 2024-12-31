@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   },
   headerLeft: {flexDirection: 'row'},
   days: {
-    color: 'red',
+    color: AppColors.red,
     fontWeight: 'bold',
     textAlign: 'left',
   },

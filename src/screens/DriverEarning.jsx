@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     paddingVertical: '2%',
   },
   headlineContent: {
-    backgroundColor: 'red',
+    backgroundColor: AppColors.red,
     borderRadius: 10,
     paddingVertical: '1.5%',
     paddingHorizontal: '5%',

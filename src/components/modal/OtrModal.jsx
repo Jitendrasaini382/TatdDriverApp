@@ -20,7 +20,7 @@ const OtrModal = () => {
   }, [dispatch]);
 
   return (
-    // <SafeAreaView style={styles.mainContainer}>
+    <SafeAreaView style={styles.mainContainer}>
       <TouchableWithoutFeedback onPress={closeModal}>
         <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>
@@ -40,7 +40,7 @@ const OtrModal = () => {
           </View>
         </View>
       </TouchableWithoutFeedback>
-    // </SafeAreaView>
+     </SafeAreaView>
   );
 };
 

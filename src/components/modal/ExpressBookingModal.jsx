@@ -1,5 +1,11 @@
-import React, { useEffect} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import React, {useEffect} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 import {EXPRESS_BOOKING_UPDATE} from '../../apis/Apis';
@@ -13,8 +19,8 @@ const ExpressBookingModal = () => {
 
   const dispatch = useDispatch();
 
-  const decodedToken = useSelector((e)=>e?.userAuth?.userProfile?.data)
-const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
+  const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   const expressBookingUpdate = async status => {
     try {
@@ -85,7 +91,7 @@ const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
   };
 
   return (
-    <View style={styles.mainContainer}>
+    <SafeAreaView style={styles.mainContainer}>
       <View style={styles.contentContainer}>
         <View style={styles.mainView}>
           <View style={styles.mainTopView}>
@@ -131,7 +137,7 @@ const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

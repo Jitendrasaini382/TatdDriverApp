@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react';
 import {
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -32,24 +33,26 @@ const RatingModal = () => {
   ];
 
   return (
-    <TouchableWithoutFeedback onPress={closeModal}>
-      <View style={styles.mainContainer}>
-        <View style={styles.contentContainer}>
-          <Text style={styles.topHeading}>Rating</Text>
-          <Text style={styles.topText}>
-            Dear {userName.toUpperCase()}, If your Rating Score is more than 4,
-            then you will:
-          </Text>
-          {bulletPoints.map(renderBulletPoint)}
-          <Text style={styles.BottamText}>
-            To increase your Rating, provide customers with a good experience.
-          </Text>
-          <TouchableOpacity style={styles.button} onPress={closeModal}>
-            <Text style={styles.buttonText}>Close</Text>
-          </TouchableOpacity>
+    <SafeAreaView style={styles.mainContainer}>
+      <TouchableWithoutFeedback onPress={closeModal}>
+        <View style={styles.mainContainer}>
+          <View style={styles.contentContainer}>
+            <Text style={styles.topHeading}>Rating</Text>
+            <Text style={styles.topText}>
+              Dear {userName.toUpperCase()}, If your Rating Score is more than
+              4, then you will:
+            </Text>
+            {bulletPoints.map(renderBulletPoint)}
+            <Text style={styles.BottamText}>
+              To increase your Rating, provide customers with a good experience.
+            </Text>
+            <TouchableOpacity style={styles.button} onPress={closeModal}>
+              <Text style={styles.buttonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 };
 
@@ -63,8 +66,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
     borderRadius: 12,
     paddingHorizontal: 15,
-    borderWidth : .2,
-
+    borderWidth: 0.2,
   },
   topHeading: {
     textAlign: 'center',

@@ -16,6 +16,7 @@ import {
   NativeModules,
   PermissionsAndroid,
   Keyboard,
+  Alert,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -24,7 +25,7 @@ import {AppFont} from '../assets/FontsFamily';
 import {DRIVER_LOGIN} from '../apis/Apis';
 import {useNavigation} from '@react-navigation/native';
 import {googleLogo} from '../assets/images';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -190,23 +191,73 @@ const DriverLogin = () => {
       setLoader(true);
       const response = await DRIVER_LOGIN({mobile: number});
       console.log(response, 'loginnnnnnnnn');
-
-      if (response.status_code == '200') {
+      // return false
+      if (response?.status_code == '200' && response?.msg_type == 'error') {
+        setLoader(false);
+        Alert.alert(response?.message);
+      } else if (
+        response?.status_code == '200' &&
+        response?.message == 'OTP sent successfully'
+      ) {
         console.log('send otppp111111');
         setLoader(false);
         navigation.navigate('CheckDriverOtp', {mobile: number});
+      } else if (
+        response?.status_code == '200' &&
+        response?.message == 'Not Found in Trusted and registration table'
+      ) {
+        setLoader(false);
+        navigation.navigate('CommanWebview', {
+          url: response?.redirect,
+        });
       }
     } catch (err) {
       setLoader(false);
-      console.log(err, 'err');
+      console.log(err, 'err run catch');
+    } finally {
+      setLoader(false);
+      console.log('run finally');
     }
   };
-  const insets = useSafeAreaInsets()
+
+  // const sendOtp = async number => {
+  //   console.log('send otppp===========================');
+  //   console.log(typeof number, number);
+  //   console.log('send otppp===========================');
+
+  //   try {
+  //     console.log(number.length, mobile, 'apiiiiiiiii');
+
+  //     if (!number) {
+  //       setError('Please Enter Mobile Number');
+  //       return;
+  //     } else if (number.length !== 10) {
+  //       setError('Please Enter 10 digit Mobile Number');
+  //       return;
+  //     }
+  //     setError(null);
+  //     Keyboard.dismiss();
+  //     setLoader(true);
+  //     const response = await DRIVER_LOGIN({mobile: number});
+  //     console.log(response, 'loginnnnnnnnn');
+
+  //     if (response.status_code == '200') {
+  //       console.log('send otppp111111');
+  //       setLoader(false);
+  //       navigation.navigate('CheckDriverOtp', {mobile: number});
+  //     }
+  //   } catch (err) {
+  //     setLoader(false);
+  //     console.log(err, 'err');
+  //   }
+  // };
+  const insets = useSafeAreaInsets();
 
   return (
     <View style={[styles.safeArea]}>
-
-      <View style={{height:insets.top,backgroundColor:AppColors.mainColor}}/>
+      <View
+        style={{height: insets.top, backgroundColor: AppColors.mainColor}}
+      />
       <Header backButtn={false} />
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
@@ -279,7 +330,9 @@ const DriverLogin = () => {
                 </View>
               </View>
               <View style={{marginHorizontal: moderateScale(30)}}>
-                <Text style={{color:AppColors.red, fontSize: 12}}>{error}</Text>
+                <Text style={{color: AppColors.red, fontSize: 12}}>
+                  {error}
+                </Text>
               </View>
 
               <Pressable

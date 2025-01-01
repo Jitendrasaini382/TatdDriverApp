@@ -20,6 +20,7 @@ import {
   Platform,
   Image,
 } from 'react-native';
+import notifee from '@notifee/react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -364,7 +365,7 @@ const TrustedDriver = ({navigation}) => {
         // If the message is longer than 30 characters, set it in state
         setLoginMessage(response?.message);
       }
-      
+
       if (response?.redirect) {
         switch (response?.redirect) {
           case 'clear-my-due-payment':
@@ -380,7 +381,7 @@ const TrustedDriver = ({navigation}) => {
             break;
         }
       }
-      
+
       // if (response?.message.length <= 30) {
       //   setLoginMessage('');
 
@@ -614,8 +615,8 @@ const TrustedDriver = ({navigation}) => {
                   </View>
                   <View style={styles.topRight}>
                     <TouchableOpacity
-                      onPress={() => navigation.navigate('DriverEarning')}
-                      // onPress={()=>checkVibrationSupport()}
+                      // onPress={() => navigation.navigate('DriverEarning')}
+                      onPress={async () => await notifee.requestPermission()}
                       // onPress={() =>
                       //   openMyUrl('https://www.tatd.in/driver-earning.php')
                       // }
@@ -807,10 +808,13 @@ const TrustedDriver = ({navigation}) => {
             </Text>
 
             {/* Main Toggle Content */}
-            <>{isRfdOn ? <BookingView /> : null}</>
+            {/* <>{isRfdOn ? <BookingView /> : null}</> */}
+            <BookingView />
             {videosContent ? <TrainingVideo data={Item} /> : null}
           </View>
         </ScrollView>
+
+        {/* bottam Tab bar */}
 
         <View style={{justifyContent: 'flex-end'}}>
           <View

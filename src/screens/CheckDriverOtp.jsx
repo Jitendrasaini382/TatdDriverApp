@@ -226,7 +226,11 @@ const CheckDriverOtp = ({navigation, route}) => {
           // });
         })
         .catch(err => {
-          console.log(err);
+          console.log(err, 'otp errorrrrr');
+          Toast.show({
+            type: 'error',
+            text1: err?.message,
+          });
         })
         .finally(() => {
           setLoader(false);
@@ -234,7 +238,7 @@ const CheckDriverOtp = ({navigation, route}) => {
     } catch (err) {
       console.error('OTP verification failed:', err);
       setLoader(false);
-      setError(err.message || 'OTP verification failed. Please try again.');
+      setError(err.message, 'lOTP verification failed. Please try again.');
     }
   };
 

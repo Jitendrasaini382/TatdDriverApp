@@ -72,11 +72,11 @@ export const checkVibrationSupport = async () => {
   try {
     if (Platform.OS === 'ios') {
       // Vibration works directly on iOS (no permission required)
-      Vibration.vibrate(500);
+      Vibration.vibrate(5000);
       console.log('Vibration triggered successfully on iOS');
     } else if (Platform.OS === 'android') {
       // Test vibration on Android
-      Vibration.vibrate(500); // Vibrates for 500ms
+      Vibration.vibrate(10000); // Vibrates for 500ms
       console.log('Vibration triggered successfully on Android');
     } else {
       console.log('Vibration not supported on this platform');

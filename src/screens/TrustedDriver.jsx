@@ -47,6 +47,7 @@ import {
 } from '../apis/Apis';
 import ExpressBookingModal from '../components/modal/ExpressBookingModal';
 import {
+  checkVibrationSupport,
   // checkVibrationPermission,
   requestNotificationPermission,
 } from '../utils/permissions';
@@ -352,21 +353,50 @@ const TrustedDriver = ({navigation}) => {
       const response = await LOGIN_BUTTON(updatedLoginButton);
       console.log('LOGIN API RESPONSE:', response);
       setIsRfdOn(response?.login_status);
-      if (response?.message.length <= 30) {
+      if (response?.message?.length <= 30) {
         setLoginMessage('');
+        // Show toast if the message length is 30 or less
         Toast.show({
           type: 'success',
           text1: response?.message,
         });
-      } else if (response?.redirect == 'clear-my-due-payment') {
-        navigation.navigate('CommanWebview', {
-          url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-        });
-      } else if (response?.redirect == 'trusted-driver') {
-        navigation.navigate('TrustedDriver');
+      } else {
+        // If the message is longer than 30 characters, set it in state
+        setLoginMessage(response?.message);
       }
-      // Navigation remainig
-      if (response?.message?.length >= 30) setLoginMessage(response?.message);
+      
+      if (response?.redirect) {
+        switch (response?.redirect) {
+          case 'clear-my-due-payment':
+            navigation.navigate('CommanWebview', {
+              url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+            });
+            break;
+          case 'trusted-driver':
+            navigation.navigate('TrustedDriver');
+            break;
+          // Add more cases here if needed
+          default:
+            break;
+        }
+      }
+      
+      // if (response?.message.length <= 30) {
+      //   setLoginMessage('');
+
+      //   Toast.show({
+      //     type: 'success',
+      //     text1: response?.message,
+      //   });
+      // } else if (response?.redirect == 'clear-my-due-payment') {
+      //   navigation.navigate('CommanWebview', {
+      //     url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+      //   });
+      // } else if (response?.redirect == 'trusted-driver') {
+      //   navigation.navigate('TrustedDriver');
+      // }
+      // // Navigation remainig
+      // if (response?.message?.length >= 30) setLoginMessage(response?.message);
     } catch (error) {
       console.log('LOGIN API ERROR:', error);
       if (error.response) {
@@ -536,6 +566,13 @@ const TrustedDriver = ({navigation}) => {
   // return false
   const insets = useSafeAreaInsets();
 
+  const combinedText = [
+    headLineData?.headlines_data?.message,
+    ...(headLineData?.headlines_data?.headlines || []),
+  ]
+    .filter(Boolean) // Remove null or undefined values
+    .join(' '); // Join them into a single line
+
   return (
     <View style={styles.safeArea}>
       <View
@@ -553,12 +590,12 @@ const TrustedDriver = ({navigation}) => {
             {/* Marquee View */}
             <View style={styles.marqueeView}>
               <Marquee spacing={20} speed={0.5}>
-                <Text style={styles.marqueeText}>
-                  {headLineData?.headlines_data?.message}
-                  {/* Please watch the remaining training videos in a quiet place.
-                  After watching the videos, your ID will be unlocked following
-                  a question and answer session.*/}
-                </Text>
+                {/* <Text style={styles.marqueeText}>
+                  {headLineData?.headlines_data?.message || headLineData?.headlines_data?.headlines.map(())}
+                 
+                </Text> */}
+
+                <Text style={styles.marqueeText}>{combinedText}</Text>
               </Marquee>
             </View>
 
@@ -578,6 +615,7 @@ const TrustedDriver = ({navigation}) => {
                   <View style={styles.topRight}>
                     <TouchableOpacity
                       onPress={() => navigation.navigate('DriverEarning')}
+                      // onPress={()=>checkVibrationSupport()}
                       // onPress={() =>
                       //   openMyUrl('https://www.tatd.in/driver-earning.php')
                       // }

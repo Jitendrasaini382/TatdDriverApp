@@ -10,6 +10,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
   FlatList,
+  SafeAreaView,
 } from 'react-native';
 import {RightArrow} from '../assets/images';
 import {AppColors} from '../assets/Colors';
@@ -84,7 +85,9 @@ const MyBookingModal = ({}) => {
   };
 
   return (
+    // <SafeAreaView style={{}}>
     <Modal transparent visible={myBookingModal}>
+      <SafeAreaView style={{flex:1}}>
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => dispatch(setMyBookingModal(false))}
@@ -272,7 +275,9 @@ const MyBookingModal = ({}) => {
           )}
         </View>
       </TouchableOpacity>
+      </SafeAreaView>
     </Modal>
+// </SafeAreaView>
   );
 };
 

@@ -9,6 +9,7 @@ import {
   Pressable,
   Linking,
   Alert,
+  FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {AppColors} from '../assets/Colors';
@@ -23,12 +24,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setMyBookingAgencyModal} from '../redux/slices/trustedDriverSlice';
 import {Buffer} from 'buffer';
 import {ON_DEMAND_BOOKING} from '../apis/Apis';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {Skeleton} from '@rneui/themed';
 
 const {width} = Dimensions.get('window');
 
 const BookingView = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
   const driverMobileNumber = useSelector(
@@ -39,6 +41,7 @@ const BookingView = () => {
   // console.log(driverMobileNumber, 'driverMobileNumberdriverMobileNumberdriverMobileNumber');
 
   const [agentPanelViewData, setAgentPanelViewData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getAgentPanelView();
@@ -56,6 +59,7 @@ const BookingView = () => {
   // </Modal>;
 
   const getAgentPanelView = async () => {
+    setLoading(true);
     try {
       const response = await ON_DEMAND_BOOKING({
         action: 'agent_panel_view',
@@ -66,6 +70,9 @@ const BookingView = () => {
       setAgentPanelViewData(response.agent_panel_text);
     } catch (error) {
       console.log(error, 'getIagent Panel View  Error');
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -93,21 +100,34 @@ const BookingView = () => {
     <View style={styles.container}>
       {agentPanelViewData && (
         <View style={styles.connectContainer}>
-          <Pressable
-            // onPress={() => {
-            //  dispatch( setMyBookingAgencyModal(true));
-            // }}
-            onPress={handleLoginPress}
-            style={styles.connectButton}>
+          <Pressable onPress={handleLoginPress} style={styles.connectButton}>
             <Icon color={AppColors.white} size={15} name="plus" />
             <Image style={styles.rightArrow} source={LeftArrow} />
           </Pressable>
-          <Text style={styles.connectText}>
-            {/* Connect the driver to your network using this button and earn Rs 250. */}
-            {agentPanelViewData}
-          </Text>
+          <Text style={styles.connectText}>{agentPanelViewData}</Text>
         </View>
       )}
+
+      {/* <View style={styles.connectContainer}>
+        <Pressable onPress={handleLoginPress} style={styles.connectButton}>
+          <Icon color={AppColors.white} size={15} name="plus" />
+          <Image style={styles.rightArrow} source={LeftArrow} />
+        </Pressable>
+        {loading ? (
+          <Skeleton
+            width={250}
+            height={50}
+            style={{
+              borderRadius: 10,
+              marginBottom: 15,
+              paddingHorizontal: 15,
+            }}
+            animation={'wave'}
+          />
+        ) : agentPanelViewData ? (
+          <Text style={styles.connectText}>{agentPanelViewData}</Text>
+        ) : null}
+      </View> */}
 
       <View style={styles.notificationContainer}>
         <Text style={styles.notificationText}>

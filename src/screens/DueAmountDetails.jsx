@@ -22,113 +22,7 @@ const DueAmountDetails = ({route, navigation}) => {
   const {bookingNumber} = route?.params;
 
   const [allInvoiceData, setAllInvoiceData] = useState();
-  // {
-  // status_code: 200,
-  // msg_type: 'success',
-  // invoice_data: {
-  // category: 'Private Driver',
-  // customer_name: 'Kartik ',
-  // booking_number: '645254',
-  // pickup_address:
-  // 'A-77, Shanti kunj Main Vasant Kunj New Delhi, Delhi 110070\r\n',
-  // drop_address: '',
-  // business_name: '',
-  // gstin: '',
-  // start_date: '19 Dec,2024',
-  // end_date: '20 Dec,2024',
-  // start_time: '08:34 PM',
-  // end_time: '12:18 AM',
-  // schedule_time: '06:00 PM',
-  // reach_time: '05:51 PM',
-  // start_kms: 0,
-  // end_kms: 0,
-  // total_charges: 1308,
-  // payment_mode: 'Cash',
-  // discount: [],
-  // igst_total: {
-  // igst_without_price: 1245.7100000000000363797880709171295166015625,
-  // igst: 62.28999999999999914734871708787977695465087890625,
-  // },
-  // paid: 0,
-  // balance_amount: 1308,
-  // company_details:
-  // 'EXECUTION FORCE PRIVATE LIMITED \n Office No G-39, Vardhman Grand Market, Sector 3, Dwarka, \n New Delhi- 110078, GST- 07AAFCE8543G1ZJ',
-  // company_details_1: 'EXECUTION FORCE PRIVATE LIMITED',
-  // company_details_2:
-  // 'Office No G-39, Vardhman Grand Market, Sector 3, Dwarka,',
-  // company_details_3: 'New Delhi- 110078, GST- 07AAFCE8543G1ZJ',
-  // tax_headers: ['SGST 2.5%', 'CGST 2.5%'],
-  // },
-  // charges: [
-  // {
-  // description: 'Package',
-  // unit: '8 hours',
-  // charges: 769.51999999999998181010596454143524169921875,
-  // igst: 38.47999999999999687361196265555918216705322265625,
-  // total_amount: 808,
-  // },
-  // {
-  // description: 'End Night Charges',
-  // unit: '1 Night',
-  // charges: 190.479999999999989768184605054557323455810546875,
-  // igst: 9.519999999999999573674358543939888477325439453125,
-  // total_amount: 200,
-  // },
-  // {
-  // description: 'Chauffeur Service',
-  // unit: 1,
-  // charges: 285.70999999999997953636921010911464691162109375,
-  // igst: 14.28999999999999914734871708787977695465087890625,
-  // total_amount: '300',
-  // },
-  // ],
-  // },
-  // {
-  // status_code: 200,
-  // msg_type: 'success',
-  // invoice_data: {
-  // category: 'Private Driver',
-  // customer_name: 'Pooja',
-  // booking_number: '646092',
-  // pickup_address: 'TESTING TESTING TESTING TESTING TESTING',
-  // drop_address: '',
-  // business_name: '',
-  // gstin: '',
-  // start_date: '24 Dec,2024',
-  // end_date: '24 Dec,2024',
-  // start_time: '11:32 AM',
-  // end_time: '11:32 AM',
-  // schedule_time: '08:00 AM',
-  // reach_time: '11:31 AM',
-  // start_kms: 0,
-  // end_kms: 0,
-  // total_charges: 610,
-  // payment_mode: 'Cash',
-  // discount: [],
-  // igst_total: {
-  // igst_without_price: 580.950000000000045474735088646411895751953125,
-  // igst: 29.050000000000000710542735760100185871124267578125,
-  // },
-  // paid: 0,
-  // balance_amount: 610,
-  // company_details:
-  // 'EXECUTION FORCE PRIVATE LIMITED \n Office No G-39, Vardhman Grand Market, Sector 3, Dwarka, \n New Delhi- 110078, GST- 07AAFCE8543G1ZJ',
-  // company_details_1: 'EXECUTION FORCE PRIVATE LIMITED',
-  // company_details_2:
-  // 'Office No G-39, Vardhman Grand Market, Sector 3, Dwarka,',
-  // company_details_3: 'New Delhi- 110078, GST- 07AAFCE8543G1ZJ',
-  // tax_headers: ['IGST 5%'],
-  // },
-  // charges: [
-  // {
-  // description: 'Package',
-  // unit: '5 hours',
-  // charges: 580.950000000000045474735088646411895751953125,
-  // igst: 29.050000000000000710542735760100185871124267578125,
-  // total_amount: 610,
-  // },
-  // ],
-  // },
+  
   useEffect(() => {
     getInvoiceData(bookingNumber);
   }, []);
@@ -320,7 +214,7 @@ const DueAmountDetails = ({route, navigation}) => {
             alignItems: 'center',
           }}>
           <View>
-            {console.log(allInvoiceData?.invoice_data?.waiting_minutes_eligibility,"allInvoiceData?.invoice_data?.waiting_minutes_eligibility")}
+            {/* {console.log(allInvoiceData?.invoice_data?.waiting_minutes_eligibility,"allInvoiceData?.invoice_data?.waiting_minutes_eligibility")} */}
             {allInvoiceData?.invoice_data?.waiting_minutes_eligibility == 1 && (
               <TouchableOpacity
                 onPress={() => setisShowExtraMinutesModal(true)}
@@ -722,12 +616,6 @@ const DueAmountDetails = ({route, navigation}) => {
               </>
             ))}
 
-            {/* <View
- style={[
- styles.divider,
- {backgroundColor: 'gray', height: 0.5, marginVertical: 10},
- ]}
- /> */}
             <View
               style={{
                 flexDirection: 'row',

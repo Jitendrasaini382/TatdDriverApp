@@ -12,7 +12,8 @@ import {AppColors} from '../../assets/Colors';
 // import Modal from 'react-native-modal';
 import RoundTripBookingAceeptModal from '../modal/RoundTripBookingAceeptModal';
 import {ON_DEMAND_BOOKING} from '../../apis/Apis';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {setTriggerFunction} from '../../redux/slices/globalSlice';
 
 const TripCard = ({trip}) => {
   // console.log(trip, 'jjjjjjjjjjjj');
@@ -186,6 +187,16 @@ const RoundTripBookingView = () => {
   );
 
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  const triggerFunction = useSelector(
+    state => state.globalSlice.triggerFunction,
+  );
+
+  const refreshKey = useSelector((state) => state.globalSlice.refreshKey); // For refresh actions
+
+  // console.log(refreshKey,"refreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKey");
+  
+
+  const dispatch = useDispatch()
 
   const getIncityOneWayBookings = async data => {
     console.log(data, 'runnnnnnnnnnn');
@@ -230,6 +241,44 @@ const RoundTripBookingView = () => {
       console.log(error, 'incity_roundtrip_bookings  Error');
     }
   };
+
+  // useEffect(() => {
+  //   if (triggerFunction) {
+  //     getOnDemandOutstationBookings({
+  //       action: 'ondemand_outstation_bookings',
+  //     });
+  //     getIncityRoundTripBookings({
+  //       action: 'incity_roundtrip_booking',
+  //     });
+  //     getIncityOneWayBookings({
+  //       action: 'incity_oneway_booking',
+  //     });
+  //     dispatch(setTriggerFunction(false));
+  //   }
+  // }, [triggerFunction, dispatch]);
+
+
+  useEffect(() => {
+    if (triggerFunction || refreshKey) {
+      console.log('Triggered by either refreshKey or triggerFunction');
+
+      // Run the required functions
+      getOnDemandOutstationBookings({
+        action: 'ondemand_outstation_bookings',
+      });
+      getIncityRoundTripBookings({
+        action: 'incity_roundtrip_booking',
+      });
+      getIncityOneWayBookings({
+        action: 'incity_oneway_booking',
+      });
+
+      // Reset `triggerFunction` after running
+      if (triggerFunction) {
+        dispatch(setTriggerFunction(false));
+      }
+    }
+  }, [triggerFunction, refreshKey, dispatch]);
 
   useEffect(() => {
     getOnDemandOutstationBookings({

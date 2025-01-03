@@ -6,16 +6,22 @@ import {
   StyleSheet,
   SafeAreaView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {FINAL_ACCEPT_BOOKING, ON_DEMAND_BOOKING} from '../../apis/Apis';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import globalSlice, {setTriggerFunction} from '../../redux/slices/globalSlice';
+import {FlatList} from 'react-native';
+import {Skeleton} from '@rneui/themed';
 
 const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [checked1, setChecked1] = useState(false);
   const [checked2, setChecked2] = useState(false);
+  const [loader, setLoader] = useState(false);
   const [driverConsent, setDriverConsent] = useState({});
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
@@ -39,10 +45,13 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   );
 
   useEffect(() => {
+    setLoader(true);
     driverConsentPopupView();
   }, []);
 
   const driverConsentPopupView = async () => {
+    setLoader(true);
+
     try {
       const response = await ON_DEMAND_BOOKING({
         action: 'ondemand_driver_consent_popup_view',
@@ -53,9 +62,14 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
         response?.ondemand_driver_consent_popup_data,
         'ondemand_driver_consent_popup_view response',
       );
+      setLoader(false);
+
       setDriverConsent(response?.ondemand_driver_consent_popup_data);
     } catch (error) {
+      setLoader(false);
       console.log(error, 'ondemand_driver_consent_popup_view Error');
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -72,14 +86,24 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
 
       console.log(response, 'acceptBooking response');
 
+      dispatch(setTriggerFunction(true));
+
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking_number,
-        isFirstTime:true
+        isFirstTime: true,
       });
     } catch (error) {
       console.log(error, 'acceptBooking Error');
     }
   };
+
+  if (loader) {
+    return (
+      <View style={{flex: .5, alignContent: 'center', justifyContent: 'center'}}>
+        <ActivityIndicator size="large" color={AppColors.mainColor} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

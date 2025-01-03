@@ -1,13 +1,25 @@
-import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {MY_BONUS_HISTORY} from '../apis/Apis';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const MyBonusStatusHistory = () => {
+  const insets = useSafeAreaInsets();
   const [bonusData, setBonusData] = useState([]);
+  const [loader, setLoader] = useState(false);
 
   const getAllBonusData = async () => {
+    setLoader(true);
     try {
       const response = await MY_BONUS_HISTORY({
         action: 'get_bonus_history',
@@ -15,9 +27,14 @@ const MyBonusStatusHistory = () => {
 
       setBonusData(response.bonuses);
       console.log(response.bonuses, 'My Bonus History Data');
+      setLoader(false);
     } catch (error) {
       console.log(error, 'My Bonus History Error');
-      Alert.alert('Error', 'Failed to fetch bonus history. Please try again.');
+      setLoader(false);
+
+      // Alert.alert('Error', 'Failed to fetch bonus history. Please try again.');
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -25,58 +42,71 @@ const MyBonusStatusHistory = () => {
     getAllBonusData();
   }, []);
 
+  if (loader) {
+    return (
+      <View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>
+        <ActivityIndicator size="large" color={AppColors.mainColor} />
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.mainContainer}>
-      <Header backButton={true} />
-      <ScrollView>
-        <View style={styles.content}>
-          <View style={styles.container}>
-            <Text style={styles.title}>My Bonus</Text>
-            <View style={styles.tableContainer}>
-              <View style={styles.headerRow}>
-                <Text style={[styles.headerCell, styles.createDateCell]}>
-                  Create Date
-                </Text>
-                <Text style={[styles.headerCell, styles.nameCell]}>Name</Text>
-                <Text style={[styles.headerCell, styles.bonusTypeCell]}>
-                  Bonus Type
-                </Text>
-                <Text style={[styles.headerCell, styles.paymentStatusCell]}>
-                  Payment Status
-                </Text>
-                <Text style={[styles.headerCell, styles.amountCell]}>
-                  Amount
-                </Text>
+    <View style={{flex: 1, backgroundColor: AppColors.white}}>
+      <View
+        style={{height: insets.top, backgroundColor: AppColors.mainColor}}
+      />
+      <SafeAreaView style={{flex: 1}}>
+        <Header backButton={true} />
+        <ScrollView>
+          <View style={styles.content}>
+            <View style={styles.container}>
+              <Text style={styles.title}>My Bonus</Text>
+              <View style={styles.tableContainer}>
+                <View style={styles.headerRow}>
+                  <Text style={[styles.headerCell, styles.createDateCell]}>
+                    Create Date
+                  </Text>
+                  <Text style={[styles.headerCell, styles.nameCell]}>Name</Text>
+                  <Text style={[styles.headerCell, styles.bonusTypeCell]}>
+                    Bonus Type
+                  </Text>
+                  <Text style={[styles.headerCell, styles.paymentStatusCell]}>
+                    Payment Status
+                  </Text>
+                  <Text style={[styles.headerCell, styles.amountCell]}>
+                    Amount
+                  </Text>
+                </View>
+                {bonusData &&
+                  bonusData.map((item, index) => (
+                    <View
+                      key={index}
+                      style={[
+                        styles.dataRow,
+                        index % 2 === 0 ? styles.evenRow : styles.oddRow,
+                      ]}>
+                      <Text style={[styles.dataCell, styles.createDateCell]}>
+                        {item.create_date}
+                      </Text>
+                      <Text style={[styles.dataCell, styles.nameCell]}>
+                        {item.name}
+                      </Text>
+                      <Text style={[styles.dataCell, styles.bonusTypeCell]}>
+                        {item.bonus_type}
+                      </Text>
+                      <Text style={[styles.dataCell, styles.paymentStatusCell]}>
+                        {item.payment_status}
+                      </Text>
+                      <Text style={[styles.dataCell, styles.amountCell]}>
+                        {item.amount}
+                      </Text>
+                    </View>
+                  ))}
               </View>
-              {bonusData &&
-                bonusData.map((item, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      styles.dataRow,
-                      index % 2 === 0 ? styles.evenRow : styles.oddRow,
-                    ]}>
-                    <Text style={[styles.dataCell, styles.createDateCell]}>
-                      {item.create_date}
-                    </Text>
-                    <Text style={[styles.dataCell, styles.nameCell]}>
-                      {item.name}
-                    </Text>
-                    <Text style={[styles.dataCell, styles.bonusTypeCell]}>
-                      {item.bonus_type}
-                    </Text>
-                    <Text style={[styles.dataCell, styles.paymentStatusCell]}>
-                      {item.payment_status}
-                    </Text>
-                    <Text style={[styles.dataCell, styles.amountCell]}>
-                      {item.amount}
-                    </Text>
-                  </View>
-                ))}
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </SafeAreaView>
     </View>
   );
 };

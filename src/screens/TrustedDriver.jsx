@@ -20,7 +20,6 @@ import {
   Platform,
   Image,
 } from 'react-native';
-import notifee from '@notifee/react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import ToggleSwitch from 'toggle-switch-react-native';
@@ -34,7 +33,6 @@ import BookingView from '../components/BookingView';
 import TrainingVideo from '../components/TrainingVideos';
 import MyBookingAgencyModal from '../components/modal/MyBookingAgencyModal';
 import messaging from '@react-native-firebase/messaging';
-
 import MyBookingModal from '../components/MyBookingModal';
 
 import {AppFont} from '../assets/FontsFamily';
@@ -66,6 +64,7 @@ import {setUserAuthStates} from '../redux/slices/userAuthSlice';
 import {Agent_Icon, Facebook_Icon} from '../assets/images';
 import {useRoute} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import {setLoginStatus, setRefreshKey} from '../redux/slices/globalSlice';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -207,11 +206,20 @@ const TrustedDriver = ({navigation}) => {
 
   const getFcmToken = async () => {
     try {
+      console.log('Starting getFcmToken function.');
       let tokenvalue = null;
 
       if (Platform.OS === 'ios') {
+        console.log('Platform is iOS.');
+
+        // Register for remote messages
         await messaging().registerDeviceForRemoteMessages();
+        console.log('iOS: Registered device for remote messages.');
+
+        // Request permission for push notifications
         const authStatus = await messaging().requestPermission();
+        console.log('iOS: Permission status:', authStatus);
+
         const enabled =
           authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
           authStatus === messaging.AuthorizationStatus.PROVISIONAL;
@@ -221,19 +229,33 @@ const TrustedDriver = ({navigation}) => {
           return;
         }
 
+        // Check APNS token
+        const apnsToken = await messaging().getAPNSToken();
+        console.log('iOS: APNS token:', apnsToken);
+
+        if (!apnsToken) {
+          console.log('Error: No APNS token retrieved.');
+          console.log(
+            'Ensure the device is configured for Push Notifications.',
+          );
+          return;
+        }
+
+        // Fetch FCM token
         tokenvalue = await messaging().getToken();
-        console.log(tokenvalue, 'ios tokenios token');
+        console.log('iOS: FCM token:', tokenvalue);
       } else {
-        // For Android, directly get the token without requiring permission
-        await requestNotificationPermission();
+        console.log('Platform is Android.');
+
+        // Fetch FCM token for Android
         tokenvalue = await messaging().getToken();
-        console.log(tokenvalue, 'Android tokenAndroid token');
+        console.log('Android: FCM token:', tokenvalue);
       }
 
       if (tokenvalue) {
+        console.log('FCM token generated successfully:', tokenvalue);
+        // Use token as needed
         sendNotificationMessage(tokenvalue);
-        setFcmToken(tokenvalue);
-        console.log('FCM token generated:', tokenvalue);
       } else {
         console.log('Failed to generate FCM token.');
       }
@@ -241,6 +263,43 @@ const TrustedDriver = ({navigation}) => {
       console.log('Error generating FCM token:', error);
     }
   };
+
+  // const getFcmToken = async () => {
+  //   try {
+  //     let tokenvalue = null;
+
+  //     if (Platform.OS === 'ios') {
+  //       await messaging().registerDeviceForRemoteMessages();
+  //       const authStatus = await messaging().requestPermission();
+  //       const enabled =
+  //         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+  //         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  //       if (!enabled) {
+  //         console.log('iOS: Permission not granted.');
+  //         return;
+  //       }
+
+  //       tokenvalue = await messaging().getToken();
+  //       console.log(tokenvalue, 'ios tokenios token');
+  //     } else {
+  //       // For Android, directly get the token without requiring permission
+  //       await requestNotificationPermission();
+  //       tokenvalue = await messaging().getToken();
+  //       console.log(tokenvalue, 'Android tokenAndroid token');
+  //     }
+
+  //     if (tokenvalue) {
+  //       sendNotificationMessage(tokenvalue);
+  //       setFcmToken(tokenvalue);
+  //       console.log('FCM token generated:', tokenvalue);
+  //     } else {
+  //       console.log('Failed to generate FCM token.');
+  //     }
+  //   } catch (error) {
+  //     console.log('Error generating FCM token:', error);
+  //   }
+  // };
 
   const sendNotificationMessage = async fcmtoken => {
     const response = await GET_FCM_TOKEN({
@@ -322,7 +381,9 @@ const TrustedDriver = ({navigation}) => {
 
   const [headLineData, setHeadLineData] = useState({});
 
-  const [isRfdOn, setIsRfdOn] = useState(false);
+  const isRfdOn = useSelector(state => state.globalSlice.loginStatus);
+
+  const [isRfdOnn, setIsRfdOn] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
   const [loginButton, setLoginButton] = useState({
     action: 'login_button',
@@ -353,7 +414,8 @@ const TrustedDriver = ({navigation}) => {
       console.log('Calling LOGIN_BUTTON API with payload:', updatedLoginButton);
       const response = await LOGIN_BUTTON(updatedLoginButton);
       console.log('LOGIN API RESPONSE:', response);
-      setIsRfdOn(response?.login_status);
+      // setIsRfdOn(response?.login_status);
+      dispatch(setLoginStatus(response?.login_status));
       if (response?.message?.length <= 30) {
         setLoginMessage('');
         // Show toast if the message length is 30 or less
@@ -370,34 +432,40 @@ const TrustedDriver = ({navigation}) => {
         switch (response?.redirect) {
           case 'clear-my-due-payment':
             navigation.navigate('CommanWebview', {
-              url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+              url: response?.url,
+            });
+            break;
+          case 'driver-training-module':
+            navigation.navigate('CommanWebview', {
+              url: response?.url,
             });
             break;
           case 'trusted-driver':
             navigation.navigate('TrustedDriver');
             break;
-          // Add more cases here if needed
           default:
+            navigation.navigate('CommanWebview', {
+              url: response?.url,
+            });
             break;
         }
       }
 
-      // if (response?.message.length <= 30) {
-      //   setLoginMessage('');
-
-      //   Toast.show({
-      //     type: 'success',
-      //     text1: response?.message,
-      //   });
-      // } else if (response?.redirect == 'clear-my-due-payment') {
-      //   navigation.navigate('CommanWebview', {
-      //     url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-      //   });
-      // } else if (response?.redirect == 'trusted-driver') {
-      //   navigation.navigate('TrustedDriver');
+      // if (response?.redirect) {
+      //   switch (response?.redirect) {
+      //     case 'clear-my-due-payment':
+      //       navigation.navigate('CommanWebview', {
+      //         url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+      //       });
+      //       break;
+      //     case 'trusted-driver':
+      //       navigation.navigate('TrustedDriver');
+      //       break;
+      //     // Add more cases here if needed
+      //     default:
+      //       break;
+      //   }
       // }
-      // // Navigation remainig
-      // if (response?.message?.length >= 30) setLoginMessage(response?.message);
     } catch (error) {
       console.log('LOGIN API ERROR:', error);
       if (error.response) {
@@ -562,6 +630,7 @@ const TrustedDriver = ({navigation}) => {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
+    dispatch(setRefreshKey());
     setRefreshing(false);
   }, []);
   // return false
@@ -615,8 +684,8 @@ const TrustedDriver = ({navigation}) => {
                   </View>
                   <View style={styles.topRight}>
                     <TouchableOpacity
-                      // onPress={() => navigation.navigate('DriverEarning')}
-                      onPress={async () => await notifee.requestPermission()}
+                      onPress={() => navigation.navigate('DriverEarning')}
+                      // onPress={()=>checkVibrationSupport()}
                       // onPress={() =>
                       //   openMyUrl('https://www.tatd.in/driver-earning.php')
                       // }
@@ -808,8 +877,8 @@ const TrustedDriver = ({navigation}) => {
             </Text>
 
             {/* Main Toggle Content */}
-            {/* <>{isRfdOn ? <BookingView /> : null}</> */}
-            <BookingView />
+            <>{isRfdOn ? <BookingView /> : null}</>
+            {/* <BookingView /> */}
             {videosContent ? <TrainingVideo data={Item} /> : null}
           </View>
         </ScrollView>

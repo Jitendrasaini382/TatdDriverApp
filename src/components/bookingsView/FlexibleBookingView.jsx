@@ -10,7 +10,8 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Modal from 'react-native-modal';
 import {AppColors} from '../../assets/Colors';
 import FlexibleBookingAcceptModal from '../modal/FlexibleBookingAcceptModal';
-import { AppFont } from '../../assets/FontsFamily';
+import {AppFont} from '../../assets/FontsFamily';
+import { FlatList } from 'react-native';
 
 const BookingCard = ({booking, index, total}) => {
   const [openModal, setOpenModal] = useState(false);
@@ -21,24 +22,24 @@ const BookingCard = ({booking, index, total}) => {
         <View style={styles.headerLeft}>
           <Text style={styles.days}>{booking.days} Days | </Text>
           <Text style={styles.price}>
-            Rs {booking.price} | {booking.paymentMethod}
+            Rs {booking.rs} | {booking.payment_mode}
           </Text>
         </View>
         <View style={styles.vehicleType}>
           <Icon color={AppColors.mainColor} name="car" />
-          <Text style={styles.vehicleText}>{booking.vehicleType}</Text>
+          <Text style={styles.vehicleText}>{booking.car_model}</Text>
         </View>
       </View>
-      <Text style={styles.title}>{booking.location}</Text>
+      <Text style={styles.title}>{booking.pickup_address}</Text>
       <View style={styles.dates}>
-        {booking.dates.map((date, idx) => (
+        {booking.date_wie.map((date, idx) => (
           <Text key={idx} style={styles.dateText}>
             {date} |
           </Text>
         ))}
       </View>
       <View style={styles.times}>
-        {booking.times.map((time, idx) => (
+        {booking.time_wie.map((time, idx) => (
           <Text key={idx} style={styles.timeText}>
             {time}
           </Text>
@@ -46,8 +47,8 @@ const BookingCard = ({booking, index, total}) => {
       </View>
       <View style={styles.footer}>
         <Text style={styles.footerText}>
-          <Text style={{fontSize: 20}}>Rs {booking.total} </Text>
-          {booking.hoursPerDay} Hours/day
+          <Text style={{fontSize: 20}}>Rs {booking.budget} </Text>
+          {booking.hours_day} Hours/day
         </Text>
         <TouchableOpacity
           onPress={() => {
@@ -182,21 +183,75 @@ const FlexibleBookingView = () => {
   //   },
   // ];
 
-  const bookingDetails = []
+  const bookingDetails = [
+    {
+      days: 4,
+      rs: 4328,
+      payment_mode: 'Cash',
+      vehicle_type: 'Manual',
+      car_model: 'Hatchback',
+      pickup_address: 'Testing of the day status of the day status ',
+      zone: 'Chennai',
+      budget: '1082',
+      hours_day: '12',
+      date_wie: [
+        '03 Jan',
+        '04 Jan',
+        '05 Jan',
+        '07 Jan',
+        '03 Jan',
+        '04 Jan',
+        '05 Jan',
+        '07 Jan',
+      ],
+      time_wie: ['05:15 AM ', '05:15 AM ', '05:15 AM ', '05:15 AM '],
+    },
+    {
+      days: 4,
+      rs: 4328,
+      payment_mode: 'Cash',
+      vehicle_type: 'Manual',
+      car_model: 'Hatchback',
+      pickup_address: 'Testing of the day status of the day status ',
+      zone: 'Chennai',
+      budget: '1082',
+      hours_day: '12',
+      date_wie: ['03 Jan', '04 Jan', '05 Jan', '07 Jan'],
+      time_wie: ['05:15 AM ', '05:15 AM ', '05:15 AM ', '05:15 AM '],
+    },
+  ];
 
-  return (
-    <ScrollView>
-      {bookingDetails.map((booking, index) => (
-        <BookingCard
-          key={index}
-          booking={booking}
-          index={index}
-          total={bookingDetails.length}
-        />
-      ))}
-    </ScrollView>
-  );
+//   return (
+//     <ScrollView>
+//       {bookingDetails.map((booking, index) => (
+//         <BookingCard
+//           key={index}
+//           booking={booking}
+//           index={index}
+//           total={bookingDetails.length}
+//         />
+//       ))}
+//     </ScrollView>
+//   );
+// };
+
+
+return (
+  <FlatList
+    data={bookingDetails}
+    keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+    renderItem={({ item, index }) => (
+      <BookingCard
+        booking={item}
+        index={index}
+        total={bookingDetails.length}
+      />
+    )}
+  />
+);
 };
+
+
 
 const styles = StyleSheet.create({
   card: {
@@ -206,7 +261,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: AppColors.mainColor,
     marginBottom: 10,
-    marginHorizontal:5
+    marginHorizontal: 5,
   },
   header: {
     flexDirection: 'row',
@@ -244,7 +299,7 @@ const styles = StyleSheet.create({
   },
   dates: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexWrap: 'wrap',
     marginBottom: 10,
   },
   dateText: {

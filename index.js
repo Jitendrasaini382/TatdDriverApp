@@ -1,4 +1,4 @@
-import {AppRegistry, AppState, Platform} from 'react-native';
+import {Alert, AppRegistry, AppState, Platform} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
 import messaging from '@react-native-firebase/messaging';
@@ -16,28 +16,37 @@ import {
 import {useEffect} from 'react';
 
 // Create notification channel with vibration enabled (for Android)
-async function createNotificationChannel() {
-  await notifee.createChannel({
-    id: 'default',
-    name: 'Default Channel',
-    sound: 'default',
+// async function createNotificationChannel() {
+//   await notifee.createChannel({
+//     id: 'tatd2025',
+//     name: 'tatd2025',
+//     sound: 'default',
+//     vibration: true, // Ensure vibration is enabled for this channel
+//     vibrationPattern: [300, 500], // Custom vibration pattern
+//     importance: AndroidImportance.HIGH, // High importance to allow sound and vibration
+//   });
+// }
+
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Message handled in the background!', remoteMessage);
+  // await createNotificationChannel();
+  const sound_ = remoteMessage?.data?.sound || 'sound'; // Default to 'sound' if not specified
+
+  const channelId = await notifee.createChannel({
+    id: 'tatd2025',
+    name: 'tatd2025',
+    sound: sound_,
     vibration: true, // Ensure vibration is enabled for this channel
     vibrationPattern: [300, 500], // Custom vibration pattern
     importance: AndroidImportance.HIGH, // High importance to allow sound and vibration
   });
-}
-
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Message handled in the background!', remoteMessage);
-  await createNotificationChannel();
+  playSound(sound_)
+  checkVibrationSupport(10000)
   await notifee.displayNotification({
     title: remoteMessage.notification?.title || remoteMessage.data?.title,
     body: remoteMessage.notification?.body || remoteMessage.data?.body,
     android: {
-      channelId: 'default', // Make sure the correct channel with vibration is used
-      sound: 'default',
-      vibrationPattern: [500, 300, 500, 300, 500, 300], // Custom vibration pattern
-      importance: AndroidImportance.HIGH, // High importance to allow sound and vibration
+      channelId
     },
     ios: {
       sound: 'default', // Use default sound or specify a custom one
@@ -45,6 +54,28 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
       criticalVolume: 1.0, // Set critical alert volume (0.0 - 1.0)
     },
   });
+});
+
+
+notifee.onBackgroundEvent(async ({ type, detail }) => {
+  switch (type) {
+    case EventType.PRESS:
+      console.log('Notification pressed in background:', detail);
+      // Handle notification press, e.g., navigate to a specific screen
+      Alert.alert("ooo")
+      break;
+    case EventType.DISMISSED:
+      console.log('Notification dismissed in background:', detail);
+      // Handle notification dismissal
+      break;
+    case EventType.BACKGROUND:
+      console.log('Background event:', detail);
+      // Handle background notification events if needed
+      break;
+    default:
+      console.log('Unhandled event in background:', type);
+      break;
+  }
 });
 // messaging().onMessage(async remoteMessage => {
 //   Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));

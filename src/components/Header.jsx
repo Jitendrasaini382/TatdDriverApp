@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     // shadowRadius: 3,
     elevation: 5,
     justifyContent: 'space-between',
-    paddingBottom: 10,
+    // paddingBottom: 10,
   },
   leftContent: {
     backgroundColor: AppColors.white,

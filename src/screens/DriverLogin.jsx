@@ -112,8 +112,9 @@ const DriverLogin = () => {
 
   // Function to handle setting the number
   const handleSetNumber = item => {
-    // console.log(item, 'itemmmmmmmm');
-    setMobile(item); // Set the selected item as the input field value
+    console.log(item, 'itemmmmmmmm');
+    const lastTenDigits = item.slice(-10);
+    setMobile(lastTenDigits); // Set the selected item as the input field value
     // if (mobile) {
     handleClose(); // Close the modal
     // }

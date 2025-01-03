@@ -1,6 +1,6 @@
 // src/redux/slices/globalSlice.js
 
-import { createSlice } from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   languageSwitch: 'hindi',
@@ -11,6 +11,10 @@ const initialState = {
   showButtonText: '',
   storedRating: null,
   notificationData: [],
+  refreshData: false,
+  triggerFunction: false,
+  loginStatus: false,
+  refreshKey: 0,
 };
 
 const globalSlice = createSlice({
@@ -19,7 +23,7 @@ const globalSlice = createSlice({
   reducers: {
     // Update a specific state key dynamically
     setGlobalState: (state, action) => {
-      const { key, value } = action.payload;
+      const {key, value} = action.payload;
       if (state.hasOwnProperty(key)) {
         state[key] = value;
       }
@@ -50,6 +54,18 @@ const globalSlice = createSlice({
     setNotificationData: (state, action) => {
       state.notificationData = action.payload;
     },
+    setRefreshData: (state, action) => {
+      state.refreshData = action.payload;
+    },
+    setTriggerFunction: (state, action) => {
+      state.triggerFunction = action.payload;
+    },
+    setLoginStatus: (state, action) => {
+      state.loginStatus = action.payload;
+    },
+    setRefreshKey: state => {
+      state.refreshKey += 1;
+    },
   },
 });
 
@@ -63,6 +79,10 @@ export const {
   setShowButtonText,
   setStoredRating,
   setNotificationData,
+  setRefreshData,
+  setTriggerFunction,
+  setLoginStatus,
+  setRefreshKey,
 } = globalSlice.actions;
 
 export default globalSlice.reducer;

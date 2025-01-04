@@ -210,6 +210,7 @@ const DriverLogin = () => {
         setLoader(false);
         navigation.navigate('CommanWebview', {
           url: response?.redirect,
+          isAuthenticated : false
         });
       }
     } catch (err) {
@@ -259,7 +260,7 @@ const DriverLogin = () => {
       <View
         style={{height: insets.top, backgroundColor: AppColors.mainColor}}
       />
-      <Header backButtn={false} />
+      <Header backButtn={false} isAuthenticated={false} />
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
         keyboardShouldPersistTaps="always">

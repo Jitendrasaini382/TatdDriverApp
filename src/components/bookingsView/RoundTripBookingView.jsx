@@ -257,30 +257,10 @@ const RoundTripBookingView = () => {
   //   }
   // }, [triggerFunction, dispatch]);
 
-
   useEffect(() => {
-    if (triggerFunction || refreshKey) {
-      console.log('Triggered by either refreshKey or triggerFunction');
-
-      // Run the required functions
-      getOnDemandOutstationBookings({
-        action: 'ondemand_outstation_bookings',
-      });
-      getIncityRoundTripBookings({
-        action: 'incity_roundtrip_booking',
-      });
-      getIncityOneWayBookings({
-        action: 'incity_oneway_booking',
-      });
-
-      // Reset `triggerFunction` after running
-      if (triggerFunction) {
-        dispatch(setTriggerFunction(false));
-      }
-    }
-  }, [triggerFunction, refreshKey, dispatch]);
-
-  useEffect(() => {
+    console.log('Triggered by refreshKey, triggerFunction, or languageSwitch roundTrip');
+  
+    // Run the required functions
     getOnDemandOutstationBookings({
       action: 'ondemand_outstation_bookings',
     });
@@ -290,7 +270,48 @@ const RoundTripBookingView = () => {
     getIncityOneWayBookings({
       action: 'incity_oneway_booking',
     });
-  }, [languageSwitch]);
+  
+    // Reset `triggerFunction` after running
+    if (triggerFunction) {
+      dispatch(setTriggerFunction(false));
+    }
+  }, [triggerFunction, refreshKey, languageSwitch, dispatch]);
+  
+
+
+  // useEffect(() => {
+  //   if (triggerFunction || refreshKey) {
+  //     console.log('Triggered by either refreshKey or triggerFunction');
+
+  //     // Run the required functions
+  //     getOnDemandOutstationBookings({
+  //       action: 'ondemand_outstation_bookings',
+  //     });
+  //     getIncityRoundTripBookings({
+  //       action: 'incity_roundtrip_booking',
+  //     });
+  //     getIncityOneWayBookings({
+  //       action: 'incity_oneway_booking',
+  //     });
+
+  //     // Reset `triggerFunction` after running
+  //     if (triggerFunction) {
+  //       dispatch(setTriggerFunction(false));
+  //     }
+  //   }
+  // }, [triggerFunction, refreshKey, dispatch]);
+
+  // useEffect(() => {
+  //   getOnDemandOutstationBookings({
+  //     action: 'ondemand_outstation_bookings',
+  //   });
+  //   getIncityRoundTripBookings({
+  //     action: 'incity_roundtrip_booking',
+  //   });
+  //   getIncityOneWayBookings({
+  //     action: 'incity_oneway_booking',
+  //   });
+  // }, [languageSwitch]);
 
   return (
     <>
@@ -316,7 +337,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 12,
     marginVertical: 10,
-    marginHorizontal: 10,
+    marginHorizontal: 5,
   },
   header: {
     flexDirection: 'row',
@@ -400,7 +421,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 8,
     alignItems: 'center',
-    minWidth: 80,
+    minWidth: 100,
   },
 });
 

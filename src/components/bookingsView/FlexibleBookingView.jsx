@@ -1,17 +1,21 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
   ScrollView,
+  Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import Modal from 'react-native-modal';
+// import Modal from 'react-native-modal';
 import {AppColors} from '../../assets/Colors';
 import FlexibleBookingAcceptModal from '../modal/FlexibleBookingAcceptModal';
 import {AppFont} from '../../assets/FontsFamily';
-import { FlatList } from 'react-native';
+import {FlatList} from 'react-native';
+import {WEEKLY_BOOKING} from '../../apis/Apis';
+import {useDispatch, useSelector} from 'react-redux';
+import {setTriggerFunction} from '../../redux/slices/globalSlice';
 
 const BookingCard = ({booking, index, total}) => {
   const [openModal, setOpenModal] = useState(false);
@@ -58,13 +62,27 @@ const BookingCard = ({booking, index, total}) => {
           <Text style={styles.acceptButtonText}>Accept</Text>
         </TouchableOpacity>
 
-        <Modal
+        {/* <Modal
           backdropOpacity={0}
           onBackdropPress={() => setOpenModal(false)}
           animationIn={'fadeInDown'}
           animationOut={'fadeOutUp'}
           isVisible={openModal}>
-          <FlexibleBookingAcceptModal setOpenModal={setOpenModal} />
+          <FlexibleBookingAcceptModal
+            setOpenModal={setOpenModal}
+            booking={booking}
+          />
+        </Modal> */}
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setOpenModal(false)}
+          visible={openModal}>
+          <FlexibleBookingAcceptModal
+            setOpenModal={setOpenModal}
+            booking={booking}
+          />
         </Modal>
       </View>
     </View>
@@ -220,38 +238,86 @@ const FlexibleBookingView = () => {
       time_wie: ['05:15 AM ', '05:15 AM ', '05:15 AM ', '05:15 AM '],
     },
   ];
+  const dispatch = useDispatch();
 
-//   return (
-//     <ScrollView>
-//       {bookingDetails.map((booking, index) => (
-//         <BookingCard
-//           key={index}
-//           booking={booking}
-//           index={index}
-//           total={bookingDetails.length}
-//         />
-//       ))}
-//     </ScrollView>
-//   );
-// };
+  const [bookingDetailss, setBookingDetails] = useState([]);
+  const [loading, setLoading] = useState(false);
 
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  const triggerFunction = useSelector(
+    state => state.globalSlice.triggerFunction,
+  );
 
-return (
-  <FlatList
-    data={bookingDetails}
-    keyExtractor={(item, index) => item.id?.toString() || index.toString()}
-    renderItem={({ item, index }) => (
-      <BookingCard
-        booking={item}
-        index={index}
-        total={bookingDetails.length}
-      />
-    )}
-  />
-);
+  const refreshKey = useSelector(state => state.globalSlice.refreshKey);
+
+  // useEffect(() => {
+  //   console.log(
+  //     'Triggered by refreshKey, triggerFunction, or languageSwitch flexible',
+  //   );
+
+  //   // Run the required functions
+  //   getWeeklyBookings();
+
+  //   // Reset `triggerFunction` after running
+  //   if (triggerFunction) {
+  //     dispatch(setTriggerFunction(false));
+  //   }
+  // }, [triggerFunction, refreshKey, languageSwitch, dispatch]);
+
+  const getWeeklyBookings = async () => {
+    try {
+      console.log('Starting getWeeklyBookings function');
+
+      setLoading(true); // Show loader
+      console.log('Loader set to true');
+
+      const response = await WEEKLY_BOOKING({
+        action: 'weekly_booking_view',
+        current_language: languageSwitch,
+      });
+      console.log('WEEKLY_BOOKING API call made');
+
+      console.log(response, 'getWeeklyBookings response received');
+
+      // setBookingDetails(response.weeklybookingview);
+      console.log('Booking details processing complete');
+    } catch (error) {
+      console.log(error, 'getWeeklyBookings Error caught');
+    } finally {
+      setLoading(false);
+      console.log('Loader set to false');
+      console.log('getWeeklyBookings function execution complete');
+    }
+  };
+
+  //   return (
+  //     <ScrollView>
+  //       {bookingDetails.map((booking, index) => (
+  //         <BookingCard
+  //           key={index}
+  //           booking={booking}
+  //           index={index}
+  //           total={bookingDetails.length}
+  //         />
+  //       ))}
+  //     </ScrollView>
+  //   );
+  // };
+
+  return (
+    <FlatList
+      data={bookingDetails}
+      keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+      renderItem={({item, index}) => (
+        <BookingCard
+          booking={item}
+          index={index}
+          total={bookingDetails.length}
+        />
+      )}
+    />
+  );
 };
-
-
 
 const styles = StyleSheet.create({
   card: {
@@ -262,6 +328,12 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.mainColor,
     marginBottom: 10,
     marginHorizontal: 5,
+
+
+
+    // padding: 12,
+    // marginVertical: 10,
+    // marginHorizontal: 10,
   },
   header: {
     flexDirection: 'row',

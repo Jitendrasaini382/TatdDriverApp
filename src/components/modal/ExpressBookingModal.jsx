@@ -13,12 +13,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setExpressBookingModal} from '../../redux/slices/trustedDriverSlice';
 
 const ExpressBookingModal = () => {
-  useEffect(() => {
-    console.log('runnnnn12345678900987654321');
-  }, []);
-
   const dispatch = useDispatch();
-
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
@@ -123,7 +118,7 @@ const ExpressBookingModal = () => {
             <Text style={styles.buttonText}>
               {languageSwitch == 'english'
                 ? 'I am available'
-                : 'मैं उपलब्ध है।'}
+                : 'मैं उपलब्ध हूँ।'}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -281,13 +276,13 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 8,
     paddingVertical: 10,
-    paddingHorizontal: 15,
+    paddingHorizontal: 5,
     backgroundColor: AppColors.mainColor,
     alignItems: 'center',
   },
   buttonText: {
     color: AppColors.white,
-    fontSize: 17,
+    fontSize: 15,
   },
 });
 

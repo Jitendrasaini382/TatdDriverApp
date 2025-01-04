@@ -300,7 +300,7 @@ const CheckDriverOtp = ({navigation, route}) => {
         style={{height: insets.top, backgroundColor: AppColors.mainColor}}
       />
 
-      <Header backButton={true} />
+      <Header backButton={true} isAuthenticated={false}/>
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
         keyboardShouldPersistTaps="always">

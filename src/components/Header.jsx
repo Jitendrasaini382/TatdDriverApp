@@ -6,14 +6,24 @@ import BackButton from './BackButton';
 import ExtraButtons from './ExtraButtons';
 import {AppColors} from '../assets/Colors';
 import {useNavigation} from '@react-navigation/native';
-const Header = ({backButton, extraButton}) => {
+const Header = ({backButton, extraButton, isAuthenticated = true}) => {
   const navigation = useNavigation();
+  const handleLogoPress = () => {
+    if (isAuthenticated) {
+      // Navigate to the private route
+      navigation.navigate('TrustedDriver');
+    } else {
+      // Navigate to the public route
+      navigation.navigate('DriverLogin');
+    }
+  };
 
   return (
     <View style={styles.mainContainer}>
       <View style={styles.leftContent}>
         <Pressable
-          onPress={() => navigation.navigate('TrustedDriver')}
+          // onPress={() => navigation.navigate('TrustedDriver')}
+          onPress={handleLogoPress}
           style={styles.logoView}>
           <Image
             source={Headerlogo}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,11 +8,75 @@ import {
   Alert,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
-import { AppFont } from '../../assets/FontsFamily';
+import {AppFont} from '../../assets/FontsFamily';
+import {WEEKLY_BOOKING_ACCEPT} from '../../apis/Apis';
+import {useSelector} from 'react-redux';
 
-const FlexibleBookingAcceptModal = ({setOpenModal}) => {
+const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
+  console.log(booking, 'weekly accept modal booking');
+  const bookingNumber = 'FS-18262';
+  const [popupData, setPopupData] = useState({});
+  const [loader, setLoader] = useState(false);
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+
+  // useEffect(() => {
+  //   setLoader(true);
+  //   // weeklybookingAcceptPopuup();
+  // }, []);
+
+  const weeklybookingAcceptPopuup = async () => {
+    console.log('Function weeklybookingAcceptPopuup invoked');
+    setLoader(true);
+    console.log('Loader set to true');
+    try {
+      console.log('Attempting to call WEEKLY_BOOKING_ACCEPT with params:', {
+        action: 'accept_booking',
+        current_language: languageSwitch,
+        booking_id: bookingNumber,
+      });
+      const response = await WEEKLY_BOOKING_ACCEPT({
+        action: 'accept_booking',
+        current_language: languageSwitch,
+        booking_id: bookingNumber,
+      });
+      console.log('Response received from WEEKLY_BOOKING_ACCEPT:', response);
+      setLoader(false);
+      console.log('Loader set to false after successful response');
+      // setPopupData(response);
+      console.log('Popup data set with:', response);
+    } catch (error) {
+      setLoader(false);
+      console.log('Loader set to false in catch block');
+
+      console.log('Error caught in weeklybookingAcceptPopuup:', error);
+    } finally {
+      setLoader(false);
+      console.log('Loader set to false in finally block');
+    }
+  };
+
+  const acceptBooking = async () => {
+    console.log(bookingNumber, 'accept booking number');
+    console.log('final accepttttt');
+    try {
+      // const response = await FINAL_ACCEPT_BOOKING({
+      //   action: 'accept_booking',
+      //   booking_id: booking_number,
+      //   current_language: languageSwitch,
+      // });
+      // console.log(response, 'acceptBooking response');
+      dispatch(setTriggerFunction(true));
+      // navigation.navigate('DutyReportUpdate', {
+      //   bookingNumber: booking_number,
+      //   isFirstTime: true,
+      // });
+    } catch (error) {
+      console.log(error, 'acceptBooking Error');
+    }
+  };
+
   return (
-    <SafeAreaView style={{flex: 1, }}>
+    <SafeAreaView style={{flex: 1}}>
       <View style={styles.card}>
         <Text style={styles.header}>Please Read Carefully.</Text>
 
@@ -53,9 +117,10 @@ const FlexibleBookingAcceptModal = ({setOpenModal}) => {
             <Text style={styles.cancelButtonText}>Cancel</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => {
-              Alert.alert('Are You Confirm');
-            }}
+            // onPress={() => {
+            //   Alert.alert('Are You Confirm');
+            // }}
+            onPress={() => acceptBooking()}
             style={styles.applyButton}>
             <Text style={styles.applyButtonText}>Apply</Text>
           </TouchableOpacity>

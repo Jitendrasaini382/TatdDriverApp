@@ -118,7 +118,7 @@ const TrustedDriver = ({navigation}) => {
       getPopup();
       getHeadlineData();
     }
-  }, [jwt]);
+  }, [jwt, languageSwitch]);
 
   // useEffect(() => {
   //   const initializePermissions = async () => {
@@ -246,7 +246,7 @@ const TrustedDriver = ({navigation}) => {
         console.log('iOS: FCM token:', tokenvalue);
       } else {
         console.log('Platform is Android.');
-
+        requestNotificationPermission();
         // Fetch FCM token for Android
         tokenvalue = await messaging().getToken();
         console.log('Android: FCM token:', tokenvalue);
@@ -875,6 +875,10 @@ const TrustedDriver = ({navigation}) => {
             <Text style={{color: AppColors.red, margin: 5}}>
               {loginMessage}
             </Text>
+
+            {/* <Text style={{color: AppColors.whatsAppIconColor, margin: 10}}>
+              {headLineData?.driver_panel_messages?.booking_score_message}
+            </Text> */}
 
             {/* Main Toggle Content */}
             <>{isRfdOn ? <BookingView /> : null}</>

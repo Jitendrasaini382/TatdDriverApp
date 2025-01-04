@@ -153,15 +153,25 @@ export const PERMANENT_BOOKING = body => {
   );
 };
 
-export const WEEKLY_BOOKING = body => {
-  console.log(body, 'WEEKLY_BOOKING body');
-  return _Fetch(
-    'POST',
-    'trusted-driver/weekly-booking-view-api.php',
-    {...body},
-    {},
-  );
-};
+// export const WEEKLY_BOOKING = body => {
+//   console.log(body, 'WEEKLY_BOOKING body');
+//   return _Fetch(
+//     'POST',
+//     'trusted-driver/weekly-booking-view-api.php',
+//     {...body},
+//     {},
+//   );
+// };
+
+// export const WEEKLY_BOOKING_ACCEPT = body => {
+//   console.log(body, 'WEEKLY_BOOKING_ACCEPT body');
+//   return _Fetch(
+//     'POST',
+//     'trusted-driver/weekly-accept-booking-api.php',
+//     {...body},
+//     {},
+//   );
+// };
 
 export const PERMANENT_REFER_POPUP = body => {
   console.log(body, 'PERMANENT_REFER_POPUP body');
@@ -434,6 +444,7 @@ export const FINAL_ACCEPT_BOOKING = body => {
 // befor start drive
 export const DUTY_REPORT_RESEND_OTP = body => {
   console.log(body, 'DUTY_REPORT_RESEND_OTP body');
-
   return _Fetch('POST', 'duty-report/resend_otp_api.php', {...body}, {});
 };
+
+//

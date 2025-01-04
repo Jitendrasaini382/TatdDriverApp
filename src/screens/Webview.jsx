@@ -10,6 +10,7 @@ const CommanWebview = () => {
 
   // Extract URL from the route parameters
   const url = route?.params?.url;
+  const isAuthenticated = route?.params?.isAuthenticated ?? true;
 
   const removeClassesScript = `
   document.querySelector('.header_area').style.display = 'none';
@@ -17,23 +18,23 @@ const CommanWebview = () => {
   true; // Required for Android
 `;
 
-const removeHeader = () => {
-  setTimeout(() => {
-    if (webviewRef?.current) {
-      webviewRef.current.injectJavaScript(removeClassesScript); 
-    }
-  }, 0);
-}
+  const removeHeader = () => {
+    setTimeout(() => {
+      if (webviewRef?.current) {
+        webviewRef.current.injectJavaScript(removeClassesScript);
+      }
+    }, 0);
+  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <Header backButton={true} />
+      <Header backButton={true} isAuthenticated={isAuthenticated} />
       <WebView
         ref={webviewRef}
         style={{flex: 1}}
         source={{uri: url}}
         startInLoadingState={true}
-        onLoadEnd={()=>removeHeader()}
+        onLoadEnd={() => removeHeader()}
         onNavigationStateChange={navState => {
           console.log('Navigating to:', navState.url);
         }}

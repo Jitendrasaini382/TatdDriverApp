@@ -189,7 +189,7 @@ const TrustedDriver = ({navigation}) => {
   //     // Retrieve the FCM token
   //     const tokenvalue = await messaging().getToken();
   //     // console.warn('FCM token generated:', tokenvalue);
-  //     sendNotificationMessage(tokenvalue)
+  //     saveFcmToken(tokenvalue)
   //     setFcmToken(tokenvalue)
   //     console.log('FCM token generated:', tokenvalue);
 
@@ -255,7 +255,7 @@ const TrustedDriver = ({navigation}) => {
       if (tokenvalue) {
         console.log('FCM token generated successfully:', tokenvalue);
         // Use token as needed
-        sendNotificationMessage(tokenvalue);
+        saveFcmToken(tokenvalue);
       } else {
         console.log('Failed to generate FCM token.');
       }
@@ -290,7 +290,7 @@ const TrustedDriver = ({navigation}) => {
   //     }
 
   //     if (tokenvalue) {
-  //       sendNotificationMessage(tokenvalue);
+  //       saveFcmToken(tokenvalue);
   //       setFcmToken(tokenvalue);
   //       console.log('FCM token generated:', tokenvalue);
   //     } else {
@@ -301,7 +301,7 @@ const TrustedDriver = ({navigation}) => {
   //   }
   // };
 
-  const sendNotificationMessage = async fcmtoken => {
+  const saveFcmToken = async fcmtoken => {
     const response = await GET_FCM_TOKEN({
       fcm_token: fcmtoken,
       action: 'save_fcm',

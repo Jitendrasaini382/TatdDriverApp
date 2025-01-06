@@ -650,10 +650,12 @@ const TrustedDriver = ({navigation}) => {
                   width: 30,
                   height: 30,
                   marginBottom: 10,
-                  tintColor:
-                    selected === 'Agent'
-                      ? AppColors.mainColor
-                      : AppColors.black,
+                  // tintColor:
+                  //   selected === 'Agent'
+                  //     ? AppColors.mainColor
+                  //     : AppColors.black,
+
+                  tintColor: AppColors.black,
                 }}
               />
               <Text
@@ -675,10 +677,12 @@ const TrustedDriver = ({navigation}) => {
                   width: 30,
                   height: 30,
                   marginBottom: 10,
-                  tintColor:
-                    selected === 'PremiumDriver'
-                      ? AppColors.mainColor
-                      : AppColors.black,
+                  // tintColor:
+                  //   selected === 'PremiumDriver'
+                  //     ? AppColors.mainColor
+                  //     : AppColors.black,
+
+                  tintColor: AppColors.black,
                 }}
               />
               <Text
@@ -700,10 +704,12 @@ const TrustedDriver = ({navigation}) => {
                   width: 30,
                   height: 30,
                   marginBottom: 10,
-                  tintColor:
-                    selected === 'TrustedPartner'
-                      ? AppColors.mainColor
-                      : AppColors.black,
+                  // tintColor:
+                  //   selected === 'TrustedPartner'
+                  //     ? AppColors.mainColor
+                  //     : AppColors.black,
+
+                  tintColor: AppColors.black,
                 }}
               />
               <Text

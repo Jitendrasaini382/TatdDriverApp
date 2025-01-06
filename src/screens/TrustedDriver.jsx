@@ -120,20 +120,6 @@ const TrustedDriver = ({navigation}) => {
     }
   }, [jwt, languageSwitch]);
 
-  // useEffect(() => {
-  //   const initializePermissions = async () => {
-  //     try {
-  //       await requestNotificationPermission();
-  //       await checkVibrationPermission();
-  //       // Optionally remove JWT for testing
-  //       // await AsyncStorage.removeItem('jwt');
-  //     } catch (error) {
-  //       console.error('Error initializing permissions:', error);
-  //     }
-  //   };
-
-  //   initializePermissions();
-  // }, []);
   const openMyUrl = url => {
     Linking.openURL(url);
   };
@@ -151,7 +137,7 @@ const TrustedDriver = ({navigation}) => {
   const [selected, setSelected] = useState(currentRoute);
 
   const handlePress = icon => {
-    setSelected(icon); // Set the selected icon
+    setSelected(icon);
     if (icon === 'Agent') {
       navigation.navigate('CommanWebview', {
         url: `https://www.tatd.in/agent-login.php`,
@@ -164,45 +150,6 @@ const TrustedDriver = ({navigation}) => {
       navigation.navigate('TrustedDriver');
     }
   };
-
-  // const getFcmToken = async () => {
-  //   try {
-  //     if (Platform.OS === 'ios') {
-  //       // For iOS, register for remote messages explicitly
-  //       await messaging().registerDeviceForRemoteMessages();
-  //     } else {
-  //       // For Android, ensure the registration for remote messages
-  //       await requestNotificationPermission();
-  //     }
-
-  //     // Request notification permissions (only if you plan to display notifications)
-  //     const authStatus = await messaging().requestPermission();
-  //     const enabled =
-  //       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-  //       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-  //     if (!enabled) {
-  //       // Alert.alert('Permission not granted for notifications');
-  //       return;
-  //     }
-
-  //     // Retrieve the FCM token
-  //     const tokenvalue = await messaging().getToken();
-  //     // console.warn('FCM token generated:', tokenvalue);
-  //     saveFcmToken(tokenvalue)
-  //     setFcmToken(tokenvalue)
-  //     console.log('FCM token generated:', tokenvalue);
-
-  //     // Save the token to AsyncStorage for later use
-  //     // await AsyncStorage.setItem('fcmToken', tokenvalue);
-  //   } catch (error) {
-  //     console.log('Error generating FCM token:', error);
-  //     // Alert.alert(
-  //     //   'Error generating FCM token:',
-  //     //   error?.message || error.toString(),
-  //     // );
-  //   }
-  // };
 
   const getFcmToken = async () => {
     try {
@@ -255,6 +202,7 @@ const TrustedDriver = ({navigation}) => {
       if (tokenvalue) {
         console.log('FCM token generated successfully:', tokenvalue);
         // Use token as needed
+        setFcmToken(tokenvalue);
         saveFcmToken(tokenvalue);
       } else {
         console.log('Failed to generate FCM token.');
@@ -263,43 +211,6 @@ const TrustedDriver = ({navigation}) => {
       console.log('Error generating FCM token:', error);
     }
   };
-
-  // const getFcmToken = async () => {
-  //   try {
-  //     let tokenvalue = null;
-
-  //     if (Platform.OS === 'ios') {
-  //       await messaging().registerDeviceForRemoteMessages();
-  //       const authStatus = await messaging().requestPermission();
-  //       const enabled =
-  //         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-  //         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-  //       if (!enabled) {
-  //         console.log('iOS: Permission not granted.');
-  //         return;
-  //       }
-
-  //       tokenvalue = await messaging().getToken();
-  //       console.log(tokenvalue, 'ios tokenios token');
-  //     } else {
-  //       // For Android, directly get the token without requiring permission
-  //       await requestNotificationPermission();
-  //       tokenvalue = await messaging().getToken();
-  //       console.log(tokenvalue, 'Android tokenAndroid token');
-  //     }
-
-  //     if (tokenvalue) {
-  //       saveFcmToken(tokenvalue);
-  //       setFcmToken(tokenvalue);
-  //       console.log('FCM token generated:', tokenvalue);
-  //     } else {
-  //       console.log('Failed to generate FCM token.');
-  //     }
-  //   } catch (error) {
-  //     console.log('Error generating FCM token:', error);
-  //   }
-  // };
 
   const saveFcmToken = async fcmtoken => {
     const response = await GET_FCM_TOKEN({
@@ -314,76 +225,10 @@ const TrustedDriver = ({navigation}) => {
     );
   };
 
-  // const [loginButton, setLoginButton] = useState({
-  //   action: 'login_button',
-  //   submitR: '1',
-  //   rfd: '0',
-  // });
-  // const [isRfdOn, setIsRfdOn] = useState(false); // State to track if the toggle is on
-  // const [isDisabled, setIsDisabled] = useState(false); // State to disable the toggle button
-  // const timerRef = useRef(null); // Ref to store the timeout
-
-  // const handleToggleButton = () => {
-  //   if (isRfdOn && isDisabled) {
-  //     Alert.alert('Please wait 30 minutes');
-  //     return;
-  //   }
-
-  //   const newRfdValue = isRfdOn ? '0' : '1';
-  //   setIsRfdOn(!isRfdOn); // Update the toggle state
-  //   setLoginButton(prevState => ({
-  //     ...prevState,
-  //     rfd: newRfdValue,
-  //   })); // Update the loginButton state
-
-  //   if (newRfdValue === '1') {
-  //     // Disable the button for 30 minutes
-  //     // setIsDisabled(true);
-
-  //     // Call the LOGIN_BUTTON function (replace with your actual API call)
-  //     LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
-  //       .then(response => {
-  //         console.log(response, 'LOGIN API RESPONSE');
-  //         Alert.alert(response.data?.message);
-  //       })
-  //       .catch(err => {
-  //         console.log(err, 'LOGIN API ERROR');
-  //       });
-
-  //     // Set a 30-minute timeout to enable the toggle again
-  //     timerRef.current = setTimeout(() => {
-  //       setIsRfdOn(false); // Automatically turn off the toggle after 30 minutes
-  //       setLoginButton(prevState => ({
-  //         ...prevState,
-  //         rfd: '0',
-  //       }));
-  //       setIsDisabled(false); // Re-enable the toggle button after 30 minutes
-  //       Alert.alert('Toggle automatically turned off after 30 minutes');
-  //     }, 1800000); // 30 minutes in milliseconds
-  //   } else {
-  //     // If toggled OFF manually, clear the existing timeout (if any)
-  //     if (timerRef.current) {
-  //       clearTimeout(timerRef.current);
-  //       timerRef.current = null;
-  //     }
-  //   }
-  // };
-
-  // // useEffect to clear the timeout if the component is unmounted or re-rendered
-  // useEffect(() => {
-  //   return () => {
-  //     // Cleanup the timer when the component unmounts
-  //     if (timerRef.current) {
-  //       clearTimeout(timerRef.current);
-  //     }
-  //   };
-  // }, []);
-
   const [headLineData, setHeadLineData] = useState({});
 
   const isRfdOn = useSelector(state => state.globalSlice.loginStatus);
 
-  const [isRfdOnn, setIsRfdOn] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
   const [loginButton, setLoginButton] = useState({
     action: 'login_button',
@@ -398,9 +243,9 @@ const TrustedDriver = ({navigation}) => {
     const newRfdValue = isRfdOn ? '0' : '1';
     console.log('New RFD Value:', newRfdValue);
 
-    // Toggle isRfdOn state
-    // setIsRfdOn(!isRfdOn);
-    console.log('Toggled isRfdOn (setState):', !isRfdOn);
+    // // Toggle isRfdOn state
+    // // setIsRfdOn(!isRfdOn);
+    // console.log('Toggled isRfdOn (setState):', !isRfdOn);
 
     // Create updated login button payload
     const updatedLoginButton = {
@@ -450,22 +295,6 @@ const TrustedDriver = ({navigation}) => {
             break;
         }
       }
-
-      // if (response?.redirect) {
-      //   switch (response?.redirect) {
-      //     case 'clear-my-due-payment':
-      //       navigation.navigate('CommanWebview', {
-      //         url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-      //       });
-      //       break;
-      //     case 'trusted-driver':
-      //       navigation.navigate('TrustedDriver');
-      //       break;
-      //     // Add more cases here if needed
-      //     default:
-      //       break;
-      //   }
-      // }
     } catch (error) {
       console.log('LOGIN API ERROR:', error);
       if (error.response) {
@@ -476,47 +305,6 @@ const TrustedDriver = ({navigation}) => {
       console.log('Finally block executed');
     }
   };
-
-  // const handleToggleButton = () => {
-  //   const newRfdValue = isRfdOn ? '0' : '1';
-  //   setIsRfdOn(!isRfdOn);
-  //   setLoginButton(prevState => ({ ...prevState, rfd: newRfdValue }));
-
-  //   // if (newRfdValue == '1') {
-  //   //   // Start the 30 minute timer
-  //   //   timeoutRef.current = setTimeout(() => {
-  //   //     setIsRfdOn(false);
-  //   //     setLoginButton(prevState => ({...prevState, rfd: '0'}));
-  //   //     Alert.alert('Toggle switched off after 30 minutes');
-  //   //   }, 1800000); // 30 minutes in milliseconds (1800000 ms)
-
-  //   LOGIN_BUTTON({ ...loginButton, rfd: newRfdValue })
-  //     .then(response => {
-  //       console.log(response, 'LOGIN API RESPONSE');
-  //       // Alert.alert(response.message, response.data.redirect);
-  //     })
-  //     .catch(err => {
-  //       console.log(err, 'LOGIN API ERROR');
-  //     });
-  //   // }
-  //   // else {
-  //   //   // If toggled off before 30 minutes, clear the timeout
-  //   //   if (timeoutRef.current) {
-  //   //     clearTimeout(timeoutRef.current);
-  //   //     timeoutRef.current = null;
-  //   //   }
-  //   // }
-  // };
-
-  // const decodeData = token => {
-  //   const decoded = jwtDecode(token);
-  //   // console.log(decoded.data, '>>>>>>>>>>>>>>>>');
-  //   setDecodedToken(decoded.data);
-  // };
-
-  // useEffect(() => {
-  //   decodeData(jwtToken);
-  // }, [jwtToken]);
 
   const getPopup = async () => {
     try {
@@ -557,53 +345,6 @@ const TrustedDriver = ({navigation}) => {
       console.log('DRIVER_HEADLINE Error:', error);
     }
   };
-
-  const [showBookingView, setBookingView] = useState(1);
-
-  // const getOnDemandBooking = async data => {
-  //   try {
-  //     const response = await ON_DEMAND_BOOKING(data);
-
-  //     console.log(
-  //       response.incity_one_way_bookings.access_flag,
-  //       `On Demand Booking response ${data.action}`,
-  //     );
-  //     // setBookingView(response.incity_one_way_bookings.access_flag);
-  //     // setIncityOneWayBooking(response.incity_one_way_bookings);
-  //   } catch (error) {
-  //     console.log(error, 'On Demand Booking  Error');
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getOnDemandBooking({
-  //     action: 'ondemand_outstation_bookings',
-  //   });
-  //   getOnDemandBooking({
-  //     action: 'incity_roundtrip_booking',
-  //   });
-  //   getOnDemandBooking({
-  //     action: 'incity_oneway_booking',
-  //   });
-  // }, []);
-  ///////////
-  // const handleToggleButton = () => {
-  //   const newRfdValue = isRfdOn ? '0' : '1';
-  //   setIsRfdOn(!isRfdOn);
-  //   setLoginButton(prevState => ({...prevState, rfd: newRfdValue}));
-
-  //   if (newRfdValue === '1') {
-  //     LOGIN_BUTTON({...loginButton, rfd: newRfdValue})
-  //       .then(response => {
-  //         console.log(response, 'LOGIN API RESPONSE');
-  //         // navigation.navigate('TrustedDriver');
-  //         Alert.alert(response.data?.message);
-  //       })
-  //       .catch(err => {
-  //         console.log(err, 'LOGIN API ERROR');
-  //       });
-  //   }
-  // };
 
   const Item = [
     {

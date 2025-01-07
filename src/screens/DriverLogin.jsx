@@ -17,6 +17,7 @@ import {
   PermissionsAndroid,
   Keyboard,
   Alert,
+  Platform,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -123,12 +124,6 @@ const DriverLogin = () => {
   const handleClose = () => {
     setModalVisible(false);
   };
-  // const handleOpen = () => {
-  //   if (!hasModalOpened) {
-  //     setModalVisible(true);
-  //     setHasModalOpened(true);
-  //   }
-  // };
   const handleOpen = () => {
     if (
       simInfo.length > 0 &&
@@ -210,7 +205,7 @@ const DriverLogin = () => {
         setLoader(false);
         navigation.navigate('CommanWebview', {
           url: response?.redirect,
-          isAuthenticated : false
+          isAuthenticated: false,
         });
       }
     } catch (err) {

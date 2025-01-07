@@ -1,5 +1,3 @@
-// src/redux/slices/userAuthSlice.js
-
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
@@ -8,6 +6,7 @@ const initialState = {
   login: false,
   userProfile: null,
   isFcmSent: false,
+  isDeviceInfo: false,
 };
 
 const userAuth = createSlice({

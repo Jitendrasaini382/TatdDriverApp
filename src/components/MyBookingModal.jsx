@@ -164,7 +164,6 @@ const MyBookingModal = ({}) => {
                           <TouchableOpacity
                             key={index}
                             onPress={() => handleSubmit(booking)}
-                            // onPress={() => navigation.navigate('DutyReportUpdateScreen')}
 
                             // onPress={() => openMyUrl(booking.url)}
                           >

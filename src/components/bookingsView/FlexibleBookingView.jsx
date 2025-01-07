@@ -132,10 +132,10 @@ const FlexibleBookingView = () => {
   //   },
   // ];
 
-  const bookingDetails = [];
+  const bookingDetailss = [];
   const dispatch = useDispatch();
 
-  const [bookingDetailss, setBookingDetails] = useState([]);
+  const [bookingDetails, setBookingDetails] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
@@ -145,43 +145,43 @@ const FlexibleBookingView = () => {
 
   const refreshKey = useSelector(state => state.globalSlice.refreshKey);
 
-  // useEffect(() => {
-  //   console.log(
-  //     'Triggered by refreshKey, triggerFunction, or languageSwitch flexible',
-  //   );
+  useEffect(() => {
+    console.log(
+      'Triggered by refreshKey, triggerFunction, or languageSwitch flexible',
+    );
 
-  //   // Run the required functions
-  //   getWeeklyBookings();
+    // Run the required functions
+    getWeeklyBookings();
 
-  //   // Reset `triggerFunction` after running
-  //   if (triggerFunction) {
-  //     dispatch(setTriggerFunction(false));
-  //   }
-  // }, [triggerFunction, refreshKey, languageSwitch, dispatch]);
+    // Reset `triggerFunction` after running
+    if (triggerFunction) {
+      dispatch(setTriggerFunction(false));
+    }
+  }, [triggerFunction, refreshKey, languageSwitch, dispatch]);
 
   const getWeeklyBookings = async () => {
     try {
-      console.log('Starting getWeeklyBookings function');
+      // console.log('Starting getWeeklyBookings function');
 
       setLoading(true); // Show loader
-      console.log('Loader set to true');
+      // console.log('Loader set to true');
 
       const response = await WEEKLY_BOOKING({
         action: 'weekly_booking_view',
         current_language: languageSwitch,
       });
-      console.log('WEEKLY_BOOKING API call made');
+      // console.log('WEEKLY_BOOKING API call made');
 
       console.log(response, 'getWeeklyBookings response received');
 
       setBookingDetails(response?.weeklybookingview);
-      console.log('Booking details processing complete');
+      // console.log('Booking details processing complete');
     } catch (error) {
       console.log(error, 'getWeeklyBookings Error caught');
     } finally {
       setLoading(false);
-      console.log('Loader set to false');
-      console.log('getWeeklyBookings function execution complete');
+      // console.log('Loader set to false');
+      // console.log('getWeeklyBookings function execution complete');
     }
   };
 
@@ -201,7 +201,7 @@ const FlexibleBookingView = () => {
 
   return (
     <FlatList
-      data={bookingDetailss}
+      data={bookingDetails}
       keyExtractor={(item, index) => item.id?.toString() || index.toString()}
       renderItem={({item, index}) => (
         <BookingCard

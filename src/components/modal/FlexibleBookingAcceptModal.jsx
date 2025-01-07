@@ -6,11 +6,14 @@ import {
   StyleSheet,
   SafeAreaView,
   Alert,
+  ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 import {WEEKLY_BOOKING_ACCEPT} from '../../apis/Apis';
 import {useSelector} from 'react-redux';
+const {width} = Dimensions.get('window');
 
 const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
   console.log(booking, 'weekly accept modal booking');
@@ -19,10 +22,14 @@ const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
   const [loader, setLoader] = useState(false);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
-  // useEffect(() => {
-  //   setLoader(true);
-  //   // weeklybookingAcceptPopuup();
-  // }, []);
+  useEffect(() => {
+    setLoader(true);
+    weeklybookingAcceptPopuup();
+  }, []);
+  console.log(
+    booking,
+    'WEEKLY_BOOKING_ACCEPTWEEKLY_BOOKING_ACCEPTWEEKLY_BOOKING_ACCEPT',
+  );
 
   const weeklybookingAcceptPopuup = async () => {
     console.log('Function weeklybookingAcceptPopuup invoked');
@@ -30,19 +37,21 @@ const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
     console.log('Loader set to true');
     try {
       console.log('Attempting to call WEEKLY_BOOKING_ACCEPT with params:', {
-        action: 'accept_booking',
+        action: 'accept_booking_show_popup_api',
         current_language: languageSwitch,
-        booking_id: bookingNumber,
+        all_booking_date: booking?.date_wie,
+        FSSubscription_hours: booking?.hours_day,
       });
       const response = await WEEKLY_BOOKING_ACCEPT({
-        action: 'accept_booking',
+        action: 'accept_booking_show_popup_api',
         current_language: languageSwitch,
-        booking_id: bookingNumber,
+        all_booking_date: booking?.date_wie,
+        FSSubscription_hours: booking?.hours_day,
       });
+
       console.log('Response received from WEEKLY_BOOKING_ACCEPT:', response);
+      setPopupData(response);
       setLoader(false);
-      console.log('Loader set to false after successful response');
-      // setPopupData(response);
       console.log('Popup data set with:', response);
     } catch (error) {
       setLoader(false);
@@ -56,7 +65,6 @@ const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
   };
 
   const acceptBooking = async () => {
-    console.log(bookingNumber, 'accept booking number');
     console.log('final accepttttt');
     try {
       // const response = await FINAL_ACCEPT_BOOKING({
@@ -75,38 +83,33 @@ const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
     }
   };
 
+  if (loader) {
+    return (
+      <View
+        style={{flex: 0.5, alignContent: 'center', justifyContent: 'center'}}>
+        <ActivityIndicator size="large" color={AppColors.mainColor} />
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.card}>
-        <Text style={styles.header}>Please Read Carefully.</Text>
+        <Text style={styles.header}>{popupData?.heading}</Text>
 
         <View style={styles.contentContainer}>
-          <Text style={styles.paragraph}>
-            1. Customer needs the same driver on 03 Jul, 04 Jul, 05 Jul, 06 Jul,
-            07 Jul, 08 Jul, 09 Jul for 12 hours.
-          </Text>
+          <Text style={styles.paragraph}>1. {popupData?.line1}</Text>
 
-          <Text style={styles.paragraph}>
-            2. This is the company's new product - Flexible Subscription, where
-            the customer has booked more than one In-city booking on the same
-            day. If you press the Accept button, you will receive all bookings
-            for Flexible Subscription. You can view all bookings in My Bookings.
-          </Text>
+          <Text style={styles.paragraph}>2. {popupData?.line2}</Text>
 
           <Text style={[styles.paragraph, styles.warningText]}>
-            3. Only accept bookings when you can fulfill all bookings of this
-            Flexible Subscription.
+            3. {popupData?.line3}
           </Text>
 
-          <Text style={styles.paragraph}>
-            4. Overtime will be charged at Rs 2 per minute. The commission is
-            applied after removing GST on the remaining bill. Night charges will
-            be 200 Rs.
-          </Text>
+          <Text style={styles.paragraph}>4. {popupData?.line4}</Text>
 
           <Text style={[styles.paragraph, styles.highlightText]}>
-            5. Please note our job is to reduce customer inconvenience, not to
-            increase it.
+            5. {popupData?.line5}
           </Text>
         </View>
 
@@ -142,7 +145,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   header: {
-    fontSize: 20,
+    fontSize: width * 0.05,
     fontWeight: 'bold',
     color: AppColors.black,
     marginBottom: 20,
@@ -151,9 +154,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   paragraph: {
-    marginBottom: 20,
+    marginBottom: 10,
     color: AppColors.black,
     padding: 5,
+    fontSize: width * 0.04,
   },
   warningText: {
     color: AppColors.red,

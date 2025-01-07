@@ -24,7 +24,6 @@ import DriverNotifications from '../../screens/DriverNotification';
 import ClearMyDuePayment from '../../screens/ClearMyDuePayment';
 import SplashScreen from '../../screens/SplashScreen';
 import {AppColors} from '../../assets/Colors';
-import DutyReportUpdateScreen from '../../screens/DutyReportUpdateScreen';
 import RateYourCustomerFeedback from '../../screens/RateYourCustomerFeedback';
 import RateYourCustomer from '../../screens/RateYourCustomer';
 import OnTimeReach from '../../screens/OnTimeReach';
@@ -43,7 +42,6 @@ const PrivateRoute = () => {
     <>
       <StatusBar
         animated={true}
-        // backgroundColor="#d1bcff"
         backgroundColor={AppColors.mainColor}
         barStyle="dark-content"
         showHideTransition="slide"
@@ -72,10 +70,8 @@ const PrivateRoute = () => {
               headerBackTitle: 'Back',
             }}
           />
-
           <Stack.Screen name="DriverNotice" component={DriverNotice} />
           <Stack.Screen name="DueAmountDetails" component={DueAmountDetails} />
-
           <Stack.Screen
             name="NoticeBoardDetail"
             component={NoticeBoardDetailScreen}
@@ -95,11 +91,6 @@ const PrivateRoute = () => {
           />
           <Stack.Screen name="TicketsDriver" component={TicketsDriver} />
           <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
-          <Stack.Screen
-            name="DutyReportUpdateScreen"
-            component={DutyReportUpdateScreen}
-          />
-
           <Stack.Screen name="AgentLogin" component={AgentLogin} />
           <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />
           <Stack.Screen name="AgentPanel" component={AgentPanel} />
@@ -107,16 +98,16 @@ const PrivateRoute = () => {
           <Stack.Screen name="AgentTrainig" component={AgentTrainig} />
           <Stack.Screen name="AgentWallet" component={AgentWallet} />
           <Stack.Screen name="DueAmount" component={DueAmount} />
-          
-          
           <Stack.Screen
             name="RateUsAtSocialMedia"
             component={RateUsAtSocialMedia}
           />
           <Stack.Screen name="OnTimeReach" component={OnTimeReach} />
           <Stack.Screen name="RateYourCustomer" component={RateYourCustomer} />
-          <Stack.Screen name="RateYourCustomerFeedback" component={RateYourCustomerFeedback} />
-
+          <Stack.Screen
+            name="RateYourCustomerFeedback"
+            component={RateYourCustomerFeedback}
+          />
           <Stack.Screen
             name="AgentCommisionAdded"
             component={AgentCommisionAdded}
@@ -124,7 +115,7 @@ const PrivateRoute = () => {
           <Stack.Screen name="SelectYourState" component={SelectYourState} />
           <Stack.Screen name="SelectYourCity" component={SelectYourCity} />
           <Stack.Screen name="AgentLeads" component={AgentLeads} />
-          <Stack.Screen name='CommanWebview' component={CommanWebview}/>
+          <Stack.Screen name="CommanWebview" component={CommanWebview} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

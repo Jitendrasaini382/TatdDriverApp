@@ -9,7 +9,6 @@ import {
   Linking,
   StyleSheet,
   Alert,
-  Platform,
   Modal,
   TextInput,
   ActivityIndicator,
@@ -17,7 +16,7 @@ import {
 // import Modal from 'react-native-modal';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import Header from '../components/Header';
-import {Address, CallingGif, Facebook_Icon, Mask} from '../assets/images';
+import {Address, CallingGif, Mask} from '../assets/images';
 import {AppColors} from '../assets/Colors';
 import SwipeableButton from '../components/SwipeableButton';
 import RadioButton from '../components/CustomRadioButton';

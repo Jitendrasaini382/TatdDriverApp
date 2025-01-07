@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity, View, Text, Image} from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import YoutubePlayer from 'react-native-youtube-iframe';
-import {OpenEnvelop} from '../assets/images';
+import {OpenEnvelop, CloseEnvelop} from '../assets/images';
 import {AppColors} from '../assets/Colors';
 
 const TrainingVideo = ({data}) => {
@@ -23,6 +23,8 @@ const TrainingVideo = ({data}) => {
           key={index}
           title={item.title}
           videoId={item.videoId}
+          id={item.id}
+          icon={item.read_status}
           isOpen={openIndex === index}
           onToggle={() => toggleItem(index)}
           index={index + 1}
@@ -34,7 +36,7 @@ const TrainingVideo = ({data}) => {
 
 export default TrainingVideo;
 
-const AccordionItem = ({title, videoId, isOpen, onToggle, index}) => {
+const AccordionItem = ({title, videoId, isOpen, onToggle, index, icon, id}) => {
   return (
     <View style={styles.itemContainer}>
       <TouchableOpacity style={styles.touchable} onPress={onToggle}>
@@ -42,7 +44,7 @@ const AccordionItem = ({title, videoId, isOpen, onToggle, index}) => {
           <Image
             style={styles.icon}
             resizeMode="contain"
-            source={OpenEnvelop}
+            source={icon == 'read' ? OpenEnvelop : CloseEnvelop}
           />
         </View>
         <View style={styles.textContainer}>

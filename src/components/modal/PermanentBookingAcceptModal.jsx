@@ -33,10 +33,10 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
     console.log(id, name, '==handleSubmittt');
     if (name == 'Accept') {
       console.log(name, '--- Accept run');
-      // handleAcceptPermanentBooking(id)
+      handleAcceptPermanentBooking(id)
     } else if (name == 'Apply') {
       console.log(name, '--- Apply run');
-      // handleApplyPermanentBooking(id)
+      handleApplyPermanentBooking(id)
     }
   };
 

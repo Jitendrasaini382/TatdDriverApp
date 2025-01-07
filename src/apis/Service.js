@@ -50,8 +50,6 @@ axiosClient.interceptors.response.use(
           );
 
           if (res.data?.jwt) {
-            console.log("new jwt change new jwt change new jwt change new jwt change new jwt change new jwt change new jwt change new jwt change ");
-            
             store.dispatch(
               setUserAuthStates({
                 key: 'jwt',
@@ -118,6 +116,12 @@ axiosClient.interceptors.response.use(
         dispatch(
           setUserAuthStates({
             key: 'isFcmSent',
+            value: false,
+          }),
+        );
+        dispatch(
+          setUserAuthStates({
+            key: 'isDeviceInfo',
             value: false,
           }),
         );

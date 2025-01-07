@@ -6,6 +6,7 @@ import {
   Text,
   View,
   ScrollView,
+  FlatList,
   Modal,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
@@ -13,7 +14,8 @@ import PermanentBookingAcceptModal from '../modal/PermanentBookingAcceptModal';
 import ReferFriendModal from '../modal/ReferFriendModal';
 import {AppFont} from '../../assets/FontsFamily';
 import {PERMANENT_BOOKING} from '../../apis/Apis';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {setTriggerFunction} from '../../redux/slices/globalSlice';
 
 const BookingCard = ({booking}) => {
   const [openModal, setOpenModal] = useState(false);
@@ -35,26 +37,19 @@ const BookingCard = ({booking}) => {
 
   const [permanentBookingPopup, setPermanentBookingPopup] = useState([]);
 
-  const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
-
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   useEffect(() => {
     getPermanentBookingPopup();
   }, [languageSwitch]);
 
   const getPermanentBookingPopup = async () => {
-    // console.log('runnnnnnnnnnn permanent_booking_popup_data');
-    console.log('1234567890-0987654321234567890--0987654321234567890-=-0987654321234567890-');
-    
-
     try {
       const response = await PERMANENT_BOOKING({
         action: 'permanent_booking_poup',
         P_ID: P_ID,
         current_language: languageSwitch,
       });
-
-      // console.log(response, 'permanent_booking_popup_data response');
       setPermanentBookingPopup(response.permanent_booking_popup_data);
     } catch (error) {
       console.log(error, 'permanent_booking_view  Error');
@@ -129,19 +124,35 @@ const BookingCard = ({booking}) => {
 const PermanentBookingView = () => {
   const [permanentBookings, setPermanentBookings] = useState([]);
   const [permanentBookingsOthers, setPermanentBookingsOthers] = useState([]);
+  const dispatch = useDispatch();
 
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  const triggerFunction = useSelector(
+    state => state.globalSlice.triggerFunction,
+  );
 
-  const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
-  
+  const refreshKey = useSelector(state => state.globalSlice.refreshKey); // For refresh actions
 
   useEffect(() => {
+    console.log(
+      'Triggered by refreshKey, triggerFunction, or languageSwitch permanent',
+    );
+
+    // Run the required functions
     getPermanentBookings();
     getPermanentBookingsOthers();
-  }, [languageSwitch]);
+    // Reset `triggerFunction` after running
+    if (triggerFunction) {
+      dispatch(setTriggerFunction(false));
+    }
+  }, [triggerFunction, refreshKey, languageSwitch, dispatch]);
+
+  // useEffect(() => {
+  //   getPermanentBookings();
+  //   getPermanentBookingsOthers();
+  // }, [languageSwitch]);
 
   const getPermanentBookings = async () => {
-    console.log('runnnnnnnnnnn permamnet--------------<<<<<<<<<<<<<<<<');
-
     try {
       const response = await PERMANENT_BOOKING({
         action: 'permanent_booking_view',
@@ -157,8 +168,6 @@ const PermanentBookingView = () => {
   };
 
   const getPermanentBookingsOthers = async () => {
-    console.log('runnnnnnnnnnn permamnet====================>>>>');
-
     try {
       const response = await PERMANENT_BOOKING({
         action: 'permanent_booking_view',
@@ -173,16 +182,26 @@ const PermanentBookingView = () => {
     }
   };
 
+  const combinedBookings = [...permanentBookings, ...permanentBookingsOthers];
+
   return (
-    <ScrollView>
-      {permanentBookings.map((booking, index) => (
-        <BookingCard key={index} booking={booking} />
-      ))}
-      {permanentBookingsOthers.map((booking, index) => (
-        <BookingCard key={index} booking={booking} />
-      ))}
-    </ScrollView>
+    <FlatList
+      data={combinedBookings}
+      keyExtractor={(item, index) => `${item.id || index}`} // Use unique keys, such as IDs if available
+      renderItem={({item}) => <BookingCard booking={item} />}
+    />
   );
+
+  // return (
+  //   <ScrollView>
+  //     {permanentBookings.map((booking, index) => (
+  //       <BookingCard key={index} booking={booking} />
+  //     ))}
+  //     {permanentBookingsOthers.map((booking, index) => (
+  //       <BookingCard key={index} booking={booking} />
+  //     ))}
+  //   </ScrollView>
+  // );
 };
 
 const styles = StyleSheet.create({

@@ -35,13 +35,17 @@ const BookingCard = ({booking, index, total}) => {
         </View>
       </View>
       <Text style={styles.title}>{booking.pickup_address}</Text>
-      <View style={styles.dates}>
+      {/* <View style={styles.dates}>
         {booking.date_wie.map((date, idx) => (
           <Text key={idx} style={styles.dateText}>
             {date} |
           </Text>
         ))}
+      </View> */}
+      <View style={styles.dates}>
+        <Text style={styles.dateText}>{booking.date_wie.join(' | ')}</Text>
       </View>
+
       <View style={styles.times}>
         {booking.time_wie.map((time, idx) => (
           <Text key={idx} style={styles.timeText}>
@@ -170,7 +174,7 @@ const FlexibleBookingView = () => {
 
       console.log(response, 'getWeeklyBookings response received');
 
-      // setBookingDetails(response.weeklybookingview);
+      setBookingDetails(response?.weeklybookingview);
       console.log('Booking details processing complete');
     } catch (error) {
       console.log(error, 'getWeeklyBookings Error caught');
@@ -197,7 +201,7 @@ const FlexibleBookingView = () => {
 
   return (
     <FlatList
-      data={bookingDetails}
+      data={bookingDetailss}
       keyExtractor={(item, index) => item.id?.toString() || index.toString()}
       renderItem={({item, index}) => (
         <BookingCard

@@ -8,9 +8,10 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Modal from 'react-native-modal';
+// import Modal from 'react-native-modal';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import DriverEarningModal from '../components/modal/DriverEarnIngModal';
@@ -39,8 +40,6 @@ const DriverEarning = () => {
   }, []);
 
   const fetchAllEarnings = useCallback(async () => {
-    setIsLoading(true);
-
     try {
       const response = await DRIVER_EARNING({
         action: 'view_all_earnings',
@@ -60,12 +59,11 @@ const DriverEarning = () => {
   //   fetchAllEarnings();
   // }, [fetchEarningData, fetchAllEarnings]);
 
-
   useEffect(() => {
+    setIsLoading(true);
     fetchEarningData();
     fetchAllEarnings();
   }, []);
-
 
   const handleEyeIconPress = useCallback(bookingNumber => {
     setSelectedBookingNumber(bookingNumber);
@@ -87,7 +85,8 @@ const DriverEarning = () => {
           <View style={styles.contentContainer}>
             <View style={styles.tripInfo}>
               <Text style={styles.tripType}>
-                {item.package_detail} - {item.payment_mode}
+                {item.package_detail} - {item.booking_number} -{' '}
+                {item.payment_mode}
               </Text>
               <Text style={styles.tripDate}>
                 {item.booking_date} -{' '}
@@ -118,7 +117,7 @@ const DriverEarning = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Header backButton={true} />
-      <Modal
+      {/* <Modal
         backdropOpacity={0}
         onBackdropPress={() => setIsModalVisible(false)}
         animationIn={'fadeInDown'}
@@ -128,27 +127,49 @@ const DriverEarning = () => {
           setIsModalVisible={setIsModalVisible}
           bookingNumber={selectedBookingNumber}
         />
+      </Modal> */}
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setIsModalVisible(false)}
+        visible={isModalVisible}>
+        <DriverEarningModal
+          setIsModalVisible={setIsModalVisible}
+          bookingNumber={selectedBookingNumber}
+        />
       </Modal>
-      <View style={styles.earningHeader}>
-        <View style={styles.EarnMAinView}>
-          <Text style={styles.earningHeaderText}>
-            My Total Earning ₹ {lifeTimeEarn}
-          </Text>
-        </View>
-      </View>
 
-      <View style={styles.headlineContainer}>
-        {renderEarningHeadline({amount: earnData.earning_7days, days: 7})}
-        {renderEarningHeadline({amount: earnData.earning_15days, days: 15})}
-        {renderEarningHeadline({amount: earnData.earning_30days, days: 30})}
-      </View>
+      {isLoading ? (
+        <ActivityIndicator
+          style={{flex: 1, alignContent: 'center'}}
+          size={'large'}
+          color={AppColors.mainColor}
+        />
+      ) : (
+        <>
+          <View style={styles.earningHeader}>
+            <View style={styles.EarnMAinView}>
+              <Text style={styles.earningHeaderText}>
+                My Total Earning ₹ {lifeTimeEarn}
+              </Text>
+            </View>
+          </View>
 
-      <FlatList
-        data={bookingsData}
-        renderItem={renderTripItem}
-        keyExtractor={item => item.booking_number}
-        style={styles.tripList}
-      />
+          <View style={styles.headlineContainer}>
+            {renderEarningHeadline({amount: earnData.earning_7days, days: 7})}
+            {renderEarningHeadline({amount: earnData.earning_15days, days: 15})}
+            {renderEarningHeadline({amount: earnData.earning_30days, days: 30})}
+          </View>
+
+          <FlatList
+            data={bookingsData}
+            renderItem={renderTripItem}
+            keyExtractor={item => item.booking_number}
+            style={styles.tripList}
+          />
+        </>
+      )}
     </SafeAreaView>
   );
 };
@@ -235,12 +256,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tripType: {
-    fontSize: SCREEN_WIDTH * 0.04,
+    fontSize: SCREEN_WIDTH * 0.038,
     paddingBottom: 5,
     color: '#000',
   },
   tripDate: {
-    fontSize: SCREEN_WIDTH * 0.03,
+    fontSize: SCREEN_WIDTH * 0.035,
     color: '#888',
   },
   settlementType: {

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,9 +14,11 @@ import {DRIVER_EARNING} from '../../apis/Apis';
 
 const DriverEarningModal = ({setIsModalVisible, bookingNumber}) => {
   const [tripDetails, setTripDetails] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log(bookingNumber, 'bookingNumberbookingNumberbookingNumber');
+    setLoading(true);
+
     viewEarningPopup();
   }, [bookingNumber]);
 
@@ -27,16 +30,24 @@ const DriverEarningModal = ({setIsModalVisible, bookingNumber}) => {
       });
       // console.log(response, 'View Earning PopUp Data');
       setTripDetails(response.earning_details);
+      setLoading(false);
     } catch (error) {
       console.log(error, 'View Earning PopUp error');
+    } finally {
+      setLoading(false);
     }
   };
 
   const closeModal = () => setIsModalVisible(false);
 
-  return (
-    <ScrollView>
-      <TouchableWithoutFeedback onPress={closeModal}>
+  return loading ? (
+    <ActivityIndicator
+      style={{flex: 1, alignContent: 'center'}}
+      color={AppColors.mainColor}
+    />
+  ) : (
+    <>
+      <TouchableWithoutFeedback style={{flex:1}} onPress={closeModal}>
         <View style={styles.container}>
           <View style={styles.topContent}>
             <Text style={styles.headerText}>Package Details</Text>
@@ -48,6 +59,7 @@ const DriverEarningModal = ({setIsModalVisible, bookingNumber}) => {
           {tripDetails && (
             <View style={styles.bottomContent}>
               <DetailRow label="Trip Type:" value={tripDetails.trip_type} />
+              <DetailRow label="Booking Number:" value={bookingNumber} />
               <DetailRow label="Package:" value={tripDetails.package} />
               <DetailRow
                 label={`Package Price : ${tripDetails.payment_mode}`}
@@ -94,7 +106,7 @@ const DriverEarningModal = ({setIsModalVisible, bookingNumber}) => {
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
-    </ScrollView>
+    </>
   );
 };
 
@@ -111,11 +123,12 @@ const InfoPoint = ({text, style}) => (
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: AppColors.white,
     borderWidth: 2,
     borderRadius: 10,
     borderColor: AppColors.mainColor,
+    margin: 5,
   },
   topContent: {
     flexDirection: 'row',

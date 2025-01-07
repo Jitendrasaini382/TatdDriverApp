@@ -29,7 +29,7 @@ import {Skeleton} from '@rneui/themed';
 
 const {width} = Dimensions.get('window');
 
-const BookingView = () => {
+const BookingView = ({data}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
@@ -129,13 +129,42 @@ const BookingView = () => {
         ) : null}
       </View> */}
 
-      <View style={styles.notificationContainer}>
+      {/* <View style={styles.notificationContainer}>
         <Text style={styles.notificationText}>
           {languageSwitch == 'english'
             ? `Dear ${decodedToken?.driver_name}, from now on, if you have completed at least one booking in the last two days and are available for bookings, you will receive an SMS alert when a new booking comes in.`
             : `डिअर ${decodedToken?.driver_name},अब से यदि आपने पिछले दो दिनों में कम से कम एक बुकिंग पूरी की है, और आप बुकिंग करने के लिए उपलब्ध हैं, तो नई बुकिंग आने पर आपको SMS Alert भेजा जाएगा।`}
         </Text>
+      </View> */}
+
+      <View style={styles.notificationContainer}>
+        {data?.driver_panel_messages?.double_booking_eligibility && (
+          <Text style={styles.notificationText}>
+            {data.driver_panel_messages.double_booking_eligibility}
+          </Text>
+        )}
+        {data?.driver_panel_messages?.booking_score_message && (
+          <Text style={[styles.notificationText, {color: 'green'}]}>
+            {data.driver_panel_messages.booking_score_message}
+          </Text>
+        )}
+        {data?.driver_panel_messages?.incident_error_message && (
+          <Text style={styles.notificationText}>
+            {data.driver_panel_messages.incident_error_message}
+          </Text>
+        )}
+        {data?.driver_panel_messages?.outstanding_message && (
+          <Text style={styles.notificationText}>
+            {data.driver_panel_messages.outstanding_message}
+          </Text>
+        )}
+        {data?.driver_panel_messages?.outstation_eligibility_message && (
+          <Text style={styles.notificationText}>
+            {data.driver_panel_messages.outstation_eligibility_message}
+          </Text>
+        )}
       </View>
+
       <RoundTripBookingView />
       <PermanentBookingView />
       <FlexibleBookingView />
@@ -177,7 +206,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     fontFamily: AppFont.regularFont,
     fontWeight: '700',
-    fontSize: 15,
+    fontSize: width * 0.038,
   },
   notificationContainer: {
     marginBottom: 20,
@@ -187,9 +216,11 @@ const styles = StyleSheet.create({
   notificationText: {
     color: AppColors.black,
     fontFamily: AppFont.regularFont,
-    fontWeight: '700',
-    fontSize: 16,
-    marginVertical: 10,
+    // fontWeight: '700',
+    // fontSize: 16,
+    fontSize: width * 0.04,
+
+    marginVertical: 5,
   },
   bookingContainer: {
     marginTop: 20,

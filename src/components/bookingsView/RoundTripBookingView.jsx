@@ -14,6 +14,7 @@ import RoundTripBookingAceeptModal from '../modal/RoundTripBookingAceeptModal';
 import {ON_DEMAND_BOOKING} from '../../apis/Apis';
 import {useDispatch, useSelector} from 'react-redux';
 import {setTriggerFunction} from '../../redux/slices/globalSlice';
+import {FlatList} from 'react-native';
 
 const TripCard = ({trip}) => {
   // console.log(trip, 'jjjjjjjjjjjj');
@@ -191,12 +192,11 @@ const RoundTripBookingView = () => {
     state => state.globalSlice.triggerFunction,
   );
 
-  const refreshKey = useSelector((state) => state.globalSlice.refreshKey); // For refresh actions
+  const refreshKey = useSelector(state => state.globalSlice.refreshKey); // For refresh actions
 
   // console.log(refreshKey,"refreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKey");
-  
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const getIncityOneWayBookings = async data => {
     console.log(data, 'runnnnnnnnnnn');
@@ -258,8 +258,10 @@ const RoundTripBookingView = () => {
   // }, [triggerFunction, dispatch]);
 
   useEffect(() => {
-    console.log('Triggered by refreshKey, triggerFunction, or languageSwitch roundTrip');
-  
+    console.log(
+      'Triggered by refreshKey, triggerFunction, or languageSwitch roundTrip',
+    );
+
     // Run the required functions
     getOnDemandOutstationBookings({
       action: 'ondemand_outstation_bookings',
@@ -270,14 +272,12 @@ const RoundTripBookingView = () => {
     getIncityOneWayBookings({
       action: 'incity_oneway_booking',
     });
-  
+
     // Reset `triggerFunction` after running
     if (triggerFunction) {
       dispatch(setTriggerFunction(false));
     }
   }, [triggerFunction, refreshKey, languageSwitch, dispatch]);
-  
-
 
   // useEffect(() => {
   //   if (triggerFunction || refreshKey) {
@@ -313,22 +313,36 @@ const RoundTripBookingView = () => {
   //   });
   // }, [languageSwitch]);
 
+  const allTrips = [
+    ...(incityOneWayBooking || []),
+    ...(incityRoundTripBooking || []),
+    ...(onDemandOutstationBooking || []),
+  ];
+
   return (
-    <>
-      {incityOneWayBooking &&
-        incityOneWayBooking.map((trip, index) => (
-          <TripCard key={index} trip={trip} />
-        ))}
-      {incityRoundTripBooking &&
-        incityRoundTripBooking.map((e, index) => (
-          <TripCard key={index} trip={e} />
-        ))}
-      {onDemandOutstationBooking &&
-        onDemandOutstationBooking.map((x, index) => (
-          <TripCard key={index} trip={x} />
-        ))}
-    </>
+    <FlatList
+      data={allTrips}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({item}) => <TripCard trip={item} />}
+    />
   );
+
+  // return (
+  //   <>
+  //     {incityOneWayBooking &&
+  //       incityOneWayBooking.map((trip, index) => (
+  //         <TripCard key={index} trip={trip} />
+  //       ))}
+  //     {incityRoundTripBooking &&
+  //       incityRoundTripBooking.map((e, index) => (
+  //         <TripCard key={index} trip={e} />
+  //       ))}
+  //     {onDemandOutstationBooking &&
+  //       onDemandOutstationBooking.map((x, index) => (
+  //         <TripCard key={index} trip={x} />
+  //       ))}
+  //   </>
+  // );
 };
 
 const styles = StyleSheet.create({

@@ -26,7 +26,7 @@ const MyBonusStatusHistory = () => {
       });
 
       setBonusData(response.bonuses);
-      console.log(response.bonuses, 'My Bonus History Data');
+      // console.log(response.bonuses, 'My Bonus History Data');
       setLoader(false);
     } catch (error) {
       console.log(error, 'My Bonus History Error');
@@ -42,14 +42,6 @@ const MyBonusStatusHistory = () => {
     getAllBonusData();
   }, []);
 
-  if (loader) {
-    return (
-      <View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>
-        <ActivityIndicator size="large" color={AppColors.mainColor} />
-      </View>
-    );
-  }
-
   return (
     <View style={{flex: 1, backgroundColor: AppColors.white}}>
       <View
@@ -57,55 +49,67 @@ const MyBonusStatusHistory = () => {
       />
       <SafeAreaView style={{flex: 1}}>
         <Header backButton={true} />
-        <ScrollView>
-          <View style={styles.content}>
-            <View style={styles.container}>
-              <Text style={styles.title}>My Bonus</Text>
-              <View style={styles.tableContainer}>
-                <View style={styles.headerRow}>
-                  <Text style={[styles.headerCell, styles.createDateCell]}>
-                    Create Date
-                  </Text>
-                  <Text style={[styles.headerCell, styles.nameCell]}>Name</Text>
-                  <Text style={[styles.headerCell, styles.bonusTypeCell]}>
-                    Bonus Type
-                  </Text>
-                  <Text style={[styles.headerCell, styles.paymentStatusCell]}>
-                    Payment Status
-                  </Text>
-                  <Text style={[styles.headerCell, styles.amountCell]}>
-                    Amount
-                  </Text>
+
+        {loader ? (
+          <ActivityIndicator
+            style={{flex: 1, alignContent: 'center'}}
+            size={'large'}
+            color={AppColors.mainColor}
+          />
+        ) : (
+          <ScrollView contentContainerStyle={{flexGrow: 1}}>
+            <View style={styles.content}>
+              <View style={styles.container}>
+                <Text style={styles.title}>My Bonus</Text>
+                <View style={styles.tableContainer}>
+                  <View style={styles.headerRow}>
+                    <Text style={[styles.headerCell, styles.createDateCell]}>
+                      Create Date
+                    </Text>
+                    <Text style={[styles.headerCell, styles.nameCell]}>
+                      Name
+                    </Text>
+                    <Text style={[styles.headerCell, styles.bonusTypeCell]}>
+                      Bonus Type
+                    </Text>
+                    <Text style={[styles.headerCell, styles.paymentStatusCell]}>
+                      Payment Status
+                    </Text>
+                    <Text style={[styles.headerCell, styles.amountCell]}>
+                      Amount
+                    </Text>
+                  </View>
+                  {bonusData &&
+                    bonusData.map((item, index) => (
+                      <View
+                        key={index}
+                        style={[
+                          styles.dataRow,
+                          index % 2 === 0 ? styles.evenRow : styles.oddRow,
+                        ]}>
+                        <Text style={[styles.dataCell, styles.createDateCell]}>
+                          {item.create_date}
+                        </Text>
+                        <Text style={[styles.dataCell, styles.nameCell]}>
+                          {item.name}
+                        </Text>
+                        <Text style={[styles.dataCell, styles.bonusTypeCell]}>
+                          {item.bonus_type}
+                        </Text>
+                        <Text
+                          style={[styles.dataCell, styles.paymentStatusCell]}>
+                          {item.payment_status}
+                        </Text>
+                        <Text style={[styles.dataCell, styles.amountCell]}>
+                          {item.amount}
+                        </Text>
+                      </View>
+                    ))}
                 </View>
-                {bonusData &&
-                  bonusData.map((item, index) => (
-                    <View
-                      key={index}
-                      style={[
-                        styles.dataRow,
-                        index % 2 === 0 ? styles.evenRow : styles.oddRow,
-                      ]}>
-                      <Text style={[styles.dataCell, styles.createDateCell]}>
-                        {item.create_date}
-                      </Text>
-                      <Text style={[styles.dataCell, styles.nameCell]}>
-                        {item.name}
-                      </Text>
-                      <Text style={[styles.dataCell, styles.bonusTypeCell]}>
-                        {item.bonus_type}
-                      </Text>
-                      <Text style={[styles.dataCell, styles.paymentStatusCell]}>
-                        {item.payment_status}
-                      </Text>
-                      <Text style={[styles.dataCell, styles.amountCell]}>
-                        {item.amount}
-                      </Text>
-                    </View>
-                  ))}
               </View>
             </View>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        )}
       </SafeAreaView>
     </View>
   );

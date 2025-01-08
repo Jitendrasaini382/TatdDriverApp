@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   View,
   Dimensions,
   ScrollView,
-  BackHandler,
   Pressable,
   Modal,
   Image,
@@ -27,6 +25,7 @@ import {DRIVER_LOGIN} from '../apis/Apis';
 import {useNavigation} from '@react-navigation/native';
 import {googleLogo} from '../assets/images';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import DeviceInfo from 'react-native-device-info';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -103,6 +102,10 @@ const DriverLogin = () => {
   const [hasModalOpened, setHasModalOpened] = useState(false); // Track if modal has been opened
   const [simInfo, setSimInfo] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [newModal, setNewModal] = useState(false);
+
+  const appVersion = DeviceInfo.getVersion();
+  const appType = Platform.OS;
 
   const handleChange = text => {
     setMobile(text);
@@ -152,26 +155,7 @@ const DriverLogin = () => {
     }
   };
 
-  // backButton working Stop
-
-  // useEffect(()=>{
-  //   const backAction = () => {
-  //     return true;
-  //   };
-
-  //   const backHandler = BackHandler.addEventListener(
-  //     'hardwareBackPress',
-  //     backAction,
-  //   );
-
-  //   return () => backHandler.remove();
-  // },[])
-
   const sendOtp = async number => {
-    console.log('send otppp===========================');
-    console.log(typeof number, number);
-    console.log('send otppp===========================');
-
     try {
       console.log(number.length, mobile, 'apiiiiiiiii');
 
@@ -185,9 +169,13 @@ const DriverLogin = () => {
       setError(null);
       Keyboard.dismiss();
       setLoader(true);
-      const response = await DRIVER_LOGIN({mobile: number});
+      const response = await DRIVER_LOGIN({
+        mobile: number,
+        user_type: 'Driver',
+        app_version: appVersion,
+        app_type: appType,
+      });
       console.log(response, 'loginnnnnnnnn');
-      // return false
       if (response?.status_code == '200' && response?.msg_type == 'error') {
         setLoader(false);
         Alert.alert(response?.message);

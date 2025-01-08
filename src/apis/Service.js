@@ -2,6 +2,7 @@ import axios from 'axios';
 import {API_BASE_URL} from '../constant/path';
 import store from '../redux/store';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
+import DeviceInfo from 'react-native-device-info';
 
 // Axios axiosClient configure
 const axiosClient = axios.create({
@@ -43,6 +44,12 @@ axiosClient.interceptors.response.use(
       const refreshToken = store.getState().userAuth.refreshToken;
 
       if (refreshToken) {
+        const appVersion = DeviceInfo.getVersion();
+        console.log(
+          appVersion,
+          'appVersionappVersionappVersionappVersionappVersionappVersionappVersionappVersionappVersion service',
+        );
+
         try {
           const res = await axios.post(
             'https://www.tatd.in/app-api/driver/login/refresh_token.php',

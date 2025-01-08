@@ -17,10 +17,20 @@ export const GET_FCM_TOKEN = body => {
   return _Fetch('POST', 'login/save-fcm-token-api.php', {...body}, {});
 };
 
-// export const SAVE_DEVICE_INFO = body => {
-//   console.log(body, 'login/save-user-device-info Body');
-//   return _Fetch('POST', 'login/save-user-device-info.php', {...body}, {});
-// };
+export const SAVE_DEVICE_INFO = body => {
+  console.log(body, 'login/save-user-device-info Body');
+  return _Fetch('POST', 'login/save-user-device-info.php', {...body}, {});
+};
+
+export const UPDATE_POPUP = body => {
+  console.log(body, 'UPDATE_POPUP Body');
+  return _Fetch(
+    'POST',
+    'authentication/get-app-version-info.php',
+    {...body},
+    {},
+  );
+};
 
 export const DRIVER_FAQ = body => {
   console.log(body, 'DRIVER_FAQ Body');

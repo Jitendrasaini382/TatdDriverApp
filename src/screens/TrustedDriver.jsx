@@ -44,6 +44,8 @@ import {
   EXPRESS_BOOKING_POPUP,
   GET_FCM_TOKEN,
   LOGIN_BUTTON,
+  SAVE_DEVICE_INFO,
+  UPDATE_POPUP,
 } from '../apis/Apis';
 import ExpressBookingModal from '../components/modal/ExpressBookingModal';
 import {
@@ -85,9 +87,9 @@ const TrustedDriver = ({navigation}) => {
   const [fcmtoken, setFcmToken] = useState();
   const [trainingVideoData, setTrainingVideoData] = useState();
   const [updateModal, setUpdateModal] = useState(false);
-  const appOs = Platform.OS;
+  const appType = Platform.OS;
 
-  console.log(appOs, 'appOsappOsappOsappOsappOsappOs');
+  console.log(appType, 'appTypeappTypeappTypeappTypeappTypeappType');
 
   const [deviceInfo, setDeviceInfo] = useState({
     action: 'save_device_info',
@@ -99,7 +101,7 @@ const TrustedDriver = ({navigation}) => {
     appVersion: '',
     buildNumber: '',
     isTablet: '',
-    deviceOS: '',
+    deviceOS: appType,
   });
 
   const currentView = useSelector(
@@ -132,6 +134,7 @@ const TrustedDriver = ({navigation}) => {
   const myBookingModal = useSelector(
     state => state.trustedDriverSlice.myBookingModal,
   );
+  const appVersion = DeviceInfo.getVersion();
 
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
@@ -147,6 +150,8 @@ const TrustedDriver = ({navigation}) => {
       getPopup();
       getHeadlineData();
       // getTrainingVideo();
+      fetchDeviceInfo();
+      getUpdatePopup();
     }
   }, [jwt, languageSwitch]);
 
@@ -244,63 +249,88 @@ const TrustedDriver = ({navigation}) => {
     }
   };
 
-  // const fetchDeviceInfo = async () => {
-  //   try {
-  //     // Fetch device information
-  //     const manufacturer = await DeviceInfo.getBrand();
-  //     const model = DeviceInfo.getModel();
-  //     const deviceName = await DeviceInfo.getDeviceName();
-  //     const systemName = DeviceInfo.getSystemName();
-  //     const systemVersion = DeviceInfo.getSystemVersion();
-  //     const appVersion = DeviceInfo.getVersion();
-  //     const buildNumber = DeviceInfo.getBuildNumber();
-  //     const isTablet = DeviceInfo.isTablet();
-  //     // const deviceOS : appOs ;
+  const fetchDeviceInfo = async () => {
+    try {
+      // Fetch device information
+      const manufacturer = await DeviceInfo.getBrand();
+      const model = DeviceInfo.getModel();
+      const deviceName = await DeviceInfo.getDeviceName();
+      const systemName = DeviceInfo.getSystemName();
+      const systemVersion = DeviceInfo.getSystemVersion();
+      const appVersion = DeviceInfo.getVersion();
+      const buildNumber = DeviceInfo.getBuildNumber();
+      const isTablet = DeviceInfo.isTablet();
+      const deviceOS = Platform.OS;
 
-  //     // Consolidate device info
-  //     const fetchedDeviceInfo = {
-  //       action: 'save_device_info',
-  //       manufacturer,
-  //       model,
-  //       deviceName,
-  //       systemName,
-  //       systemVersion,
-  //       appVersion,
-  //       buildNumber,
-  //       isTablet,
-  //       deviceOS,
-  //     };
+      // Consolidate device info
+      const fetchedDeviceInfo = {
+        action: 'save_device_info',
+        manufacturer,
+        model,
+        deviceName,
+        systemName,
+        systemVersion,
+        appVersion,
+        buildNumber,
+        isTablet,
+        deviceOS,
+      };
 
-  //     // Update state with device info
-  //     setDeviceInfo(fetchedDeviceInfo);
-  //     // Send device info if all properties are valid
-  //     if (
-  //       Object.values(fetchedDeviceInfo).every(
-  //         value => value !== undefined && value !== null,
-  //       )
-  //     ) {
-  //       await sendDeviceInfo(fetchedDeviceInfo);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching device information:', error);
-  //   }
-  // };
+      // Update state with device info
+      setDeviceInfo(fetchedDeviceInfo);
+      // Send device info if all properties are valid
+      if (
+        Object.values(fetchedDeviceInfo).every(
+          value => value !== undefined && value !== null,
+        )
+      ) {
+        await sendDeviceInfo(fetchedDeviceInfo);
+      }
+    } catch (error) {
+      console.error('Error fetching device information:', error);
+    }
+  };
 
-  // const sendDeviceInfo = async deviceInfo => {
-  //   try {
-  //     console.log('Sending device information...', deviceInfo);
-  //     // const response = await SAVE_DEVICE_INFO(deviceInfo);
-  //     // console.log('SAVE_DEVICE_INFO response:', response);
-  //     dispatch(
-  //       setUserAuthStates({
-  //         key: 'isDeviceInfo',
-  //         value: true,
-  //       }),
-  //     );
-  //   } catch (error) {
-  //     console.error('Error sending device information:', error);
-  //   }
-  // };
+  const sendDeviceInfo = async deviceInfo => {
+    try {
+      console.log('Sending device information...', deviceInfo);
+      const response = await SAVE_DEVICE_INFO(deviceInfo);
+      console.log('SAVE_DEVICE_INFO response:', response);
+      dispatch(
+        setUserAuthStates({
+          key: 'isDeviceInfo',
+          value: true,
+        }),
+      );
+    } catch (error) {
+      console.error('Error sending device information:', error);
+    }
+  };
+
+  const getUpdatePopup = async () => {
+    console.log('Starting to fetch headline data...');
+
+    try {
+      console.log('Sending request to DRIVER_HEADLINE with:', {
+        app_type: appType,
+        user_type: 'Driver',
+      });
+
+      const response = await UPDATE_POPUP({
+        app_type: 'Android',
+        user_type: 'Driver',
+      });
+
+      if (appVersion < response?.app_details?.version) {
+        setUpdateModal(true);
+      }
+
+      console.log('getUpdatePopup Response:', response);
+      // setHeadLineData(response);
+    } catch (error) {
+      console.log('getUpdatePopup Error:', error);
+    }
+  };
 
   const saveFcmToken = async fcmtoken => {
     const response = await GET_FCM_TOKEN({
@@ -604,6 +634,7 @@ const TrustedDriver = ({navigation}) => {
                           borderRadius: responsiveSize(7),
                           borderColor: AppColors.white,
                           alignItems: 'center',
+                          alignContent: 'center',
                           paddingHorizontal: responsiveSize(8),
                           paddingVertical: responsiveSize(4),
                           margin: responsiveSize(2),
@@ -611,7 +642,7 @@ const TrustedDriver = ({navigation}) => {
                         <Image
                           style={{
                             height: responsiveSize(20),
-                            width: responsiveSize(18),
+                            width: responsiveSize(20),
                           }}
                           source={Diamond_Icon}
                         />
@@ -1193,7 +1224,7 @@ const TrustedDriver = ({navigation}) => {
                     Update Now
                   </Text>
                   <Image
-                    source={Diamond_Icon}
+                    source={AppLogo}
                     style={{
                       width: 20,
                       height: 20,

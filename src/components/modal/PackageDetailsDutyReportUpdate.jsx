@@ -1,4 +1,5 @@
 import {
+  Dimensions,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,12 +10,12 @@ import {
 import React from 'react';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
+const {width} = Dimensions.get('window');
 
 const PackageDetailsDutyReportUpdate = ({
   setPackageDetailsDutyReportUpdate,
   data,
 }) => {
-   
   return (
     <TouchableWithoutFeedback
       onPress={() => setPackageDetailsDutyReportUpdate(false)}>
@@ -65,160 +66,368 @@ const PackageDetailsDutyReportUpdate = ({
           {/* bottam Content */}
 
           <View style={{margin: 30}}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginBottom: 10,
-              }}>
-              <Text
+            {data?.Salary && (
+              <View
                 style={{
-                  color: AppColors.black,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
                   marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
                 }}>
-                Trip Type:
-              </Text>
-              <Text
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  Salary
+                </Text>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  Rs. {data?.Salary}
+                </Text>
+              </View>
+            )}
+            {data?.Working_Days && (
+              <View
                 style={{
-                  color: AppColors.black,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
                   marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
                 }}>
-                {/* {tripDetails.type} */}
-                {data?.trip_type}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginBottom: 10,
-              }}>
-              <Text
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  Working Days:
+                </Text>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  {data?.Working_Days}
+                </Text>
+              </View>
+            )}
+            {data?.Working_Hours && (
+              <View
                 style={{
-                  color: AppColors.black,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
                   marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
                 }}>
-                Package:
-              </Text>
-              <Text
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  Working Hours :
+                </Text>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  {data?.Working_Hours}
+                </Text>
+              </View>
+            )}
+            {data?.Overtime && (
+              <View
                 style={{
-                  color: AppColors.black,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
                   marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
                 }}>
-                {data?.package}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginBottom: 10,
-              }}>
-              <Text
-                style={{
-                  color: AppColors.black,
-                  marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
-                }}>
-                Package Price : {data?.payment_mode}
-              </Text>
-              <Text
-                style={{
-                  color: AppColors.black,
-                  marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
-                }}>
-                {data?.package_price}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginBottom: 10,
-              }}>
-              <Text
-                style={{
-                  color: AppColors.black,
-                  marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
-                }}>
-                GST : 5%
-              </Text>
-              <Text
-                style={{
-                  color: AppColors.black,
-                  marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
-                }}>
-                Rs {data?.gst_amount}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginBottom: 10,
-              }}>
-              <Text
-                style={{
-                  color: AppColors.black,
-                  marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
-                }}>
-                Commission : {data?.commission}
-              </Text>
-              <Text
-                style={{
-                  color: AppColors.black,
-                  marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
-                }}>
-                Rs {data?.commision_amount}
-              </Text>
-            </View>
-            <View
-              style={{borderBottomWidth: 0.5, borderStyle: 'dashed'}}></View>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  Overtime :
+                </Text>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  {data?.Overtime}
+                </Text>
+              </View>
+            )}
+
+            {data?.hours && data?.budget && (
+              <View style={styles.container}>
+                <View style={styles.textContainer}>
+                  <Text
+                    style={[
+                      styles.text,
+                      {color: AppColors.black, fontSize: width * 0.045},
+                    ]}>
+                    Trial {data?.hours} hours - {data?.budget} Rs का है।
+                  </Text>
+                </View>
+              </View>
+            )}
 
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginVertical: 10,
+                marginTop: 10,
+                marginBottom: 20,
               }}>
-              <Text
-                style={{
-                  color: AppColors.black,
-                  marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
-                }}>
-                Net Earning:
-              </Text>
-              <Text
-                style={{
-                  color: AppColors.black,
-                  marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
-                }}>
-                Rs {data?.supply_cost}
-              </Text>
+              {data?.message && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'flex-start', // Ensures alignment
+                    // marginVertical: 2, // Consistent spacing
+                  }}>
+                  <View
+                    style={{
+                      width: 4,
+                      height: 4,
+                      borderRadius: 2,
+                      backgroundColor: AppColors.black,
+                      marginTop: 6, // Align dot with text
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: AppColors.mainColor,
+                      marginLeft: 10,
+                      fontFamily: AppFont.regularFont,
+                      fontWeight: 'bold',
+                      fontSize: width * 0.045,
+                    }}>
+                    {data?.message}
+                  </Text>
+                </View>
+              )}
+
+              {data?.budget && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'flex-start', // Ensures alignment
+                    marginVertical: 2, // Consistent spacing
+                  }}>
+                  <View
+                    style={{
+                      width: 4,
+                      height: 4,
+                      borderRadius: 2,
+                      backgroundColor: AppColors.black,
+                      marginTop: 6, // Align dot with text
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: AppColors.black,
+                      marginLeft: 10,
+                      fontSize: width * 0.04,
+
+                      fontFamily: AppFont.regularFont,
+                      fontWeight: 'bold',
+                    }}>
+                    Return to TAT D - Rs. {data?.budget}
+                  </Text>
+                  <View
+                    style={{
+                      borderBottomWidth: 1,
+                      borderColor: AppColors.gray,
+                    }}
+                  />
+                </View>
+              )}
             </View>
+
+            {/* </View>
+          <View style={{margin: 30}}> */}
+            {data?.trip_type && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginBottom: 10,
+                }}>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  Trip Type:
+                </Text>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  {/* {tripDetails.type} */}
+                  {data?.trip_type}
+                </Text>
+              </View>
+            )}
+            {data?.package && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginBottom: 10,
+                }}>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  Package:
+                </Text>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  {data?.package}
+                </Text>
+              </View>
+            )}
+            {data?.package_price && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginBottom: 10,
+                }}>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  Package Price : {data?.payment_mode}
+                </Text>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  {data?.package_price}
+                </Text>
+              </View>
+            )}
+            {data?.gst_amount && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginBottom: 10,
+                }}>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  GST : 5%
+                </Text>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  Rs {data?.gst_amount}
+                </Text>
+              </View>
+            )}
+            {data?.commision_amount && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginBottom: 10,
+                }}>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  Commission : {data?.commission}
+                </Text>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  Rs {data?.commision_amount}
+                </Text>
+              </View>
+            )}
+            <View
+              style={{borderBottomWidth: 0.5, borderStyle: 'dashed'}}></View>
+
+            {data?.supply_cost && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginVertical: 10,
+                }}>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  Net Earning:
+                </Text>
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  Rs {data?.supply_cost}
+                </Text>
+              </View>
+            )}
             <View
               style={{borderBottomWidth: 0.5, borderStyle: 'dashed'}}></View>
             <View
@@ -226,69 +435,75 @@ const PackageDetailsDutyReportUpdate = ({
                 marginTop: 10,
                 marginBottom: 20,
               }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingVertical: 2,
-                }}>
+              {data?.Overtime_Charges && (
                 <View
                   style={{
-                    width: 4,
-                    height: 4,
-                    borderRadius: 2,
-                    backgroundColor: AppColors.black,
-                  }}
-                />
-                <Text
-                  style={{
-                    color: AppColors.black,
-                    marginLeft: 10,
-                    fontFamily: AppFont.regularFont,
-                    fontWeight: 'bold',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingVertical: 2,
                   }}>
-                  {data?.Overtime_Charges}
-                </Text>
-              </View>
-
-              <View style={styles.container}>
-                <View style={styles.bullet} />
-                <View style={styles.textContainer}>
-                  <Text style={styles.text}>{data?.Night_Charges}</Text>
+                  <View
+                    style={{
+                      width: 4,
+                      height: 4,
+                      borderRadius: 2,
+                      backgroundColor: AppColors.black,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: AppColors.black,
+                      marginLeft: 10,
+                      fontFamily: AppFont.regularFont,
+                      fontWeight: 'bold',
+                    }}>
+                    {data?.Overtime_Charges}
+                  </Text>
                 </View>
-              </View>
+              )}
 
-              <View
-                style={{
-                  flexDirection: 'row',
-                  paddingVertical: 2,
-                  alignItems: 'center',
-                }}>
+              {data?.Night_Charges && (
+                <View style={styles.container}>
+                  <View style={styles.bullet} />
+                  <View style={styles.textContainer}>
+                    <Text style={styles.text}>{data?.Night_Charges}</Text>
+                  </View>
+                </View>
+              )}
+
+              {data?.return_to_tatd && (
                 <View
                   style={{
-                    width: 4,
-                    height: 4,
-                    borderRadius: 2,
-                    backgroundColor: AppColors.black,
-                  }}
-                />
-                <Text
-                  style={{
-                    color: AppColors.black,
-                    marginLeft: 10,
-                    fontFamily: AppFont.regularFont,
-                    fontWeight: 'bold',
+                    flexDirection: 'row',
+                    paddingVertical: 2,
+                    alignItems: 'center',
                   }}>
-                  {data?.return_to_tatd}
-                </Text>
-              </View>
+                  <View
+                    style={{
+                      width: 4,
+                      height: 4,
+                      borderRadius: 2,
+                      backgroundColor: AppColors.black,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: AppColors.black,
+                      marginLeft: 10,
+                      fontFamily: AppFont.regularFont,
+                      fontWeight: 'bold',
+                    }}>
+                    {data?.return_to_tatd}
+                  </Text>
+                  <View
+                    style={{
+                      borderBottomWidth: 1,
+                      borderColor: AppColors.gray,
+                    }}
+                  />
+                </View>
+              )}
             </View>
-            <View
-              style={{
-                borderBottomWidth: 1,
-                borderColor: AppColors.gray,
-              }}
-            />
           </View>
 
           {/* bottam content button  */}

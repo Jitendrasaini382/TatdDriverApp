@@ -96,7 +96,17 @@ export const DRIVER_TRAINING_VIDEOS = body => {
   console.log(body, 'DRIVER_TRAINING_VIDEOS  body');
   return _Fetch(
     'GET',
-    `trusted-driver/training_vidoes_api.php?action=training_videos&current_language=${body}`,
+    `trusted-driver/training_videos_api.php?action=training_videos&current_language=${body}`,
+  );
+};
+
+export const DRIVER_TRAINING_VIDEOS_CLICK_STORE = body => {
+  console.log(body, 'DRIVER NOTICE Body');
+  return _Fetch(
+    'POST',
+    'trusted-driver/store-training-clicks-api.php',
+    {...body},
+    {},
   );
 };
 

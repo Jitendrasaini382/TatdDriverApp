@@ -11,7 +11,7 @@ import {
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 import {SAVE_REFER_PERMANENT} from '../../apis/Apis';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 
 const ConfirmReferFriendModal = ({
   closeModalButton,
@@ -20,15 +20,10 @@ const ConfirmReferFriendModal = ({
   id,
   data,
 }) => {
-  
+  const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
-
-    const  decodedToken = useSelector((e)=>e?.userAuth?.userProfile)
-    const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
- 
   const [saveReferPermanent, setSaveReferPermanent] = useState();
-
-  console.log(data.points[0], 'send previous data');
 
   const bookingData = {
     action: 'permanent_booking_refer_accept_insert',
@@ -39,6 +34,12 @@ const ConfirmReferFriendModal = ({
     driver_mobile_number: decodedToken?.driver_mobile_number,
     P_ID: id,
   };
+
+  console.log(
+    decodedToken?.driver_name,
+    decodedToken?.driver_mobile_number,
+    'refer friend modal==',
+  );
 
   const handleSaveReferPermanent = async () => {
     console.log(bookingData, 'runnnnnnnnnnn getSaveReferPermanent');
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   header: {
-    fontSize: 23,
+    fontSize: 22,
     fontWeight: '800',
     marginBottom: 30,
     color: AppColors.black,

@@ -75,7 +75,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
 
   const acceptBooking = async () => {
     console.log(booking_number, 'accept booking number');
-    console.log('final accepttttt');
+    console.log('final accepttttt Roundtrip');
 
     try {
       const response = await FINAL_ACCEPT_BOOKING({
@@ -99,7 +99,8 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
 
   if (loader) {
     return (
-      <View style={{flex: .5, alignContent: 'center', justifyContent: 'center'}}>
+      <View
+        style={{flex: 0.5, alignContent: 'center', justifyContent: 'center'}}>
         <ActivityIndicator size="large" color={AppColors.mainColor} />
       </View>
     );

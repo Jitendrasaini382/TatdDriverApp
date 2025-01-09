@@ -14,10 +14,13 @@ import {
   ACCEPT_PERMANENT_BOOKING,
   APPLY_PERMANENT_BOOKING,
 } from '../../apis/Apis';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {setTriggerFunction} from '../../redux/slices/globalSlice';
 
 const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
-  
-
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
   const {
     condition_1,
     condition_2,
@@ -33,39 +36,101 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
     console.log(id, name, '==handleSubmittt');
     if (name == 'Accept') {
       console.log(name, '--- Accept run');
-      handleAcceptPermanentBooking(id)
+      handleAcceptPermanentBooking(id);
     } else if (name == 'Apply') {
       console.log(name, '--- Apply run');
-      handleApplyPermanentBooking(id)
+      handleApplyPermanentBooking(id);
     }
   };
 
+  // const handleApplyPermanentBooking = async id => {
+  //   try {
+  //     const response = await APPLY_PERMANENT_BOOKING({
+  //       action: 'send_permanent_application',
+  //       P_ID: id,
+  //     });
+  //     console.log(response, 'APPLY_PERMANENT_BOOKINGAPPLY_PERMANENT_BOOKING');
+  //   } catch (error) {
+  //     console.log(
+  //       error,
+  //       'APPLY_PERMANENT_BOOKINGAPPLY_PERMANENT_BOOKING  Error',
+  //     );
+  //   }
+  // };
+
   const handleApplyPermanentBooking = async id => {
     try {
-      const response = await APPLY_PERMANENT_BOOKING({
-        action: 'apply_permanent_booking',
+      console.log('Function started, received ID:', id);
+
+      const payload = {
+        action: 'send_permanent_application',
         P_ID: id,
-      });
-      console.log(response, 'APPLY_PERMANENT_BOOKINGAPPLY_PERMANENT_BOOKING');
+      };
+      console.log('Payload prepared:', payload);
+
+      const response = await APPLY_PERMANENT_BOOKING(payload);
+      console.log('Response received:', response);
+
+      console.log(
+        response,
+        'APPLY_PERMANENT_BOOKINGAPPLY_PERMANENT_BOOKING completed successfully',
+      );
+      if (response?.status_code == 200) {
+        // Alert.alert(response?.message);
+        Alert.alert('Success', response?.message, [{text: 'OK'}]);
+        setOpenModal(false);
+      }
     } catch (error) {
+      console.log('Error encountered:', error);
       console.log(
         error,
-        'APPLY_PERMANENT_BOOKINGAPPLY_PERMANENT_BOOKING  Error',
+        'APPLY_PERMANENT_BOOKINGAPPLY_PERMANENT_BOOKING Error',
       );
     }
   };
 
+  // const handleAcceptPermanentBooking = async id => {
+  //   try {
+  //     const response = await ACCEPT_PERMANENT_BOOKING({
+  //       action: 'permanent_instant_driver_assignment_to_customer',
+  //       P_ID: id,
+  //     });
+  //     console.log(response, 'ACCEPT_PERMANENT_BOOKINGACCEPT_PERMANENT_BOOKING');
+  //   } catch (error) {
+  //     console.log(
+  //       error,
+  //       'ACCEPT_PERMANENT_BOOKINGACCEPT_PERMANENT_BOOKING  Error',
+  //     );
+  //   }
+  // };
+
   const handleAcceptPermanentBooking = async id => {
+    console.log('Function called with id:', id);
     try {
-      const response = await ACCEPT_PERMANENT_BOOKING({
-        action: 'accept_permanent_booking',
+      console.log('Attempting to call ACCEPT_PERMANENT_BOOKING with payload:', {
+        action: 'permanent_instant_driver_assignment_to_customer',
         P_ID: id,
       });
-      console.log(response, 'ACCEPT_PERMANENT_BOOKINGACCEPT_PERMANENT_BOOKING');
+
+      const response = await ACCEPT_PERMANENT_BOOKING({
+        action: 'permanent_instant_driver_assignment_to_customer',
+        P_ID: id,
+      });
+      console.log('Response from ACCEPT_PERMANENT_BOOKING:', response);
+      if (response?.status_code == 200) {
+        const bookingNumber = response?.bookingNumber;
+        navigation.navigate('DutyReportUpdate', {
+          bookingNumber: bookingNumber,
+          isFirstTime: true,
+        });
+        setOpenModal(false);
+        dispatch(setTriggerFunction(true));
+      }
     } catch (error) {
+      console.log('Caught an error:', error);
       console.log(
         error,
-        'ACCEPT_PERMANENT_BOOKINGACCEPT_PERMANENT_BOOKING  Error',
+        'ACCEPT_PERMANENT_BOOKINGACCEPT_PERMANENT_BOOKING Error',
       );
     }
   };

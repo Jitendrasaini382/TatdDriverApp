@@ -38,6 +38,7 @@ import Svg, {Path, G} from 'react-native-svg';
 import DeviceInfo from 'react-native-device-info';
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
+import {Buffer} from 'buffer';
 import {
   DRIVER_HEADLINE,
   DRIVER_TRAINING_VIDEOS,
@@ -64,12 +65,7 @@ import {
 } from '../redux/slices/trustedDriverSlice';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
-import {
-  Agent_Icon,
-  AppLogo,
-  Diamond_Icon,
-  Facebook_Icon,
-} from '../assets/images';
+import {Agent_Icon, AppLogo, Diamond_Icon} from '../assets/images';
 import {useRoute} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import {setLoginStatus, setRefreshKey} from '../redux/slices/globalSlice';
@@ -87,10 +83,10 @@ const TrustedDriver = ({navigation}) => {
   const [fcmtoken, setFcmToken] = useState();
   const [trainingVideoData, setTrainingVideoData] = useState();
   const [updateModal, setUpdateModal] = useState(false);
+  const [upadatePopupData, setUpdatePopupData] = useState({});
   const appType = Platform.OS;
 
   console.log(appType, 'appTypeappTypeappTypeappTypeappTypeappType');
-
   const [deviceInfo, setDeviceInfo] = useState({
     action: 'save_device_info',
     manufacturer: '',
@@ -139,33 +135,32 @@ const TrustedDriver = ({navigation}) => {
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
-  console.log(
-    decodedToken?.TrustedDriverData?.agent_panel_earning,
-    'diamond_eligability diamond_eligability data agent_panel_earningagent_panel_earning',
-  );
-
   const jwt = useSelector(e => e?.userAuth?.jwt);
   useEffect(() => {
     if (jwt) {
-      getPopup();
+      if (isRfdOn) {
+        getPopup();
+      }
       getHeadlineData();
-      // getTrainingVideo();
-      fetchDeviceInfo();
+      getTrainingVideo();
+
       getUpdatePopup();
     }
   }, [jwt, languageSwitch]);
 
   const openMyUrl = url => {
-    Linking.openURL(url);
+    Linking.openURL(url).then(() => {
+      setUpdateModal(false);
+    });
   };
 
   const isFcmSent = useSelector(e => e?.userAuth?.isFcmSent);
+  const isRfdOn = useSelector(state => state.globalSlice.loginStatus);
   const isDeviceInfo = useSelector(e => e?.userAuth?.isDeviceInfo);
-  console.log(isFcmSent, 'isFcmSentisFcmSentisFcmSentisFcmSentisFcmSent');
-  console.log(isDeviceInfo, 'isDeviceInfoisDeviceInfoisDeviceInfoisDeviceInfo');
 
   useEffect(() => {
     if (!isFcmSent) getFcmToken();
+    if (!isDeviceInfo) fetchDeviceInfo();
   }, []);
 
   const currentRoute = route.name;
@@ -176,9 +171,7 @@ const TrustedDriver = ({navigation}) => {
   const handlePress = icon => {
     setSelected(icon);
     if (icon === 'Agent') {
-      navigation.navigate('CommanWebview', {
-        url: `https://www.tatd.in/agent-login.php`,
-      });
+      handleLoginPress();
     } else if (icon === 'PremiumDriver') {
       navigation.navigate('CommanWebview', {
         url: `https://www.tatd.in/premium-driver.php?step=1`,
@@ -308,29 +301,58 @@ const TrustedDriver = ({navigation}) => {
   };
 
   const getUpdatePopup = async () => {
-    console.log('Starting to fetch headline data...');
+    console.log('Starting to fetch update popup data...');
 
     try {
-      console.log('Sending request to DRIVER_HEADLINE with:', {
+      // Fetch update popup data
+      const response = await UPDATE_POPUP({
         app_type: appType,
         user_type: 'Driver',
       });
 
-      const response = await UPDATE_POPUP({
-        app_type: 'Android',
-        user_type: 'Driver',
-      });
-
-      if (appVersion < response?.app_details?.version) {
-        setUpdateModal(true);
-      }
-
+      // Log the response for debugging
       console.log('getUpdatePopup Response:', response);
-      // setHeadLineData(response);
+
+      // Check and handle update conditions
+      if (response?.app_details) {
+        const {version, force_update, app_url} = response.app_details;
+        // if (force_update == '1' && app_url) {
+        //   openMyUrl(app_url);
+        // }
+
+        if (appVersion < version) {
+          setUpdateModal(true);
+        }
+      }
+      // Set the update popup data
+      setUpdatePopupData(response);
     } catch (error) {
-      console.log('getUpdatePopup Error:', error);
+      // Log any errors encountered during the API call
+      console.error('getUpdatePopup Error:', error);
     }
   };
+  // const getUpdatePopup = async () => {
+  //   console.log('Starting to fetch headline data...');
+
+  //   try {
+  //     const response = await UPDATE_POPUP({
+  //       app_type: appType,
+  //       user_type: 'Driver',
+  //     });
+
+  //     if (appVersion < response?.app_details?.version) {
+  //       setUpdateModal(true);
+  //     }
+  //     if (response?.app_details?.force_update == '1') {
+  //       openMyUrl(response?.app_details?.app_url);
+  //     }
+
+  //     console.log('getUpdatePopup Response:', response);
+  //     setUpdatePopupData(response);
+  //   } catch (error) {
+  //     console.log('getUpdatePopup Error:', error);
+  //   }
+  // };
 
   const saveFcmToken = async fcmtoken => {
     const response = await GET_FCM_TOKEN({
@@ -348,8 +370,6 @@ const TrustedDriver = ({navigation}) => {
   };
 
   const [headLineData, setHeadLineData] = useState({});
-
-  const isRfdOn = useSelector(state => state.globalSlice.loginStatus);
 
   const [loginMessage, setLoginMessage] = useState('');
   const [loginButton, setLoginButton] = useState({
@@ -428,6 +448,22 @@ const TrustedDriver = ({navigation}) => {
     }
   };
 
+  const handleLoginPress = () => {
+    try {
+      const encodedMobile = Buffer.from(
+        decodedToken?.driver_mobile_number,
+      ).toString('base64');
+      const url = `https://www.tatd.in/agent-login.php?dologin=${encodedMobile}`;
+
+      console.log('Generated URL:', url);
+      navigation.navigate('CommanWebview', {
+        url: url,
+      });
+    } catch (error) {
+      console.log('Caught error:', error);
+    }
+  };
+
   const getPopup = async () => {
     try {
       const response = await EXPRESS_BOOKING_POPUP({
@@ -435,9 +471,8 @@ const TrustedDriver = ({navigation}) => {
         current_language: languageSwitch,
       });
       console.log(response, 'GET_POPUP  Response ');
-      if (response.express_booking_popup_flag == 1) {
-        console.log('run popup flaggggggg');
 
+      if (response.express_booking_popup_flag == 1) {
         dispatch(setExpressBookingModal(true));
         setPopupData(response.express_booking_popup_flag);
       } else {
@@ -468,19 +503,19 @@ const TrustedDriver = ({navigation}) => {
     }
   };
 
-  // const getTrainingVideo = async () => {
-  //   try {
-  //     const response = await DRIVER_TRAINING_VIDEOS(languageSwitch);
-  //     console.log(
-  //       'DRIVER_TRAINING_VIDEOS DRIVER_TRAINING_VIDEOS Response:',
-  //       response,
-  //     );
+  const getTrainingVideo = async () => {
+    try {
+      const response = await DRIVER_TRAINING_VIDEOS(languageSwitch);
+      console.log(
+        'DRIVER_TRAINING_VIDEOS DRIVER_TRAINING_VIDEOS Response::',
+        response?.response?.training_data,
+      );
 
-  //     // setTrainingVideoData(response)
-  //   } catch (error) {
-  //     console.log(error, 'DRIVER_TRAINING_VIDEOS  Error');
-  //   }
-  // };
+      setTrainingVideoData(response?.response?.training_data);
+    } catch (error) {
+      console.log(error, 'DRIVER_TRAINING_VIDEOS  Error');
+    }
+  };
 
   const Item = [
     {
@@ -515,11 +550,64 @@ const TrustedDriver = ({navigation}) => {
     },
   ];
 
-  const onRefresh = useCallback(() => {
+  const item2 = [
+    {
+      eligibility: '0',
+      icon: 'open_envlop.png',
+      id: '9',
+      subject: 'Video देखें,  Login और अपनी reference verification पूरी करें। ',
+      videoId: 'https://youtu.be/uuCULpkpKrA',
+    },
+    {
+      eligibility: '0',
+      icon: 'open_envlop.png',
+      id: '2',
+      subject: 'Login करने के बाद आपको अपनी मर्जी की बुकिंग उठानी होगी।',
+      videoId: 'https://www.youtube.com/watch?v=4HDKAi75-Vo',
+    },
+    {
+      eligibility: '0',
+      icon: 'open_envlop.png',
+      id: '3',
+      subject: 'बुकिंग उठाने के बाद आपको उस बुकिंग को पूरा करना होगा।',
+      videoId: 'https://www.youtube.com/watch?v=u892FTsKLKk',
+    },
+    {
+      eligibility: '0',
+      icon: 'open_envlop.png',
+      id: '4',
+      subject:
+        'बुकिंग पूरी करने के बाद आपको उस बुकिंग का पैसा कंपनी में जमा करना होगा।',
+      videoId: 'https://www.youtube.com/watch?v=M-iyhUZ-h7o',
+    },
+    {
+      eligibility: '0',
+      icon: 'open_envlop.png',
+      id: '302',
+      subject: 'How to accept permanent Booking',
+      videoId: 'https://youtu.be/v6n5SvV3XSs',
+    },
+  ];
+
+  // const onRefresh = useCallback(() => {
+  //   setRefreshing(true);
+  //   dispatch(setRefreshKey());
+  //   getUpdatePopup()
+  //   setRefreshing(false);
+  // }, []);
+
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    dispatch(setRefreshKey());
-    setRefreshing(false);
-  }, []);
+    try {
+      dispatch(setRefreshKey());
+      await getUpdatePopup();
+    } catch (error) {
+      console.log('Error during refresh:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [dispatch, getUpdatePopup]);
+
   // return false
   const insets = useSafeAreaInsets();
 
@@ -761,7 +849,7 @@ const TrustedDriver = ({navigation}) => {
                         styles.bottamContent1Text,
                         videosContent && {color: AppColors.white},
                       ]}>
-                      {languageSwitch == 'english' ? 'Training' : 'ट्रेनिंग'}
+                      {languageSwitch == 'english' ? 'Training ' : 'ट्रेनिंग'}
                     </Text>
                     <Text
                       style={[
@@ -791,11 +879,12 @@ const TrustedDriver = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   // onPress={() => navigation.navigate('AgentLogin')}
-                  onPress={() =>
-                    navigation.navigate('CommanWebview', {
-                      url: `https://www.tatd.in/agent-login.php`,
-                    })
-                  }
+                  // onPress={() =>
+                  //   navigation.navigate('CommanWebview', {
+                  //     url: `https://www.tatd.in/agent-login.php`,
+                  //   })
+                  // }
+                  onPress={() => handleLoginPress()}
                   style={styles.bottamContent3}>
                   <Text style={styles.mainText}>
                     {languageSwitch == 'english' ? 'Agent panel' : 'एजेंट पैनल'}
@@ -851,7 +940,7 @@ const TrustedDriver = ({navigation}) => {
             {/* Main Toggle Content */}
             <>{isRfdOn ? <BookingView data={headLineData} /> : null}</>
             {/* <BookingView /> */}
-            {videosContent ? <TrainingVideo data={Item} /> : null}
+            {videosContent ? <TrainingVideo data={trainingVideoData} /> : null}
           </View>
         </ScrollView>
 
@@ -1143,8 +1232,8 @@ const TrustedDriver = ({navigation}) => {
         <Modal
           backdropOpacity={0.5}
           onBackdropPress={() => setUpdateModal(false)}
-          animationIn={'fadeInDown'}
-          animationOut={'fadeOutUp'}
+          // animationIn={'fadeInDown'}
+          // animationOut={'fadeOutUp'}
           isVisible={updateModal}>
           <View
             style={{
@@ -1189,7 +1278,7 @@ const TrustedDriver = ({navigation}) => {
                   textAlign: 'center',
                   marginBottom: 30,
                 }}>
-                hello
+                {upadatePopupData?.app_details?.upgrade_message}
               </Text>
               <View
                 style={{
@@ -1212,8 +1301,9 @@ const TrustedDriver = ({navigation}) => {
                     shadowRadius: 10,
                     marginBottom: 15,
                   }}
-                  // onPress={() => sendUpdate(updateUrl)}
-                >
+                  onPress={() =>
+                    openMyUrl(upadatePopupData?.app_details?.app_url)
+                  }>
                   <Text
                     style={{
                       color: '#fff',

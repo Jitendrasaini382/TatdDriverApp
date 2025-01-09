@@ -4,11 +4,28 @@ import Collapsible from 'react-native-collapsible';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {OpenEnvelop, CloseEnvelop} from '../assets/images';
 import {AppColors} from '../assets/Colors';
+import {DRIVER_TRAINING_VIDEOS_CLICK_STORE} from '../apis/Apis';
 
 const TrainingVideo = ({data}) => {
   const [openIndex, setOpenIndex] = useState(null);
 
-  const toggleItem = index => {
+  const storeClickVideo = async id => {
+    console.log('Starting to fetch storeClickVideo data...');
+    try {
+      const response = await DRIVER_TRAINING_VIDEOS_CLICK_STORE({
+        action: 'store_training_videos_clicks',
+        training_id: id,
+        training_type: 'Driver Training',
+      });
+      console.log('storeClickVideo Response:', response);
+    } catch (error) {
+      console.error('storeClickVideo Error:', error);
+    }
+  };
+
+  const toggleItem = (index, id) => {
+    console.log(id, 'idddddddddd video video');
+    storeClickVideo(id);
     if (openIndex === index) {
       setOpenIndex(null);
     } else {
@@ -21,10 +38,11 @@ const TrainingVideo = ({data}) => {
       {data.map((item, index) => (
         <AccordionItem
           key={index}
-          title={item.title}
+          title={item.subject}
           videoId={item.videoId}
           id={item.id}
-          icon={item.read_status}
+          icon={item.icon}
+          eligibility={item.eligibility}
           isOpen={openIndex === index}
           onToggle={() => toggleItem(index)}
           index={index + 1}
@@ -36,7 +54,16 @@ const TrainingVideo = ({data}) => {
 
 export default TrainingVideo;
 
-const AccordionItem = ({title, videoId, isOpen, onToggle, index, icon, id}) => {
+const AccordionItem = ({
+  title,
+  videoId,
+  isOpen,
+  onToggle,
+  index,
+  icon,
+  id,
+  eligibility,
+}) => {
   return (
     <View style={styles.itemContainer}>
       <TouchableOpacity style={styles.touchable} onPress={onToggle}>
@@ -44,7 +71,7 @@ const AccordionItem = ({title, videoId, isOpen, onToggle, index, icon, id}) => {
           <Image
             style={styles.icon}
             resizeMode="contain"
-            source={icon == 'read' ? OpenEnvelop : CloseEnvelop}
+            source={icon == 'open_envlop.png' ? OpenEnvelop : CloseEnvelop}
           />
         </View>
         <View style={styles.textContainer}>

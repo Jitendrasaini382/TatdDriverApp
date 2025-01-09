@@ -135,7 +135,7 @@ const BookingView = ({data}) => {
             ? `Dear ${decodedToken?.driver_name}, from now on, if you have completed at least one booking in the last two days and are available for bookings, you will receive an SMS alert when a new booking comes in.`
             : `डिअर ${decodedToken?.driver_name},अब से यदि आपने पिछले दो दिनों में कम से कम एक बुकिंग पूरी की है, और आप बुकिंग करने के लिए उपलब्ध हैं, तो नई बुकिंग आने पर आपको SMS Alert भेजा जाएगा।`}
         </Text>
-      </View> */}
+      </View> */ }
 
       <View style={styles.notificationContainer}>
         {data?.driver_panel_messages?.double_booking_eligibility && (

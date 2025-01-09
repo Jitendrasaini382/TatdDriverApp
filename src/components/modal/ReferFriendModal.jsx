@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   Modal,
   Alert,
+  Keyboard,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {AppColors} from '../../assets/Colors';
@@ -17,13 +18,15 @@ import {
   PERMANENT_REFER_ACCEPT_POPUP,
   PERMANENT_REFER_POPUP,
 } from '../../apis/Apis';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
+import {ActivityIndicator} from 'react-native';
 
 const ReferFriendModal = ({setReferFriendModal, id}) => {
   const [friendName, setFriendName] = useState('');
   const [friendNumber, setFriendNumber] = useState('');
+  const [loader, setLoader] = useState(false);
 
-  const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   const [confirmModal, setConfirmModal] = useState(false);
   const [permanentReferPopup, setPermanentReferPopup] = useState({});
@@ -43,10 +46,17 @@ const ReferFriendModal = ({setReferFriendModal, id}) => {
 
   const getPermanentReferPopup = async () => {
     try {
+      setLoader(true);
+
       const response = await PERMANENT_REFER_POPUP(languageSwitch);
       setPermanentReferPopup(response?.refer_popup_data);
+      setLoader(false);
     } catch (error) {
       console.log(error, 'getPermanentReferPopup  Error');
+    } finally {
+      console.log('run finalyy');
+
+      setLoader(false);
     }
   };
 
@@ -73,52 +83,60 @@ const ReferFriendModal = ({setReferFriendModal, id}) => {
       Alert.alert('Please enter a valid 10-digit mobile number.');
       return;
     }
+    Keyboard.dismiss();
     setConfirmModal(true);
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.closeButton}
-          onPress={() => setReferFriendModal(false)}>
-          <Icon name="close" size={25} color={AppColors.white} />
-          {/* <Text style={{color: AppColors.white, fontSize:25, fontWeight:"bold"}} >x</Text> */}
-        </TouchableOpacity>
-        <View style={styles.content}>
-          <Text style={styles.description}>{permanentReferPopup?.content}</Text>
-        </View>
-
-        <View style={styles.referSection}>
-          <Text style={styles.sectionTitle}>{permanentReferPopup?.title}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder={
-              permanentReferPopup?.form_fields?.friend_name_placeholder
-            }
-            placeholderTextColor={'#999'}
-            value={friendName}
-            onChangeText={setFriendName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholderTextColor={'#999'}
-            placeholder={
-              permanentReferPopup?.form_fields?.friend_number_placeholder
-            }
-            value={friendNumber}
-            onChangeText={setFriendNumber}
-            keyboardType="number-pad"
-            maxLength={10}
-          />
-          <TouchableOpacity style={styles.referButton} onPress={referFriend}>
-            <Text style={styles.referButtonText}>
-              {permanentReferPopup?.button_text}
-            </Text>
+      {!loader ? (
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setReferFriendModal(false)}>
+            <Icon name="close" size={25} color={AppColors.white} />
+            {/* <Text style={{color: AppColors.white, fontSize:25, fontWeight:"bold"}} >x</Text> */}
           </TouchableOpacity>
-        </View>
-      </View>
+          <View style={styles.content}>
+            <Text style={styles.description}>
+              {permanentReferPopup?.content}
+            </Text>
+          </View>
 
+          <View style={styles.referSection}>
+            <Text style={styles.sectionTitle}>
+              {permanentReferPopup?.title}
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder={
+                permanentReferPopup?.form_fields?.friend_name_placeholder
+              }
+              placeholderTextColor={'#999'}
+              value={friendName}
+              onChangeText={setFriendName}
+            />
+            <TextInput
+              style={styles.input}
+              placeholderTextColor={'#999'}
+              placeholder={
+                permanentReferPopup?.form_fields?.friend_number_placeholder
+              }
+              value={friendNumber}
+              onChangeText={setFriendNumber}
+              keyboardType="number-pad"
+              maxLength={10}
+            />
+            <TouchableOpacity style={styles.referButton} onPress={referFriend}>
+              <Text style={styles.referButtonText}>
+                {permanentReferPopup?.button_text}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ) : (
+        <ActivityIndicator size={'large'} />
+      )}
       <Modal
         animationType="slide"
         transparent={true}

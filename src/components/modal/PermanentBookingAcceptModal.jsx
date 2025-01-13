@@ -78,6 +78,8 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
       if (response?.status_code == 200) {
         // Alert.alert(response?.message);
         Alert.alert('Success', response?.message, [{text: 'OK'}]);
+        dispatch(setTriggerFunction(true));
+
         setOpenModal(false);
       }
     } catch (error) {
@@ -118,7 +120,7 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
       });
       console.log('Response from ACCEPT_PERMANENT_BOOKING:', response);
       if (response?.status_code == 200) {
-        const bookingNumber = response?.bookingNumber;
+        const bookingNumber = response?.booking_id;
         navigation.navigate('DutyReportUpdate', {
           bookingNumber: bookingNumber,
           isFirstTime: true,
@@ -128,6 +130,9 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
       }
     } catch (error) {
       console.log('Caught an error:', error);
+      if (error == 'Booking is not in pending status') {
+        Alert.alert('This booking already accepted by another driver.');
+      }
       console.log(
         error,
         'ACCEPT_PERMANENT_BOOKINGACCEPT_PERMANENT_BOOKING Error',

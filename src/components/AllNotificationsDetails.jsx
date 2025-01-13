@@ -23,11 +23,13 @@ import {
   setNotificationData,
   setStoredRating,
 } from '../redux/slices/globalSlice';
+import {RefreshControl} from 'react-native';
 
 const AllNotificationComponent = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const notificationData = useSelector(e => e?.globalSlice?.notificationData);
+  const [refreshing, setRefreshing] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -61,16 +63,34 @@ const AllNotificationComponent = () => {
     });
   }, []);
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      // dispatch(setRefreshKey());
+      await getAllNotification({
+        action: 'view_all_notifications',
+      });
+    } catch (error) {
+      console.log('Error during refresh:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
+
   if (isLoading) {
     return (
       <View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>
-        <ActivityIndicator size="large" color={AppColors.whatsAppIconColor} />
+        <ActivityIndicator size="small" color={AppColors.mainColor} />
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
       {notificationData &&
         notificationData.map(notification => (
           <TouchableOpacity
@@ -102,6 +122,7 @@ const AllNotificationComponent = () => {
 };
 
 export const NotificationDetailScreen = ({route}) => {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const {notificationId} = route.params;
   const [notification, setNotification] = useState({});
@@ -197,8 +218,78 @@ export const NotificationDetailScreen = ({route}) => {
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
-        <View style={{flex: 1}}>
+        {/* <View style={{flex: 1}}>
           <Text style={styles.detailText}>{notification.message_preview}</Text>
+        </View> */}
+
+        <View
+          style={{
+            flex: 1,
+            // padding: 16,
+          }}>
+          <View
+            style={{
+              backgroundColor: '#0056b3',
+              padding: 16,
+              borderRadius: 8,
+            }}>
+            <Text
+              style={{
+                color: '#ffffff',
+                fontSize: 22,
+                fontWeight: 'bold',
+                textAlign: 'center',
+              }}>
+              Headline
+            </Text>
+          </View>
+          <View
+            style={{
+              backgroundColor: 'white',
+              marginVertical: 20,
+              width: '100%',
+              borderRadius: 10,
+              elevation: 5,
+            }}>
+            <View
+              style={{
+                backgroundColor: '#e9f6ff',
+                padding: 16,
+                borderRadius: 8,
+                marginTop: 16,
+                borderLeftColor: '#0056b3',
+                borderLeftWidth: 5,
+                margin: 20,
+              }}>
+              <Text
+                style={{
+                  color: '#333',
+                  fontSize: 18,
+                  marginBottom: 20,
+                }}>
+                {notification.message_preview}
+              </Text>
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={{
+                  backgroundColor: '#0056b3',
+                  paddingVertical: 12,
+                  borderRadius: 8,
+                  alignItems: 'center',
+                  marginTop: 20,
+                  marginBottom: 5,
+                }}>
+                <Text
+                  style={{
+                    color: '#ffffff',
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                  }}>
+                  I Have Read the Updates
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
 
         {shouldShowRating() && (

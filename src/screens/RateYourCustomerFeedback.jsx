@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   SafeAreaView,
+  Keyboard,
 } from 'react-native';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
@@ -29,6 +30,7 @@ const RateYourCustomerFeedback = ({navigation, route}) => {
     }
 
     setLoading(true);
+    Keyboard.dismiss();
     try {
       const response = await RATE_YOUR_CUSTOMER({
         action: 'rating_detail',
@@ -59,7 +61,9 @@ const RateYourCustomerFeedback = ({navigation, route}) => {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{flex: 1}}>
-          <ScrollView contentContainerStyle={{flexGrow: 1}}>
+          <ScrollView
+            contentContainerStyle={{flexGrow: 1}}
+            keyboardShouldPersistTaps="always">
             <View style={{flex: 1}}>
               <View
                 style={{

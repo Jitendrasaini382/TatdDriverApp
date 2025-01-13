@@ -84,13 +84,17 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
         current_language: languageSwitch,
       });
 
-      console.log(response, 'acceptBooking response');
+      console.log(
+        response,
+        'acceptBooking response final accepttttt Roundtrip final accepttttt Roundtrip',
+      );
 
       dispatch(setTriggerFunction(true));
 
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking_number,
         isFirstTime: true,
+        isFirstTimeId: '5',
       });
     } catch (error) {
       console.log(error, 'acceptBooking Error');
@@ -101,7 +105,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
     return (
       <View
         style={{flex: 0.5, alignContent: 'center', justifyContent: 'center'}}>
-        <ActivityIndicator size="large" color={AppColors.mainColor} />
+        <ActivityIndicator size="small" color={AppColors.mainColor} />
       </View>
     );
   }

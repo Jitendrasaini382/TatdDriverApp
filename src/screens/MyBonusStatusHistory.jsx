@@ -53,7 +53,7 @@ const MyBonusStatusHistory = () => {
         {loader ? (
           <ActivityIndicator
             style={{flex: 1, alignContent: 'center'}}
-            size={'large'}
+            size={'small'}
             color={AppColors.mainColor}
           />
         ) : (

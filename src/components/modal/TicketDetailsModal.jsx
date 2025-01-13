@@ -52,11 +52,17 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
   };
 
   if (isLoading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return (
+      <ActivityIndicator
+        size="smal"
+        color={AppColors.mainColor}
+        style={{flex: 1}}
+      />
+    );
   }
 
   const renderDetailItem = (label, value) => {
-    if (!value) return null;
+    // if (!value) return null;
     return (
       <View style={styles.contentView}>
         <Text style={styles.leftSectionText}>{label}</Text>
@@ -64,6 +70,8 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
       </View>
     );
   };
+
+  console.log(ticketDetails, 'show ticket dataattatatatatatata');
 
   return (
     <ScrollView style={styles.container}>
@@ -80,7 +88,7 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
             {renderDetailItem('Ticket ID :', ticketDetails.id)}
             {renderDetailItem('Created Date', ticketDetails.timestamp)}
             {renderDetailItem('Booking Number :', ticketDetails.booking_id)}
-            {renderDetailItem('Status', 'Close')}
+            {renderDetailItem('Status :', ticketDetails.ticket_status)}
             {renderDetailItem(
               'Description:',
               ticketDetails.support_require_for,

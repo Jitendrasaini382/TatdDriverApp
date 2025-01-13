@@ -12,6 +12,7 @@ import {
   Modal,
   TextInput,
   ActivityIndicator,
+  Keyboard,
 } from 'react-native';
 // import Modal from 'react-native-modal';
 import YoutubePlayer from 'react-native-youtube-iframe';
@@ -50,6 +51,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     state,
   } = route?.params;
   const isFirstTimeVisit = route?.params?.isFirstTime;
+  const isFirstTimeId = route?.params?.isFirstTimeId;
   console.log(bookingNumber, 'bookingggg');
   // console.log(tripStatus, 'trip status');
 
@@ -120,29 +122,6 @@ const DutyReportUpdate = ({route, navigation}) => {
     }
   };
 
-  // const notPickupPhoneCustomer = async () => {
-  //   setLoader(true);
-  //   try {
-  //     const response = await CUSTOMER_NOT_PICKUP_PHONE({
-  //       action: 'duty_report_send_sms',
-  //       booking_id: bookingNumber,
-  //       current_language: languageSwitch,
-  //       sub_status: 'Not Picking Call',
-  //     });
-  //     Toast.show({
-  //       type: 'success',
-  //       text1: 'success',
-  //       text2: response?.alert,
-  //     });
-  //     GetAllBookingInfo();
-  //     console.log(response, 'talk to customer Api response');
-  //   } catch (error) {
-  //     console.log(error, 'talk to customer Api error - General Error');
-  //   } finally {
-  //     setLoader(false);
-  //   }
-  // };
-
   const customerWantToCancel = async () => {
     setLoader(true);
     try {
@@ -171,28 +150,6 @@ const DutyReportUpdate = ({route, navigation}) => {
       setLoader(false);
     }
   };
-
-  const options = [
-    {id: '1', label: 'Have you talked to the customer ?'},
-    {id: '2', label: 'Is the customer not picking up the phone ?'},
-    {id: '3', label: 'The customer wants to cancel ?'},
-  ];
-
-  // Define functions for each option
-  // const handleOption1 = () => {
-  // console.log('Option 1 selected: Have you talked to the customer?');
-  // // Add your logic here
-  // };
-
-  // const handleOption2 = () => {
-  // console.log('Option 2 selected: Is the customer not picking up the phone?');
-  // // Add your logic here
-  // };
-
-  // const handleOption3 = () => {
-  // console.log('Option 3 selected: The customer wants to cancel?');
-  // // Add your logic here
-  // };
 
   // Function to handle selection
   const handleSelect = id => {
@@ -459,7 +416,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       });
       console.log(res, 'duty_report_booking_reach Responseeeeee');
       setModalVisibleRich(false);
-      setModalVisibleinput(true);
+      // setModalVisibleinput(true);
       GetAllBookingInfo();
     } catch (err) {
       console.log(err, 'duty_report_booking_reach Errrrrrrrrrrrrrrrr');
@@ -469,6 +426,7 @@ const DutyReportUpdate = ({route, navigation}) => {
 
   const driverReached = async () => {
     setLoader(true);
+    Keyboard.dismiss();
     try {
       const res = await DRIVE_START({
         action: 'duty_report_booking_start',
@@ -511,6 +469,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         trip_status: bookingInfo?.condition?.next_booking_status_id,
       });
       navigation.navigate('DueAmount', {bookingNumber});
+      setModalVisibleEnd(false);
       console.log(res, 'booking end api response');
     } catch (err) {
       console.log(err, 'booking end api Err');
@@ -556,8 +515,8 @@ const DutyReportUpdate = ({route, navigation}) => {
     }
   };
   useEffect(() => {
-    if (isFirstTimeVisit) {
-      getFirstTimePopupFn(10);
+    if (isFirstTimeVisit && isFirstTimeId) {
+      getFirstTimePopupFn(isFirstTimeId);
       setfirstTimePopup(true);
       setLoader(true);
     } else {
@@ -575,7 +534,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       <Toast visibilityTime={5000} topOffset={50} />
       {mainLoader ? (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <ActivityIndicator size={'large'} color={AppColors.mainColor} />
+          <ActivityIndicator size={'small'} color={AppColors.mainColor} />
         </View>
       ) : state === 'cancel' ? (
         <View
@@ -953,7 +912,10 @@ const DutyReportUpdate = ({route, navigation}) => {
                       // textAlign: 'center',
                     }}>
                     {loader ? (
-                      <ActivityIndicator color={AppColors.white} />
+                      <ActivityIndicator
+                        color={AppColors.white}
+                        size={'small'}
+                      />
                     ) : (
                       firstTimePopupData?.popupdata?.accept_alert_btn
                     )}
@@ -1077,7 +1039,10 @@ const DutyReportUpdate = ({route, navigation}) => {
                       // textAlign: 'center',
                     }}>
                     {loader ? (
-                      <ActivityIndicator color={AppColors.white} />
+                      <ActivityIndicator
+                        color={AppColors.white}
+                        size={'small'}
+                      />
                     ) : (
                       'Accept'
                     )}
@@ -1111,7 +1076,7 @@ const DutyReportUpdate = ({route, navigation}) => {
               minHeight: '40%',
             }}>
             {loader ? (
-              <ActivityIndicator size={'large'} color={AppColors.mainColor} />
+              <ActivityIndicator size={'small'} color={AppColors.mainColor} />
             ) : (
               <ScrollView>
                 <TouchableOpacity
@@ -1449,9 +1414,9 @@ const DutyReportUpdate = ({route, navigation}) => {
               minHeight: 400,
             }}>
             {loader ? (
-              <ActivityIndicator color={AppColors.mainColor} size={40} />
+              <ActivityIndicator color={AppColors.mainColor} size={'small'} />
             ) : (
-              <ScrollView>
+              <ScrollView keyboardShouldPersistTaps="always">
                 <TouchableOpacity
                   style={{
                     backgroundColor: '#16588e',
@@ -1564,7 +1529,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                       alignItems: 'center',
                       justifyContent: 'center',
                       marginHorizontal: '20%',
-                      marginBottom: 120,
+                      marginBottom: 100,
                     }}
                     onPress={() => {
                       driverReached();

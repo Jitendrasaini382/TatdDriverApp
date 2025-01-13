@@ -82,25 +82,36 @@ const RateUsAtSocialMedia = ({route, navigation}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.mainContainer}>
-        <Header backButton={true} />
+        <Header
+          backButton={true}
+          customeNavigation={{
+            name: 'DutyReportUpdate',
+            params: {
+              bookingNumber: bookingNumber,
+              state: '',
+            },
+          }}
+        />
+        {console.log(bookingNumber ,"bookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumber")}
+
         <View style={styles.container}>
           <Text style={styles.feedbackText}>{viewData?.content1}</Text>
         </View>
         <View style={styles.reviewContainer}>
           <Text style={styles.inspirationText}>{viewData?.content2}</Text>
-          <Text
+          {/* <Text
             style={{marginHorizontal: 15, alignSelf: 'center', fontSize: 14}}>
             {viewData?.content3}
-          </Text>
+          </Text> */}
           <TouchableOpacity
-            // onPress={() => submitRating(viewData?.social_link)}
-            onPress={() =>
-              navigation.navigate('CommanWebview', {
-                url: viewData?.social_link,
-              })
-            }
+            onPress={() => submitRating(viewData?.social_link)}
+            // onPress={() =>
+            //   navigation.navigate('CommanWebview', {
+            //     url: viewData?.social_link,
+            //   })
+            // }
             style={styles.button}>
-            <Text style={styles.buttonText}>Review as at Google</Text>
+            <Text style={styles.buttonText}>{viewData?.content3}</Text>
           </TouchableOpacity>
         </View>
       </View>

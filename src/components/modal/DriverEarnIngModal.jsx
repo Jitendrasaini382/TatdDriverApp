@@ -44,10 +44,11 @@ const DriverEarningModal = ({setIsModalVisible, bookingNumber}) => {
     <ActivityIndicator
       style={{flex: 1, alignContent: 'center'}}
       color={AppColors.mainColor}
+      size={'small'}
     />
   ) : (
     <>
-      <TouchableWithoutFeedback style={{flex:1}} onPress={closeModal}>
+      <TouchableWithoutFeedback style={{flex: 1}} onPress={closeModal}>
         <View style={styles.container}>
           <View style={styles.topContent}>
             <Text style={styles.headerText}>Package Details</Text>

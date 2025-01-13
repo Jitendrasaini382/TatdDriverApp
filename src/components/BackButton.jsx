@@ -3,12 +3,24 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {AppColors} from '../assets/Colors';
 
-const BackButton = () => {
+const BackButton = ({customeNavigation = null}) => {
   const navigation = useNavigation();
 
+  // const handlePress = useCallback(() => {
+  //   navigation.goBack();
+
+  // }, [navigation]);
+
   const handlePress = useCallback(() => {
-    navigation.goBack();
-  }, [navigation]);
+    if (customeNavigation && customeNavigation.name) {
+      navigation.navigate(
+        customeNavigation.name,
+        customeNavigation.params || {},
+      );
+    } else {
+      navigation.goBack();
+    }
+  }, [navigation, customeNavigation]);
 
   return (
     <View style={styles.mainView}>

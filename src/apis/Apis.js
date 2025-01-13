@@ -101,7 +101,7 @@ export const DRIVER_TRAINING_VIDEOS = body => {
 };
 
 export const DRIVER_TRAINING_VIDEOS_CLICK_STORE = body => {
-  console.log(body, 'DRIVER NOTICE Body');
+  console.log(body, 'DRIVER_TRAINING_VIDEOS_CLICK_STORE Body');
   return _Fetch(
     'POST',
     'trusted-driver/store-training-clicks-api.php',
@@ -125,6 +125,21 @@ export const LANGUAGE_SWITCH = body => {
   return _Fetch(
     'POST',
     'trusted-driver/switch-language-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const GET_HOME_NOTIFICATION = body => {
+  console.log(body, 'GET_HOME_NOTIFICATION body');
+  return _Fetch('POST', 'trusted-driver/driver-notice-api.php', {...body}, {});
+};
+
+export const GET_TRUSTED_POPUP_DATA = body => {
+  console.log(body, 'GET_TRUSTED_POPUP_DATA body');
+  return _Fetch(
+    'POST',
+    'trusted-driver/ondemand-bookings-view.php',
     {...body},
     {},
   );
@@ -446,6 +461,16 @@ export const FINAL_ACCEPT_BOOKING = body => {
   return _Fetch(
     'POST',
     'trusted-driver/ondemand-accept-booking-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const FINAL_ACCEPT_WEEKLY_BOOKING = body => {
+  console.log(body, 'FINAL_ACCEPT_WEEKLY_BOOKING body');
+  return _Fetch(
+    'POST',
+    'trusted-driver/weekly-accept-booking-api.php',
     {...body},
     {},
   );

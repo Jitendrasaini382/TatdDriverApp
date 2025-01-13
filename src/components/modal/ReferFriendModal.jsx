@@ -135,7 +135,7 @@ const ReferFriendModal = ({setReferFriendModal, id}) => {
           </View>
         </View>
       ) : (
-        <ActivityIndicator size={'large'} />
+        <ActivityIndicator size={'small'} />
       )}
       <Modal
         animationType="slide"

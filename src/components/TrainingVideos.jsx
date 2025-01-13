@@ -10,7 +10,7 @@ const TrainingVideo = ({data}) => {
   const [openIndex, setOpenIndex] = useState(null);
 
   const storeClickVideo = async id => {
-    console.log('Starting to fetch storeClickVideo data...');
+    console.log('Starting to fetch storeClickVideo data...', id);
     try {
       const response = await DRIVER_TRAINING_VIDEOS_CLICK_STORE({
         action: 'store_training_videos_clicks',
@@ -24,7 +24,6 @@ const TrainingVideo = ({data}) => {
   };
 
   const toggleItem = (index, id) => {
-    console.log(id, 'idddddddddd video video');
     storeClickVideo(id);
     if (openIndex === index) {
       setOpenIndex(null);
@@ -35,19 +34,20 @@ const TrainingVideo = ({data}) => {
 
   return (
     <View style={styles.container}>
-      {data.map((item, index) => (
-        <AccordionItem
-          key={index}
-          title={item.subject}
-          videoId={item.videoId}
-          id={item.id}
-          icon={item.icon}
-          eligibility={item.eligibility}
-          isOpen={openIndex === index}
-          onToggle={() => toggleItem(index)}
-          index={index + 1}
-        />
-      ))}
+      {data &&
+        data.map((item, index) => (
+          <AccordionItem
+            key={index}
+            title={item.subject}
+            videoId={item.videoId}
+            id={item.id}
+            icon={item.icon}
+            eligibility={item.eligibility}
+            isOpen={openIndex === index}
+            onToggle={() => toggleItem(index, item.id)}
+            index={index + 1}
+          />
+        ))}
     </View>
   );
 };

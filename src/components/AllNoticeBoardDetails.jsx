@@ -16,11 +16,13 @@ import Header from './Header';
 import {AppColors} from '../assets/Colors';
 import {DRIVER_NOTICE} from '../apis/Apis';
 import {AppFont} from '../assets/FontsFamily';
+import {RefreshControl} from 'react-native';
 
 const AllNoticeBoardComponent = () => {
   const navigation = useNavigation();
   const [noticeBoardData, setNoticeBoardData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   const getAllDriverNotice = useCallback(async () => {
     setIsLoading(true);
@@ -53,16 +55,32 @@ const AllNoticeBoardComponent = () => {
     [navigation],
   );
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      // dispatch(setRefreshKey());
+      await getAllDriverNotice();
+    } catch (error) {
+      console.log('Error during refresh:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
+
   if (isLoading) {
     return (
       <View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>
-        <ActivityIndicator size="large" color={AppColors.whatsAppIconColor} />
+        <ActivityIndicator size="small" color={AppColors.mainColor} />
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
       {noticeBoardData &&
         noticeBoardData.map(noticeBoard => (
           <TouchableOpacity
@@ -176,12 +194,90 @@ export const NoticeBoardDetailScreen = ({route}) => {
     <SafeAreaView style={styles.fullScreenContainer}>
       <Header backButton={true} />
       <ScrollView style={styles.scrollView}>
-        {notice && (
+        {/* {notice && (
           <View style={styles.detailContainer}>
             <Text style={styles.detailSubject}>{notice.subject}</Text>
-            <Text style={styles.detailDescription}>{notice.description}</Text>
+            <Text style={styles.detailDescription}>
+              {notice.description}
+            </Text>
+          </View>
+        )} */}
+        {/*  */}
+
+        {notice && (
+          <View
+            style={{
+              flex: 1,
+              padding: 10,
+            }}>
+            <View
+              style={{
+                backgroundColor: '#0056b3',
+                padding: 16,
+                borderRadius: 8,
+              }}>
+              <Text
+                style={{
+                  color: '#ffffff',
+                  fontSize: 22,
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                }}>
+                {notice.subject}
+              </Text>
+            </View>
+            <View
+              style={{
+                backgroundColor: 'white',
+                marginVertical: 20,
+                width: '100%',
+                borderRadius: 10,
+                elevation: 5,
+              }}>
+              <View
+                style={{
+                  backgroundColor: '#e9f6ff',
+                  padding: 16,
+                  borderRadius: 8,
+                  marginTop: 16,
+                  borderLeftColor: '#0056b3',
+                  borderLeftWidth: 5,
+                  margin: 20,
+                }}>
+                <Text
+                  style={{
+                    color: '#333',
+                    fontSize: 18,
+                    marginBottom: 20,
+                  }}>
+                  {notice.description}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => navigation.goBack()}
+                  style={{
+                    backgroundColor: '#0056b3',
+                    paddingVertical: 12,
+                    borderRadius: 8,
+                    alignItems: 'center',
+                    marginTop: 20,
+                    marginBottom: 5,
+                  }}>
+                  <Text
+                    style={{
+                      color: '#ffffff',
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                    }}>
+                    I Have Read the Updates
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         )}
+
+        {/*  */}
+
         {footerData.map(footerNotice => (
           <View key={footerNotice.id} style={{paddingHorizontal: 20}}>
             <TouchableOpacity

@@ -14,9 +14,11 @@ import Header from '../components/Header';
 import AllNotificationComponent from '../components/AllNotificationsDetails';
 import {AppColors} from '../assets/Colors';
 import {DRIVER_NOTIFICATION} from '../apis/Apis'; // Assuming this function exists
+import {RefreshControl} from 'react-native';
 
 const DriverNotifications = ({navigation}) => {
   const [currentView, setCurrentView] = useState('NOTIFICATIONS');
+  const [refreshing, setRefreshing] = useState(false);
 
   const handleToggle = useCallback(
     label => {
@@ -55,10 +57,26 @@ const DriverNotifications = ({navigation}) => {
     }
   }, []);
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      // dispatch(setRefreshKey());
+      await handleClearAllNotifications();
+    } catch (error) {
+      console.log('Error during refresh:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <Header backButton={true} />
-      <ScrollView contentContainerStyle={styles.scrollView}>
+      <ScrollView
+        contentContainerStyle={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View style={styles.headerContainer}>
           <ToggleButton
             button1Label="NOTIFICATIONS"

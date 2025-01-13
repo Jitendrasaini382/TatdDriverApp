@@ -120,13 +120,13 @@ axiosClient.interceptors.response.use(
             value: false,
           }),
         );
-        dispatch(
+        store.dispatch(
           setUserAuthStates({
             key: 'isFcmSent',
             value: false,
           }),
         );
-        dispatch(
+        store.dispatch(
           setUserAuthStates({
             key: 'isDeviceInfo',
             value: false,

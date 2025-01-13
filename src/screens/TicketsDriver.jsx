@@ -21,7 +21,7 @@ import {TICKETS_DRIVER} from '../apis/Apis';
 import TicketDetails from '../components/modal/TicketDetailsModal';
 import AccordionData from '../components/AccordianData';
 import CreateTicketModal from '../components/modal/CreateTicketModal';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {Skeleton} from '@rneui/base';
 
@@ -35,14 +35,19 @@ const TicketsDriver = ({navigation}) => {
   const [buttonShow, setButtonShow] = useState(false);
   const [showButtonText, setShowButtonText] = useState('');
 
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  console.log(languageSwitch, 'tickettttt');
+
   const [field, setField] = useState({
     action: 'create_driver_ticket',
     remarks: '',
     tbooking_id: '',
+    cuurent_language: languageSwitch,
   });
   const [checkField, setCheckField] = useState({
     action: 'check_booking_number',
     tbooking_id: '',
+    current_language: languageSwitch,
   });
 
   const handleChange = (name, value) => {
@@ -116,48 +121,163 @@ const TicketsDriver = ({navigation}) => {
   );
 
   const handleCreateTicket = async () => {
-    if (!field.tbooking_id) {
-      Alert.alert('Error', 'Please enter the booking ID');
-      return;
-    }
+    console.log('handleCreateTicket called');
+
     if (!field.remarks) {
+      console.log('Remarks are missing');
       Alert.alert('Error', 'Please enter remarks');
       return;
     }
 
     Keyboard.dismiss();
+    console.log('Keyboard dismissed');
+
     try {
-      const checkResponse = await TICKETS_DRIVER(checkField);
+      // If booking number exists, validate it
+      if (field.tbooking_id) {
+        console.log('Booking ID exists:', field.tbooking_id);
 
-   
+        const checkResponse = await TICKETS_DRIVER(checkField);
+        console.log('Check response:', checkResponse);
 
-      if (
-        checkResponse.status_code === 200 &&
-        checkResponse?.message == 'valid_booking_id'
-      ) {
-        const createResponse = await TICKETS_DRIVER(field);
-        if (createResponse.status_code === 200) {
-          checkOpenTicket();
-          setCreateTicketModal(false);
-
-          Alert.alert('Success', createResponse.message, [
-            {
-              text: 'OK',
-              onPress: () => {
-                setCreateTicketModal(false);
-              },
-            },
-          ]);
+        if (
+          checkResponse.status_code === 200 &&
+          checkResponse?.message === 'valid_booking_id'
+        ) {
+          console.log('Booking ID is valid, proceeding to create ticket');
+          await createTicket();
         } else {
-          Alert.alert('Error', 'Failed to create ticket.');
+          console.log('Invalid booking ID:', checkResponse.message);
+          Alert.alert('Error', checkResponse.message);
         }
       } else {
-        Alert.alert('Error', checkResponse.message);
+        console.log('No Booking ID, directly creating ticket');
+        await createTicket();
       }
     } catch (error) {
-      console.log('Error', error || 'Network error occurred.');
+      console.error('Error handling ticket:', error);
+      Alert.alert('Error', 'An unexpected error occurred. Please try again.');
     }
   };
+
+  // Utility function to create a ticket
+  const createTicket = async () => {
+    console.log('createTicket called');
+
+    try {
+      const createResponse = await TICKETS_DRIVER(field);
+      console.log('Create response:', createResponse);
+
+      if (createResponse.status_code === 200) {
+        console.log('Ticket created successfully');
+        checkOpenTicket();
+        console.log('Checked open tickets');
+
+        setCreateTicketModal(false);
+        console.log('Create ticket modal closed');
+
+        showDriverTicket();
+        console.log('Driver ticket displayed');
+
+        resetFields();
+        console.log('Fields reset');
+
+        Alert.alert('Success', createResponse.message, [
+          {
+            text: 'OK',
+            onPress: () => {
+              setCreateTicketModal(false);
+              console.log('Create ticket modal closed from alert');
+            },
+          },
+        ]);
+      } else {
+        console.log('Failed to create ticket');
+        Alert.alert('Error', 'Internal server error');
+      }
+    } catch (error) {
+      console.error('Error creating ticket:', error);
+      Alert.alert('Error', error?.message);
+    }
+  };
+
+  // Utility function to reset fields
+  const resetFields = () => {
+    console.log('resetFields called');
+    field.remarks = '';
+    field.tbooking_id = '';
+    console.log('Fields reset to empty');
+  };
+
+  //   const handleCreateTicket = async () => {
+  //     // if (!field.tbooking_id) {
+  //     //   Alert.alert('Error', 'Please enter the booking ID');
+  //     //   return;
+  //     // }
+  //     if (!field.remarks) {
+  //       Alert.alert('Error', 'Please enter remarks');
+  //       return;
+  //     }
+
+  //     Keyboard.dismiss();
+  //     try {
+
+  //         if(checkField?.tbooking_id){
+
+  //             const checkResponse = await TICKETS_DRIVER(checkField);
+
+  //             if (
+  //               checkResponse.status_code === 200 &&
+  //               checkResponse?.message == 'valid_booking_id'
+  //             ) {
+  //               const createResponse = await TICKETS_DRIVER(field);
+  //               if (createResponse.status_code === 200) {
+  //                 checkOpenTicket();
+  //                 setCreateTicketModal(false);
+  //                 showDriverTicket();
+  //                 field.remarks(' ');
+  //                 field.tbooking_id(' ');
+
+  //                 Alert.alert('Success', createResponse.message, [
+  //                   {
+  //                     text: 'OK',
+  //                     onPress: () => {
+  //                       setCreateTicketModal(false);
+  //                     },
+  //                   },
+  //                 ]);
+  //               } else {
+  //                 Alert.alert('Error', 'Failed to create ticket.');
+  //               }
+  //             } else {
+  //               Alert.alert('Error', checkResponse.message);
+  //             }
+  //           }
+  //           else{
+
+  //               const createResponse = await TICKETS_DRIVER(field);
+  //               if (createResponse.status_code === 200) {
+  //                 checkOpenTicket();
+  //                 setCreateTicketModal(false);
+  //                 showDriverTicket();
+  //                 field.remarks(' ');
+  //                 field.tbooking_id(' ');
+
+  //                 Alert.alert('Success', createResponse.message, [
+  //                   {
+  //                     text: 'OK',
+  //                     onPress: () => {
+  //                       setCreateTicketModal(false);
+  //                     },
+  //                   },
+  //                 ]);
+  //               }
+
+  //           }catch (error) {
+  //         }
+  //       console.log('Error', error || 'run catch.');
+  //     }
+  //   };
 
   const renderItem = useCallback(
     ({id, timestamp, ticket_status}, index) => (
@@ -212,15 +332,6 @@ const TicketsDriver = ({navigation}) => {
           </View>
         )}
 
-        {/* <Modal
-          backdropOpacity={0}
-          onBackdropPress={() => setCreateTicketModal(false)}
-          animationIn="fadeInDown"
-          animationOut="fadeOutUp"
-          isVisible={createTicketModal}>
-          <CreateTicketModal setCreateTicketModal={setCreateTicketModal} />
-        </Modal> */}
-
         <Modal
           backdropOpacity={0}
           onBackdropPress={() => setCreateTicketModal(false)}
@@ -230,9 +341,7 @@ const TicketsDriver = ({navigation}) => {
           <View
             style={{
               flex: 1,
-              //   height: 'auto',
               justifyContent: 'flex-start',
-
               backgroundColor: AppColors.white,
               padding: 10,
               borderWidth: 2,
@@ -271,7 +380,6 @@ const TicketsDriver = ({navigation}) => {
                   fontWeight: 'bold',
                   marginBottom: 20,
                   color: '#333',
-                  fontFamily: 'Roboto-Medium',
                 }}>
                 Create Ticket
               </Text>
@@ -289,7 +397,11 @@ const TicketsDriver = ({navigation}) => {
                   borderColor: '#e7e7e7',
                   color: AppColors.black,
                 }}
-                placeholder="Share Your Booking Number"
+                placeholder={
+                  languageSwitch == 'english'
+                    ? 'Share Your Booking Number'
+                    : 'अपनी बुकिंग नंबर साझा करें।'
+                }
                 onChangeText={value => handleChange('tbooking_id', value)}
                 placeholderTextColor="#6c757d"
                 value={field.tbooking_id}
@@ -305,12 +417,15 @@ const TicketsDriver = ({navigation}) => {
                   marginBottom: 15,
                   borderWidth: 1,
                   fontSize: 18,
-                  height: 100,
                   textAlignVertical: 'top',
                   borderColor: '#e7e7e7',
                   color: AppColors.black,
                 }}
-                placeholder="Please provide detailed information about your issue. We will promptly address your inquiry."
+                placeholder={
+                  languageSwitch == 'english'
+                    ? 'Please provide detailed information about your issue. We will promptly address your inquiry.'
+                    : 'कृपया अपनी समस्या के बारे में पूरी जानकारी प्रदान करें ? हम जल्द से जल्द आपकी enquiry का समाधान करेंगे।'
+                }
                 placeholderTextColor={AppColors.silverGrey}
                 multiline
                 value={field.remarks}

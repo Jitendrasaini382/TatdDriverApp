@@ -12,7 +12,7 @@ import {setModalVisible} from '../../redux/slices/trustedDriverSlice';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 
-const OtrModal = () => {
+const OtrModal = ({data}) => {
   const dispatch = useDispatch();
 
   const closeModal = useCallback(() => {
@@ -24,13 +24,15 @@ const OtrModal = () => {
       <TouchableWithoutFeedback onPress={closeModal}>
         <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>
-            <Text style={styles.topHeading}>What Is OTR?</Text>
-            <Text style={styles.middleText}>OTR stands for On Time Reach.</Text>
-            <Text style={styles.BottamText}>
+            <Text style={styles.topHeading}>{data?.title}</Text>
+            <Text style={styles.middleText}>{data?.body?.line1}</Text>
+            <Text style={styles.middleText}>{data?.body?.line2}</Text>
+            <Text style={styles.middleText}>{data?.body?.line3}</Text>
+            {/* <Text style={styles.BottamText}>
               When you are sent to a customer, it is expected that you will
               reach on time. Your OTR increases when you reach on time,
               otherwise, it decreases.
-            </Text>
+            </Text> */}
             <TouchableOpacity
               style={styles.button}
               onPress={closeModal}
@@ -40,7 +42,7 @@ const OtrModal = () => {
           </View>
         </View>
       </TouchableWithoutFeedback>
-     </SafeAreaView>
+    </SafeAreaView>
   );
 };
 

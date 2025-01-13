@@ -22,7 +22,7 @@ const DueAmountDetails = ({route, navigation}) => {
   const {bookingNumber} = route?.params;
 
   const [allInvoiceData, setAllInvoiceData] = useState();
-  
+
   useEffect(() => {
     getInvoiceData(bookingNumber);
   }, []);
@@ -34,10 +34,11 @@ const DueAmountDetails = ({route, navigation}) => {
         booking_number: number,
       });
 
+      console.log(response, 'amount detailsss allInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceData ');
+
       setAllInvoiceData(response);
-      console.log(response, 'getInvoiceData Api response');
+      // console.log(response, 'getInvoiceData Api response');
     } catch (response) {
-      setAllInvoiceData(response.data);
       console.log(error, 'getInvoiceData Api error - Error');
     }
   };
@@ -57,6 +58,9 @@ const DueAmountDetails = ({route, navigation}) => {
       console.log(err);
     }
   };
+
+  console.log(allInvoiceData?.invoice_data?.discount, 'all adtaaddadadad');
+
   return (
     <SafeAreaView>
       <Modal
@@ -123,7 +127,7 @@ const DueAmountDetails = ({route, navigation}) => {
                   style={{
                     justifyContent: 'flex-end',
                     alignItems: 'flex-end',
-                    left: 20,
+                    left: 15,
                   }}>
                   <Image
                     source={Triangle_Icon}
@@ -296,7 +300,7 @@ const DueAmountDetails = ({route, navigation}) => {
                   style={{
                     justifyContent: 'flex-end',
                     alignItems: 'flex-end',
-                    left: 20,
+                    left: 15,
                   }}>
                   <Image
                     source={Triangle_Icon}
@@ -337,6 +341,7 @@ const DueAmountDetails = ({route, navigation}) => {
                   color: '#ffffff',
                   fontSize: 12,
                   marginLeft: 10,
+                  flex: 1,
                 }}>
                 {allInvoiceData?.invoice_data?.pickup_address}
               </Text>
@@ -615,6 +620,60 @@ const DueAmountDetails = ({route, navigation}) => {
                 />
               </>
             ))}
+
+            {/*  */}
+
+            {allInvoiceData?.invoice_data?.discount?.coupon_discount && (
+              <>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginVertical: 5,
+                    marginHorizontal: 5,
+                  }}>
+                  {/* Total Charges Label */}
+                  <Text
+                    style={[styles.chargeText, {flex: 0.2, fontWeight: '600'}]}>
+                    {allInvoiceData?.invoice_data?.discount?.description}
+                  </Text>
+
+                  {/* Empty Unit Column */}
+                  <View style={{flex: 0.16, alignItems: 'center'}}>
+                    <Text style={[styles.chargeText]}>
+                      {allInvoiceData?.invoice_data?.discount?.unit}
+                    </Text>
+                  </View>
+
+                  {/* Charges Column */}
+                  <Text
+                    style={[
+                      styles.chargeText,
+                      {flex: 0.16, textAlign: 'center'},
+                    ]}>
+                    {''}
+                  </Text>
+
+                  {/* Taxes Column */}
+                  <View style={{flex: 0.32, flexDirection: 'row'}}></View>
+
+                  {/* Total Amount Column */}
+                  <View style={{flex: 0.16, alignItems: 'center'}}>
+                    <Text style={[styles.chargeText, {fontWeight: '600'}]}>
+                      ₹{' '}
+                      {allInvoiceData?.invoice_data?.discount?.coupon_discount}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={[
+                    styles.divider,
+                    {backgroundColor: 'grey', height: 0.5, marginVertical: 10},
+                  ]}
+                />
+              </>
+            )}
+
+            {/*  */}
 
             <View
               style={{

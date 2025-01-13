@@ -8,9 +8,7 @@ const RateYourCustomer = ({navigation, route}) => {
   const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  //   const {bookingNumber} = route?.params;
-
-  const bookingNumber = 649863;
+  const {bookingNumber} = route?.params;
 
   const handleRatingCompleted = selectedRating => {
     setRating(selectedRating);

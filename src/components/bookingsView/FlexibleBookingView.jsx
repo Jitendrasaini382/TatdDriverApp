@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Modal,
+  Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 // import Modal from 'react-native-modal';
@@ -16,6 +17,7 @@ import {FlatList} from 'react-native';
 import {WEEKLY_BOOKING} from '../../apis/Apis';
 import {useDispatch, useSelector} from 'react-redux';
 import {setTriggerFunction} from '../../redux/slices/globalSlice';
+const {width} = Dimensions.get('window');
 
 const BookingCard = ({booking, index, total}) => {
   const [openModal, setOpenModal] = useState(false);
@@ -94,45 +96,6 @@ const BookingCard = ({booking, index, total}) => {
 };
 
 const FlexibleBookingView = () => {
-  // const bookingDetails = [
-  //   {
-  //     days: 4,
-  //     rs: 4328,
-  //     payment_mode: 'Cash',
-  //     vehicle_type: 'Manual',
-  //     car_model: 'Hatchback',
-  //     pickup_address: 'Testing of the day status of the day status ',
-  //     zone: 'Chennai',
-  //     budget: '1082',
-  //     hours_day: '12',
-  //     date_wie: [
-  //       '03 Jan',
-  //       '04 Jan',
-  //       '05 Jan',
-  //       '07 Jan',
-  //       '03 Jan',
-  //       '04 Jan',
-  //       '05 Jan',
-  //       '07 Jan',
-  //     ],
-  //     time_wie: ['05:15 AM ', '05:15 AM ', '05:15 AM ', '05:15 AM '],
-  //   },
-  //   {
-  //     days: 4,
-  //     rs: 4328,
-  //     payment_mode: 'Cash',
-  //     vehicle_type: 'Manual',
-  //     car_model: 'Hatchback',
-  //     pickup_address: 'Testing of the day status of the day status ',
-  //     zone: 'Chennai',
-  //     budget: '1082',
-  //     hours_day: '12',
-  //     date_wie: ['03 Jan', '04 Jan', '05 Jan', '07 Jan'],
-  //     time_wie: ['05:15 AM ', '05:15 AM ', '05:15 AM ', '05:15 AM '],
-  //   },
-  // ];
-
-  const bookingDetailss = [];
   const dispatch = useDispatch();
 
   const [bookingDetails, setBookingDetails] = useState([]);
@@ -260,7 +223,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     marginBottom: 15,
     fontFamily: 'Roboto-Medium',
-    fontSize: 22,
+    fontSize: width * 0.05,
   },
   dates: {
     flexDirection: 'row',
@@ -305,11 +268,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
-  indexText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
+ 
 });
 
 export default FlexibleBookingView;

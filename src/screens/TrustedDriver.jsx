@@ -44,6 +44,8 @@ import {
   DRIVER_TRAINING_VIDEOS,
   EXPRESS_BOOKING_POPUP,
   GET_FCM_TOKEN,
+  GET_HOME_NOTIFICATION,
+  GET_TRUSTED_POPUP_DATA,
   LOGIN_BUTTON,
   SAVE_DEVICE_INFO,
   UPDATE_POPUP,
@@ -84,9 +86,16 @@ const TrustedDriver = ({navigation}) => {
   const [trainingVideoData, setTrainingVideoData] = useState();
   const [updateModal, setUpdateModal] = useState(false);
   const [upadatePopupData, setUpdatePopupData] = useState({});
+  const [videoCount, setVideoCount] = useState('');
+  const [ratingTrustedData, setRatingTrustedData] = useState({});
+  const [otrTrustedData, setOtrTrustedData] = useState({});
+  const [homeNotificationData, setHomeNotificationData] = useState({});
+  const [homeNoticeData, setHomeNoticeData] = useState({});
+  const [showNotification, setShowNotification] = useState(false);
+  const [showNotice, setShowNotice] = useState(false);
+  const [bookingTrustedData, setBookingTrustedData] = useState({});
   const appType = Platform.OS;
 
-  console.log(appType, 'appTypeappTypeappTypeappTypeappTypeappType');
   const [deviceInfo, setDeviceInfo] = useState({
     action: 'save_device_info',
     manufacturer: '',
@@ -143,8 +152,12 @@ const TrustedDriver = ({navigation}) => {
       }
       getHeadlineData();
       getTrainingVideo();
-
+      getTrustedPopupRating();
+      getTrustedPopupBooking();
+      getTrustedPopupOtr();
       getUpdatePopup();
+      getHomeNotification();
+      getHomeNotice();
     }
   }, [jwt, languageSwitch]);
 
@@ -167,6 +180,7 @@ const TrustedDriver = ({navigation}) => {
   console.log(currentRoute, 'currenttttttt');
 
   const [selected, setSelected] = useState(currentRoute);
+  const [showNeedHelp, setShowNeedHelp] = useState();
 
   const handlePress = icon => {
     setSelected(icon);
@@ -311,14 +325,13 @@ const TrustedDriver = ({navigation}) => {
       });
 
       // Log the response for debugging
-      console.log('getUpdatePopup Response:', response);
 
       // Check and handle update conditions
       if (response?.app_details) {
         const {version, force_update, app_url} = response.app_details;
-        // if (force_update == '1' && app_url) {
-        //   openMyUrl(app_url);
-        // }
+        if (force_update == '1' && app_url) {
+          openMyUrl(app_url);
+        }
 
         if (appVersion < version) {
           setUpdateModal(true);
@@ -331,28 +344,6 @@ const TrustedDriver = ({navigation}) => {
       console.error('getUpdatePopup Error:', error);
     }
   };
-  // const getUpdatePopup = async () => {
-  //   console.log('Starting to fetch headline data...');
-
-  //   try {
-  //     const response = await UPDATE_POPUP({
-  //       app_type: appType,
-  //       user_type: 'Driver',
-  //     });
-
-  //     if (appVersion < response?.app_details?.version) {
-  //       setUpdateModal(true);
-  //     }
-  //     if (response?.app_details?.force_update == '1') {
-  //       openMyUrl(response?.app_details?.app_url);
-  //     }
-
-  //     console.log('getUpdatePopup Response:', response);
-  //     setUpdatePopupData(response);
-  //   } catch (error) {
-  //     console.log('getUpdatePopup Error:', error);
-  //   }
-  // };
 
   const saveFcmToken = async fcmtoken => {
     const response = await GET_FCM_TOKEN({
@@ -413,6 +404,9 @@ const TrustedDriver = ({navigation}) => {
       } else {
         // If the message is longer than 30 characters, set it in state
         setLoginMessage(response?.message);
+        setTimeout(() => {
+          setLoginMessage('');
+        }, 300000);
       }
 
       if (response?.redirect) {
@@ -496,10 +490,99 @@ const TrustedDriver = ({navigation}) => {
         current_language: languageSwitch,
       });
 
-      console.log('DRIVER_HEADLINE Response:', response);
       setHeadLineData(response);
+      if (response?.driver_panel_messages?.driver_notification_flag == '1') {
+        setShowNotification(true);
+      }
+      if (response?.driver_panel_messages?.driver_awareness_flag == '1') {
+        setShowNotice(true);
+      }
+      if (response?.driver_panel_messages?.need_help_button == '1') {
+        setShowNeedHelp(true);
+      } else {
+        setShowNeedHelp(false);
+      }
     } catch (error) {
       console.log('DRIVER_HEADLINE Error:', error);
+    }
+  };
+
+  const getTrustedPopupBooking = async () => {
+    console.log(
+      'Starting to getTrustedPopupBookinggetTrustedPopupBooking data...',
+    );
+
+    try {
+      const response = await GET_TRUSTED_POPUP_DATA({
+        action: 'booking_popup_data',
+        current_language: languageSwitch,
+      });
+
+      setBookingTrustedData(response?.booking_popup_data);
+    } catch (error) {
+      console.log('getTrustedPopupBookinggetTrustedPopupBooking Error:', error);
+    }
+  };
+
+  const getTrustedPopupOtr = async () => {
+    console.log('Starting to getTrustedPopupOtrgetTrustedPopupOtr data...');
+
+    try {
+      const response = await GET_TRUSTED_POPUP_DATA({
+        action: 'otr_popup_data',
+        current_language: languageSwitch,
+      });
+
+      setOtrTrustedData(response?.otr_popup_data);
+    } catch (error) {
+      console.log('getTrustedPopupOtrgetTrustedPopupOtr Error:', error);
+    }
+  };
+
+  const getHomeNotification = async () => {
+    console.log('Starting to getHomeNotificationgetHomeNotification data...');
+
+    try {
+      const response = await GET_HOME_NOTIFICATION({
+        action: 'view_headline_update',
+        bucket: 'Awareness',
+      });
+
+      setHomeNotificationData(response);
+    } catch (error) {
+      console.log('getHomeNotificationgetHomeNotification Error:', error);
+    }
+  };
+
+  const getHomeNotice = async () => {
+    console.log('Starting to getHomeNoticegetHomeNotice data...');
+
+    try {
+      const response = await GET_HOME_NOTIFICATION({
+        action: 'view_one_awareness_footer_links',
+        bucket: 'Awareness',
+      });
+
+      setHomeNoticeData(response);
+    } catch (error) {
+      console.log('getHomeNoticegetHomeNotice Error:', error);
+    }
+  };
+
+  const getTrustedPopupRating = async () => {
+    console.log(
+      'Starting to getTrustedPopupRatinggetTrustedPopupRating data...',
+    );
+
+    try {
+      const response = await GET_TRUSTED_POPUP_DATA({
+        action: 'rating_popup_data',
+        current_language: languageSwitch,
+      });
+
+      setRatingTrustedData(response?.rating_popup_data);
+    } catch (error) {
+      console.log('getTrustedPopupRatinggetTrustedPopupRating Error:', error);
     }
   };
 
@@ -510,84 +593,13 @@ const TrustedDriver = ({navigation}) => {
         'DRIVER_TRAINING_VIDEOS DRIVER_TRAINING_VIDEOS Response::',
         response?.response?.training_data,
       );
+      setVideoCount(response?.response?.training_data.length);
 
       setTrainingVideoData(response?.response?.training_data);
     } catch (error) {
       console.log(error, 'DRIVER_TRAINING_VIDEOS  Error');
     }
   };
-
-  const Item = [
-    {
-      title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
-      videoId: 'uuCULpkpKrA',
-      id: 1,
-      read_status: 'read',
-    },
-    {
-      title: 'Login करने के बाद आपको अपनी मर्जी की बुकिंग उठानी होगी। ',
-      videoId: '4HDKAi75-Vo',
-      id: 2,
-      read_status: 'unread',
-    },
-    {
-      title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
-      videoId: 'u892FTsKLKk',
-      id: 3,
-      read_status: 'read',
-    },
-    {
-      title: 'Login करने के बाद आपको अपनी मर्जी की बुकिंग उठानी होगी।',
-      videoId: 'M-iyhUZ-h7o',
-      id: 4,
-      read_status: 'unread',
-    },
-    {
-      title: 'Video देखें, Login और अपनी Reference Verification पूरी करें।',
-      videoId: 'v6n5SvV3XSs',
-      id: 5,
-      read_status: 'read',
-    },
-  ];
-
-  const item2 = [
-    {
-      eligibility: '0',
-      icon: 'open_envlop.png',
-      id: '9',
-      subject: 'Video देखें,  Login और अपनी reference verification पूरी करें। ',
-      videoId: 'https://youtu.be/uuCULpkpKrA',
-    },
-    {
-      eligibility: '0',
-      icon: 'open_envlop.png',
-      id: '2',
-      subject: 'Login करने के बाद आपको अपनी मर्जी की बुकिंग उठानी होगी।',
-      videoId: 'https://www.youtube.com/watch?v=4HDKAi75-Vo',
-    },
-    {
-      eligibility: '0',
-      icon: 'open_envlop.png',
-      id: '3',
-      subject: 'बुकिंग उठाने के बाद आपको उस बुकिंग को पूरा करना होगा।',
-      videoId: 'https://www.youtube.com/watch?v=u892FTsKLKk',
-    },
-    {
-      eligibility: '0',
-      icon: 'open_envlop.png',
-      id: '4',
-      subject:
-        'बुकिंग पूरी करने के बाद आपको उस बुकिंग का पैसा कंपनी में जमा करना होगा।',
-      videoId: 'https://www.youtube.com/watch?v=M-iyhUZ-h7o',
-    },
-    {
-      eligibility: '0',
-      icon: 'open_envlop.png',
-      id: '302',
-      subject: 'How to accept permanent Booking',
-      videoId: 'https://youtu.be/v6n5SvV3XSs',
-    },
-  ];
 
   // const onRefresh = useCallback(() => {
   //   setRefreshing(true);
@@ -624,324 +636,490 @@ const TrustedDriver = ({navigation}) => {
         style={{height: insets.top, backgroundColor: AppColors.mainColor}}
       />
       <SafeAreaView style={{flex: 1}}>
-        <Header extraButton={true} />
+        <Header extraButton={true} showNeedHelp={showNeedHelp} />
         {myBookingModal && <MyBookingModal />}
 
         <ScrollView
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
-          <View style={styles.mainContainer}>
-            {/* Marquee View */}
-            <View style={styles.marqueeView}>
-              <Marquee spacing={20} speed={0.5}>
-                {/* <Text style={styles.marqueeText}>
+          {!showNotification && homeNotificationData ? (
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: '#f4f4f4',
+                padding: 16,
+              }}>
+              <View
+                style={{
+                  backgroundColor: '#0056b3',
+                  padding: 16,
+                  borderRadius: 8,
+                }}>
+                <Text
+                  style={{
+                    color: '#ffffff',
+                    fontSize: 22,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                  }}>
+                  Headline notification
+                </Text>
+              </View>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  marginVertical: 20,
+                  width: '100%',
+                  borderRadius: 10,
+                  elevation: 5,
+                }}>
+                <View
+                  style={{
+                    backgroundColor: '#e9f6ff',
+                    padding: 16,
+                    borderRadius: 8,
+                    marginTop: 16,
+                    borderLeftColor: '#0056b3',
+                    borderLeftWidth: 5,
+                    margin: 20,
+                  }}>
+                  <Text
+                    style={{
+                      color: '#333',
+                      fontSize: 18,
+                      marginBottom: 16,
+                    }}>
+                    testing
+                  </Text>
+                  <TouchableOpacity
+                    // onPress={()=>}
+                    style={{
+                      backgroundColor: '#0056b3',
+                      paddingVertical: 12,
+                      borderRadius: 8,
+                      alignItems: 'center',
+                      marginTop: 60,
+                      marginBottom: 5,
+                    }}>
+                    <Text
+                      style={{
+                        color: '#ffffff',
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                      }}>
+                      I Have Read the Updates
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          ) : showNotice && homeNoticeData ? (
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: '#f4f4f4',
+                padding: 16,
+              }}>
+              <View
+                style={{
+                  backgroundColor: '#0056b3',
+                  padding: 16,
+                  borderRadius: 8,
+                }}>
+                <Text
+                  style={{
+                    color: '#ffffff',
+                    fontSize: 22,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                  }}>
+                  Headlinennn Notice
+                </Text>
+              </View>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  marginVertical: 20,
+                  width: '100%',
+                  borderRadius: 10,
+                  elevation: 5,
+                }}>
+                <View
+                  style={{
+                    backgroundColor: '#e9f6ff',
+                    padding: 16,
+                    borderRadius: 8,
+                    marginTop: 16,
+                    borderLeftColor: '#0056b3',
+                    borderLeftWidth: 5,
+                    margin: 20,
+                  }}>
+                  <Text
+                    style={{
+                      color: '#333',
+                      fontSize: 18,
+                      marginBottom: 16,
+                    }}>
+                    testing
+                  </Text>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: '#0056b3',
+                      paddingVertical: 12,
+                      borderRadius: 8,
+                      alignItems: 'center',
+                      marginTop: 60,
+                      marginBottom: 5,
+                    }}>
+                    <Text
+                      style={{
+                        color: '#ffffff',
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                      }}>
+                      I Have Read the Updates
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          ) : (
+            <View style={styles.mainContainer}>
+              {/* Marquee View */}
+              <View style={styles.marqueeView}>
+                <Marquee spacing={20} speed={0.5}>
+                  {/* <Text style={styles.marqueeText}>
                   {headLineData?.headlines_data?.message || headLineData?.headlines_data?.headlines.map(())}
                  
                 </Text> */}
 
-                <Text style={styles.marqueeText}>{combinedText}</Text>
-              </Marquee>
-            </View>
+                  <Text style={styles.marqueeText}>{combinedText}</Text>
+                </Marquee>
+              </View>
 
-            {/* Middle Container */}
-            <View style={styles.middleContainer}>
-              <View style={styles.middleContent}>
-                {/* Top div */}
-                <View style={styles.topView}>
-                  <View style={styles.topLeft}>
-                    <Text style={styles.topLeftText}>
-                      {decodedToken &&
-                        decodedToken.DriverCommisonData.commission}
-                      %
-                    </Text>
-                    <Text style={styles.bottamLeftText}>Commission</Text>
-                  </View>
-                  <View style={styles.topRight}>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate('DriverEarning')}
-                      // onPress={()=>checkVibrationSupport()}
-                      // onPress={() =>
-                      //   openMyUrl('https://www.tatd.in/driver-earning.php')
-                      // }
-                    >
-                      <View style={styles.earningView}>
-                        <Text style={styles.rupeeIcon}>
-                          <Icon name="rupee" size={responsiveSize(8)} />{' '}
-                          {decodedToken &&
-                            decodedToken.DriverCommisonData.earning_30days}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      // onPress={() =>
-                      //   openMyUrl(
-                      //     'https://www.tatd.in/driver-notifications.php',
-                      //   )
-                      // }
+              {/* Middle Container */}
+              <View style={styles.middleContainer}>
+                <View style={styles.middleContent}>
+                  {/* Top div */}
+                  <View style={styles.topView}>
+                    <View style={styles.topLeft}>
+                      <Text style={styles.topLeftText}>
+                        {decodedToken &&
+                          decodedToken.DriverCommisonData.commission}
+                        %
+                      </Text>
+                      <Text style={styles.bottamLeftText}>Commission</Text>
+                    </View>
+                    <View style={styles.topRight}>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate('DriverEarning')}
+                        // onPress={()=>checkVibrationSupport()}
+                        // onPress={() =>
+                        //   openMyUrl('https://www.tatd.in/driver-earning.php')
+                        // }
+                      >
+                        <View style={styles.earningView}>
+                          <Text style={styles.rupeeIcon}>
+                            <Icon name="rupee" size={responsiveSize(8)} />{' '}
+                            {decodedToken &&
+                              decodedToken.DriverCommisonData.earning_30days}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        // onPress={() =>
+                        //   openMyUrl(
+                        //     'https://www.tatd.in/driver-notifications.php',
+                        //   )
+                        // }
 
-                      onPress={() =>
-                        navigation.navigate('DriverNotifications')
-                      }>
-                      <View style={styles.notification}>
-                        <Icon
-                          color={AppColors.white}
-                          size={responsiveSize(22.5)}
-                          name="bell"
+                        onPress={() =>
+                          navigation.navigate('DriverNotifications')
+                        }>
+                        <View style={styles.notification}>
+                          <Icon
+                            color={AppColors.white}
+                            size={responsiveSize(22.5)}
+                            name="bell"
+                          />
+                          <Text style={styles.notificationCount}>0</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <View style={styles.toggleView}>
+                        <ToggleSwitch
+                          isOn={isRfdOn}
+                          onColor={AppColors.mainColor}
+                          offColor={AppColors.greyColor}
+                          size="medium"
+                          onToggle={() => handleToggleButton()}
+                          // disabled={isDisabled}
                         />
-                        <Text style={styles.notificationCount}>0</Text>
                       </View>
-                    </TouchableOpacity>
-                    <View style={styles.toggleView}>
-                      <ToggleSwitch
-                        isOn={isRfdOn}
-                        onColor={AppColors.mainColor}
-                        offColor={AppColors.greyColor}
-                        size="medium"
-                        onToggle={() => handleToggleButton()}
-                        // disabled={isDisabled}
-                      />
+                    </View>
+                  </View>
+
+                  {/* Bottom div */}
+                  <View style={styles.bottamView}>
+                    <View style={styles.driverNameView}>
+                      <Text style={styles.driverNameText}>
+                        {decodedToken && decodedToken.driver_name}
+                      </Text>
+                    </View>
+
+                    <View style={styles.bottamRightView}>
+                      {decodedToken?.diamond_eligability == '1' ? (
+                        <View
+                          style={{
+                            backgroundColor: AppColors.white,
+                            borderWidth: 2,
+                            borderRadius: responsiveSize(7),
+                            borderColor: AppColors.white,
+                            alignItems: 'center',
+                            alignContent: 'center',
+                            paddingHorizontal: responsiveSize(8),
+                            paddingVertical: responsiveSize(4),
+                            margin: responsiveSize(2),
+                          }}>
+                          <Image
+                            style={{
+                              height: responsiveSize(20),
+                              width: responsiveSize(20),
+                            }}
+                            source={Diamond_Icon}
+                          />
+                        </View>
+                      ) : null}
+
+                      <TouchableOpacity
+                        onPress={() => dispatch(setModalVisible(true))}>
+                        <View
+                          style={[
+                            styles.otrView,
+                            {
+                              backgroundColor:
+                                decodedToken?.otr_all_data?.otr?.background,
+                            },
+                          ]}>
+                          <Text
+                            style={[
+                              styles.bottamRightText,
+                              {
+                                color: decodedToken?.otr_all_data?.otr?.color,
+                              },
+                            ]}>
+                            {decodedToken && decodedToken.TrustedDriverData.otr}{' '}
+                            %
+                          </Text>
+                          <Text
+                            style={[
+                              styles.bottamRightText,
+                              {
+                                color: decodedToken?.otr_all_data?.otr?.color,
+                              },
+                            ]}>
+                            {languageSwitch == 'english' ? 'OTR' : 'ओटीआर'}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => dispatch(setRatingModal(true))}>
+                        <View
+                          style={[
+                            styles.ratingView,
+                            {
+                              backgroundColor:
+                                decodedToken?.otr_all_data?.dcr?.background,
+                            },
+                          ]}>
+                          <Text
+                            style={[
+                              styles.bottamRightText,
+                              {
+                                color: decodedToken?.otr_all_data?.dcr?.color,
+                              },
+                            ]}>
+                            {decodedToken &&
+                              decodedToken.TrustedDriverData.rating}
+                          </Text>
+                          <Text
+                            style={[
+                              styles.bottamRightText,
+                              {
+                                color: decodedToken?.otr_all_data?.dcr?.color,
+                              },
+                            ]}>
+                            {languageSwitch == 'english' ? 'Rating' : 'रेटिंग'}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => dispatch(setBookingModal(true))}>
+                        <View
+                          style={[
+                            styles.bookingView,
+                            {
+                              backgroundColor:
+                                decodedToken?.otr_all_data?.rating?.background,
+                            },
+                          ]}>
+                          <Text
+                            style={[
+                              styles.bottamRightText,
+                              {
+                                color:
+                                  decodedToken?.otr_all_data?.rating?.color,
+                              },
+                            ]}>
+                            {decodedToken &&
+                              decodedToken.TrustedDriverData.recent_dcr}{' '}
+                            %
+                          </Text>
+                          <Text
+                            style={[
+                              styles.bottamRightText,
+                              {
+                                color:
+                                  decodedToken?.otr_all_data?.rating?.color,
+                              },
+                            ]}>
+                            {languageSwitch == 'english' ? 'Booking' : 'बुकिंग'}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>
 
                 {/* Bottom div */}
-                <View style={styles.bottamView}>
-                  <View style={styles.driverNameView}>
-                    <Text style={styles.driverNameText}>
-                      {decodedToken && decodedToken.driver_name}
+                <View style={styles.bottamContent}>
+                  <TouchableOpacity
+                    onPress={() => dispatch(setVideosContent(!videosContent))}
+                    style={[
+                      styles.bottamContent1,
+                      videosContent && {backgroundColor: AppColors.mainColor},
+                    ]}>
+                    <Text style={styles.absoulteText}>{videoCount || 0}</Text>
+                    <View style={styles.absoulteView}>
+                      <Text
+                        style={[
+                          styles.bottamContent1Text,
+                          videosContent && {color: AppColors.white},
+                        ]}>
+                        {languageSwitch == 'english' ? 'Training ' : 'ट्रेनिंग'}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.bottamContent1Text,
+                          videosContent && {color: AppColors.white},
+                        ]}>
+                        {languageSwitch == 'english' ? 'Videos' : 'वीडियो'}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('MyBonusStatusHistory')}
+                    style={styles.bottamContent2}>
+                    <Text style={styles.mainText}>
+                      {languageSwitch == 'english' ? 'My Bonus' : 'मेरा बोनस'}
                     </Text>
-                  </View>
-
-                  <View style={styles.bottamRightView}>
-                    {decodedToken?.diamond_eligability == '1' ? (
-                      <View
-                        style={{
-                          backgroundColor: AppColors.white,
-                          borderWidth: 2,
-                          borderRadius: responsiveSize(7),
-                          borderColor: AppColors.white,
-                          alignItems: 'center',
-                          alignContent: 'center',
-                          paddingHorizontal: responsiveSize(8),
-                          paddingVertical: responsiveSize(4),
-                          margin: responsiveSize(2),
-                        }}>
-                        <Image
-                          style={{
-                            height: responsiveSize(20),
-                            width: responsiveSize(20),
-                          }}
-                          source={Diamond_Icon}
-                        />
-                      </View>
-                    ) : null}
-
-                    <TouchableOpacity
-                      onPress={() => dispatch(setModalVisible(true))}>
-                      <View
-                        style={[
-                          styles.otrView,
-                          {
-                            backgroundColor:
-                              decodedToken?.otr_all_data?.otr?.background,
-                          },
-                        ]}>
-                        <Text
-                          style={[
-                            styles.bottamRightText,
-                            {
-                              color: decodedToken?.otr_all_data?.otr?.color,
-                            },
-                          ]}>
-                          {decodedToken && decodedToken.TrustedDriverData.otr} %
-                        </Text>
-                        <Text
-                          style={[
-                            styles.bottamRightText,
-                            {
-                              color: decodedToken?.otr_all_data?.otr?.color,
-                            },
-                          ]}>
-                          {languageSwitch == 'english' ? 'OTR' : 'ओटीआर'}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => dispatch(setRatingModal(true))}>
-                      <View
-                        style={[
-                          styles.ratingView,
-                          {
-                            backgroundColor:
-                              decodedToken?.otr_all_data?.dcr?.background,
-                          },
-                        ]}>
-                        <Text
-                          style={[
-                            styles.bottamRightText,
-                            {
-                              color: decodedToken?.otr_all_data?.dcr?.color,
-                            },
-                          ]}>
-                          {decodedToken &&
-                            decodedToken.TrustedDriverData.rating}
-                        </Text>
-                        <Text
-                          style={[
-                            styles.bottamRightText,
-                            {
-                              color: decodedToken?.otr_all_data?.dcr?.color,
-                            },
-                          ]}>
-                          {languageSwitch == 'english' ? 'Rating' : 'रेटिंग'}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => dispatch(setBookingModal(true))}>
-                      <View
-                        style={[
-                          styles.bookingView,
-                          {
-                            backgroundColor:
-                              decodedToken?.otr_all_data?.rating?.background,
-                          },
-                        ]}>
-                        <Text
-                          style={[
-                            styles.bottamRightText,
-                            {
-                              color: decodedToken?.otr_all_data?.rating?.color,
-                            },
-                          ]}>
-                          {decodedToken &&
-                            decodedToken.TrustedDriverData.recent_dcr}{' '}
-                          %
-                        </Text>
-                        <Text
-                          style={[
-                            styles.bottamRightText,
-                            {
-                              color: decodedToken?.otr_all_data?.rating?.color,
-                            },
-                          ]}>
-                          {languageSwitch == 'english' ? 'Booking' : 'बुकिंग'}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
+                    <Text style={styles.textIcon}>
+                      <Icon name="rupee" size={responsiveSize(9)} />{' '}
+                      {headLineData?.driver_panel_messages?.my_joining_bonus}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    // onPress={() => navigation.navigate('AgentLogin')}
+                    // onPress={() =>
+                    //   navigation.navigate('CommanWebview', {
+                    //     url: `https://www.tatd.in/agent-login.php`,
+                    //   })
+                    // }
+                    onPress={() => handleLoginPress()}
+                    style={styles.bottamContent3}>
+                    <Text style={styles.mainText}>
+                      {languageSwitch == 'english'
+                        ? 'Agent panel'
+                        : 'एजेंट पैनल'}
+                    </Text>
+                    <Text style={styles.textIcon}>
+                      <Icon name="rupee" size={responsiveSize(9)} />{' '}
+                      {decodedToken?.TrustedDriverData?.agent_panel_earning}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={
+                      () =>
+                        navigation.navigate('CommanWebview', {
+                          url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                        })
+                      // openMyUrl(
+                      //   `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                      // )
+                    }
+                    // onPress={() => navigation.navigate('ClearMyDuePayment')}
+                    style={[
+                      styles.bottamContent4,
+                      {
+                        backgroundColor:
+                          decodedToken?.clear_due_color?.background || 'yellow',
+                      },
+                    ]}>
+                    <Text
+                      style={[
+                        styles.mainText,
+                        {
+                          color:
+                            decodedToken?.clear_due_color?.color ||
+                            AppColors.black,
+                        },
+                      ]}>
+                      {languageSwitch == 'english'
+                        ? 'Clear My Due'
+                        : 'बकाया जमा करें'}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.textIcon,
+                        {
+                          color:
+                            decodedToken?.clear_due_color?.color ||
+                            AppColors.black,
+                        },
+                      ]}>
+                      <Icon name="rupee" size={responsiveSize(9)} />{' '}
+                      {decodedToken && decodedToken.DRIVER_CLEAR_MY_DUE}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
 
-              {/* Bottom div */}
-              <View style={styles.bottamContent}>
-                <TouchableOpacity
-                  onPress={() => dispatch(setVideosContent(!videosContent))}
-                  style={[
-                    styles.bottamContent1,
-                    videosContent && {backgroundColor: AppColors.mainColor},
-                  ]}>
-                  <Text style={styles.absoulteText}>5</Text>
-                  <View style={styles.absoulteView}>
-                    <Text
-                      style={[
-                        styles.bottamContent1Text,
-                        videosContent && {color: AppColors.white},
-                      ]}>
-                      {languageSwitch == 'english' ? 'Training ' : 'ट्रेनिंग'}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.bottamContent1Text,
-                        videosContent && {color: AppColors.white},
-                      ]}>
-                      {languageSwitch == 'english' ? 'Videos' : 'वीडियो'}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('MyBonusStatusHistory')}
-                  // onPress={() => navigation.navigate('DueAmount')}
-                  // onPress={() => navigation.navigate('RateUsAtSocialMedia')}
-                  // onPress={() => navigation.navigate('OnTimeReach')}
-                  // onPress={() => navigation.navigate('RateYourCustomer')}
-                  // onPress={() => navigation.navigate('RateYourCustomerFeedback')}
-                  // onPress={() => navigation.navigate('DutyReportUpdate')}
+              {/* Toggle Button */}
+              <ToggleButton
+                button1Label="Hindi"
+                button2Label="English"
+                onToggle={label => dispatch(setCurrentView(label))}
+              />
 
-                  style={styles.bottamContent2}>
-                  <Text style={styles.mainText}>
-                    {languageSwitch == 'english' ? 'My Bonus' : 'मेरा बोनस'}
-                  </Text>
-                  <Text style={styles.textIcon}>
-                    <Icon name="rupee" size={responsiveSize(9)} /> 0
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  // onPress={() => navigation.navigate('AgentLogin')}
-                  // onPress={() =>
-                  //   navigation.navigate('CommanWebview', {
-                  //     url: `https://www.tatd.in/agent-login.php`,
-                  //   })
-                  // }
-                  onPress={() => handleLoginPress()}
-                  style={styles.bottamContent3}>
-                  <Text style={styles.mainText}>
-                    {languageSwitch == 'english' ? 'Agent panel' : 'एजेंट पैनल'}
-                  </Text>
-                  <Text style={styles.textIcon}>
-                    <Icon name="rupee" size={responsiveSize(9)} />{' '}
-                    {decodedToken?.TrustedDriverData?.agent_panel_earning}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={
-                    () =>
-                      navigation.navigate('CommanWebview', {
-                        url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                      })
-                    // openMyUrl(
-                    //   `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                    // )
-                  }
-                  // onPress={() => navigation.navigate('ClearMyDuePayment')}
-                  style={styles.bottamContent4}>
-                  <Text style={styles.mainText}>
-                    {languageSwitch == 'english'
-                      ? 'Clear My Due'
-                      : 'बकाया जमा करें'}
-                  </Text>
-                  <Text style={styles.textIcon}>
-                    <Icon name="rupee" size={responsiveSize(9)} />{' '}
-                    {decodedToken && decodedToken.DRIVER_CLEAR_MY_DUE}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+              {/* <ViewAwarenessData /> */}
+              {/* <RoundTripBookingView /> */}
+              {/* <BookingView /> */}
+              <Text style={{color: AppColors.red, margin: 5}}>
+                {loginMessage}
+              </Text>
 
-            {/* Toggle Button */}
-            <ToggleButton
-              button1Label="Hindi"
-              button2Label="English"
-              onToggle={label => dispatch(setCurrentView(label))}
-            />
-
-            {/* <ViewAwarenessData /> */}
-            {/* <RoundTripBookingView /> */}
-            {/* <BookingView /> */}
-            <Text style={{color: AppColors.red, margin: 5}}>
-              {loginMessage}
-            </Text>
-
-            {/* <Text style={{color: AppColors.whatsAppIconColor, margin: 10}}>
+              {/* <Text style={{color: AppColors.whatsAppIconColor, margin: 10}}>
               {headLineData?.driver_panel_messages?.booking_score_message}
             </Text> */}
 
-            {/* Main Toggle Content */}
-            <>{isRfdOn ? <BookingView data={headLineData} /> : null}</>
-            {/* <BookingView /> */}
-            {videosContent ? <TrainingVideo data={trainingVideoData} /> : null}
-          </View>
+              {/* Main Toggle Content */}
+              <>{isRfdOn ? <BookingView data={headLineData} /> : null}</>
+              {/* <BookingView /> */}
+              {videosContent ? (
+                <TrainingVideo data={trainingVideoData} />
+              ) : null}
+            </View>
+          )}
         </ScrollView>
 
         {/* bottam Tab bar */}
@@ -1192,7 +1370,7 @@ const TrustedDriver = ({navigation}) => {
           animationOut={'fadeOutUp'}
           style={{justifyContent: 'center', alignItems: 'center'}}
           isVisible={isModalVisible}>
-          <OtrModal />
+          <OtrModal data={otrTrustedData} />
         </Modal>
 
         <Modal
@@ -1201,7 +1379,7 @@ const TrustedDriver = ({navigation}) => {
           animationIn={'fadeInDown'}
           animationOut={'fadeOutUp'}
           isVisible={ratingModal}>
-          <RatingModal />
+          <RatingModal data={ratingTrustedData} />
         </Modal>
 
         <Modal
@@ -1210,7 +1388,7 @@ const TrustedDriver = ({navigation}) => {
           animationIn={'fadeInDown'}
           animationOut={'fadeOutUp'}
           isVisible={bookingModal}>
-          <BookingModal />
+          <BookingModal data={bookingTrustedData} />
         </Modal>
 
         <Modal
@@ -1555,7 +1733,6 @@ const styles = StyleSheet.create({
     paddingBottom: 3,
   },
   bottamContent4: {
-    backgroundColor: 'yellow',
     flex: 1,
     borderWidth: 1,
     borderColor: AppColors.mainColor,

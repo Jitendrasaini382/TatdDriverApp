@@ -60,7 +60,7 @@ const DueAmount = ({route, navigation}) => {
       <Header backButton={true} />
       {loading ? (
         <View style={{flex: 1, justifyContent: 'center'}}>
-          <ActivityIndicator size={'large'} color={AppColors.mainColor} />
+          <ActivityIndicator size={'small'} color={AppColors.mainColor} />
         </View>
       ) : (
         <View style={styles.mainContainer}>

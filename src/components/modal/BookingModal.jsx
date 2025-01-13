@@ -12,11 +12,14 @@ import {AppColors} from '../../assets/Colors';
 import {useDispatch, useSelector} from 'react-redux';
 import {setBookingModal} from '../../redux/slices/trustedDriverSlice';
 
-const BookingModal = () => {
+const BookingModal = ({data}) => {
+  console.log(
+    data,
+    'booking datadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadatadata',
+  );
   const dispatch = useDispatch();
 
-
-  const decodedToken = useSelector((e)=>e?.userAuth?.userProfile?.data)
+  const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
 
   const closeModal = useCallback(() => {
     dispatch(setBookingModal(false));
@@ -39,11 +42,33 @@ const BookingModal = () => {
       <View style={styles.contentContainer}>
         <TouchableWithoutFeedback onPress={closeModal}>
           <ScrollView contentContainerStyle={{flexGrow: 1}}>
-            <Text style={styles.topHeading}>
-              If your Booking Score is more than 70%, then:
-            </Text>
-            {bulletPoints.map(renderBulletPoint)}
-            <Text style={styles.subHeading}>Booking Score Clarity</Text>
+            <View style={{marginBottom: 30}}>
+              <TouchableOpacity
+                onPress={() => closeModal()}
+                style={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 15,
+                  backgroundColor: '#e0e0e0',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{fontSize: 20, color: '#333', fontWeight: 'bold'}}>
+                  ×
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.topHeading}>{data?.body?.line1}</Text>
+            <Text style={styles.topHeading}>{data?.body?.line2}</Text>
+            <Text style={styles.topHeading}>{data?.body?.line3}</Text>
+            <Text style={styles.topHeading}>{data?.body?.line4}</Text>
+            <Text style={styles.topHeading}>{data?.body?.line5}</Text>
+            {/* {bulletPoints.map(renderBulletPoint)} */}
+            <Text style={styles.subHeading}>{data?.title}</Text>
             <Text style={styles.BottamText}>
               {/* Dear {userName.toUpperCase()}, customers book drivers only when they */}
               Dear {decodedToken && decodedToken.driver_name}, customers book

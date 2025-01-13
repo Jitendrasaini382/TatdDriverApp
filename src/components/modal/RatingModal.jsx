@@ -12,7 +12,7 @@ import {setRatingModal} from '../../redux/slices/trustedDriverSlice';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 
-const RatingModal = () => {
+const RatingModal = ({data}) => {
   const dispatch = useDispatch();
   const userName = useSelector(state => state.user?.name) || 'User';
 
@@ -20,32 +20,33 @@ const RatingModal = () => {
     dispatch(setRatingModal(false));
   }, [dispatch]);
 
-  const renderBulletPoint = (text, index) => (
-    <Text key={index} style={styles.middleText}>
-      {`${index + 1} - ${text}`}
-    </Text>
-  );
+  // const renderBulletPoint = (text, index) => (
+  //   <Text key={index} style={styles.middleText}>
+  //     {`${index + 1} - ${text}`}
+  //   </Text>
+  // );
 
-  const bulletPoints = [
-    'See bookings immediately on the panel; otherwise, they will appear late.',
-    'Be notified via SMS when new bookings come in your area.',
-    'If your Rating Score is more than 4 and your Booking Score is more than 70%, you can see and take more than one booking in a day.',
-  ];
+  // const bulletPoints = [
+  //   'See bookings immediately on the panel; otherwise, they will appear late.',
+  //   'Be notified via SMS when new bookings come in your area.',
+  //   'If your Rating Score is more than 4 and your Booking Score is more than 70%, you can see and take more than one booking in a day.',
+  // ];
 
   return (
     <SafeAreaView style={styles.mainContainer}>
       <TouchableWithoutFeedback onPress={closeModal}>
         <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>
-            <Text style={styles.topHeading}>Rating</Text>
-            <Text style={styles.topText}>
-              Dear {userName.toUpperCase()}, If your Rating Score is more than
-              4, then you will:
-            </Text>
-            {bulletPoints.map(renderBulletPoint)}
-            <Text style={styles.BottamText}>
+            <Text style={styles.topHeading}>{data?.title}</Text>
+            <Text style={styles.topText}>{data?.body?.line1}</Text>
+            <Text style={styles.topText}>{data?.body?.line2}</Text>
+            <Text style={styles.topText}>{data?.body?.line3}</Text>
+            <Text style={styles.topText}>{data?.body?.line4}</Text>
+            <Text style={styles.topText}>{data?.body?.line5}</Text>
+            {/* {bulletPoints.map(renderBulletPoint)} */}
+            {/* <Text style={styles.BottamText}>
               To increase your Rating, provide customers with a good experience.
-            </Text>
+            </Text> */}
             <TouchableOpacity style={styles.button} onPress={closeModal}>
               <Text style={styles.buttonText}>Close</Text>
             </TouchableOpacity>

@@ -6,7 +6,13 @@ import BackButton from './BackButton';
 import ExtraButtons from './ExtraButtons';
 import {AppColors} from '../assets/Colors';
 import {useNavigation} from '@react-navigation/native';
-const Header = ({backButton, extraButton, isAuthenticated = true}) => {
+const Header = ({
+  backButton,
+  extraButton,
+  isAuthenticated = true,
+  showNeedHelp = false,
+  customeNavigation
+}) => {
   const navigation = useNavigation();
   const handleLogoPress = () => {
     if (isAuthenticated) {
@@ -32,7 +38,11 @@ const Header = ({backButton, extraButton, isAuthenticated = true}) => {
         </Pressable>
       </View>
 
-      {backButton ? <BackButton /> : extraButton ? <ExtraButtons /> : null}
+      {backButton ? (
+        <BackButton customeNavigation={customeNavigation}  />
+      ) : extraButton ? (
+        <ExtraButtons showNeedHelp={showNeedHelp}   />
+      ) : null}
     </View>
   );
 };

@@ -1,14 +1,12 @@
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {AppColors} from '../assets/Colors';
-import { useDispatch, useSelector } from 'react-redux';
-import { setMyBookingModal } from '../redux/slices/trustedDriverSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {setMyBookingModal} from '../redux/slices/trustedDriverSlice';
 
-const ExtraButtons = () => {
-
-const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
-
+const ExtraButtons = ({showNeedHelp}) => {
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -21,16 +19,22 @@ const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
     <View style={styles.mainView}>
       <View style={styles.leftView}>
         {/* <TouchableOpacity onPress={openNeedHelp}> */}
-        <TouchableOpacity onPress={()=>navigation.navigate("TicketsDriver")}>
-          {/* <Text style={styles.leftText}>Need Help?</Text> */}
-          <Text style={styles.leftText}>{languageSwitch == "english" ?"Need Help?" : " मदद चाहिए?"}</Text>
-         
-        </TouchableOpacity>
+        {showNeedHelp && (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('TicketsDriver')}>
+            {/* <Text style={styles.leftText}>Need Help?</Text> */}
+            <Text style={styles.leftText}>
+              {languageSwitch == 'english' ? 'Need Help?' : ' मदद चाहिए?'}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
       <View style={styles.rightView}>
         <TouchableOpacity onPress={() => dispatch(setMyBookingModal(true))}>
           {/* <Text style={styles.rightText}>My Bookings</Text> */}
-          <Text style={styles.rightText}>{languageSwitch == "english" ? "My Bookings" : "मेरी बुकिंगें"}</Text>
+          <Text style={styles.rightText}>
+            {languageSwitch == 'english' ? 'My Bookings' : 'मेरी बुकिंगें'}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -91,7 +91,7 @@ const AccordionItem = ({
         </View>
       </TouchableOpacity>
       <Collapsible collapsed={!isOpen}>
-        <YoutubePlayer height={200} videoId={videoId} />
+        <YoutubePlayer height={200} play={true} videoId={videoId} />
       </Collapsible>
     </View>
   );

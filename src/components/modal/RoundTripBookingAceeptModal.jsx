@@ -12,7 +12,7 @@ import {AppColors} from '../../assets/Colors';
 import {FINAL_ACCEPT_BOOKING, ON_DEMAND_BOOKING} from '../../apis/Apis';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import globalSlice, {setTriggerFunction} from '../../redux/slices/globalSlice';
+import globalSlice, {setRefreshKey, setTriggerFunction} from '../../redux/slices/globalSlice';
 import {FlatList} from 'react-native';
 import {Skeleton} from '@rneui/themed';
 
@@ -90,6 +90,8 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
       );
 
       dispatch(setTriggerFunction(true));
+      dispatch(setRefreshKey());
+
 
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking_number,

@@ -16,7 +16,7 @@ import {
   WEEKLY_BOOKING_ACCEPT,
 } from '../../apis/Apis';
 import {useDispatch, useSelector} from 'react-redux';
-import {setTriggerFunction} from '../../redux/slices/globalSlice';
+import {setRefreshKey, setTriggerFunction} from '../../redux/slices/globalSlice';
 import {useNavigation} from '@react-navigation/native';
 const {width} = Dimensions.get('window');
 
@@ -83,12 +83,6 @@ const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
         current_language: languageSwitch,
       },
     );
-    console.log('Data to be sent:', {
-      action: 'accept_booking',
-      booking_ids: formatBookingIds(booking?.booking_ids),
-      current_language: languageSwitch,
-    });
-
     // return false;
 
     try {
@@ -101,6 +95,8 @@ const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
       console.log('API Response:', response);
 
       dispatch(setTriggerFunction(true));
+      dispatch(setRefreshKey());
+
       console.log('Dispatched setTriggerFunction with true');
 
       setOpenModal(false);

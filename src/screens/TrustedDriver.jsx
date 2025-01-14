@@ -72,6 +72,7 @@ import {Agent_Icon, AppLogo, Diamond_Icon} from '../assets/images';
 import {useRoute} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import {setLoginStatus, setRefreshKey} from '../redux/slices/globalSlice';
+import { triggerVibration } from '../utils/soundVibration';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -1001,7 +1002,9 @@ const TrustedDriver = ({navigation}) => {
                     <View style={styles.bottamRightView}>
                       {decodedToken?.diamond_eligability == '1' ? (
                         <TouchableOpacity
-                          // onPress={() => checkVibrationSupport(1000)}
+                          onPress={() => checkVibrationSupport(10000)}
+                          // onPress={() => triggerVibration()}
+                          
                           style={{
                             backgroundColor: AppColors.white,
                             borderWidth: 2,

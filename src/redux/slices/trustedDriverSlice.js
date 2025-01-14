@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  currentView: 'Hindi',
+  currentView: 'English',
   toggleButton: false,
   expressBookingModal: false,
   mainToggleContent: false,

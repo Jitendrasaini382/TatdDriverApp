@@ -86,34 +86,43 @@ export const checkVibrationPermission = async () => {
 //     console.log('Vibration feature failed', error);
 //   }
 // };
+// 
 
-export const checkVibrationSupport = async time => {
+// 
+
+// export const checkVibrationSupport = async time => {
+//   try {
+//     if (Platform.OS === 'ios') {
+//       Vibration.vibrate(time); // iOS vibration works directly
+//       console.log('Vibration triggered successfully on iOS');
+//     } else if (Platform.OS === 'android') {
+//       const pattern = [0, time]; // Vibration pattern
+//       Vibration.vibrate(pattern); // False: Do not repeat
+//       console.log('Vibration triggered successfully on Android');
+//     } else {
+//       console.log('Vibration not supported on this platform');
+//     }
+//   } catch (error) {
+//     console.log('Vibration feature failed', error);
+//   }
+// };
+
+
+export const checkVibrationSupport = (duration) => {
   try {
-    if (Platform.OS === 'ios') {
-      Vibration.vibrate(time); // iOS vibration works directly
-      console.log('Vibration triggered successfully on iOS');
-    } else if (Platform.OS === 'android') {
-      const pattern = [0, time]; // Vibration pattern
-      Vibration.vibrate(pattern); // False: Do not repeat
-      console.log('Vibration triggered successfully on Android');
+    if (Platform.OS === 'ios' || Platform.OS === 'android') {
+      // Create a pattern for the specified duration (10 seconds = 10000ms)
+      const interval = 100; // Vibrate every 100ms
+      const repetitions = Math.floor(duration / interval); // Calculate how many intervals fit in the duration
+      const pattern = Array(repetitions).fill(interval).flatMap((v) => [v, interval]);
+
+      // console.log(`Triggering vibration with pattern for ${duration}ms:`, pattern);
+
+      Vibration.vibrate(pattern, false); // False to avoid infinite vibration
     } else {
       console.log('Vibration not supported on this platform');
     }
   } catch (error) {
-    console.log('Vibration feature failed', error);
+    console.error('Error triggering vibration:', error);
   }
 };
-
-// export const checkVibrationSupport = async time => {
-//   if (Platform.OS === 'android') {
-//     // Directly test vibration since permission might not be required
-//     try {
-//       Vibration.vibrate(time); // Vibrates for 500ms
-//       console.log('Vibration triggered successfully =====');
-//     } catch (error) {
-//       console.log('Vibration feature failed', error);
-//     }
-//   } else {
-//     console.log('Vibration not supported on this platform');
-//   }
-// };

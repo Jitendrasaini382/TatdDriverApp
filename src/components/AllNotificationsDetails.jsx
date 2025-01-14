@@ -48,6 +48,11 @@ const AllNotificationComponent = () => {
       setIsLoading(true);
       try {
         const response = await DRIVER_NOTIFICATION(data);
+        console.log(
+          response.notifications[0],
+          'response.notificationsresponse.',
+        );
+
         dispatch(setNotificationData(response.notifications));
       } catch (error) {
         console.error('DRIVER NOTIFICATION error:', error);

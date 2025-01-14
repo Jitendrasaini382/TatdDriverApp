@@ -3,7 +3,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  languageSwitch: 'hindi',
+  languageSwitch: 'english',
   ticketsData: [],
   faqData: [],
   rating: 0,

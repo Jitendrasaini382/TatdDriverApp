@@ -45,7 +45,7 @@ const AllNoticeBoardComponent = () => {
         'view_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_notice',
       );
 
-      setNoticeBoardData(response.awareness_data);
+      setNoticeBoardData(response?.awareness_data);
     } catch (error) {
       console.error(' Driver Notice error:', error);
       setIsLoading(false);
@@ -58,7 +58,7 @@ const AllNoticeBoardComponent = () => {
   useFocusEffect(
     useCallback(() => {
       getAllDriverNotice();
-    }, [getAllDriverNotice]),
+    }, []),
   );
 
   const handleNoticePress = useCallback(

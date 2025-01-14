@@ -31,24 +31,29 @@ const AllNoticeBoardComponent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const getAllDriverNotice = useCallback(async () => {
+  const getAllDriverNotice = async () => {
+    console.log('runnnnnnn');
+
     setIsLoading(true);
     try {
       const response = await DRIVER_NOTICE({
         action: 'view_all_notice',
-        current_language: "english",
+        current_language: languageSwitch,
       });
-      console.log(response,"view_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_notice");
-      
+      console.log(
+        response,
+        'view_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_notice',
+      );
+
       setNoticeBoardData(response.awareness_data);
     } catch (error) {
-      console.error('Driver Notice error:', error);
+      console.error(' Driver Notice error:', error);
       setIsLoading(false);
       // Alert.alert('Error', 'Failed to fetch notices. Please try again.');
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  };
 
   useFocusEffect(
     useCallback(() => {

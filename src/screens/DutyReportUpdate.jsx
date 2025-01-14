@@ -60,6 +60,7 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [modalVisibleOntheway, setModalVisibleOntheway] = useState(false);
   const [modalVisibleRich, setModalVisibleRich] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  const [inputKmsValue, setInputKmsValue] = useState('');
   const [modalVisibleinput, setModalVisibleinput] = useState(false);
   const [modalVisibleonTimeRich, setModalVisibleonTimeRich] = useState(false);
   const [textWidth, setTextWidth] = useState(0);
@@ -132,6 +133,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       });
       GetAllBookingInfo();
       if (response?.msg_type == 'error') {
+        Alert.alert(response?.message);
         Toast.show({
           type: 'error',
           text1: response?.message,
@@ -433,7 +435,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         booking_id: bookingNumber,
         current_language: languageSwitch,
         trip_status: bookingInfo?.condition?.next_booking_status_id,
-        start_kms: null,
+        start_kms: inputKmsValue,
         otp: inputValue,
       });
       console.log(res, 'OTPRESPO');
@@ -470,6 +472,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       });
       navigation.navigate('DueAmount', {bookingNumber});
       setModalVisibleEnd(false);
+      GetAllBookingInfo();
       console.log(res, 'booking end api response');
     } catch (err) {
       console.log(err, 'booking end api Err');
@@ -811,7 +814,7 @@ const DutyReportUpdate = ({route, navigation}) => {
           }}>
           <View
             style={{
-              backgroundColor: 'white',
+              backgroundColor: AppColors.white,
               width: '90%',
               borderRadius: 10,
               padding: 20,
@@ -846,7 +849,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                   style={{
                     fontFamily: 'Merriweather-Bold',
                     fontSize: 18,
-                    color: 'white',
+                    color: AppColors.white,
                   }}>
                   {/* Guests are like God */}
                   {firstTimePopupData?.popupdata?.accept_alert}
@@ -942,7 +945,7 @@ const DutyReportUpdate = ({route, navigation}) => {
           }}>
           <View
             style={{
-              backgroundColor: 'white',
+              backgroundColor: AppColors.white,
               width: '90%',
               borderRadius: 10,
               padding: 20,
@@ -977,7 +980,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                   style={{
                     fontFamily: 'Merriweather-Bold',
                     fontSize: 18,
-                    color: 'white',
+                    color: AppColors.white,
                   }}>
                   Guests are like God
                 </Text>
@@ -1068,7 +1071,7 @@ const DutyReportUpdate = ({route, navigation}) => {
           }}>
           <View
             style={{
-              backgroundColor: 'white',
+              backgroundColor: AppColors.white,
               width: '90%',
               borderRadius: 10,
               padding: 20,
@@ -1107,7 +1110,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                     style={{
                       fontFamily: 'Merriweather-Bold',
                       fontSize: 18,
-                      color: 'white',
+                      color: AppColors.white,
                     }}>
                     {popupsData?.popupdata?.ontheway_alert}
                   </Text>
@@ -1162,7 +1165,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                   }}>
                   <Text
                     style={{
-                      color: 'white',
+                      color: AppColors.white,
                       fontWeight: '600',
                       textAlign: 'center',
                     }}>
@@ -1192,7 +1195,7 @@ const DutyReportUpdate = ({route, navigation}) => {
           }}>
           <View
             style={{
-              backgroundColor: 'white',
+              backgroundColor: AppColors.white,
               width: '90%',
               borderRadius: 10,
               padding: 20,
@@ -1227,7 +1230,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                   style={{
                     fontFamily: 'Merriweather-Bold',
                     fontSize: 18,
-                    color: 'white',
+                    color: AppColors.white,
                   }}>
                   Guests are like God
                 </Text>
@@ -1266,7 +1269,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                   }}>
                   <Text
                     style={{
-                      color: 'white',
+                      color: AppColors.white,
                       fontWeight: '600',
                       textAlign: 'center',
                     }}>
@@ -1294,7 +1297,7 @@ const DutyReportUpdate = ({route, navigation}) => {
           }}>
           <View
             style={{
-              backgroundColor: 'white',
+              backgroundColor: AppColors.white,
               width: '90%',
               borderRadius: 10,
               padding: 20,
@@ -1303,7 +1306,7 @@ const DutyReportUpdate = ({route, navigation}) => {
             <ScrollView>
               <TouchableOpacity
                 style={{
-                  backgroundColor: '#16588e',
+                  backgroundColor: AppColors.mainColor,
                   borderRadius: 20,
                   marginBottom: 20,
                   alignSelf: 'flex-end',
@@ -1319,7 +1322,7 @@ const DutyReportUpdate = ({route, navigation}) => {
               </TouchableOpacity>
               <View
                 style={{
-                  backgroundColor: '#16588e',
+                  backgroundColor: AppColors.mainColor,
                   alignItems: 'center',
                   justifyContent: 'center',
                   alignSelf: 'center',
@@ -1331,7 +1334,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                   style={{
                     fontFamily: 'Merriweather-Bold',
                     fontSize: 18,
-                    color: 'white',
+                    color: AppColors.white,
                   }}>
                   {/* Guests are like God */}
                   {popupsData?.popupdata?.reach_alert}
@@ -1355,14 +1358,14 @@ const DutyReportUpdate = ({route, navigation}) => {
                     fontSize: 16,
                     fontWeight: 'bold',
                     textAlign: 'center',
-                    color: 'black',
+                    color: AppColors.black,
                   }}>
                   {/* And ready to provide excellent service. */}
                   {popupsData?.popupdata?.reach_alert_p}
                 </Text>
                 <TouchableOpacity
                   style={{
-                    backgroundColor: '#16588e',
+                    backgroundColor: AppColors.mainColor,
                     marginTop: 20,
                     padding: 12,
                     borderRadius: 6,
@@ -1377,7 +1380,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                   }}>
                   <Text
                     style={{
-                      color: 'white',
+                      color: AppColors.white,
                       fontWeight: '600',
                       textAlign: 'center',
                     }}>
@@ -1406,7 +1409,7 @@ const DutyReportUpdate = ({route, navigation}) => {
           }}>
           <View
             style={{
-              backgroundColor: 'white',
+              backgroundColor: AppColors.white,
               width: '90%',
               borderRadius: 10,
               padding: 20,
@@ -1419,7 +1422,7 @@ const DutyReportUpdate = ({route, navigation}) => {
               <ScrollView keyboardShouldPersistTaps="always">
                 <TouchableOpacity
                   style={{
-                    backgroundColor: '#16588e',
+                    backgroundColor: AppColors.mainColor,
                     borderRadius: 20,
                     marginBottom: 20,
                     alignSelf: 'flex-end',
@@ -1433,7 +1436,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                 </TouchableOpacity>
                 <View
                   style={{
-                    backgroundColor: '#16588e',
+                    backgroundColor: AppColors.mainColor,
                     alignItems: 'center',
                     justifyContent: 'center',
                     alignSelf: 'center',
@@ -1445,7 +1448,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                     style={{
                       fontFamily: 'Merriweather-Bold',
                       fontSize: 18,
-                      color: 'white',
+                      color: AppColors.white,
                     }}>
                     {/* Guests are like God */}
                     {popupsData?.popupdata?.start_alert}
@@ -1468,6 +1471,29 @@ const DutyReportUpdate = ({route, navigation}) => {
                   value={inputValue}
                   onChangeText={text => setInputValue(text)}
                 />
+
+                {popupsData?.popupdata?.start_kms_eligibility == '1' && (
+                  <TextInput
+                    style={{
+                      borderColor: '#c4c4be',
+                      borderWidth: 1.5,
+                      borderRadius: 8,
+                      paddingHorizontal: 10,
+                      fontSize: 16,
+                      color: '#333',
+                      backgroundColor: '#fff',
+                      marginTop: 20,
+                      padding: 10,
+                    }}
+                    placeholder={
+                      popupsData?.popupdata?.start_kms_placeholder_text ||
+                      'Enter Start KM'
+                    }
+                    placeholderTextColor="#aaa"
+                    value={inputKmsValue}
+                    onChangeText={text => setInputKmsValue(text)}
+                  />
+                )}
                 <View style={{marginVertical: 5}}>
                   <View
                     style={{
@@ -1478,7 +1504,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                         style={{
                           fontSize: 16,
                           fontWeight: '400',
-                          color: 'black',
+                          color: AppColors.mainColor,
                         }}
                         onLayout={event => {
                           const {width} = event.nativeEvent.layout;
@@ -1492,7 +1518,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                       style={{
                         marginTop: 2,
                         height: 1,
-                        backgroundColor: 'black',
+                        backgroundColor: AppColors.mainColor,
                         width: textWidth,
                       }}
                     />
@@ -1521,26 +1547,27 @@ const DutyReportUpdate = ({route, navigation}) => {
                   </View>
                   <TouchableOpacity
                     style={{
-                      backgroundColor: '#16588e',
-                      marginTop: '40%',
+                      backgroundColor: AppColors.mainColor,
+                      marginTop: '20%',
                       padding: 12,
                       borderRadius: 6,
                       width: '60%',
                       alignItems: 'center',
                       justifyContent: 'center',
                       marginHorizontal: '20%',
-                      marginBottom: 100,
+                      marginBottom: 50,
                     }}
                     onPress={() => {
                       driverReached();
                     }}>
                     <Text
                       style={{
-                        color: 'white',
+                        color: AppColors.white,
                         fontWeight: '600',
                         textAlign: 'center',
                       }}>
-                      Start
+                      {/* {Start} */}
+                      {popupsData?.popupdata?.start_alert_btn}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -1565,7 +1592,7 @@ const DutyReportUpdate = ({route, navigation}) => {
           }}>
           <View
             style={{
-              backgroundColor: 'white',
+              backgroundColor: AppColors.white,
               width: '90%',
               borderRadius: 10,
               padding: 20,
@@ -1574,7 +1601,7 @@ const DutyReportUpdate = ({route, navigation}) => {
             <ScrollView>
               <TouchableOpacity
                 style={{
-                  backgroundColor: '#16588e',
+                  backgroundColor: AppColors.mainColor,
                   borderRadius: 20,
                   marginBottom: 20,
                   alignSelf: 'flex-end',
@@ -1589,7 +1616,7 @@ const DutyReportUpdate = ({route, navigation}) => {
 
               <TouchableOpacity
                 style={{
-                  backgroundColor: '#16588e',
+                  backgroundColor: AppColors.mainColor,
                   marginTop: 20,
                   padding: 12,
                   borderRadius: 6,
@@ -1604,7 +1631,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                 }}>
                 <Text
                   style={{
-                    color: 'white',
+                    color: AppColors.white,
                     fontWeight: '600',
                     textAlign: 'center',
                   }}>
@@ -1631,7 +1658,7 @@ const DutyReportUpdate = ({route, navigation}) => {
           }}>
           <View
             style={{
-              backgroundColor: 'white',
+              backgroundColor: AppColors.white,
               width: '90%',
               borderRadius: 10,
               padding: 20,
@@ -1640,7 +1667,7 @@ const DutyReportUpdate = ({route, navigation}) => {
             <ScrollView>
               <TouchableOpacity
                 style={{
-                  backgroundColor: '#16588e',
+                  backgroundColor: AppColors.mainColor,
                   borderRadius: 20,
                   marginBottom: 20,
                   alignSelf: 'flex-end',
@@ -1654,7 +1681,7 @@ const DutyReportUpdate = ({route, navigation}) => {
               </TouchableOpacity>
               <View
                 style={{
-                  backgroundColor: '#16588e',
+                  backgroundColor: AppColors.mainColor,
                   alignItems: 'center',
                   justifyContent: 'center',
                   alignSelf: 'center',
@@ -1666,7 +1693,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                   style={{
                     fontFamily: 'Merriweather-Bold',
                     fontSize: 18,
-                    color: 'white',
+                    color: AppColors.white,
                   }}>
                   {/* Guests are like God */}
                   {popupsData?.popupdata?.end_alert}
@@ -1686,7 +1713,7 @@ const DutyReportUpdate = ({route, navigation}) => {
               <View style={{marginVertical: 30}}>
                 <TouchableOpacity
                   style={{
-                    backgroundColor: '#16588e',
+                    backgroundColor: AppColors.mainColor,
                     marginTop: 20,
                     padding: 12,
                     borderRadius: 6,
@@ -1701,7 +1728,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                   }}>
                   <Text
                     style={{
-                      color: 'white',
+                      color: AppColors.white,
                       fontWeight: '600',
                       textAlign: 'center',
                     }}>
@@ -1814,7 +1841,7 @@ const styles = StyleSheet.create({
   callingGif: {
     width: 40,
     height: 40,
-    backgroundColor: 'white',
+    backgroundColor: AppColors.white,
     borderRadius: 20,
     overflow: 'hidden',
     elevation: 5,

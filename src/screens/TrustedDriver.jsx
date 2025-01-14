@@ -90,34 +90,7 @@ const TrustedDriver = ({navigation}) => {
   const [videoCount, setVideoCount] = useState('');
   const [ratingTrustedData, setRatingTrustedData] = useState({});
   const [otrTrustedData, setOtrTrustedData] = useState({});
-  const [homeNotificationData, setHomeNotificationData] = useState({
-    status_code: 200,
-    headline: {
-      id: 2917208,
-      notification_bucket: '',
-      headline_type: 'Permanent Assignment',
-      category: 'Private Driver',
-      timestamp: '2025-01-13 11:08:36',
-      booking_id: 'PD-13518',
-      driver_name: 'MOHIT DHANAWAT',
-      driver_mobile_number: '8118813148',
-      start_date: '2025-01-13 11:08:36',
-      end_date: '2025-01-16 11:08:36',
-      created_by: 'By Driver',
-      message:
-        "Important Job Interview Alert!\r\n\r\nDear MOHIT DHANAWAT, please reach the customer's house on time and upon meeting the customer, take the OTP and press the start button. Doing so will increase the customer's trust in you and will increase the chances of you getting the job.\r\n\r\n<b>Remember, it is mandatory to take the OTP and press the start button as soon as you meet the customer. Failing to do this will result in the company rejecting you, and you will not be sent for any job henceforth.</b>\r\n\r\nDo not forget to press the End button after the interview is over.\r\n\r\nInterview Time - 10:00 AM ,11 Jan 2025 \r\n\r\nHave a good day. Thank you.\r\n\r\nwww.tatd.in",
-      clicks: 0,
-      support_id: 0,
-      closure_by: '',
-      tag_ticket: '',
-      rate: 0,
-      remarks: '',
-      closure_timestamp: '0000-00-00 00:00:00',
-      message_preview:
-        'Important Job Interview Alert!\r\n\r\nDear MOHIT DHANAWAT, please reach the customer&#039;s house on time and upon meeting the customer, take the OTP and press the start button. Doing so will increase the customer&#039;s trust in you and will increase the chances of you getting the job.\r\n\r\nRemember, it is mandatory to take the OTP and press the start button as soon as you meet the customer. Failing to do this will result in the company rejecting you, and you will not be sent for any job henceforth.\r\n\r\nDo not forget to press the End button after the interview is over.\r\n\r\nInterview Time - 10:00 AM ,11 Jan 2025 \r\n\r\nHave a good day. Thank you.\r\n\r\nwww.tatd.in',
-    },
-    message: 'success',
-  });
+  const [homeNotificationData, setHomeNotificationData] = useState({});
   const [homeNoticeData, setHomeNoticeData] = useState({});
   const [showNotification, setShowNotification] = useState(false);
   const [showNotice, setShowNotice] = useState(false);
@@ -176,7 +149,7 @@ const TrustedDriver = ({navigation}) => {
   useEffect(() => {
     if (jwt) {
       // if (isRfdOn) {
-        getPopup();
+      getPopup();
       // }
       getHeadlineData();
       getTrainingVideo();

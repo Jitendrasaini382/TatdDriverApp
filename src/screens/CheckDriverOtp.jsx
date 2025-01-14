@@ -577,6 +577,14 @@ const CheckDriverOtp = ({navigation, route}) => {
               style={styles.verifyButton}
               // disabled={loader}
               onPress={verifyOtp}>
+              {/* {loader ? (
+                <View style={{flexDirection: 'row'}}>
+                  <ActivityIndicator size="small" color="#fff" />
+                  <Text style={styles.verifyButtonText}>Please Wait</Text>
+                </View>
+              ) : (
+                <Text style={styles.verifyButtonText}>Verify</Text>
+              )} */}
               <Text style={styles.verifyButtonText}>
                 {loader ? 'Please Wait' : 'Verify'}
               </Text>

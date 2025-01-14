@@ -37,7 +37,9 @@ export const requestNotificationPermission = async () => {
         return false; // Error occurred
       }
     } else {
-      console.log('Notification permission not required for this Android version');
+      console.log(
+        'Notification permission not required for this Android version',
+      );
       return true; // For Android versions below 33
     }
   } else {
@@ -67,16 +69,32 @@ export const checkVibrationPermission = async () => {
   }
 };
 
+// export const checkVibrationSupport = async time => {
+//   try {
+//     if (Platform.OS === 'ios') {
+//       // Vibration works directly on iOS (no permission required)
+//       Vibration.vibrate(time);
+//       console.log('Vibration triggered successfully on iOS');
+//     } else if (Platform.OS === 'android') {
+//       // Test vibration on Android
+//       Vibration.vibrate(time); // Vibrates for 500ms
+//       console.log('Vibration triggered successfully on Android');
+//     } else {
+//       console.log('Vibration not supported on this platform');
+//     }
+//   } catch (error) {
+//     console.log('Vibration feature failed', error);
+//   }
+// };
 
-export const checkVibrationSupport = async (time) => {
+export const checkVibrationSupport = async time => {
   try {
     if (Platform.OS === 'ios') {
-      // Vibration works directly on iOS (no permission required)
-      Vibration.vibrate(time);
+      Vibration.vibrate(time); // iOS vibration works directly
       console.log('Vibration triggered successfully on iOS');
     } else if (Platform.OS === 'android') {
-      // Test vibration on Android
-      Vibration.vibrate(time); // Vibrates for 500ms
+      const pattern = [0, time]; // Vibration pattern
+      Vibration.vibrate(pattern); // False: Do not repeat
       console.log('Vibration triggered successfully on Android');
     } else {
       console.log('Vibration not supported on this platform');
@@ -86,13 +104,12 @@ export const checkVibrationSupport = async (time) => {
   }
 };
 
-
-// export const checkVibrationPermission = async () => {
+// export const checkVibrationSupport = async time => {
 //   if (Platform.OS === 'android') {
 //     // Directly test vibration since permission might not be required
 //     try {
-//       Vibration.vibrate(5000); // Vibrates for 500ms
-//       console.log('Vibration triggered successfully');
+//       Vibration.vibrate(time); // Vibrates for 500ms
+//       console.log('Vibration triggered successfully =====');
 //     } catch (error) {
 //       console.log('Vibration feature failed', error);
 //     }

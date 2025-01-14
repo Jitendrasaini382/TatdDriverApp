@@ -26,6 +26,7 @@ import {
 import {RefreshControl} from 'react-native';
 
 const AllNotificationComponent = () => {
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const notificationData = useSelector(e => e?.globalSlice?.notificationData);
@@ -122,10 +123,13 @@ const AllNotificationComponent = () => {
 };
 
 export const NotificationDetailScreen = ({route}) => {
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {notificationId} = route.params;
   const [notification, setNotification] = useState({});
+  const [bottamButtonText, setBottamButtonText] = useState({});
 
   const storeRating = useSelector(e => e?.globalSlice?.storeRating);
 
@@ -156,8 +160,10 @@ export const NotificationDetailScreen = ({route}) => {
       const response = await DRIVER_NOTIFICATION({
         action: 'view_headline',
         id: notificationId,
+        current_language: languageSwitch,
       });
       setNotification(response.headline);
+      setBottamButtonText(response);
       dispatch(setStoredRating(response.headline.rate));
     } catch (err) {
       console.error('VIEW_HEADLINE error:', err);
@@ -212,16 +218,28 @@ export const NotificationDetailScreen = ({route}) => {
     }
   }, [notificationId, feedback]);
 
+  const clickStoreHomeNotification = async id => {
+    console.log(id, 'clickStoreHomeNotification clickStoreHomeNotification');
+
+    // return false;
+    try {
+      const response = await DRIVER_NOTIFICATION({
+        action: 'view_headline',
+        id: id,
+      });
+      // setNotification(response.headline);
+      // dispatch(setStoredRating(response.headline.rate));
+    } catch (err) {
+      console.error('VIEW_HEADLINE error:', err);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.fullScreenContainer}>
       <Header backButton={true} />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
-        {/* <View style={{flex: 1}}>
-          <Text style={styles.detailText}>{notification.message_preview}</Text>
-        </View> */}
-
         <View
           style={{
             flex: 1,
@@ -240,7 +258,7 @@ export const NotificationDetailScreen = ({route}) => {
                 fontWeight: 'bold',
                 textAlign: 'center',
               }}>
-              Headline
+              {notification?.headline_type}
             </Text>
           </View>
           <View
@@ -267,27 +285,51 @@ export const NotificationDetailScreen = ({route}) => {
                   fontSize: 18,
                   marginBottom: 20,
                 }}>
-                {notification.message_preview}
+                {notification.message}
               </Text>
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={{
-                  backgroundColor: '#0056b3',
-                  paddingVertical: 12,
-                  borderRadius: 8,
-                  alignItems: 'center',
-                  marginTop: 20,
-                  marginBottom: 5,
-                }}>
-                <Text
+              {bottamButtonText?.back_btn == '1' ? (
+                <TouchableOpacity
+                  onPress={() => navigation.goBack()}
                   style={{
-                    color: '#ffffff',
-                    fontSize: 18,
-                    fontWeight: 'bold',
+                    backgroundColor: '#0056b3',
+                    paddingVertical: 12,
+                    borderRadius: 8,
+                    alignItems: 'center',
+                    marginTop: 20,
+                    marginBottom: 5,
                   }}>
-                  I Have Read the Updates
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{
+                      color: '#ffffff',
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                    }}>
+                    {bottamButtonText?.btn_text}
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() =>
+                    clickStoreHomeNotification(bottamButtonText?.headline?.id)
+                  }
+                  style={{
+                    backgroundColor: '#0056b3',
+                    paddingVertical: 12,
+                    borderRadius: 8,
+                    alignItems: 'center',
+                    marginTop: 20,
+                    marginBottom: 5,
+                  }}>
+                  <Text
+                    style={{
+                      color: '#ffffff',
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                    }}>
+                    {bottamButtonText?.btn_text}
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </View>

@@ -34,8 +34,6 @@ const DueAmountDetails = ({route, navigation}) => {
         booking_number: number,
       });
 
-      console.log(response, 'amount detailsss allInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceDataallInvoiceData ');
-
       setAllInvoiceData(response);
       // console.log(response, 'getInvoiceData Api response');
     } catch (response) {
@@ -58,8 +56,6 @@ const DueAmountDetails = ({route, navigation}) => {
       console.log(err);
     }
   };
-
-  console.log(allInvoiceData?.invoice_data?.discount, 'all adtaaddadadad');
 
   return (
     <SafeAreaView>
@@ -334,7 +330,7 @@ const DueAmountDetails = ({route, navigation}) => {
               </View>
             </View>
 
-            <View style={{flexDirection: 'row', marginHorizontal: 5}}>
+            <View style={{flexDirection: 'row', margin: 10}}>
               <Text style={{color: '#ffffff', fontSize: 12}}>From:</Text>
               <Text
                 style={{
@@ -352,7 +348,8 @@ const DueAmountDetails = ({route, navigation}) => {
                 alignItems: 'center',
                 marginVertical: 20,
               }}>
-              <Text style={{color: '#ffffff', fontSize: 12, marginLeft: 5}}>
+              <Text
+                style={{color: '#ffffff', fontSize: 12, marginHorizontal: 10}}>
                 To:
               </Text>
               <Text style={{color: '#ffffff', fontSize: 12, marginLeft: 10}}>
@@ -424,7 +421,7 @@ const DueAmountDetails = ({route, navigation}) => {
             </View>
           </View>
 
-          <View style={{flexDirection: 'row', marginVertical: 5}}>
+          <View style={{flexDirection: 'row', margin: 5, marginTop: 30}}>
             {/* Description Column */}
             <View style={{flex: 0.2, alignItems: 'center'}}>
               <Text></Text>
@@ -497,7 +494,7 @@ const DueAmountDetails = ({route, navigation}) => {
                 style={{
                   color: AppColors.black,
                   fontFamily: AppFont.regularFont,
-                  fontSize: 14,
+                  fontSize: 12,
                 }}>
                 Total
               </Text>
@@ -540,7 +537,7 @@ const DueAmountDetails = ({route, navigation}) => {
                       style={{
                         color: AppColors.black,
                         fontFamily: AppFont.regularFont,
-                        fontSize: 14,
+                        fontSize: 12,
                       }}>
                       {row?.unit}
                     </Text>
@@ -552,7 +549,7 @@ const DueAmountDetails = ({route, navigation}) => {
                       style={{
                         color: AppColors.black,
                         fontFamily: AppFont.regularFont,
-                        fontSize: 14,
+                        fontSize: 12,
                       }}>
                       {row?.charges}
                     </Text>
@@ -606,7 +603,7 @@ const DueAmountDetails = ({route, navigation}) => {
                       style={{
                         color: AppColors.black,
                         fontFamily: AppFont.regularFont,
-                        fontSize: 14,
+                        fontSize: 12,
                       }}>
                       ₹ {row?.total_amount}
                     </Text>
@@ -730,7 +727,11 @@ const DueAmountDetails = ({route, navigation}) => {
 
               {/* Total Amount Column */}
               <View style={{flex: 0.16, alignItems: 'center'}}>
-                <Text style={[styles.chargeText, {fontWeight: '600'}]}>
+                <Text
+                  style={[
+                    styles.chargeText,
+                    {fontWeight: '600', fontSize: 15},
+                  ]}>
                   ₹ {allInvoiceData?.invoice_data?.total_charges}
                 </Text>
               </View>
@@ -745,7 +746,9 @@ const DueAmountDetails = ({route, navigation}) => {
           {/* Advance Section */}
           <View style={styles.advanceSection}>
             <Text style={styles.advanceLabel}>Advance</Text>
-            <Text style={styles.advanceValue}>₹0</Text>
+            <Text style={styles.advanceValue}>
+              ₹ {allInvoiceData?.invoice_data?.paid}
+            </Text>
           </View>
           <View
             style={[
@@ -770,7 +773,7 @@ const DueAmountDetails = ({route, navigation}) => {
           <Text
             style={{
               color: 'black',
-              fontSize: 10,
+              fontSize: 12,
               alignSelf: 'center',
               textAlign: 'center',
               marginVertical: 15,
@@ -794,7 +797,7 @@ const DueAmountDetails = ({route, navigation}) => {
             marginVertical: 30,
             //alignSelf:'center'
           }}>
-          <Text style={{color: '#ffffff', fontSize: 14}}>
+          <Text style={{color: '#ffffff', fontSize: 15}}>
             Rate Your Customer
           </Text>
         </TouchableOpacity>
@@ -867,14 +870,14 @@ const styles = StyleSheet.create({
   timingsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 5,
+    marginHorizontal: 10,
   },
   timingColumn: {
     alignItems: 'center',
     // flex: 1,
   },
   timingLabel: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: 'bold',
     color: 'black',
   },
@@ -945,11 +948,11 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   advanceLabel: {
-    fontSize: 14,
+    fontSize: 12,
     color: 'black',
   },
   advanceValue: {
-    fontSize: 14,
+    fontSize: 12,
     color: 'black',
     textAlign: 'right',
   },
@@ -963,12 +966,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   balanceLabel: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: 'bold',
     color: 'blue',
   },
   balanceValue: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: 'bold',
     color: '#007bff',
     textAlign: 'right',

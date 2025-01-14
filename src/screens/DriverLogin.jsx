@@ -449,6 +449,7 @@ const DriverLogin = () => {
       }
     } catch (err) {
       setLoader(false);
+      setError(err);
       console.log(err, 'err run catch');
     } finally {
       setLoader(false);

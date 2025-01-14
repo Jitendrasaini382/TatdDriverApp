@@ -17,8 +17,15 @@ import {AppColors} from '../assets/Colors';
 import {DRIVER_NOTICE} from '../apis/Apis';
 import {AppFont} from '../assets/FontsFamily';
 import {RefreshControl} from 'react-native';
+import {useSelector} from 'react-redux';
 
 const AllNoticeBoardComponent = () => {
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  console.log(
+    languageSwitch,
+    ' const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch) ',
+  );
+
   const navigation = useNavigation();
   const [noticeBoardData, setNoticeBoardData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,7 +36,10 @@ const AllNoticeBoardComponent = () => {
     try {
       const response = await DRIVER_NOTICE({
         action: 'view_all_notice',
+        current_language: "english",
       });
+      console.log(response,"view_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_noticeview_all_notice");
+      
       setNoticeBoardData(response.awareness_data);
     } catch (error) {
       console.error('Driver Notice error:', error);
@@ -121,21 +131,53 @@ const AllNoticeBoardComponent = () => {
 export const NoticeBoardDetailScreen = ({route}) => {
   const {noticeId} = route.params;
   const [notice, setNotice] = useState({});
+  const [bottamButtonText, setBottamButtonText] = useState({});
   const [footerData, setFooterData] = useState([]);
   const navigation = useNavigation();
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  console.log(
+    languageSwitch,
+    ' const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch)=============== ',
+  );
+
+  const clickStoreHomeNotice = async id => {
+    console.log(id, 'clickStoreHomeNotice clickStoreHomeNotice');
+
+    // return false;
+    try {
+      const response = await DRIVER_NOTICE({
+        action: 'read_awareness_notice',
+        awareness_id: id,
+        current_language: languageSwitch,
+      });
+
+      console.log(response, ' clickStoreHomeNotice noticeeee');
+
+      // setNotification(response.headline);
+      // dispatch(setStoredRating(response.headline.rate));
+    } catch (err) {
+      console.error('VIEW_HEADLINE error:', err);
+    }
+  };
 
   const fetchNoticeData = useCallback(async () => {
     try {
       const [noticeResponse, footerResponse] = await Promise.all([
-        DRIVER_NOTICE({action: 'view_one_awareness', id: noticeId}),
+        DRIVER_NOTICE({
+          action: 'view_one_awareness',
+          id: noticeId,
+          current_language: languageSwitch,
+        }),
         DRIVER_NOTICE({
           action: 'view_one_awareness_footer_links',
           id: noticeId,
           bucket: 'Awareness',
+          current_language: languageSwitch,
         }),
       ]);
 
       setNotice(noticeResponse.awareness);
+      setBottamButtonText(noticeResponse);
       setFooterData(footerResponse.viewed);
 
       await Promise.all([
@@ -252,25 +294,50 @@ export const NoticeBoardDetailScreen = ({route}) => {
                   }}>
                   {notice.description}
                 </Text>
-                <TouchableOpacity
-                  onPress={() => navigation.goBack()}
-                  style={{
-                    backgroundColor: '#0056b3',
-                    paddingVertical: 12,
-                    borderRadius: 8,
-                    alignItems: 'center',
-                    marginTop: 20,
-                    marginBottom: 5,
-                  }}>
-                  <Text
+
+                {bottamButtonText?.back_btn == '1' ? (
+                  <TouchableOpacity
+                    onPress={() => navigation.goBack()}
                     style={{
-                      color: '#ffffff',
-                      fontSize: 18,
-                      fontWeight: 'bold',
+                      backgroundColor: '#0056b3',
+                      paddingVertical: 12,
+                      borderRadius: 8,
+                      alignItems: 'center',
+                      marginTop: 50,
+                      marginBottom: 5,
                     }}>
-                    I Have Read the Updates
-                  </Text>
-                </TouchableOpacity>
+                    <Text
+                      style={{
+                        color: '#ffffff',
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                      }}>
+                      {bottamButtonText?.btn_text}
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() =>
+                      clickStoreHomeNotice(bottamButtonText?.awareness?.id)
+                    }
+                    style={{
+                      backgroundColor: '#0056b3',
+                      paddingVertical: 12,
+                      borderRadius: 8,
+                      alignItems: 'center',
+                      marginTop: 50,
+                      marginBottom: 5,
+                    }}>
+                    <Text
+                      style={{
+                        color: '#ffffff',
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                      }}>
+                      {notice?.btn_text}
+                    </Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
           </View>
@@ -287,7 +354,7 @@ export const NoticeBoardDetailScreen = ({route}) => {
                 <Image
                   style={styles.icon}
                   resizeMode="contain"
-                  source={CloseEnvelop}
+                  source={OpenEnvelop}
                 />
               </View>
               <View style={styles.textContainer}>

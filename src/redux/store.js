@@ -12,6 +12,7 @@ const rootReducer = combineReducers({
   trustedDriverSlice,
   globalSlice
 });
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 const persistConfig = {
   key: 'root',
@@ -24,11 +25,11 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: getDefaultMiddleware => {
-    return getDefaultMiddleware({
-      serializableCheck: false, // Disable serializableCheck if you want to avoid warnings
-    });
-  },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false, // Disable serializableCheck warnings
+      immutableCheck: isDevelopment, // Only enable in development
+    }),
 });
 
 export const persistor = persistStore(store); // Create persistor

@@ -359,12 +359,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   time: {
-    fontSize: 20,
+    fontSize: 17,
     color: AppColors.white,
     marginRight: 10,
   },
   vehicleType: {
-    fontSize: 18,
+    fontSize: 16,
     color: AppColors.white,
     marginLeft: 6,
   },

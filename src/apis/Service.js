@@ -45,15 +45,11 @@ axiosClient.interceptors.response.use(
 
       if (refreshToken) {
         const appVersion = DeviceInfo.getVersion();
-        console.log(
-          appVersion,
-          'appVersionappVersionappVersionappVersionappVersionappVersionappVersionappVersionappVersion service',
-        );
 
         try {
           const res = await axios.post(
             'https://www.tatd.in/app-api/driver/login/refresh_token.php',
-            {refresh_token: refreshToken},
+            {refresh_token: refreshToken, app_version: appVersion},
           );
 
           if (res.data?.jwt) {

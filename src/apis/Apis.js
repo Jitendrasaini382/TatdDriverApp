@@ -130,10 +130,10 @@ export const LANGUAGE_SWITCH = body => {
   );
 };
 
-export const GET_HOME_NOTIFICATION = body => {
-  console.log(body, 'GET_HOME_NOTIFICATION body');
-  return _Fetch('POST', 'trusted-driver/driver-notice-api.php', {...body}, {});
-};
+// export const GET_HOME_NOTIFICATION = body => {
+//   console.log(body, 'GET_HOME_NOTIFICATION body');
+//   return _Fetch('POST', 'trusted-driver/driver-notice-api.php', {...body}, {});
+// };
 
 export const GET_TRUSTED_POPUP_DATA = body => {
   console.log(body, 'GET_TRUSTED_POPUP_DATA body');

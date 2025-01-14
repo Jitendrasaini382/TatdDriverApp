@@ -41,10 +41,11 @@ import ToggleButton from '../components/modal/ToggleButton';
 import {Buffer} from 'buffer';
 import {
   DRIVER_HEADLINE,
+  DRIVER_NOTICE,
+  DRIVER_NOTIFICATION,
   DRIVER_TRAINING_VIDEOS,
   EXPRESS_BOOKING_POPUP,
   GET_FCM_TOKEN,
-  GET_HOME_NOTIFICATION,
   GET_TRUSTED_POPUP_DATA,
   LOGIN_BUTTON,
   SAVE_DEVICE_INFO,
@@ -89,7 +90,34 @@ const TrustedDriver = ({navigation}) => {
   const [videoCount, setVideoCount] = useState('');
   const [ratingTrustedData, setRatingTrustedData] = useState({});
   const [otrTrustedData, setOtrTrustedData] = useState({});
-  const [homeNotificationData, setHomeNotificationData] = useState({});
+  const [homeNotificationData, setHomeNotificationData] = useState({
+    status_code: 200,
+    headline: {
+      id: 2917208,
+      notification_bucket: '',
+      headline_type: 'Permanent Assignment',
+      category: 'Private Driver',
+      timestamp: '2025-01-13 11:08:36',
+      booking_id: 'PD-13518',
+      driver_name: 'MOHIT DHANAWAT',
+      driver_mobile_number: '8118813148',
+      start_date: '2025-01-13 11:08:36',
+      end_date: '2025-01-16 11:08:36',
+      created_by: 'By Driver',
+      message:
+        "Important Job Interview Alert!\r\n\r\nDear MOHIT DHANAWAT, please reach the customer's house on time and upon meeting the customer, take the OTP and press the start button. Doing so will increase the customer's trust in you and will increase the chances of you getting the job.\r\n\r\n<b>Remember, it is mandatory to take the OTP and press the start button as soon as you meet the customer. Failing to do this will result in the company rejecting you, and you will not be sent for any job henceforth.</b>\r\n\r\nDo not forget to press the End button after the interview is over.\r\n\r\nInterview Time - 10:00 AM ,11 Jan 2025 \r\n\r\nHave a good day. Thank you.\r\n\r\nwww.tatd.in",
+      clicks: 0,
+      support_id: 0,
+      closure_by: '',
+      tag_ticket: '',
+      rate: 0,
+      remarks: '',
+      closure_timestamp: '0000-00-00 00:00:00',
+      message_preview:
+        'Important Job Interview Alert!\r\n\r\nDear MOHIT DHANAWAT, please reach the customer&#039;s house on time and upon meeting the customer, take the OTP and press the start button. Doing so will increase the customer&#039;s trust in you and will increase the chances of you getting the job.\r\n\r\nRemember, it is mandatory to take the OTP and press the start button as soon as you meet the customer. Failing to do this will result in the company rejecting you, and you will not be sent for any job henceforth.\r\n\r\nDo not forget to press the End button after the interview is over.\r\n\r\nInterview Time - 10:00 AM ,11 Jan 2025 \r\n\r\nHave a good day. Thank you.\r\n\r\nwww.tatd.in',
+    },
+    message: 'success',
+  });
   const [homeNoticeData, setHomeNoticeData] = useState({});
   const [showNotification, setShowNotification] = useState(false);
   const [showNotice, setShowNotice] = useState(false);
@@ -147,9 +175,9 @@ const TrustedDriver = ({navigation}) => {
   const jwt = useSelector(e => e?.userAuth?.jwt);
   useEffect(() => {
     if (jwt) {
-      if (isRfdOn) {
+      // if (isRfdOn) {
         getPopup();
-      }
+      // }
       getHeadlineData();
       getTrainingVideo();
       getTrustedPopupRating();
@@ -177,7 +205,6 @@ const TrustedDriver = ({navigation}) => {
   }, []);
 
   const currentRoute = route.name;
-  console.log(currentRoute, 'currenttttttt');
 
   const [selected, setSelected] = useState(currentRoute);
   const [showNeedHelp, setShowNeedHelp] = useState();
@@ -394,7 +421,7 @@ const TrustedDriver = ({navigation}) => {
       console.log('LOGIN API RESPONSE:', response);
       // setIsRfdOn(response?.login_status);
       dispatch(setLoginStatus(response?.login_status));
-      if (response?.message?.length <= 30) {
+      if (response?.message?.length <= 30 && response?.message) {
         setLoginMessage('');
         // Show toast if the message length is 30 or less
         Toast.show({
@@ -464,7 +491,10 @@ const TrustedDriver = ({navigation}) => {
         action: 'check_popup',
         current_language: languageSwitch,
       });
-      console.log(response, 'GET_POPUP  Response ');
+      console.log(
+        response,
+        'GET_POPUP  --------------------->>>>>>>>>>>>>  Response ',
+      );
 
       if (response.express_booking_popup_flag == 1) {
         dispatch(setExpressBookingModal(true));
@@ -491,11 +521,21 @@ const TrustedDriver = ({navigation}) => {
       });
 
       setHeadLineData(response);
+      if (response?.rfd == '1') {
+        dispatch(setLoginStatus(true));
+      } else {
+        dispatch(setLoginStatus(false));
+      }
+
       if (response?.driver_panel_messages?.driver_notification_flag == '1') {
         setShowNotification(true);
+      } else {
+        setShowNotification(false);
       }
       if (response?.driver_panel_messages?.driver_awareness_flag == '1') {
         setShowNotice(true);
+      } else {
+        setShowNotice(false);
       }
       if (response?.driver_panel_messages?.need_help_button == '1') {
         setShowNeedHelp(true);
@@ -543,10 +583,11 @@ const TrustedDriver = ({navigation}) => {
     console.log('Starting to getHomeNotificationgetHomeNotification data...');
 
     try {
-      const response = await GET_HOME_NOTIFICATION({
+      const response = await DRIVER_NOTIFICATION({
         action: 'view_headline_update',
-        bucket: 'Awareness',
+        current_language: languageSwitch,
       });
+      console.log(response, 'getHomeNotificationgetHomeNotificatio ----- ');
 
       setHomeNotificationData(response);
     } catch (error) {
@@ -558,9 +599,9 @@ const TrustedDriver = ({navigation}) => {
     console.log('Starting to getHomeNoticegetHomeNotice data...');
 
     try {
-      const response = await GET_HOME_NOTIFICATION({
-        action: 'view_one_awareness_footer_links',
-        bucket: 'Awareness',
+      const response = await DRIVER_NOTICE({
+        action: 'view_one_awareness',
+        current_language: languageSwitch,
       });
 
       setHomeNoticeData(response);
@@ -627,8 +668,47 @@ const TrustedDriver = ({navigation}) => {
     headLineData?.headlines_data?.message,
     ...(headLineData?.headlines_data?.headlines || []),
   ]
-    .filter(Boolean) // Remove null or undefined values
-    .join(' '); // Join them into a single line
+    .filter(Boolean)
+    .join(' ');
+
+  const clickStoreHomeNotification = async id => {
+    console.log(id, 'clickStoreHomeNotification clickStoreHomeNotification');
+
+    try {
+      const response = await DRIVER_NOTIFICATION({
+        action: 'read_notification',
+        headline_id: id,
+        current_language: languageSwitch,
+      });
+
+      console.log(
+        response,
+        'clickStoreHomeNotificationclickStoreHomeNotification response ',
+      );
+
+      getHeadlineData();
+    } catch (err) {
+      console.error('VIEW_HEADLINE error:', err);
+    }
+  };
+
+  const clickStoreHomeNotice = async id => {
+    console.log(id, 'clickStoreHomeNotice clickStoreHomeNotice');
+
+    // return false;
+    try {
+      const response = await DRIVER_NOTICE({
+        action: 'read_awareness_notice',
+        awareness_id: id,
+        current_language: languageSwitch,
+      });
+
+      getHomeNotice();
+      getHeadlineData();
+    } catch (err) {
+      console.error('VIEW_HEADLINE error:', err);
+    }
+  };
 
   return (
     <View style={styles.safeArea}>
@@ -643,7 +723,7 @@ const TrustedDriver = ({navigation}) => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
-          {!showNotification && homeNotificationData ? (
+          {showNotification && homeNotificationData ? (
             <View
               style={{
                 flex: 1,
@@ -663,7 +743,7 @@ const TrustedDriver = ({navigation}) => {
                     fontWeight: 'bold',
                     textAlign: 'center',
                   }}>
-                  Headline notification
+                  {homeNotificationData?.headline?.headline_type}
                 </Text>
               </View>
               <View
@@ -690,10 +770,14 @@ const TrustedDriver = ({navigation}) => {
                       fontSize: 18,
                       marginBottom: 16,
                     }}>
-                    testing
+                    {homeNotificationData?.headline?.message}
                   </Text>
-                  <TouchableOpacity
-                    // onPress={()=>}
+                  {/* <TouchableOpacity
+                    onPress={() =>
+                      clickStoreHomeNotification(
+                        homeNotificationData?.headline?.id,
+                      )
+                    }
                     style={{
                       backgroundColor: '#0056b3',
                       paddingVertical: 12,
@@ -708,9 +792,58 @@ const TrustedDriver = ({navigation}) => {
                         fontSize: 18,
                         fontWeight: 'bold',
                       }}>
-                      I Have Read the Updates
+                      I Have Read the Updates notification
                     </Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
+
+                  {homeNotificationData?.back_btn == '1' ? (
+                    <TouchableOpacity
+                      onPress={() => [
+                        setShowNotification(false),
+                        getHeadlineData(),
+                      ]}
+                      style={{
+                        backgroundColor: '#0056b3',
+                        paddingVertical: 12,
+                        borderRadius: 8,
+                        alignItems: 'center',
+                        marginTop: 50,
+                        marginBottom: 5,
+                      }}>
+                      <Text
+                        style={{
+                          color: '#ffffff',
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                        }}>
+                        {homeNotificationData?.btn_text}
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() =>
+                        clickStoreHomeNotification(
+                          homeNotificationData?.headline?.id,
+                        )
+                      }
+                      style={{
+                        backgroundColor: '#0056b3',
+                        paddingVertical: 12,
+                        borderRadius: 8,
+                        alignItems: 'center',
+                        marginTop: 50,
+                        marginBottom: 5,
+                      }}>
+                      <Text
+                        style={{
+                          color: '#ffffff',
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                        }}>
+                        {homeNotificationData?.btn_text}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
             </View>
@@ -734,7 +867,7 @@ const TrustedDriver = ({navigation}) => {
                     fontWeight: 'bold',
                     textAlign: 'center',
                   }}>
-                  Headlinennn Notice
+                  {homeNoticeData?.awareness?.subject}
                 </Text>
               </View>
               <View
@@ -761,26 +894,51 @@ const TrustedDriver = ({navigation}) => {
                       fontSize: 18,
                       marginBottom: 16,
                     }}>
-                    testing
+                    {homeNoticeData?.awareness?.description}
                   </Text>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: '#0056b3',
-                      paddingVertical: 12,
-                      borderRadius: 8,
-                      alignItems: 'center',
-                      marginTop: 60,
-                      marginBottom: 5,
-                    }}>
-                    <Text
+                  {homeNoticeData?.back_btn == '1' ? (
+                    <TouchableOpacity
+                      onPress={() => [setShowNotice(false), getHeadlineData()]}
                       style={{
-                        color: '#ffffff',
-                        fontSize: 18,
-                        fontWeight: 'bold',
+                        backgroundColor: '#0056b3',
+                        paddingVertical: 12,
+                        borderRadius: 8,
+                        alignItems: 'center',
+                        marginTop: 50,
+                        marginBottom: 5,
                       }}>
-                      I Have Read the Updates
-                    </Text>
-                  </TouchableOpacity>
+                      <Text
+                        style={{
+                          color: '#ffffff',
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                        }}>
+                        {homeNoticeData?.btn_text}
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() =>
+                        clickStoreHomeNotice(homeNoticeData?.awareness?.id)
+                      }
+                      style={{
+                        backgroundColor: '#0056b3',
+                        paddingVertical: 12,
+                        borderRadius: 8,
+                        alignItems: 'center',
+                        marginTop: 50,
+                        marginBottom: 5,
+                      }}>
+                      <Text
+                        style={{
+                          color: '#ffffff',
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                        }}>
+                        {homeNoticeData?.btn_text}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
             </View>
@@ -869,7 +1027,8 @@ const TrustedDriver = ({navigation}) => {
 
                     <View style={styles.bottamRightView}>
                       {decodedToken?.diamond_eligability == '1' ? (
-                        <View
+                        <TouchableOpacity
+                          // onPress={() => checkVibrationSupport(1000)}
                           style={{
                             backgroundColor: AppColors.white,
                             borderWidth: 2,
@@ -888,7 +1047,7 @@ const TrustedDriver = ({navigation}) => {
                             }}
                             source={Diamond_Icon}
                           />
-                        </View>
+                        </TouchableOpacity>
                       ) : null}
 
                       <TouchableOpacity

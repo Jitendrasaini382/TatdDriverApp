@@ -109,6 +109,7 @@ const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking?.booking_ids[0],
         isFirstTime: true,
+        isFirstTimeId: '10',
       });
       console.log(
         'Navigated to DutyReportUpdate with bookingNumber:',

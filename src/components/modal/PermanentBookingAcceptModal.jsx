@@ -124,6 +124,7 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
         navigation.navigate('DutyReportUpdate', {
           bookingNumber: bookingNumber,
           isFirstTime: true,
+          isFirstTimeId: '5',
         });
         setOpenModal(false);
         dispatch(setTriggerFunction(true));

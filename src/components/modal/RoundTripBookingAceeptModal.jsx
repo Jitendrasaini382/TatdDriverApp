@@ -94,7 +94,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking_number,
         isFirstTime: true,
-        isFirstTimeId: '5',
+        isFirstTimeId: '10',
       });
     } catch (error) {
       console.log(error, 'acceptBooking Error');

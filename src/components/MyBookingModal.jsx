@@ -86,7 +86,6 @@ const MyBookingModal = ({}) => {
   };
 
   return (
-    // <SafeAreaView style={{}}>
     <Modal transparent visible={myBookingModal}>
       <SafeAreaView style={{flex: 1}}>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
@@ -306,7 +305,6 @@ const MyBookingModal = ({}) => {
         </ScrollView>
       </SafeAreaView>
     </Modal>
-    // </SafeAreaView>
   );
 };
 
@@ -330,9 +328,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: 'hidden',
     width: 250,
-    // height: 250,
     minHeight: 100,
-    maxHeight: 500,
+    maxHeight: 700,
   },
   closeButtonContainer: {
     alignItems: 'flex-end',

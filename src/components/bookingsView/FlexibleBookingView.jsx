@@ -33,7 +33,7 @@ const BookingCard = ({booking, index, total}) => {
         </View>
         <View style={styles.vehicleType}>
           <Icon color={AppColors.mainColor} name="car" />
-          <Text style={styles.vehicleText}>{booking.car_model}</Text>
+          <Text style={styles.vehicleText}>{booking.vehicle_type}</Text>
         </View>
       </View>
       <Text style={styles.title}>{booking.pickup_address}</Text>
@@ -268,7 +268,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
- 
 });
 
 export default FlexibleBookingView;

@@ -35,7 +35,6 @@ const DueAmountDetails = ({route, navigation}) => {
       });
 
       setAllInvoiceData(response);
-      // console.log(response, 'getInvoiceData Api response');
     } catch (response) {
       console.log(error, 'getInvoiceData Api error - Error');
     }

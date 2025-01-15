@@ -2,7 +2,6 @@ import {Platform} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import notifee from '@notifee/react-native';
-import {GET_FCM_TOKEN} from '../apis/Apis';
 import {playSound} from './soundVibration';
 
 class NotificationService {
@@ -22,7 +21,7 @@ class NotificationService {
         console.warn('[NotificationService] Notification permission denied.');
       }
     } else if (Platform.OS === 'android') {
-      if (Platform.Version >= 33) { 
+      if (Platform.Version >= 33) {
         const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
         if (result === RESULTS.GRANTED) {
           console.log('[NotificationService] Notification permission granted.');
@@ -69,20 +68,6 @@ class NotificationService {
       console.error('[NotificationService] Error fetching FCM Token:', error);
     }
   }
-
-  // // Send FCM token to the server
-  // static async sendNotificationMessage(fcmtoken) {
-  //   console.log('[NotificationService] Sending FCM token to the server...');
-  //   try {
-  //     const response = await GET_FCM_TOKEN({
-  //       fcm_token: fcmtoken,
-  //       action: 'save_fcm',
-  //     });
-  //     console.log('[NotificationService] GET FCM TOKEN response:', response);
-  //   } catch (error) {
-  //     console.error('[NotificationService] Error sending FCM token:', error);
-  //   }
-  // }
 
   // Handle FCM token refresh
   static onTokenRefresh() {

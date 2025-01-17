@@ -134,6 +134,7 @@ export const NotificationDetailScreen = ({route}) => {
   const dispatch = useDispatch();
   const {notificationId} = route.params;
   const [notification, setNotification] = useState({});
+  const [loader, setLoader] = useState(false);
   const [bottamButtonText, setBottamButtonText] = useState({});
 
   const storeRating = useSelector(e => e?.globalSlice?.storeRating);
@@ -161,6 +162,7 @@ export const NotificationDetailScreen = ({route}) => {
   }, [notification, currentDateTime]);
 
   const viewHeadline = useCallback(async () => {
+    setLoader(true);
     try {
       const response = await DRIVER_NOTIFICATION({
         action: 'view_headline',
@@ -172,6 +174,8 @@ export const NotificationDetailScreen = ({route}) => {
       dispatch(setStoredRating(response.headline.rate));
     } catch (err) {
       console.error('VIEW_HEADLINE error:', err);
+    } finally {
+      setLoader(false);
     }
   }, [notificationId, storeRating]);
 
@@ -225,15 +229,12 @@ export const NotificationDetailScreen = ({route}) => {
 
   const clickStoreHomeNotification = async id => {
     console.log(id, 'clickStoreHomeNotification clickStoreHomeNotification');
-
-    // return false;
     try {
       const response = await DRIVER_NOTIFICATION({
         action: 'view_headline',
         id: id,
       });
-      // setNotification(response.headline);
-      // dispatch(setStoredRating(response.headline.rate));
+      console.log(response, 'click store');
     } catch (err) {
       console.error('VIEW_HEADLINE error:', err);
     }
@@ -242,150 +243,166 @@ export const NotificationDetailScreen = ({route}) => {
   return (
     <SafeAreaView style={styles.fullScreenContainer}>
       <Header backButton={true} />
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.contentContainer}>
-        <View
+      {loader ? (
+        <ActivityIndicator
+          size={'small'}
           style={{
-            flex: 1,
-            // padding: 16,
-          }}>
-          <View
-            style={{
-              backgroundColor: '#0056b3',
-              padding: 16,
-              borderRadius: 8,
-            }}>
-            <Text
-              style={{
-                color: '#ffffff',
-                fontSize: 22,
-                fontWeight: 'bold',
-                textAlign: 'center',
-              }}>
-              {notification?.headline_type}
-            </Text>
-          </View>
-          <View
-            style={{
-              backgroundColor: 'white',
-              marginVertical: 20,
-              width: '100%',
-              borderRadius: 10,
-              elevation: 5,
-            }}>
+            marginTop: '50%',
+            alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        />
+      ) : (
+        !loader &&
+        notification && (
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.contentContainer}>
             <View
               style={{
-                backgroundColor: '#e9f6ff',
-                padding: 16,
-                borderRadius: 8,
-                marginTop: 16,
-                borderLeftColor: '#0056b3',
-                borderLeftWidth: 5,
-                margin: 20,
+                flex: 1,
               }}>
-              <Text
+              <View
                 style={{
-                  color: '#333',
-                  fontSize: 18,
-                  marginBottom: 20,
+                  backgroundColor: '#0056b3',
+                  padding: 16,
+                  borderRadius: 8,
                 }}>
-                {notification.message}
-              </Text>
-              {bottamButtonText?.back_btn == '1' ? (
-                <TouchableOpacity
-                  onPress={() => navigation.goBack()}
+                <Text
                   style={{
-                    backgroundColor: '#0056b3',
-                    paddingVertical: 12,
+                    color: '#ffffff',
+                    fontSize: 22,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                  }}>
+                  {notification?.headline_type}
+                </Text>
+              </View>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  marginVertical: 20,
+                  width: '100%',
+                  borderRadius: 10,
+                  elevation: 5,
+                }}>
+                <View
+                  style={{
+                    backgroundColor: '#e9f6ff',
+                    padding: 16,
                     borderRadius: 8,
-                    alignItems: 'center',
-                    marginTop: 20,
-                    marginBottom: 5,
+                    marginTop: 16,
+                    borderLeftColor: '#0056b3',
+                    borderLeftWidth: 5,
+                    margin: 20,
                   }}>
                   <Text
                     style={{
-                      color: '#ffffff',
+                      color: '#333',
                       fontSize: 18,
-                      fontWeight: 'bold',
+                      marginBottom: 20,
                     }}>
-                    {bottamButtonText?.btn_text}
+                    {notification.message}
                   </Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  onPress={() =>
-                    clickStoreHomeNotification(bottamButtonText?.headline?.id)
-                  }
-                  style={{
-                    backgroundColor: '#0056b3',
-                    paddingVertical: 12,
-                    borderRadius: 8,
-                    alignItems: 'center',
-                    marginTop: 20,
-                    marginBottom: 5,
-                  }}>
-                  <Text
-                    style={{
-                      color: '#ffffff',
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                    }}>
-                    {bottamButtonText?.btn_text}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-        </View>
-
-        {shouldShowRating() && (
-          <>
-            <Text style={styles.rateResponseText}>Rate Our Response ?</Text>
-
-            <View style={styles.starContainer}>
-              {[1, 2, 3, 4, 5].map(star => (
-                <TouchableOpacity
-                  key={star}
-                  onPress={() => handleStarPress(star)}
-                  style={styles.starButton}>
-                  <Icon
-                    name={star <= storeRating ? 'star' : 'star-o'}
-                    size={30}
-                    color={AppColors.mainColor}
-                  />
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            <View style={styles.extraView}>
-              <View>
-                <View style={styles.feedbackInputContainer}>
-                  <TextInput
-                    style={styles.inputType}
-                    placeholder="Type your feedback here..."
-                    value={feedback}
-                    onChangeText={setFeedback}
-                    placeholderTextColor={AppColors.black}
-                    multiline
-                  />
+                  {bottamButtonText?.back_btn == '1' ? (
+                    <TouchableOpacity
+                      onPress={() => navigation.goBack()}
+                      style={{
+                        backgroundColor: '#0056b3',
+                        paddingVertical: 12,
+                        borderRadius: 8,
+                        alignItems: 'center',
+                        marginTop: 20,
+                        marginBottom: 5,
+                      }}>
+                      <Text
+                        style={{
+                          color: '#ffffff',
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                        }}>
+                        {bottamButtonText?.btn_text}
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() =>
+                        clickStoreHomeNotification(
+                          bottamButtonText?.headline?.id,
+                        )
+                      }
+                      style={{
+                        backgroundColor: '#0056b3',
+                        paddingVertical: 12,
+                        borderRadius: 8,
+                        alignItems: 'center',
+                        marginTop: 20,
+                        marginBottom: 5,
+                      }}>
+                      <Text
+                        style={{
+                          color: '#ffffff',
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                        }}>
+                        {bottamButtonText?.btn_text}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
-
-                <TouchableOpacity
-                  style={styles.btnView}
-                  onPress={saveBookingRemarks}>
-                  <Icon
-                    size={20}
-                    color={AppColors.mainColor}
-                    name="paper-plane"
-                    style={styles.IconType}
-                  />
-                </TouchableOpacity>
               </View>
             </View>
-          </>
-        )}
-      </ScrollView>
+
+            {shouldShowRating() && (
+              <>
+                <Text style={styles.rateResponseText}>Rate Our Response ?</Text>
+
+                <View style={styles.starContainer}>
+                  {[1, 2, 3, 4, 5].map(star => (
+                    <TouchableOpacity
+                      key={star}
+                      onPress={() => handleStarPress(star)}
+                      style={styles.starButton}>
+                      <Icon
+                        name={star <= storeRating ? 'star' : 'star-o'}
+                        size={30}
+                        color={AppColors.mainColor}
+                      />
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                <View style={styles.extraView}>
+                  <View>
+                    <View style={styles.feedbackInputContainer}>
+                      <TextInput
+                        style={styles.inputType}
+                        placeholder="Type your feedback here..."
+                        value={feedback}
+                        onChangeText={setFeedback}
+                        placeholderTextColor={AppColors.black}
+                        multiline
+                      />
+                    </View>
+
+                    <TouchableOpacity
+                      style={styles.btnView}
+                      onPress={saveBookingRemarks}>
+                      <Icon
+                        size={20}
+                        color={AppColors.mainColor}
+                        name="paper-plane"
+                        style={styles.IconType}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </>
+            )}
+          </ScrollView>
+        )
+      )}
     </SafeAreaView>
   );
 };

@@ -17,156 +17,180 @@ import {setTriggerFunction} from '../../redux/slices/globalSlice';
 import {FlatList} from 'react-native';
 
 const TripCard = ({trip}) => {
-  // console.log(trip, 'jjjjjjjjjjjj');
   const [openModal, setOpenModal] = useState(false);
 
   return (
-    <View style={styles.card}>
-      <View style={styles.header}>
-        <Text style={styles.time}>
-          {trip.Btime} <Text style={{fontSize: 16}}>{trip.BDate}</Text>{' '}
-          <Icon color={AppColors.white} name="car" size={17} />{' '}
-          <Text style={styles.vehicleType}>
-            {trip.vehicle_type} {trip.vehicle_model}
-          </Text>
-        </Text>
+    <View style={{flexDirection: 'column', marginBottom: 10}}>
+      {trip.night_charge > 0 ? (
         <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'row',
-            // padding: 10,
-          }}></View>
-      </View>
-      <View style={styles.contentWrapper}>
-        <View style={styles.leftContent}>
-          <Text style={styles.title}>
-            {trip.way_type} - {trip.product_type}
+          style={[
+            {
+              padding: 8,
+              borderRadius: 5,
+              borderBottomRightRadius: 0,
+              // marginBottom: 5,
+              marginHorizontal: 5,
+              alignSelf: 'flex-end',
+              backgroundColor: '#FF8C00',
+            },
+          ]}>
+          <Text style={[styles.incentiveText, {color: AppColors.white}]}>
+            + ₹ {trip.night_charge} Night Charge
           </Text>
-          {/* {trip.addresses.map((address, index) => ( */}
-          <View style={{flexDirection: 'row'}}>
-            <View
-              style={{
-                height: 10,
-                width: 10,
-                borderRadius: 5,
-                backgroundColor: '#0dc53d',
-                alignItems: 'flex-start',
-                top: 5,
-                left: 10,
-              }}></View>
-            <Text style={styles.address}>{trip.pickup_address}</Text>
-          </View>
-          {trip.drop_address ? (
+        </View>
+      ) : null}
+      <View style={styles.card}>
+        <View style={styles.header}>
+          <Text style={styles.time}>
+            {trip.Btime} <Text style={{fontSize: 16}}>{trip.BDate}</Text>{' '}
+            <Icon color={AppColors.white} name="car" size={17} />{' '}
+            <Text style={styles.vehicleType}>
+              {trip.vehicle_type} {trip.vehicle_model}
+            </Text>
+          </Text>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'row',
+              // padding: 10,
+            }}></View>
+        </View>
+        <View style={styles.contentWrapper}>
+          <View style={styles.leftContent}>
+            <Text style={styles.title}>
+              {trip.way_type} - {trip.product_type}
+            </Text>
+            {/* {trip.addresses.map((address, index) => ( */}
             <View style={{flexDirection: 'row'}}>
               <View
                 style={{
                   height: 10,
                   width: 10,
                   borderRadius: 5,
-                  backgroundColor: 'black',
+                  backgroundColor: '#0dc53d',
                   alignItems: 'flex-start',
                   top: 5,
                   left: 10,
                 }}></View>
-              <Text style={styles.address}>{trip.drop_address}</Text>
+              <Text style={styles.address}>{trip.pickup_address}</Text>
             </View>
-          ) : (
-            ''
-          )}
-          {/* ))} */}
-        </View>
-        <View style={styles.rightContent}>
-          <View style={styles.paymentDetails}>
-            {/* {console.log(trip.incentive_eligibility_fullfillment) } */}
-            {trip.night_charge > 0 ? (
-              <View style={[styles.incentiveBox, {backgroundColor: '#FF8C00'}]}>
-                <Text style={[styles.incentiveText, {color: AppColors.white}]}>
-                  + ₹ {trip.night_charge} Night Charge
-                </Text>
+            {trip.drop_address ? (
+              <View style={{flexDirection: 'row'}}>
+                <View
+                  style={{
+                    height: 10,
+                    width: 10,
+                    borderRadius: 5,
+                    backgroundColor: 'black',
+                    alignItems: 'flex-start',
+                    top: 5,
+                    left: 10,
+                  }}></View>
+                <Text style={styles.address}>{trip.drop_address}</Text>
               </View>
-            ) : null}
-            {trip.surge > 0 ? (
-              <View
-                style={[
-                  styles.incentiveBox,
-                  {backgroundColor: AppColors.orange},
-                ]}>
-                <Text style={[styles.incentiveText, {color: AppColors.white}]}>
-                  + ₹ {trip.surge} Surge
-                </Text>
-              </View>
-            ) : null}
-            {trip.chauffeur_service > 0 ? (
-              <View
-                style={[
-                  styles.incentiveBox,
-                  {backgroundColor: AppColors.orange},
-                ]}>
-                <Text style={[styles.incentiveText, {color: AppColors.white}]}>
-                  + ₹ {trip.chauffeur_service} Chauffeur Service
-                </Text>
-              </View>
-            ) : null}
-            {trip.washing_service > 0 ? (
-              <View
-                style={[
-                  styles.incentiveBox,
-                  {backgroundColor: AppColors.orange},
-                ]}>
-                <Text style={[styles.incentiveText, {color: AppColors.white}]}>
-                  + ₹ {trip.washing_service} Washing Service
-                </Text>
-              </View>
-            ) : null}
-            {trip.incentive > 0 ? (
-              <View style={styles.incentiveBox}>
-                <Text style={styles.incentiveText}>
-                  + Incentive ₹ {trip.incentive}
-                </Text>
-              </View>
-            ) : null}
-            {trip.incentive_eligibility_fullfillment > 0 ? (
-              <View style={styles.incentiveBox}>
-                <Text style={styles.incentiveText}>
-                  + Incentive ₹ {trip.incentive_eligibility_fullfillment}
-                </Text>
-              </View>
-            ) : null}
+            ) : (
+              ''
+            )}
+            {/* ))} */}
+          </View>
 
-            {trip.incentive_eligible_amount_fullfillment > 0 ? (
+          <View style={styles.rightContent}>
+            <View style={styles.paymentDetails}>
+              {/* {console.log(trip.incentive_eligibility_fullfillment) } */}
+              {/* {trip.night_charge > 0 ? (
+                <View
+                  style={[styles.incentiveBox, {backgroundColor: '#FF8C00'}]}>
+                  <Text
+                    style={[styles.incentiveText, {color: AppColors.white}]}>
+                    + ₹ {trip.night_charge} Night Charge
+                  </Text>
+                </View>
+              ) : null} */}
+              {trip.surge > 0 ? (
+                <View
+                  style={[
+                    styles.incentiveBox,
+                    {backgroundColor: AppColors.orange},
+                  ]}>
+                  <Text
+                    style={[styles.incentiveText, {color: AppColors.white}]}>
+                    + ₹ {trip.surge} Surge
+                  </Text>
+                </View>
+              ) : null}
+              {trip.chauffeur_service > 0 ? (
+                <View
+                  style={[
+                    styles.incentiveBox,
+                    {backgroundColor: AppColors.orange},
+                  ]}>
+                  <Text
+                    style={[styles.incentiveText, {color: AppColors.white}]}>
+                    + ₹ {trip.chauffeur_service} Chauffeur Service
+                  </Text>
+                </View>
+              ) : null}
+              {trip.washing_service > 0 ? (
+                <View
+                  style={[
+                    styles.incentiveBox,
+                    {backgroundColor: AppColors.orange},
+                  ]}>
+                  <Text
+                    style={[styles.incentiveText, {color: AppColors.white}]}>
+                    + ₹ {trip.washing_service} Washing Service
+                  </Text>
+                </View>
+              ) : null}
+              {trip.incentive > 0 ? (
+                <View style={styles.incentiveBox}>
+                  <Text style={styles.incentiveText}>
+                    + Incentive ₹ {trip.incentive}
+                  </Text>
+                </View>
+              ) : trip.incentive_eligibility_fullfillment == '1' &&
+                trip.incentive_eligible_amount_fullfillment > 0 ? (
+                <View style={styles.incentiveBox}>
+                  <Text style={styles.incentiveText}>
+                    + Incentive ₹ {trip.incentive_eligible_amount_fullfillment}
+                  </Text>
+                </View>
+              ) : null}
+
+              {/* {trip.incentive_eligible_amount_fullfillment > 0 ? (
               <View style={styles.incentiveBox}>
                 <Text style={styles.incentiveText}>
                   + Incentive ₹ {trip.incentive_eligible_amount_fullfillment}
                 </Text>
               </View>
-            ) : null}
+            ) : null} */}
 
-            <View style={{marginRight: 5}}>
-              <Text style={styles.price}>₹ {trip.bugdet_price}</Text>
-              <Text style={styles.package}>
-                Package - {trip.package_detail}
-              </Text>
-              <Text>{'\n'}</Text>
+              <View style={{marginRight: 5}}>
+                <Text style={styles.price}>₹ {trip.bugdet_price}</Text>
+                <Text style={styles.package}>
+                  Package - {trip.package_detail}
+                </Text>
+                <Text>{'\n'}</Text>
+              </View>
             </View>
-          </View>
-          <TouchableOpacity
-            onPress={() => setOpenModal(true)}
-            style={styles.acceptButton}>
-            <Text style={styles.acceptText}>Accept</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setOpenModal(true)}
+              style={styles.acceptButton}>
+              <Text style={styles.acceptText}>Accept</Text>
+            </TouchableOpacity>
 
-          <Modal
-            animationType="slide"
-            transparent={false}
-            onRequestClose={() => setOpenModal(false)}
-            visible={openModal}>
-            <RoundTripBookingAceeptModal
-              setOpenModal={setOpenModal}
-              trip={trip}
-            />
-          </Modal>
-          {/* <Modal
+            <Modal
+              animationType="slide"
+              transparent={false}
+              onRequestClose={() => setOpenModal(false)}
+              visible={openModal}>
+              <RoundTripBookingAceeptModal
+                setOpenModal={setOpenModal}
+                trip={trip}
+              />
+            </Modal>
+            {/* <Modal
             backdropOpacity={.6}
             onBackdropPress={() => setOpenModal(false)}
             animationIn={'fadeInDown'}
@@ -174,6 +198,7 @@ const TripCard = ({trip}) => {
             isVisible={openModal}>
             <RoundTripBookingAceeptModal setOpenModal={setOpenModal} />
           </Modal> */}
+          </View>
         </View>
       </View>
     </View>
@@ -350,8 +375,9 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.mainColor,
     borderRadius: 10,
     padding: 12,
-    marginVertical: 10,
+    marginBottom: 10,
     marginHorizontal: 5,
+    borderTopRightRadius: 0,
   },
   header: {
     flexDirection: 'row',

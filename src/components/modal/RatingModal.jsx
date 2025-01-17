@@ -14,29 +14,41 @@ import {AppFont} from '../../assets/FontsFamily';
 
 const RatingModal = ({data}) => {
   const dispatch = useDispatch();
-  const userName = useSelector(state => state.user?.name) || 'User';
 
   const closeModal = useCallback(() => {
     dispatch(setRatingModal(false));
   }, [dispatch]);
 
-  // const renderBulletPoint = (text, index) => (
-  //   <Text key={index} style={styles.middleText}>
-  //     {`${index + 1} - ${text}`}
-  //   </Text>
-  // );
+  const isDataValid = data && Object.keys(data).length > 0;
 
-  // const bulletPoints = [
-  //   'See bookings immediately on the panel; otherwise, they will appear late.',
-  //   'Be notified via SMS when new bookings come in your area.',
-  //   'If your Rating Score is more than 4 and your Booking Score is more than 70%, you can see and take more than one booking in a day.',
-  // ];
+  if (!isDataValid) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.mainContainer}>
       <TouchableWithoutFeedback onPress={closeModal}>
         <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>
+            <View style={{marginBottom: 10}}>
+              <TouchableOpacity
+                onPress={() => closeModal()}
+                style={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 15,
+                  backgroundColor: '#e0e0e0',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{fontSize: 20, color: '#333', fontWeight: 'bold'}}>
+                  ×
+                </Text>
+              </TouchableOpacity>
+            </View>
             <Text style={styles.topHeading}>{data?.title}</Text>
             <Text style={styles.topText}>{data?.body?.line1}</Text>
             <Text style={styles.topText}>{data?.body?.line2}</Text>
@@ -105,7 +117,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
     backgroundColor: AppColors.mainColor,
-    alignSelf: 'flex-start',
+    alignSelf: 'center',
   },
   buttonText: {color: AppColors.white},
 });

@@ -92,7 +92,6 @@ const RateUsAtSocialMedia = ({route, navigation}) => {
             },
           }}
         />
-        {console.log(bookingNumber ,"bookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumberbookingNumber")}
 
         <View style={styles.container}>
           <Text style={styles.feedbackText}>{viewData?.content1}</Text>

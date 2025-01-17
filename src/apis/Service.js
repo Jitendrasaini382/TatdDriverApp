@@ -3,6 +3,8 @@ import {API_BASE_URL} from '../constant/path';
 import store from '../redux/store';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
 import DeviceInfo from 'react-native-device-info';
+import {setLoginStatus} from '../redux/slices/globalSlice';
+import {jwtDecode} from 'jwt-decode';
 
 // Axios axiosClient configure
 const axiosClient = axios.create({
@@ -60,6 +62,13 @@ axiosClient.interceptors.response.use(
               }),
             );
 
+            store.dispatch(
+              setUserAuthStates({
+                key: 'userProfile',
+                value: jwtDecode(res.data.jwt),
+              }),
+            );
+
             // add new jwt in header
             axiosClient.defaults.headers.common[
               'Authorization'
@@ -79,6 +88,12 @@ axiosClient.interceptors.response.use(
             store.dispatch(
               setUserAuthStates({
                 key: 'login',
+                value: false,
+              }),
+            );
+            store.dispatch(
+              setLoginStatus({
+                key: 'loginStatus',
                 value: false,
               }),
             );

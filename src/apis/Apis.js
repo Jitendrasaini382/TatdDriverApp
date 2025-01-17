@@ -375,15 +375,6 @@ export const CHECK_IS_BOOKING_IS_UPCOMMING = body => {
   );
 };
 
-export const DRIVER_REACH = body => {
-  return _Fetch(
-    'POST',
-    'duty-report/duty_report_booking_reach.php',
-    {...body},
-    {},
-  );
-};
-
 export const DRIVE_START = body => {
   return _Fetch(
     'POST',
@@ -392,6 +383,16 @@ export const DRIVE_START = body => {
     {},
   );
 };
+
+export const GET_FIRST_POPUP_DATA = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/booking_accepted_duty_report_popup.php',
+    {...body},
+    {},
+  );
+};
+
 export const DRIVE_END = body => {
   return _Fetch(
     'POST',

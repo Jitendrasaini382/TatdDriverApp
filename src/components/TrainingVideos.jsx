@@ -1,13 +1,34 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View, Text, Image} from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {OpenEnvelop, CloseEnvelop} from '../assets/images';
 import {AppColors} from '../assets/Colors';
-import {DRIVER_TRAINING_VIDEOS_CLICK_STORE} from '../apis/Apis';
+import {
+  DRIVER_TRAINING_VIDEOS,
+  DRIVER_TRAINING_VIDEOS_CLICK_STORE,
+} from '../apis/Apis';
 
-const TrainingVideo = ({data}) => {
+const TrainingVideo = () => {
   const [openIndex, setOpenIndex] = useState(null);
+  const [trainingVideoData, setTrainingVideoData] = useState();
+
+  useEffect(() => {
+    getTrainingVideo();
+  }, []);
+
+  const getTrainingVideo = async () => {
+    try {
+      const response = await DRIVER_TRAINING_VIDEOS(languageSwitch);
+      console.log(
+        'DRIVER_TRAINING_VIDEOS DRIVER_TRAINING_VIDEOS Response::',
+        response?.response?.training_data,
+      );
+      setTrainingVideoData(response?.response?.training_data);
+    } catch (error) {
+      console.log(error, 'DRIVER_TRAINING_VIDEOS  Error');
+    }
+  };
 
   const storeClickVideo = async id => {
     console.log('Starting to fetch storeClickVideo data...', id);
@@ -34,8 +55,8 @@ const TrainingVideo = ({data}) => {
 
   return (
     <View style={styles.container}>
-      {data &&
-        data.map((item, index) => (
+      {trainingVideoData &&
+        trainingVideoData.map((item, index) => (
           <AccordionItem
             key={index}
             title={item.subject}

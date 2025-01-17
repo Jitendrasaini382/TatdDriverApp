@@ -53,11 +53,11 @@ const animateCell = ({hasValue, index, isFocused}) => {
       toValue: isFocused ? 1 : 0,
       duration: 250,
     }),
-    Animated.spring(animationsScale[index], {
-      useNativeDriver: false,
-      toValue: hasValue ? 0 : 1,
-      duration: hasValue ? 300 : 250,
-    }),
+    // Animated.spring(animationsScale[index], {
+    //   useNativeDriver: false,
+    //   toValue: hasValue ? 0 : 1,
+    //   duration: hasValue ? 300 : 250,
+    // }),
   ]).start();
 };
 
@@ -124,106 +124,6 @@ const CheckDriverOtp = ({navigation, route}) => {
         setShowResendOtpText(false);
       });
   };
-  // const verifyOtp = async () => {
-  //   console.log('clickkkkked');
-  //   try {
-  //     console.log('Verify OTP process started'); // Debug console
-  //     if (!otp) {
-  //       console.log('No OTP entered'); // Debug console
-  //       // setError('Please Enter OTP');
-  //       Toast.show({
-  //         type: 'error',
-  //         text1: 'Please Enter OTP',
-  //       });
-  //       return;
-  //     } else if (otp.length !== 4) {
-  //       console.log(`Invalid OTP length: ${otp.length}`); // Debug console
-  //       // setError('Please enter a 4-digit OTP');
-  //       Toast.show({
-  //         type: 'error',
-  //         text1: 'Please enter a 4-digit OTP',
-  //       });
-  //       return;
-  //     }
-
-  //     console.log('Setting loader to true and dismissing keyboard'); // Debug console
-  //     setLoader(true);
-  //     Keyboard.dismiss();
-
-  //     console.log('Calling VERIFY_OTP_LOGIN API with data:', {mobile, otp}); // Debug console
-  //     VERIFY_OTP_LOGIN({
-  //       mobile: mobile,
-  //       otp: otp,
-  //     })
-  //       .then(response => {
-  //         console.log('VERIFY_OTP_LOGIN response:', response); // Debug console
-  //         if (response?.jwt && response?.refresh_token) {
-  //           console.log('Dispatching JWT to state:', response.jwt); // Debug console
-  //           dispatch(
-  //             setUserAuthStates({
-  //               key: 'jwt',
-  //               value: response?.jwt,
-  //             }),
-  //           );
-  //         }
-  //         return response;
-  //       })
-  //       .then(response => {
-  //         console.log(
-  //           'Dispatching refresh token to state:',
-  //           response?.refresh_token,
-  //         ); // Debug console
-  //         dispatch(
-  //           setUserAuthStates({
-  //             key: 'refreshToken',
-  //             value: response?.refresh_token,
-  //           }),
-  //         );
-  //         return response;
-  //       })
-  //       .then(response => {
-  //         console.log('Decoding JWT and updating user profile:', response?.jwt); // Debug console
-  //         dispatch(
-  //           setUserAuthStates({
-  //             key: 'userProfile',
-  //             value: jwtDecode(response.jwt),
-  //           }),
-  //         );
-  //         console.log('Updating login state to true'); // Debug console
-  //         dispatch(
-  //           setUserAuthStates({
-  //             key: 'login',
-  //             value: true,
-  //           }),
-  //         );
-  //       })
-  //       .catch(err => {
-  //         console.warn('Error during VERIFY_OTP_LOGIN API call:', err); // Debug console
-  //         Toast.show({
-  //           type: 'error',
-  //           text1: err,
-  //         });
-  //       })
-  //       .finally(() => {
-  //         console.log('Setting loader to false in finally block'); // Debug console
-  //         setLoader(false);
-  //       });
-  //   } catch (err) {
-  //     console.log(
-  //       'OTP verification failed in catch block: messagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessagemessage',
-  //       err,
-  //     ); // Debug console
-  //     // setLoader(false);
-  //     // Toast.show({
-  //     //   type: 'error',
-  //     //   text1: err?.message,
-  //     // });
-  //     // setError(err.message, 'OTP verification failed. Please try again.');
-  //   } finally {
-  //     console.log('Setting loader to false in finally block last finall'); // Debug console
-  //     setLoader(false);
-  //   }
-  // };
 
   const verifyOtp = async () => {
     try {

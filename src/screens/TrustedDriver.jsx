@@ -19,6 +19,7 @@ import {
   RefreshControl,
   Platform,
   Image,
+  AppState,
 } from 'react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -52,11 +53,7 @@ import {
   UPDATE_POPUP,
 } from '../apis/Apis';
 import ExpressBookingModal from '../components/modal/ExpressBookingModal';
-import {
-  checkVibrationSupport,
-  // checkVibrationPermission,
-  requestNotificationPermission,
-} from '../utils/permissions';
+import {requestNotificationPermission} from '../utils/permissions';
 import {
   setBookingModal,
   setCurrentView,
@@ -68,11 +65,10 @@ import {
 } from '../redux/slices/trustedDriverSlice';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
-import {Agent_Icon, AppLogo, Diamond_Icon} from '../assets/images';
-import {useRoute} from '@react-navigation/native';
+import {Agent_Icon, AppLogo} from '../assets/images';
+import {useFocusEffect, useRoute} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import {setLoginStatus, setRefreshKey} from '../redux/slices/globalSlice';
-import { triggerVibration } from '../utils/soundVibration';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -93,6 +89,7 @@ const TrustedDriver = ({navigation}) => {
   const [otrTrustedData, setOtrTrustedData] = useState({});
   const [homeNotificationData, setHomeNotificationData] = useState({});
   const [homeNoticeData, setHomeNoticeData] = useState({});
+  const [expressPopupData, setExpressPopupData] = useState({});
   const [showNotification, setShowNotification] = useState(false);
   const [showNotice, setShowNotice] = useState(false);
   const [bookingTrustedData, setBookingTrustedData] = useState({});
@@ -147,13 +144,61 @@ const TrustedDriver = ({navigation}) => {
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   const jwt = useSelector(e => e?.userAuth?.jwt);
+ 
+  useFocusEffect(
+    useCallback(() => {
+      getHeadlineData();
+      getHomeNotification();
+      getHomeNotice();
+      getPopup();
+
+      return () => {
+        console.log('Screen unfocused, cleanup if necessary.');
+      };
+    }, []),
+  );
+
+  // Handle when the app comes to the foreground
+  useEffect(() => {
+    const handleAppStateChange = nextAppState => {
+      if (nextAppState === 'active') {
+        console.log('App is active, refetching data...');
+        getHeadlineData();
+        getHomeNotification();
+        getHomeNotice();
+        getPopup();
+      }
+    };
+
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   getHeadlineData();
+  //   getPopup();
+  //   getTrainingVideo();
+  //   getTrustedPopupRating();
+  //   getTrustedPopupBooking();
+  //   getTrustedPopupOtr();
+  //   getUpdatePopup();
+  //   getHomeNotification();
+  //   getHomeNotice();
+  // }, []);
+
   useEffect(() => {
     if (jwt) {
       // if (isRfdOn) {
       getPopup();
       // }
       getHeadlineData();
-      getTrainingVideo();
+      // getTrainingVideo();
       getTrustedPopupRating();
       getTrustedPopupBooking();
       getTrustedPopupOtr();
@@ -164,9 +209,7 @@ const TrustedDriver = ({navigation}) => {
   }, [jwt, languageSwitch]);
 
   const openMyUrl = url => {
-    Linking.openURL(url).then(() => {
-      setUpdateModal(false);
-    });
+    Linking.openURL(url).then(() => {});
   };
 
   const isFcmSent = useSelector(e => e?.userAuth?.isFcmSent);
@@ -332,6 +375,7 @@ const TrustedDriver = ({navigation}) => {
         const {version, force_update, app_url} = response.app_details;
         if (force_update == '1' && app_url) {
           openMyUrl(app_url);
+          setUpdateModal(false);
         }
 
         if (appVersion < version) {
@@ -377,10 +421,6 @@ const TrustedDriver = ({navigation}) => {
     const newRfdValue = isRfdOn ? '0' : '1';
     console.log('New RFD Value:', newRfdValue);
 
-    // // Toggle isRfdOn state
-    // // setIsRfdOn(!isRfdOn);
-    // console.log('Toggled isRfdOn (setState):', !isRfdOn);
-
     // Create updated login button payload
     const updatedLoginButton = {
       ...loginButton,
@@ -392,9 +432,14 @@ const TrustedDriver = ({navigation}) => {
     try {
       console.log('Calling LOGIN_BUTTON API with payload:', updatedLoginButton);
       const response = await LOGIN_BUTTON(updatedLoginButton);
-      console.log('LOGIN API RESPONSE:', response);
-      // setIsRfdOn(response?.login_status);
-      dispatch(setLoginStatus(response?.login_status));
+
+      if (response?.rfd == '1') {
+        dispatch(setLoginStatus(true));
+      } else {
+        dispatch(setLoginStatus(false));
+      }
+
+      // dispatch(setLoginStatus(response?.login_status));
       if (response?.message?.length <= 30 && response?.message) {
         setLoginMessage('');
         // Show toast if the message length is 30 or less
@@ -407,7 +452,7 @@ const TrustedDriver = ({navigation}) => {
         setLoginMessage(response?.message);
         setTimeout(() => {
           setLoginMessage('');
-        }, 300000);
+        }, 60000);
       }
 
       if (response?.redirect) {
@@ -465,11 +510,8 @@ const TrustedDriver = ({navigation}) => {
         action: 'check_popup',
         current_language: languageSwitch,
       });
-      console.log(
-        response,
-        'GET_POPUP  --------------------->>>>>>>>>>>>>  Response ',
-      );
 
+      setExpressPopupData(response?.popup_data);
       if (response.express_booking_popup_flag == 1) {
         dispatch(setExpressBookingModal(true));
         setPopupData(response.express_booking_popup_flag);
@@ -494,8 +536,24 @@ const TrustedDriver = ({navigation}) => {
         current_language: languageSwitch,
       });
 
+      console.log(
+        response,
+        'responseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse  getHeadlineDatagetHeadlineDatagetHeadlineData',
+      );
+
       setHeadLineData(response);
-      if (response?.rfd == '1') {
+
+      if (
+        response?.driver_panel_messages
+          ?.redirect_to_website_trusted_driver_flag == '1'
+      ) {
+        openMyUrl(
+          response?.driver_panel_messages
+            ?.redirect_to_website_trusted_driver_url,
+        );
+      }
+
+      if (response?.driver_panel_messages?.rfd == '1') {
         dispatch(setLoginStatus(true));
       } else {
         dispatch(setLoginStatus(false));
@@ -516,6 +574,7 @@ const TrustedDriver = ({navigation}) => {
       } else {
         setShowNeedHelp(false);
       }
+      setVideoCount(response?.driver_panel_messages?.training_video_unseen);
     } catch (error) {
       console.log('DRIVER_HEADLINE Error:', error);
     }
@@ -608,28 +667,23 @@ const TrustedDriver = ({navigation}) => {
         'DRIVER_TRAINING_VIDEOS DRIVER_TRAINING_VIDEOS Response::',
         response?.response?.training_data,
       );
-      setVideoCount(response?.response?.training_data.length);
-
       setTrainingVideoData(response?.response?.training_data);
     } catch (error) {
       console.log(error, 'DRIVER_TRAINING_VIDEOS  Error');
     }
   };
 
-  // const onRefresh = useCallback(() => {
-  //   setRefreshing(true);
-  //   dispatch(setRefreshKey());
-  //   getUpdatePopup()
-  //   setRefreshing(false);
-  // }, []);
-
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
       dispatch(setRefreshKey());
       await getUpdatePopup();
+      await getHeadlineData();
+      await getHomeNotification();
+      await getHomeNotice();
     } catch (error) {
       console.log('Error during refresh:', error);
+      setRefreshing(false);
     } finally {
       setRefreshing(false);
     }
@@ -646,7 +700,10 @@ const TrustedDriver = ({navigation}) => {
     .join(' ');
 
   const clickStoreHomeNotification = async id => {
-    console.log(id, 'clickStoreHomeNotification clickStoreHomeNotification');
+    console.log(
+      id,
+      'clickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotification',
+    );
 
     try {
       const response = await DRIVER_NOTIFICATION({
@@ -661,13 +718,17 @@ const TrustedDriver = ({navigation}) => {
       );
 
       getHeadlineData();
+      getHomeNotification();
     } catch (err) {
       console.error('VIEW_HEADLINE error:', err);
     }
   };
 
   const clickStoreHomeNotice = async id => {
-    console.log(id, 'clickStoreHomeNotice clickStoreHomeNotice');
+    console.log(
+      id,
+      'clickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNotice',
+    );
 
     // return false;
     try {
@@ -704,6 +765,28 @@ const TrustedDriver = ({navigation}) => {
                 backgroundColor: '#f4f4f4',
                 padding: 16,
               }}>
+              {console.log(
+                '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',
+              )}
+              {console.log(
+                'run-------------------------- trustedd showNotice',
+                showNotice,
+              )}
+              {console.log(
+                'run-------------------------- trustedd showNotification',
+                showNotification,
+              )}
+              {console.log(
+                'run-------------------------- trustedd homeNotificationData',
+                homeNotificationData,
+              )}
+              {console.log(
+                'run-------------------------- trustedd homeNoticeData',
+                homeNoticeData,
+              )}
+              {console.log(
+                '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',
+              )}
               <View
                 style={{
                   backgroundColor: '#0056b3',
@@ -828,6 +911,28 @@ const TrustedDriver = ({navigation}) => {
                 backgroundColor: '#f4f4f4',
                 padding: 16,
               }}>
+              {console.log(
+                '------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
+              )}
+              {console.log(
+                'run-------------------------- trustedd showNotice',
+                showNotice,
+              )}
+              {console.log(
+                'run-------------------------- trustedd showNotification',
+                showNotification,
+              )}
+              {console.log(
+                'run-------------------------- trustedd homeNotificationData',
+                homeNotificationData,
+              )}
+              {console.log(
+                'run-------------------------- trustedd homeNoticeData',
+                homeNoticeData,
+              )}
+              {console.log(
+                '------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
+              )}
               <View
                 style={{
                   backgroundColor: '#0056b3',
@@ -918,6 +1023,28 @@ const TrustedDriver = ({navigation}) => {
             </View>
           ) : (
             <View style={styles.mainContainer}>
+              {console.log(
+                '==============================================================================================================================================================================================================================================================================================================================================================================================================================================',
+              )}
+              {console.log(
+                'run-------------------------- trustedd showNotice',
+                showNotice,
+              )}
+              {console.log(
+                'run-------------------------- trustedd showNotification',
+                showNotification,
+              )}
+              {console.log(
+                'run-------------------------- trustedd homeNotificationData',
+                homeNotificationData,
+              )}
+              {console.log(
+                'run-------------------------- trustedd homeNoticeData',
+                homeNoticeData,
+              )}
+              {console.log(
+                '==============================================================================================================================================================================================================================================================================================================================================================================================================================================',
+              )}
               {/* Marquee View */}
               <View style={styles.marqueeView}>
                 <Marquee spacing={20} speed={0.5}>
@@ -1000,32 +1127,6 @@ const TrustedDriver = ({navigation}) => {
                     </View>
 
                     <View style={styles.bottamRightView}>
-                      {decodedToken?.diamond_eligability == '1' ? (
-                        <TouchableOpacity
-                          onPress={() => checkVibrationSupport(10000)}
-                          // onPress={() => triggerVibration()}
-                          
-                          style={{
-                            backgroundColor: AppColors.white,
-                            borderWidth: 2,
-                            borderRadius: responsiveSize(7),
-                            borderColor: AppColors.white,
-                            alignItems: 'center',
-                            alignContent: 'center',
-                            paddingHorizontal: responsiveSize(8),
-                            paddingVertical: responsiveSize(4),
-                            margin: responsiveSize(2),
-                          }}>
-                          <Image
-                            style={{
-                              height: responsiveSize(20),
-                              width: responsiveSize(20),
-                            }}
-                            source={Diamond_Icon}
-                          />
-                        </TouchableOpacity>
-                      ) : null}
-
                       <TouchableOpacity
                         onPress={() => dispatch(setModalVisible(true))}>
                         <View
@@ -1179,7 +1280,8 @@ const TrustedDriver = ({navigation}) => {
                     </Text>
                     <Text style={styles.textIcon}>
                       <Icon name="rupee" size={responsiveSize(9)} />{' '}
-                      {decodedToken?.TrustedDriverData?.agent_panel_earning}
+                      {headLineData?.driver_panel_messages?.agent_panel_earning}
+                      {/* {decodedToken?.TrustedDriverData?.agent_panel_earning} */}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -1239,7 +1341,12 @@ const TrustedDriver = ({navigation}) => {
               {/* <ViewAwarenessData /> */}
               {/* <RoundTripBookingView /> */}
               {/* <BookingView /> */}
-              <Text style={{color: AppColors.red, margin: 5}}>
+              <Text
+                style={{
+                  color: AppColors.red,
+                  marginVertical: 5,
+                  marginHorizontal: 15,
+                }}>
                 {loginMessage}
               </Text>
 
@@ -1250,9 +1357,7 @@ const TrustedDriver = ({navigation}) => {
               {/* Main Toggle Content */}
               <>{isRfdOn ? <BookingView data={headLineData} /> : null}</>
               {/* <BookingView /> */}
-              {videosContent ? (
-                <TrainingVideo data={trainingVideoData} />
-              ) : null}
+              {videosContent ? <TrainingVideo /> : null}
             </View>
           )}
         </ScrollView>
@@ -1398,104 +1503,15 @@ const TrustedDriver = ({navigation}) => {
           </View>
         </View>
 
-        {/* <View style={{justifyContent: 'flex-end'}}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              alignItems: 'center',
-              paddingVertical: 20,
-              elevation: 20,
-              backgroundColor: '#fff',
-            }}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('CommanWebview', {
-                  url: `https://www.tatd.in/agent-login.php`,
-                })
-              }
-              style={{alignItems: 'center', justifyContent: 'center'}}>
-              <Image
-                source={Agent_Icon} // Replace with your actual image path
-                style={{
-                  width: 30,
-                  height: 30,
-                  marginBottom: 10,
-                  tintColor: AppColors.mainColor,
-                }}
-              />
-              <Text
-                style={{
-                  fontSize: 12,
-
-                  color: '#000',
-                }}>
-                AGENT PANEL
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('CommanWebview', {
-                  url: `https://www.tatd.in/premium-driver.php?step=1`,
-                })
-              }
-              style={{alignItems: 'center', justifyContent: 'center'}}>
-              <Image
-                source={Agent_Icon} // Replace with your actual image path
-                style={{
-                  width: 30,
-                  height: 30,
-                  marginBottom: 10,
-                  tintColor: AppColors.mainColor,
-                }}
-              />
-              <Text
-                style={{
-                  fontSize: 12,
-
-                  color: '#000',
-                }}>
-                PREMIUM DRIVER
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              // onPress={() =>
-              //   navigation.navigate('CommanWebview', {
-              //     url: `https://www.tatd.in/agent-login.php`,
-              //   })
-              // }
-              onPress={() => navigation.navigate('TrustedDriver')}
-              style={{alignItems: 'center', justifyContent: 'center'}}>
-              <Image
-                source={Agent_Icon} // Replace with your actual image path
-                style={{
-                  width: 30,
-                  height: 30,
-                  marginBottom: 10,
-                  tintColor: AppColors.mainColor,
-                }}
-              />
-              <Text
-                style={{
-                  fontSize: 12,
-
-                  color: '#000',
-                }}>
-                TRUSTED PARTNER
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View> */}
-
         {/* Modals */}
 
         <Modal
           backdropOpacity={0}
           animationIn={'fadeInDown'}
           animationOut={'fadeOutUp'}
+          // isVisible={popupData == 0}>
           isVisible={popupData == 1 && expressBookingModal}>
-          <ExpressBookingModal />
+          <ExpressBookingModal data={expressPopupData} />
         </Modal>
 
         <Modal
@@ -1545,8 +1561,6 @@ const TrustedDriver = ({navigation}) => {
         <Modal
           backdropOpacity={0.5}
           onBackdropPress={() => setUpdateModal(false)}
-          // animationIn={'fadeInDown'}
-          // animationOut={'fadeOutUp'}
           isVisible={updateModal}>
           <View
             style={{
@@ -1614,9 +1628,10 @@ const TrustedDriver = ({navigation}) => {
                     shadowRadius: 10,
                     marginBottom: 15,
                   }}
-                  onPress={() =>
-                    openMyUrl(upadatePopupData?.app_details?.app_url)
-                  }>
+                  onPress={() => [
+                    openMyUrl(upadatePopupData?.app_details?.app_url),
+                    setUpdateModal(false),
+                  ]}>
                   <Text
                     style={{
                       color: '#fff',

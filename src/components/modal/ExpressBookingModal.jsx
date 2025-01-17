@@ -5,14 +5,16 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Image,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 import {EXPRESS_BOOKING_UPDATE} from '../../apis/Apis';
 import {useDispatch, useSelector} from 'react-redux';
 import {setExpressBookingModal} from '../../redux/slices/trustedDriverSlice';
+import {Triangle_Icon} from '../../assets/images';
 
-const ExpressBookingModal = () => {
+const ExpressBookingModal = ({data}) => {
   const dispatch = useDispatch();
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
@@ -33,58 +35,6 @@ const ExpressBookingModal = () => {
     }
   };
 
-  const renderContent = () => {
-    if (languageSwitch == 'english') {
-      return (
-        <>
-          <View style={styles.contentView}>
-            <Text style={styles.contentText}>
-              Are you available for any booking in the entire{' '}
-              <Text style={styles.highlightText}>
-                {decodedToken?.TrustedDriverData.zone}
-              </Text>{' '}
-              area in the next
-              <Text style={styles.highlightText}> 30 minutes</Text>? If yes, you
-              will be notified by SMS as soon as an Express booking comes in.
-            </Text>
-          </View>
-          <View style={styles.contentView}>
-            <Text style={styles.contentText}>
-              Please do not provide incorrect information to avoid wasting both
-              your and our time.
-            </Text>
-          </View>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <View style={styles.contentView}>
-            <Text style={styles.contentText}>
-              क्या आप अगले{' '}
-              <Text style={styles.highlightText}>
-                30 मिनट में पूरे {decodedToken?.TrustedDriverData.zone}{' '}
-              </Text>
-              क्षेत्र में कहीं की भी बुकिंग करने के लिए उपलब्ध है। यदि हाँ, तो
-              Express बुकिंग बुकिंग आते ही
-              <Text style={styles.highlightText}>
-                {' '}
-                आपको SMS द्वारा सूचित किया जाएगा।
-              </Text>
-              ?
-            </Text>
-          </View>
-          <View style={styles.contentView}>
-            <Text style={styles.contentText}>
-              कृपया गलत जानकारी मत देना जिससे आपका और हमारा दोनों को समय बर्बाद
-              हो।
-            </Text>
-          </View>
-        </>
-      );
-    }
-  };
-
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.contentContainer}>
@@ -92,15 +42,16 @@ const ExpressBookingModal = () => {
           <View style={styles.mainTopView}>
             <View style={styles.mainTopContent}>
               <View style={styles.headingView}>
-                <Text style={styles.headingText}>Next 30 Minutes</Text>
+                <Text style={styles.headingText}>{data?.title}</Text>
               </View>
               <View style={styles.triangleMainView}>
-                <View style={styles.triangleView}></View>
+                {/* <View style={styles.triangleView}></View>
                 <View
                   style={[
                     styles.triangleView,
                     {transform: [{rotate: '270deg'}]},
-                  ]}></View>
+                  ]}></View> */}
+                <Image source={Triangle_Icon} />
               </View>
             </View>
             <View>
@@ -110,24 +61,23 @@ const ExpressBookingModal = () => {
             </View>
           </View>
         </View>
-        {renderContent()}
+        <View style={styles.contentView}>
+          <Text style={styles.contentText}>{data?.message}</Text>
+        </View>
+        <View style={styles.contentView}>
+          <Text style={styles.contentText}>{data?.warning}</Text>
+        </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={() => expressBookingUpdate(1)}
             style={styles.button}>
-            <Text style={styles.buttonText}>
-              {languageSwitch == 'english'
-                ? 'I am available'
-                : 'मैं उपलब्ध हूँ।'}
-            </Text>
+            <Text style={styles.buttonText}>{data?.buttons?.available}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => expressBookingUpdate(0)}
             style={styles.button}>
             <Text style={styles.buttonText}>
-              {languageSwitch == 'english'
-                ? 'I am not available'
-                : 'मैं उपलब्ध नहीं हूँ।'}
+              {data?.buttons?.not_available}
             </Text>
           </TouchableOpacity>
         </View>

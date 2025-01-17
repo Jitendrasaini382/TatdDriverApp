@@ -1,6 +1,6 @@
-import React, { useRef } from 'react';
-import { useRoute } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native';
+import React, {useRef} from 'react';
+import {useRoute} from '@react-navigation/native';
+import {SafeAreaView} from 'react-native';
 import WebView from 'react-native-webview';
 import Header from '../components/Header';
 
@@ -37,15 +37,21 @@ const CommanWebview = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Header backButton={true} isAuthenticated={isAuthenticated} />
+    <SafeAreaView style={{flex: 1}}>
+      <Header
+        backButton={true}
+        isAuthenticated={isAuthenticated}
+        customeNavigation={{
+          name: 'TrustedDriver',
+        }}
+      />
       <WebView
         ref={webviewRef}
-        style={{ flex: 1 }}
-        source={{ uri: url }}
+        style={{flex: 1}}
+        source={{uri: url}}
         startInLoadingState={true}
         onLoadEnd={() => removeHeader()}
-        onNavigationStateChange={(navState) => {
+        onNavigationStateChange={navState => {
           console.log('Navigating to:', navState.url);
         }}
       />
@@ -54,11 +60,6 @@ const CommanWebview = () => {
 };
 
 export default CommanWebview;
-
-
-
-
-
 
 // import React, {useRef} from 'react';
 // import {useRoute} from '@react-navigation/native';

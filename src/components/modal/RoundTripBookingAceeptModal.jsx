@@ -1,20 +1,20 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
-  Alert,
   ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {FINAL_ACCEPT_BOOKING, ON_DEMAND_BOOKING} from '../../apis/Apis';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import globalSlice, {setRefreshKey, setTriggerFunction} from '../../redux/slices/globalSlice';
-import {FlatList} from 'react-native';
-import {Skeleton} from '@rneui/themed';
+import globalSlice, {
+  setRefreshKey,
+  setTriggerFunction,
+} from '../../redux/slices/globalSlice';
 
 const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   const navigation = useNavigation();
@@ -25,7 +25,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   const [driverConsent, setDriverConsent] = useState({});
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
-  console.log(trip, 'popuop datatattatatat');
+  // console.log(trip, 'popuop datatattatatat');
 
   const {
     booking_number,
@@ -76,7 +76,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   const acceptBooking = async () => {
     console.log(booking_number, 'accept booking number');
     console.log('final accepttttt Roundtrip');
-
+    // return false;
     try {
       const response = await FINAL_ACCEPT_BOOKING({
         action: 'accept_booking',
@@ -92,11 +92,10 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
       dispatch(setTriggerFunction(true));
       dispatch(setRefreshKey());
 
-
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking_number,
         isFirstTime: true,
-        isFirstTimeId: '10',
+        isType: 'Ondemand',
       });
     } catch (error) {
       console.log(error, 'acceptBooking Error');
@@ -137,13 +136,19 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
             onPress={() => setChecked1(!checked1)}
             style={[
               styles.checkbox,
-              {backgroundColor: checked1 ? AppColors.mainColor : 'white'},
+              {
+                backgroundColor: checked1
+                  ? AppColors.mainColor
+                  : AppColors.white,
+              },
             ]}>
             {checked1 && <Text style={styles.checkboxTick}>✔</Text>}
           </TouchableOpacity>
-          <Text style={styles.checkboxLabel}>
-            {driverConsent?.checkboxLabel1}
-          </Text>
+          <Pressable onPress={() => setChecked1(!checked1)}>
+            <Text style={styles.checkboxLabel}>
+              {driverConsent?.checkboxLabel1}
+            </Text>
+          </Pressable>
         </View>
 
         {/* Second Checkbox */}
@@ -152,13 +157,19 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
             onPress={() => setChecked2(!checked2)}
             style={[
               styles.checkbox,
-              {backgroundColor: checked2 ? AppColors.mainColor : 'white'},
+              {
+                backgroundColor: checked2
+                  ? AppColors.mainColor
+                  : AppColors.white,
+              },
             ]}>
             {checked2 && <Text style={styles.checkboxTick}>✔</Text>}
           </TouchableOpacity>
-          <Text style={styles.checkboxLabel}>
-            {driverConsent?.checkboxLabel2}
-          </Text>
+          <Pressable onPress={() => setChecked2(!checked2)}>
+            <Text style={styles.checkboxLabel}>
+              {driverConsent?.checkboxLabel2}
+            </Text>
+          </Pressable>
         </View>
       </View>
       <TouchableOpacity
@@ -214,7 +225,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   contentText: {
-    color: 'black',
+    color: AppColors.black,
     fontSize: 20,
     padding: 10,
   },
@@ -232,14 +243,16 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: AppColors.mainColor,
     marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   checkboxTick: {
-    color: 'white',
+    color: AppColors.white,
     fontWeight: 'bold',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   checkboxLabel: {
     fontSize: 16,
@@ -249,12 +262,13 @@ const styles = StyleSheet.create({
   },
   acceptButton: {
     padding: 10,
-    borderWidth: 0.5,
-    borderColor: AppColors.black,
+    borderWidth: 1,
+    borderColor: AppColors.mainColor,
     marginBottom: 20,
     width: '50%',
     justifyContent: 'center',
     alignSelf: 'center',
+    borderRadius: 5,
   },
   acceptButtonText: {
     fontSize: 22,
@@ -265,170 +279,3 @@ const styles = StyleSheet.create({
 });
 
 export default RoundTripBookingAceeptModal;
-
-// return (
-//   // <SafeAreaView style={{flex: 1}}>
-//   <View
-//     style={{
-//       borderWidth: 2,
-//       borderColor: AppColors.mainColor,
-//       // flex: 1,
-//       backgroundColor: AppColors.white,
-//       margin: 5,
-//     }}>
-//     <View
-//       style={{
-//         // backgroundColor: AppColors.silverGrey,
-//         backgroundColor: '#F7F7F7',
-//         flexDirection: 'row',
-//         justifyContent: 'space-between',
-//         alignItems: 'center',
-//         padding: 15,
-//         paddingHorizontal: 20,
-//         // alignContent: 'center',
-//         // alignSelf: 'center',
-//       }}>
-//       <View
-//         style={{
-//           // paddingHorizontal: 10,
-//           // paddingTop: 40,
-//           // paddingBottom: 20,
-//           justifyContent: 'center',
-//           alignItems: 'center',
-//         }}>
-//         <Text
-//           style={{
-//             color: AppColors.black,
-//             fontSize: 25,
-//             fontFamily: 'Roboto',
-//             fontWeight: '500',
-//           }}>
-//           {driverConsent?.accept_heading}
-//         </Text>
-//       </View>
-//       <TouchableOpacity onPress={() => setOpenModal(false)}>
-//         <Text
-//           style={{
-//             padding: 10,
-//             textAlign: 'right',
-//             fontSize: 25,
-//             fontFamily: 'Roboto',
-//             color: AppColors.gray,
-//             fontWeight: 'bold',
-//           }}>
-//           X
-//         </Text>
-//       </TouchableOpacity>
-//     </View>
-//     <View style={{paddingHorizontal: 10}}>
-//       <Text style={{color: 'black', fontSize: 20, padding: 10}}>
-//         {driverConsent?.accept_paragraph1}
-//       </Text>
-//       <Text style={{color: 'black', fontSize: 20, padding: 10}}>
-//         {driverConsent?.accept_paragraph2}
-//       </Text>
-//     </View>
-//     <View
-//       style={{
-//         flexDirection: 'column',
-//         justifyContent: 'center',
-//         padding: 10,
-//       }}>
-//       {/* First Checkbox */}
-//       <View
-//         style={{
-//           flexDirection: 'row',
-//           // alignItems: 'center',
-//           marginBottom: 10,
-//           justifyContent: 'flex-start',
-//         }}>
-//         <TouchableOpacity
-//           onPress={() => setChecked1(!checked1)}
-//           style={{
-//             height: 20,
-//             width: 20,
-//             borderWidth: 1,
-//             borderColor: 'black',
-//             backgroundColor: checked1 ? AppColors.mainColor : 'white',
-//             marginRight: 10,
-//           }}>
-//           {checked1 && (
-//             <Text style={{color: 'white', fontWeight: 'bold'}}>✔</Text>
-//           )}
-//         </TouchableOpacity>
-//         <Text
-//           style={{
-//             fontSize: 16,
-//             fontWeight: 'bold',
-//             // flex: 1,
-//             color: AppColors.black,
-//           }}>
-//           {driverConsent?.checkboxLabel1}
-//         </Text>
-//       </View>
-
-//       {/* Second Checkbox */}
-//       <View
-//         style={{
-//           flexDirection: 'row',
-//           // alignItems: 'center',
-//           marginBottom: 10,
-//           justifyContent: 'flex-start',
-//         }}>
-//         <TouchableOpacity
-//           onPress={() => setChecked2(!checked2)}
-//           style={{
-//             height: 20,
-//             width: 20,
-//             borderWidth: 1,
-//             borderColor: 'black',
-//             backgroundColor: checked2 ? AppColors.mainColor : 'white',
-//             marginRight: 10,
-//           }}>
-//           {checked2 && (
-//             <Text style={{color: 'white', fontWeight: 'bold'}}>✔</Text>
-//           )}
-//         </TouchableOpacity>
-//         <Text
-//           style={{
-//             fontSize: 16,
-//             fontWeight: 'bold',
-//             flex: 1,
-//             color: AppColors.black,
-//           }}>
-//           {driverConsent?.checkboxLabel2}
-//         </Text>
-//       </View>
-//     </View>
-
-//     <TouchableOpacity
-//       onPress={() => {
-//         Alert.alert('Are You Confirm');
-//       }}
-//       disabled={!checked1 && !checked2}
-//       style={{
-//         backgroundColor:
-//           checked1 && checked2 ? AppColors.mainColor : '#CCCCCC',
-//         padding: 10,
-//         borderWidth: 0.5,
-//         borderColor: AppColors.black,
-//         // paddingHorizontal: 20,
-//         marginBottom: 20,
-//         width: '50%',
-//         justifyContent: 'center',
-//         alignSelf: 'center',
-//       }}>
-//       <Text
-//         style={{
-//           fontSize: 22,
-//           color: AppColors.white,
-//           fontFamily: 'Roboto-Medium',
-//           alignSelf: 'center',
-//         }}>
-//         Accept
-//       </Text>
-//     </TouchableOpacity>
-//   </View>
-//   // </SafeAreaView>
-// );
-// };

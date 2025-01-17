@@ -15,15 +15,42 @@ import {AppFont} from '../../assets/FontsFamily';
 const OtrModal = ({data}) => {
   const dispatch = useDispatch();
 
+  console.log('runn data value', data);
+
   const closeModal = useCallback(() => {
     dispatch(setModalVisible(false));
   }, [dispatch]);
+
+  const isDataValid = data && Object.keys(data).length > 0;
+
+  if (!isDataValid) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.mainContainer}>
       <TouchableWithoutFeedback onPress={closeModal}>
         <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>
+            <View style={{marginBottom: 10}}>
+              <TouchableOpacity
+                onPress={() => closeModal()}
+                style={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 15,
+                  backgroundColor: '#e0e0e0',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{fontSize: 20, color: '#333', fontWeight: 'bold'}}>
+                  ×
+                </Text>
+              </TouchableOpacity>
+            </View>
             <Text style={styles.topHeading}>{data?.title}</Text>
             <Text style={styles.middleText}>{data?.body?.line1}</Text>
             <Text style={styles.middleText}>{data?.body?.line2}</Text>
@@ -86,12 +113,12 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   button: {
-    marginTop: 5,
+    margin: 20,
     paddingVertical: 3,
     paddingHorizontal: 10,
     borderRadius: 5,
     backgroundColor: AppColors.mainColor,
-    alignSelf: 'flex-start',
+    alignSelf: 'center',
   },
   buttonText: {color: AppColors.white},
 });

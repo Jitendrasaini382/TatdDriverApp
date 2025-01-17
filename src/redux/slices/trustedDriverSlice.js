@@ -12,6 +12,7 @@ const initialState = {
   ratingModal: false,
   myBookingModal: false,
   splash: true,
+  isRefresh: false,
 };
 
 const trustedDriverSlice = createSlice({
@@ -62,6 +63,9 @@ const trustedDriverSlice = createSlice({
     setSplash: (state, action) => {
       state.splash = action.payload;
     },
+    setIsRefresh: (state, action) => {
+      state.isRefresh = action.payload;
+    },
   },
 });
 
@@ -78,6 +82,7 @@ export const {
   setMyBookingModal,
   mainToggleHandle,
   setSplash,
+  setIsRefresh,
 } = trustedDriverSlice.actions;
 
 export default trustedDriverSlice.reducer;

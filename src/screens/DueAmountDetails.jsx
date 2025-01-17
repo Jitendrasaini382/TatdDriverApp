@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   Modal,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import Header from '../components/Header';
 import {Triangle_Icon} from '../assets/images';
@@ -20,10 +21,12 @@ import AddIcon from 'react-native-vector-icons/AntDesign';
 
 const DueAmountDetails = ({route, navigation}) => {
   const {bookingNumber} = route?.params;
+  const [loader, setLoader] = useState(false);
 
   const [allInvoiceData, setAllInvoiceData] = useState();
 
   useEffect(() => {
+    setLoader(true);
     getInvoiceData(bookingNumber);
   }, []);
 
@@ -37,6 +40,8 @@ const DueAmountDetails = ({route, navigation}) => {
       setAllInvoiceData(response);
     } catch (response) {
       console.log(error, 'getInvoiceData Api error - Error');
+    } finally {
+      setLoader(false);
     }
   };
   const [isShowExtraMinutesModal, setisShowExtraMinutesModal] = useState(false);
@@ -55,6 +60,16 @@ const DueAmountDetails = ({route, navigation}) => {
       console.log(err);
     }
   };
+
+  if (loader) {
+    return (
+      <ActivityIndicator
+        size={'small'}
+        style={{flex: 1, alignContent: 'center'}}
+        color={AppColors.mainColor}
+      />
+    );
+  }
 
   return (
     <SafeAreaView>
@@ -113,10 +128,10 @@ const DueAmountDetails = ({route, navigation}) => {
                   style={{
                     position: 'absolute',
                     color: AppColors.mainColor,
-                    marginLeft: 5,
+                    marginLeft: 10,
                     fontFamily: 'Roboto',
                   }}>
-                  {/* {dueData?.category} */}
+                  Verified & Experienced Driver
                 </Text>
                 <View
                   style={{
@@ -288,6 +303,7 @@ const DueAmountDetails = ({route, navigation}) => {
                     marginLeft: 5,
                     fontSize: 12,
                     paddingVertical: 3,
+                    justifyContent: 'center',
                   }}>
                   {allInvoiceData?.invoice_data?.category}
                 </Text>
@@ -316,20 +332,20 @@ const DueAmountDetails = ({route, navigation}) => {
                   alignItems: 'center',
                 }}>
                 <Text style={{color: '#ffffff', fontSize: 12}}>
-                  {allInvoiceData?.invoice_data?.start_date}
+                  Booking ID :{' '}
                 </Text>
-                <View style={{marginHorizontal: 20, paddingTop: 5}}>
+                <View style={{marginHorizontal: 10}}>
                   <Text style={{color: '#ffffff', fontSize: 16}}>
                     {allInvoiceData?.invoice_data?.booking_number}
                   </Text>
-                  <Text style={{color: '#ffffff', fontSize: 12}}>
+                  {/* <Text style={{color: '#ffffff', fontSize: 12}}>
                     Booking ID
-                  </Text>
+                  </Text> */}
                 </View>
               </View>
             </View>
 
-            <View style={{flexDirection: 'row', margin: 10}}>
+            {/* <View style={{flexDirection: 'row', margin: 10}}>
               <Text style={{color: '#ffffff', fontSize: 12}}>From:</Text>
               <Text
                 style={{
@@ -354,7 +370,7 @@ const DueAmountDetails = ({route, navigation}) => {
               <Text style={{color: '#ffffff', fontSize: 12, marginLeft: 10}}>
                 {allInvoiceData?.invoice_data?.drop_address}
               </Text>
-            </View>
+            </View> */}
           </View>
 
           {/* Timings Section */}
@@ -400,7 +416,7 @@ const DueAmountDetails = ({route, navigation}) => {
                   <View style={{alignItems: 'center'}}>
                     <Text style={styles.timingLabel}>End KMS</Text>
                     <Text style={styles.timingValue}>
-                      {allInvoiceData?.invoice_data?.start_kms}
+                      {allInvoiceData?.invoice_data?.end_kms}
                     </Text>
                   </View>
                 )}

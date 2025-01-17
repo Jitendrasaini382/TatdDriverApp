@@ -16,7 +16,10 @@ import {
   WEEKLY_BOOKING_ACCEPT,
 } from '../../apis/Apis';
 import {useDispatch, useSelector} from 'react-redux';
-import {setRefreshKey, setTriggerFunction} from '../../redux/slices/globalSlice';
+import {
+  setRefreshKey,
+  setTriggerFunction,
+} from '../../redux/slices/globalSlice';
 import {useNavigation} from '@react-navigation/native';
 const {width} = Dimensions.get('window');
 
@@ -105,7 +108,7 @@ const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking?.booking_ids[0],
         isFirstTime: true,
-        isFirstTimeId: '10',
+        isType: 'Weekly',
       });
       console.log(
         'Navigated to DutyReportUpdate with bookingNumber:',

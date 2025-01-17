@@ -144,7 +144,7 @@ const TrustedDriver = ({navigation}) => {
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   const jwt = useSelector(e => e?.userAuth?.jwt);
- 
+
   useFocusEffect(
     useCallback(() => {
       getHeadlineData();
@@ -1507,15 +1507,6 @@ const TrustedDriver = ({navigation}) => {
 
         <Modal
           backdropOpacity={0}
-          animationIn={'fadeInDown'}
-          animationOut={'fadeOutUp'}
-          // isVisible={popupData == 0}>
-          isVisible={popupData == 1 && expressBookingModal && expressPopupData}>
-          <ExpressBookingModal data={expressPopupData} />
-        </Modal>
-
-        <Modal
-          backdropOpacity={0}
           onBackdropPress={() => dispatch(setModalVisible(false))}
           animationIn={'fadeInDown'}
           animationOut={'fadeOutUp'}
@@ -1550,14 +1541,16 @@ const TrustedDriver = ({navigation}) => {
           isVisible={myBookingAgencyModal}>
           <MyBookingAgencyModal />
         </Modal>
+
         <Modal
           backdropOpacity={0}
           onBackdropPress={() => dispatch(setExpressBookingModal(false))}
           animationIn={'fadeInDown'}
           animationOut={'fadeOutUp'}
-          isVisible={expressBookingModal}>
-          <ExpressBookingModal />
+          isVisible={popupData == 1 && expressBookingModal && expressPopupData}>
+          <ExpressBookingModal data={expressPopupData} />
         </Modal>
+        
         <Modal
           backdropOpacity={0.5}
           onBackdropPress={() => setUpdateModal(false)}

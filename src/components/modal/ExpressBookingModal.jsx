@@ -19,6 +19,12 @@ const ExpressBookingModal = ({data}) => {
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
+  const isDataValid = data && Object.keys(data).length > 0;
+
+  if (!isDataValid) {
+    return null;
+  }
+
   const expressBookingUpdate = async status => {
     try {
       const bookingUpdate = {

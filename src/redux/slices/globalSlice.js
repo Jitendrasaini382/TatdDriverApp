@@ -4,6 +4,7 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   languageSwitch: 'english',
+  currentView: 'English',
   ticketsData: [],
   faqData: [],
   rating: 0,
@@ -15,6 +16,7 @@ const initialState = {
   triggerFunction: false,
   loginStatus: false,
   refreshKey: 0,
+  driverConsentData: null,
 };
 
 const globalSlice = createSlice({
@@ -66,6 +68,12 @@ const globalSlice = createSlice({
     setRefreshKey: state => {
       state.refreshKey += 1;
     },
+    setDriverConsentData: (state, action) => {
+      state.driverConsentData = action.payload;
+    },
+    setCurrentView: (state, action) => {
+      state.currentView = action.payload;
+    },
   },
 });
 
@@ -83,6 +91,8 @@ export const {
   setTriggerFunction,
   setLoginStatus,
   setRefreshKey,
+  setDriverConsentData,
+  setCurrentView,
 } = globalSlice.actions;
 
 export default globalSlice.reducer;

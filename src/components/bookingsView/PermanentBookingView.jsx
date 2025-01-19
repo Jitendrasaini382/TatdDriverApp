@@ -190,6 +190,15 @@ const PermanentBookingView = () => {
       keyExtractor={(item, index) => `${item.id || index}`} // Use unique keys, such as IDs if available
       renderItem={({item}) => <BookingCard booking={item} />}
     />
+    // <FlatList
+    //   data={combinedBookings.slice(0, visibleBookings)} // Display only visible bookings
+    //   keyExtractor={(item, index) => `${item.id || index}`} // Use unique keys
+    //   renderItem={({item}) => <BookingCard booking={item} />}
+    //   onEndReached={() => setVisibleBookings(visibleBookings + 10)}
+    //   // onEndReachedThreshold={1}
+    //   // windowSize={2}
+    //   showsVerticalScrollIndicator={false}
+    // />
   );
 
   // return (
@@ -259,7 +268,7 @@ const styles = StyleSheet.create({
     // marginBottom: 15,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 10,
   },
   eventTypeText: {
     color: AppColors.white,

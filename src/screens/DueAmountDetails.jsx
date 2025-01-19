@@ -10,6 +10,7 @@ import {
   Modal,
   TextInput,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import Header from '../components/Header';
 import {Triangle_Icon} from '../assets/images';
@@ -47,13 +48,28 @@ const DueAmountDetails = ({route, navigation}) => {
   const [isShowExtraMinutesModal, setisShowExtraMinutesModal] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const addWaitingMinutes = async () => {
+    console.log(
+      {
+        booking_id: bookingNumber,
+        overtime_minutes: inputValue,
+      },
+      'send action    ',
+    );
+
+    // return false
+
     try {
       const res = await WAITING_MINUTE_INSERT({
+        action: 'overtime_minutes',
         booking_id: bookingNumber,
         overtime_minutes: inputValue,
       });
-      console.log(res);
-      getInvoiceData();
+
+      console.log(res, 'waiting response   -------');
+      if (res?.msg_type == 'error') {
+        Alert.alert(res?.message);
+      }
+      getInvoiceData(bookingNumber);
       setisShowExtraMinutesModal(false);
       setInputValue('');
     } catch {

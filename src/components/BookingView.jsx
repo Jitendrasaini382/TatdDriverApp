@@ -21,31 +21,29 @@ import RoundTripBookingView from './bookingsView/RoundTripBookingView';
 import PermanentBookingView from './bookingsView/PermanentBookingView';
 import FlexibleBookingView from './bookingsView/FlexibleBookingView';
 import {useDispatch, useSelector} from 'react-redux';
-import {setMyBookingAgencyModal} from '../redux/slices/trustedDriverSlice';
 import {Buffer} from 'buffer';
-import {ON_DEMAND_BOOKING} from '../apis/Apis';
 import {useNavigation} from '@react-navigation/native';
-import {Skeleton} from '@rneui/themed';
 
 const {width} = Dimensions.get('window');
 
-const BookingView = ({data}) => {
+const BookingView = ({data, allBookingData, panelData}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
-  const driverMobileNumber = useSelector(
-    e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
-  );
-  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  
+  // const driverMobileNumber = useSelector(
+  //   e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
+  // );
+  // const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   // console.log(driverMobileNumber, 'driverMobileNumberdriverMobileNumberdriverMobileNumber');
 
-  const [agentPanelViewData, setAgentPanelViewData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // const [agentPanelViewData, setAgentPanelViewData] = useState([]);
+  // const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    getAgentPanelView();
-  }, [languageSwitch]);
+  // useEffect(() => {
+  //   getAgentPanelView();
+  // }, [languageSwitch]);
 
   // <Modal
   //   backdropOpacity={0}
@@ -58,23 +56,23 @@ const BookingView = ({data}) => {
   //   />
   // </Modal>;
 
-  const getAgentPanelView = async () => {
-    setLoading(true);
-    try {
-      const response = await ON_DEMAND_BOOKING({
-        action: 'agent_panel_view',
-        current_language: languageSwitch,
-      });
+  // const getAgentPanelView = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await ON_DEMAND_BOOKING({
+  //       action: 'agent_panel_view',
+  //       current_language: languageSwitch,
+  //     });
 
-      console.log(response, 'getIagent Panel View response');
-      setAgentPanelViewData(response.agent_panel_text);
-    } catch (error) {
-      console.log(error, 'getIagent Panel View  Error');
-      setLoading(false);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     console.log(response, 'getIagent Panel View response');
+  //     setAgentPanelViewData(response.agent_panel_text);
+  //   } catch (error) {
+  //     console.log(error, 'getIagent Panel View  Error');
+  //     setLoading(false);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleLoginPress = () => {
     try {
@@ -98,44 +96,15 @@ const BookingView = ({data}) => {
 
   return (
     <View style={styles.container}>
-      {agentPanelViewData && (
+      {panelData && (
         <View style={styles.connectContainer}>
           <Pressable onPress={handleLoginPress} style={styles.connectButton}>
             <Icon color={AppColors.white} size={15} name="plus" />
             <Image style={styles.rightArrow} source={LeftArrow} />
           </Pressable>
-          <Text style={styles.connectText}>{agentPanelViewData}</Text>
+          <Text style={styles.connectText}>{panelData}</Text>
         </View>
       )}
-
-      {/* <View style={styles.connectContainer}>
-        <Pressable onPress={handleLoginPress} style={styles.connectButton}>
-          <Icon color={AppColors.white} size={15} name="plus" />
-          <Image style={styles.rightArrow} source={LeftArrow} />
-        </Pressable>
-        {loading ? (
-          <Skeleton
-            width={250}
-            height={50}
-            style={{
-              borderRadius: 10,
-              marginBottom: 15,
-              paddingHorizontal: 15,
-            }}
-            animation={'wave'}
-          />
-        ) : agentPanelViewData ? (
-          <Text style={styles.connectText}>{agentPanelViewData}</Text>
-        ) : null}
-      </View> */}
-
-      {/* <View style={styles.notificationContainer}>
-        <Text style={styles.notificationText}>
-          {languageSwitch == 'english'
-            ? `Dear ${decodedToken?.driver_name}, from now on, if you have completed at least one booking in the last two days and are available for bookings, you will receive an SMS alert when a new booking comes in.`
-            : `डिअर ${decodedToken?.driver_name},अब से यदि आपने पिछले दो दिनों में कम से कम एक बुकिंग पूरी की है, और आप बुकिंग करने के लिए उपलब्ध हैं, तो नई बुकिंग आने पर आपको SMS Alert भेजा जाएगा।`}
-        </Text>
-      </View> */ }
 
       <View style={styles.notificationContainer}>
         {data?.driver_panel_messages?.double_booking_eligibility && (
@@ -165,7 +134,7 @@ const BookingView = ({data}) => {
         )}
       </View>
 
-      <RoundTripBookingView />
+      <RoundTripBookingView allBookingData={allBookingData} />
       <PermanentBookingView />
       <FlexibleBookingView />
     </View>

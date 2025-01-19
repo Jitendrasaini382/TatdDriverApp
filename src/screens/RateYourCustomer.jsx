@@ -3,10 +3,13 @@ import {View, Text, TouchableOpacity, SafeAreaView} from 'react-native';
 import Header from '../components/Header';
 import {AirbnbRating} from 'react-native-ratings';
 import {AppColors} from '../assets/Colors';
+import {RATE_YOUR_CUSTOMER} from '../apis/Apis';
+import {useSelector} from 'react-redux';
 
 const RateYourCustomer = ({navigation, route}) => {
   const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(false);
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   const {bookingNumber} = route?.params;
 
@@ -14,17 +17,53 @@ const RateYourCustomer = ({navigation, route}) => {
     setRating(selectedRating);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (rating === 0) {
       alert('Please select a rating before submitting.');
       return;
     }
+
+    console.log(
+      {
+        action: 'rating_detail',
+        booking_id: bookingNumber,
+        rate: rating,
+        current_language: languageSwitch,
+        message: '',
+      },
+      'send start rating',
+    );
+
+    // return false;
+
     setLoading(true);
-    navigation.navigate('RateYourCustomerFeedback', {
-      rate: rating,
-      bookingNumber: bookingNumber,
-    });
-    setLoading(false);
+    try {
+      const response = await RATE_YOUR_CUSTOMER({
+        action: 'rating_detail',
+        booking_id: bookingNumber,
+        rate: rating,
+        current_language: languageSwitch,
+        message: '',
+      });
+
+      console.log(response, 'submitRating API response');
+      // setLoading(false);
+      if (response?.status_code == 200) {
+        navigation.navigate('RateYourCustomerFeedback', {
+          rate: rating,
+          bookingNumber: bookingNumber,
+        });
+      }
+      //   navigation.navigate('RateUsAtSocialMedia', {
+      //     bookingNumber: bookingNumber,
+      //   });
+    } catch (err) {
+      console.log(err, 'submitRating API error');
+      setError('Something went wrong. Please try again later.');
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

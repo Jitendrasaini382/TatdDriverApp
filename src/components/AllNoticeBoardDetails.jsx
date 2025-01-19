@@ -321,7 +321,7 @@ export const NoticeBoardDetailScreen = ({route}) => {
                           fontSize: 18,
                           fontWeight: 'bold',
                         }}>
-                        {bottamButtonText?.btn_text}
+                        {bottamButtonText?.btn_text || "Back"}
                       </Text>
                     </TouchableOpacity>
                   ) : (

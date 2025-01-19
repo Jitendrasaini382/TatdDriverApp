@@ -984,7 +984,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                   style={{
                     fontSize: 18,
                     fontWeight: 'bold',
-                    textAlign: 'center',
+                    textAlign: 'flext-start',
                     color: AppColors.mainColor,
                   }}>
                   {/* I accept this duty. */}
@@ -1161,7 +1161,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         <View
           style={{
             flex: 1,
-            justifyContent: 'flex-end',
+            justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
           }}>

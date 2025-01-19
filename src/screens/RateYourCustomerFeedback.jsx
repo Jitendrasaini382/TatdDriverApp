@@ -24,10 +24,10 @@ const RateYourCustomerFeedback = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
 
   const submitRating = async () => {
-    if (!message.trim()) {
-      alert('Please enter a message before submitting.');
-      return;
-    }
+    // if (!message.trim()) {
+    //   alert('Please enter a message before submitting.');
+    //   return;
+    // }
 
     setLoading(true);
     Keyboard.dismiss();

@@ -8,10 +8,12 @@ import {
   DRIVER_TRAINING_VIDEOS,
   DRIVER_TRAINING_VIDEOS_CLICK_STORE,
 } from '../apis/Apis';
+import {useSelector} from 'react-redux';
 
 const TrainingVideo = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const [trainingVideoData, setTrainingVideoData] = useState();
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   useEffect(() => {
     getTrainingVideo();
@@ -112,7 +114,7 @@ const AccordionItem = ({
         </View>
       </TouchableOpacity>
       <Collapsible collapsed={!isOpen}>
-        <YoutubePlayer height={200} play={true} videoId={videoId} />
+        <YoutubePlayer height={200} videoId={videoId} />
       </Collapsible>
     </View>
   );

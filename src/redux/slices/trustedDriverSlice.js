@@ -1,7 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  currentView: 'English',
   toggleButton: false,
   expressBookingModal: false,
   mainToggleContent: false,
@@ -19,9 +18,6 @@ const trustedDriverSlice = createSlice({
   name: 'trustedDriver',
   initialState,
   reducers: {
-    setCurrentView: (state, action) => {
-      state.currentView = action.payload;
-    },
     setToggleButton: (state, action) => {
       state.toggleButton = action.payload;
     },
@@ -70,7 +66,6 @@ const trustedDriverSlice = createSlice({
 });
 
 export const {
-  setCurrentView,
   setToggleButton,
   setExpressBookingModal,
   setMainToggleContent,

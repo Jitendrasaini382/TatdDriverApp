@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   SafeAreaView,
@@ -44,11 +38,10 @@ import {
   DRIVER_HEADLINE,
   DRIVER_NOTICE,
   DRIVER_NOTIFICATION,
-  DRIVER_TRAINING_VIDEOS,
   EXPRESS_BOOKING_POPUP,
   GET_FCM_TOKEN,
-  GET_TRUSTED_POPUP_DATA,
   LOGIN_BUTTON,
+  ON_DEMAND_BOOKING,
   SAVE_DEVICE_INFO,
   UPDATE_POPUP,
 } from '../apis/Apis';
@@ -56,7 +49,6 @@ import ExpressBookingModal from '../components/modal/ExpressBookingModal';
 import {requestNotificationPermission} from '../utils/permissions';
 import {
   setBookingModal,
-  setCurrentView,
   setExpressBookingModal,
   setModalVisible,
   setMyBookingAgencyModal,
@@ -68,7 +60,12 @@ import {setUserAuthStates} from '../redux/slices/userAuthSlice';
 import {Agent_Icon, AppLogo} from '../assets/images';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
-import {setLoginStatus, setRefreshKey} from '../redux/slices/globalSlice';
+import {
+  setCurrentView,
+  setDriverConsentData,
+  setLoginStatus,
+  setRefreshKey,
+} from '../redux/slices/globalSlice';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -81,19 +78,19 @@ const TrustedDriver = ({navigation}) => {
   const [popupData, setPopupData] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [fcmtoken, setFcmToken] = useState();
-  const [trainingVideoData, setTrainingVideoData] = useState();
   const [updateModal, setUpdateModal] = useState(false);
   const [upadatePopupData, setUpdatePopupData] = useState({});
   const [videoCount, setVideoCount] = useState('');
-  const [ratingTrustedData, setRatingTrustedData] = useState({});
-  const [otrTrustedData, setOtrTrustedData] = useState({});
   const [homeNotificationData, setHomeNotificationData] = useState({});
   const [homeNoticeData, setHomeNoticeData] = useState({});
   const [expressPopupData, setExpressPopupData] = useState({});
   const [showNotification, setShowNotification] = useState(false);
   const [showNotice, setShowNotice] = useState(false);
-  const [bookingTrustedData, setBookingTrustedData] = useState({});
   const appType = Platform.OS;
+
+  const isFcmSent = useSelector(e => e?.userAuth?.isFcmSent);
+  const isRfdOn = useSelector(state => state.globalSlice.loginStatus);
+  const isDeviceInfo = useSelector(e => e?.userAuth?.isDeviceInfo);
 
   const [deviceInfo, setDeviceInfo] = useState({
     action: 'save_device_info',
@@ -108,9 +105,6 @@ const TrustedDriver = ({navigation}) => {
     deviceOS: appType,
   });
 
-  const currentView = useSelector(
-    state => state.trustedDriverSlice.currentView,
-  );
   const toggleButton = useSelector(
     state => state.trustedDriverSlice.toggleButton,
   );
@@ -142,6 +136,10 @@ const TrustedDriver = ({navigation}) => {
 
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  const triggerFunction = useSelector(
+    state => state?.globalSlice?.triggerFunction,
+  );
+  const refreshKey = useSelector(state => state?.globalSlice?.refreshKey);
 
   const jwt = useSelector(e => e?.userAuth?.jwt);
 
@@ -151,6 +149,8 @@ const TrustedDriver = ({navigation}) => {
       getHomeNotification();
       getHomeNotice();
       getPopup();
+      getAllOndemandBookings();
+      getAllTrustedData();
 
       return () => {
         console.log('Screen unfocused, cleanup if necessary.');
@@ -167,6 +167,10 @@ const TrustedDriver = ({navigation}) => {
         getHomeNotification();
         getHomeNotice();
         getPopup();
+        if (isRfdOn) {
+          getAllOndemandBookings();
+        }
+        getAllTrustedData();
       }
     };
 
@@ -199,22 +203,23 @@ const TrustedDriver = ({navigation}) => {
       // }
       getHeadlineData();
       // getTrainingVideo();
-      getTrustedPopupRating();
-      getTrustedPopupBooking();
-      getTrustedPopupOtr();
-      getUpdatePopup();
+      // getTrustedPopupRating();
+      // getTrustedPopupBooking();
+      // getTrustedPopupOtr();
+      // if (isRfdOn) {
+      getAllOndemandBookings();
+      // }
+      getAllTrustedData();
+
+      // getUpdatePopup();
       getHomeNotification();
       getHomeNotice();
     }
-  }, [jwt, languageSwitch]);
+  }, [jwt, languageSwitch, refreshKey]);
 
   const openMyUrl = url => {
     Linking.openURL(url).then(() => {});
   };
-
-  const isFcmSent = useSelector(e => e?.userAuth?.isFcmSent);
-  const isRfdOn = useSelector(state => state.globalSlice.loginStatus);
-  const isDeviceInfo = useSelector(e => e?.userAuth?.isDeviceInfo);
 
   useEffect(() => {
     if (!isFcmSent) getFcmToken();
@@ -369,6 +374,10 @@ const TrustedDriver = ({navigation}) => {
       });
 
       // Log the response for debugging
+      console.log(
+        response,
+        'responseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update apiresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update apiresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update apiresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update apiresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update apiresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update apiresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update apiresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update api',
+      );
 
       // Check and handle update conditions
       if (response?.app_details) {
@@ -452,7 +461,7 @@ const TrustedDriver = ({navigation}) => {
         setLoginMessage(response?.message);
         setTimeout(() => {
           setLoginMessage('');
-        }, 60000);
+        }, 50000);
       }
 
       if (response?.redirect) {
@@ -485,6 +494,61 @@ const TrustedDriver = ({navigation}) => {
       }
     } finally {
       console.log('Finally block executed');
+    }
+  };
+
+  const [loading, setLoading] = useState(false);
+  const [allOndemandBookings, setAllOndemandBookings] = useState({});
+  const [allTrustedData, setAllTrustedData] = useState({});
+
+  const getAllOndemandBookings = async () => {
+    setLoading(true);
+    try {
+      const response = await ON_DEMAND_BOOKING({
+        action: 'ondemand_bookings',
+        current_language: languageSwitch,
+      });
+
+      // console.log(
+      //   response,
+      //   'getAllOndemandBookingsgetAllOndemandBookingsgetAllOndemandBookings response',
+      // );
+      setAllOndemandBookings(response);
+    } catch (error) {
+      console.log(
+        error,
+        'getAllOndemandBookingsgetAllOndemandBookingsgetAllOndemandBookings  Error',
+      );
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getAllTrustedData = async () => {
+    setLoading(true);
+    try {
+      const response = await ON_DEMAND_BOOKING({
+        action: 'trusted_other_data',
+        current_language: languageSwitch,
+      });
+
+      // console.log(
+      //   response,
+      //   'getAllTrustedDatagetAllTrustedDatagetAllTrustedDatagetAllTrustedData response',
+      // );
+      setAllTrustedData(response);
+      dispatch(
+        setDriverConsentData(response?.ondemand_driver_consent_popup_data),
+      );
+    } catch (error) {
+      console.log(
+        error,
+        'getAllTrustedDatagetAllTrustedDatagetAllTrustedDatagetAllTrustedData  Error',
+      );
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -537,8 +601,9 @@ const TrustedDriver = ({navigation}) => {
       });
 
       console.log(
-        response,
-        'responseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse  getHeadlineDatagetHeadlineDatagetHeadlineData',
+        response?.driver_panel_messages
+          ?.redirect_to_website_trusted_driver_flag,
+        '12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890',
       );
 
       setHeadLineData(response);
@@ -580,38 +645,6 @@ const TrustedDriver = ({navigation}) => {
     }
   };
 
-  const getTrustedPopupBooking = async () => {
-    console.log(
-      'Starting to getTrustedPopupBookinggetTrustedPopupBooking data...',
-    );
-
-    try {
-      const response = await GET_TRUSTED_POPUP_DATA({
-        action: 'booking_popup_data',
-        current_language: languageSwitch,
-      });
-
-      setBookingTrustedData(response?.booking_popup_data);
-    } catch (error) {
-      console.log('getTrustedPopupBookinggetTrustedPopupBooking Error:', error);
-    }
-  };
-
-  const getTrustedPopupOtr = async () => {
-    console.log('Starting to getTrustedPopupOtrgetTrustedPopupOtr data...');
-
-    try {
-      const response = await GET_TRUSTED_POPUP_DATA({
-        action: 'otr_popup_data',
-        current_language: languageSwitch,
-      });
-
-      setOtrTrustedData(response?.otr_popup_data);
-    } catch (error) {
-      console.log('getTrustedPopupOtrgetTrustedPopupOtr Error:', error);
-    }
-  };
-
   const getHomeNotification = async () => {
     console.log('Starting to getHomeNotificationgetHomeNotification data...');
 
@@ -643,35 +676,67 @@ const TrustedDriver = ({navigation}) => {
     }
   };
 
-  const getTrustedPopupRating = async () => {
-    console.log(
-      'Starting to getTrustedPopupRatinggetTrustedPopupRating data...',
-    );
+  // const getTrustedPopupRating = async () => {
+  //   console.log(
+  //     'Starting to getTrustedPopupRatinggetTrustedPopupRating data...',
+  //   );
 
-    try {
-      const response = await GET_TRUSTED_POPUP_DATA({
-        action: 'rating_popup_data',
-        current_language: languageSwitch,
-      });
+  //   try {
+  //     const response = await GET_TRUSTED_POPUP_DATA({
+  //       action: 'rating_popup_data',
+  //       current_language: languageSwitch,
+  //     });
 
-      setRatingTrustedData(response?.rating_popup_data);
-    } catch (error) {
-      console.log('getTrustedPopupRatinggetTrustedPopupRating Error:', error);
-    }
-  };
+  //     setRatingTrustedData(response?.rating_popup_data);
+  //   } catch (error) {
+  //     console.log('getTrustedPopupRatinggetTrustedPopupRating Error:', error);
+  //   }
+  // };
 
-  const getTrainingVideo = async () => {
-    try {
-      const response = await DRIVER_TRAINING_VIDEOS(languageSwitch);
-      console.log(
-        'DRIVER_TRAINING_VIDEOS DRIVER_TRAINING_VIDEOS Response::',
-        response?.response?.training_data,
-      );
-      setTrainingVideoData(response?.response?.training_data);
-    } catch (error) {
-      console.log(error, 'DRIVER_TRAINING_VIDEOS  Error');
-    }
-  };
+  // const getTrainingVideo = async () => {
+  //   try {
+  //     const response = await DRIVER_TRAINING_VIDEOS(languageSwitch);
+  //     console.log(
+  //       'DRIVER_TRAINING_VIDEOS DRIVER_TRAINING_VIDEOS Response::',
+  //       response?.response?.training_data,
+  //     );
+  //     setTrainingVideoData(response?.response?.training_data);
+  //   } catch (error) {
+  //     console.log(error, 'DRIVER_TRAINING_VIDEOS  Error');
+  //   }
+  // };
+
+  // const getTrustedPopupOtr = async () => {
+  //   console.log('Starting to getTrustedPopupOtrgetTrustedPopupOtr data...');
+
+  //   try {
+  //     const response = await GET_TRUSTED_POPUP_DATA({
+  //       action: 'otr_popup_data',
+  //       current_language: languageSwitch,
+  //     });
+
+  //     setOtrTrustedData(response?.otr_popup_data);
+  //   } catch (error) {
+  //     console.log('getTrustedPopupOtrgetTrustedPopupOtr Error:', error);
+  //   }
+  // };
+
+  // const getTrustedPopupBooking = async () => {
+  //   console.log(
+  //     'Starting to getTrustedPopupBookinggetTrustedPopupBooking data...',
+  //   );
+
+  //   try {
+  //     const response = await GET_TRUSTED_POPUP_DATA({
+  //       action: 'booking_popup_data',
+  //       current_language: languageSwitch,
+  //     });
+
+  //     setBookingTrustedData(response?.booking_popup_data);
+  //   } catch (error) {
+  //     console.log('getTrustedPopupBookinggetTrustedPopupBooking Error:', error);
+  //   }
+  // };
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -681,13 +746,17 @@ const TrustedDriver = ({navigation}) => {
       await getHeadlineData();
       await getHomeNotification();
       await getHomeNotice();
+      await getAllTrustedData();
+      if (isRfdOn) {
+        await getAllOndemandBookings();
+      }
     } catch (error) {
       console.log('Error during refresh:', error);
       setRefreshing(false);
     } finally {
       setRefreshing(false);
     }
-  }, [dispatch, getUpdatePopup]);
+  }, [dispatch, getUpdatePopup, triggerFunction, refreshKey]);
 
   // return false
   const insets = useSafeAreaInsets();
@@ -700,11 +769,6 @@ const TrustedDriver = ({navigation}) => {
     .join(' ');
 
   const clickStoreHomeNotification = async id => {
-    console.log(
-      id,
-      'clickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotificationclickStoreHomeNotification clickStoreHomeNotification',
-    );
-
     try {
       const response = await DRIVER_NOTIFICATION({
         action: 'read_notification',
@@ -725,11 +789,6 @@ const TrustedDriver = ({navigation}) => {
   };
 
   const clickStoreHomeNotice = async id => {
-    console.log(
-      id,
-      'clickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNoticeclickStoreHomeNotice clickStoreHomeNotice',
-    );
-
     // return false;
     try {
       const response = await DRIVER_NOTICE({
@@ -765,7 +824,7 @@ const TrustedDriver = ({navigation}) => {
                 backgroundColor: '#f4f4f4',
                 padding: 16,
               }}>
-              {console.log(
+              {/* {console.log(
                 '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',
               )}
               {console.log(
@@ -786,7 +845,7 @@ const TrustedDriver = ({navigation}) => {
               )}
               {console.log(
                 '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',
-              )}
+              )} */}
               <View
                 style={{
                   backgroundColor: '#0056b3',
@@ -911,7 +970,7 @@ const TrustedDriver = ({navigation}) => {
                 backgroundColor: '#f4f4f4',
                 padding: 16,
               }}>
-              {console.log(
+              {/* {console.log(
                 '------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
               )}
               {console.log(
@@ -932,7 +991,7 @@ const TrustedDriver = ({navigation}) => {
               )}
               {console.log(
                 '------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
-              )}
+              )} */}
               <View
                 style={{
                   backgroundColor: '#0056b3',
@@ -1023,7 +1082,7 @@ const TrustedDriver = ({navigation}) => {
             </View>
           ) : (
             <View style={styles.mainContainer}>
-              {console.log(
+              {/* {console.log(
                 '==============================================================================================================================================================================================================================================================================================================================================================================================================================================',
               )}
               {console.log(
@@ -1044,7 +1103,7 @@ const TrustedDriver = ({navigation}) => {
               )}
               {console.log(
                 '==============================================================================================================================================================================================================================================================================================================================================================================================================================================',
-              )}
+              )} */}
               {/* Marquee View */}
               <View style={styles.marqueeView}>
                 <Marquee spacing={20} speed={0.5}>
@@ -1355,7 +1414,15 @@ const TrustedDriver = ({navigation}) => {
             </Text> */}
 
               {/* Main Toggle Content */}
-              <>{isRfdOn ? <BookingView data={headLineData} /> : null}</>
+              <>
+                {isRfdOn ? (
+                  <BookingView
+                    data={headLineData}
+                    allBookingData={allOndemandBookings}
+                    panelData={allTrustedData?.agent_panel_view}
+                  />
+                ) : null}
+              </>
               {/* <BookingView /> */}
               {videosContent ? <TrainingVideo /> : null}
             </View>
@@ -1512,7 +1579,7 @@ const TrustedDriver = ({navigation}) => {
           animationOut={'fadeOutUp'}
           style={{justifyContent: 'center', alignItems: 'center'}}
           isVisible={isModalVisible}>
-          <OtrModal data={otrTrustedData} />
+          <OtrModal data={allTrustedData?.otr_popup_data} />
         </Modal>
 
         <Modal
@@ -1521,7 +1588,7 @@ const TrustedDriver = ({navigation}) => {
           animationIn={'fadeInDown'}
           animationOut={'fadeOutUp'}
           isVisible={ratingModal}>
-          <RatingModal data={ratingTrustedData} />
+          <RatingModal data={allTrustedData?.rating_popup_data} />
         </Modal>
 
         <Modal
@@ -1530,7 +1597,7 @@ const TrustedDriver = ({navigation}) => {
           animationIn={'fadeInDown'}
           animationOut={'fadeOutUp'}
           isVisible={bookingModal}>
-          <BookingModal data={bookingTrustedData} />
+          <BookingModal data={allTrustedData?.booking_popup_data} />
         </Modal>
 
         <Modal
@@ -1550,7 +1617,7 @@ const TrustedDriver = ({navigation}) => {
           isVisible={popupData == 1 && expressBookingModal && expressPopupData}>
           <ExpressBookingModal data={expressPopupData} />
         </Modal>
-        
+
         <Modal
           backdropOpacity={0.5}
           onBackdropPress={() => setUpdateModal(false)}

@@ -205,128 +205,97 @@ const TripCard = ({trip}) => {
   );
 };
 
-const RoundTripBookingView = () => {
+const RoundTripBookingView = ({allBookingData}) => {
   const [incityOneWayBooking, setIncityOneWayBooking] = useState([]);
   const [incityRoundTripBooking, setIncityRoundTripBooking] = useState([]);
   const [onDemandOutstationBooking, setOnDemandOutstationBooking] = useState(
     [],
   );
 
-  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
-  const triggerFunction = useSelector(
-    state => state.globalSlice.triggerFunction,
-  );
-
-  const refreshKey = useSelector(state => state.globalSlice.refreshKey); // For refresh actions
-
-  // console.log(refreshKey,"refreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKeyrefreshKey");
-
-  const dispatch = useDispatch();
-
-  const getIncityOneWayBookings = async data => {
-    console.log(data, 'runnnnnnnnnnn');
-
-    try {
-      const response = await ON_DEMAND_BOOKING(data);
-
-      // console.log(
-      //   response,
-      //   'getIncityOneWayBookings response',
-      // );
-      setIncityOneWayBooking(response.incity_one_way_bookings);
-    } catch (error) {
-      console.log(error, 'incity_OneWay_bookings  Error');
-    }
-  };
-  const getOnDemandOutstationBookings = async data => {
-    console.log(data, 'runnnnnnnnnnn');
-
-    try {
-      const response = await ON_DEMAND_BOOKING(data);
-
-      // console.log(response, 'getOnDemandOutstationBookings response');
-      setOnDemandOutstationBooking(response.ondemand_outstation_bookings);
-    } catch (error) {
-      console.log(error, 'ondemand_outstation_bookings  Error');
-    }
-  };
-
-  const getIncityRoundTripBookings = async data => {
-    console.log(data, 'runnnnnnnnnnn');
-
-    try {
-      const response = await ON_DEMAND_BOOKING(data);
-
-      // console.log(
-      //   response,
-      //  'getIncityRoundTripBookings response',
-      // );
-      setIncityRoundTripBooking(response.incity_roundtrip_bookings);
-    } catch (error) {
-      console.log(error, 'incity_roundtrip_bookings  Error');
-    }
-  };
-
-  // useEffect(() => {
-  //   if (triggerFunction) {
-  //     getOnDemandOutstationBookings({
-  //       action: 'ondemand_outstation_bookings',
-  //     });
-  //     getIncityRoundTripBookings({
-  //       action: 'incity_roundtrip_booking',
-  //     });
-  //     getIncityOneWayBookings({
-  //       action: 'incity_oneway_booking',
-  //     });
-  //     dispatch(setTriggerFunction(false));
-  //   }
-  // }, [triggerFunction, dispatch]);
-
+  // Update state when allBookingData changes
   useEffect(() => {
-    console.log(
-      'Triggered by refreshKey, triggerFunction, or languageSwitch roundTrip',
-    );
-
-    // Run the required functions
-    getOnDemandOutstationBookings({
-      action: 'ondemand_outstation_bookings',
-    });
-    getIncityRoundTripBookings({
-      action: 'incity_roundtrip_booking',
-    });
-    getIncityOneWayBookings({
-      action: 'incity_oneway_booking',
-    });
-
-    // Reset `triggerFunction` after running
-    if (triggerFunction) {
-      dispatch(setTriggerFunction(false));
+    if (allBookingData) {
+      setIncityOneWayBooking(allBookingData?.incity_one_way_bookings || []);
+      setIncityRoundTripBooking(
+        allBookingData?.incity_roundtrip_bookings || [],
+      );
+      setOnDemandOutstationBooking(
+        allBookingData?.ondemand_outstation_bookings || [],
+      );
     }
-  }, [triggerFunction, refreshKey, languageSwitch, dispatch]);
+  }, [allBookingData]);
 
-  // useEffect(() => {
-  //   if (triggerFunction || refreshKey) {
-  //     console.log('Triggered by either refreshKey or triggerFunction');
+  // const [incityOneWayBooking, setIncityOneWayBooking] = useState(
+  //   allBookingData?.incity_one_way_bookings,
+  // );
+  // const [incityRoundTripBooking, setIncityRoundTripBooking] = useState(
+  //   allBookingData?.incity_roundtrip_bookings,
+  // );
+  // const [onDemandOutstationBooking, setOnDemandOutstationBooking] = useState(
+  //   allBookingData?.ondemand_outstation_bookings,
+  // );
 
-  //     // Run the required functions
-  //     getOnDemandOutstationBookings({
-  //       action: 'ondemand_outstation_bookings',
-  //     });
-  //     getIncityRoundTripBookings({
-  //       action: 'incity_roundtrip_booking',
-  //     });
-  //     getIncityOneWayBookings({
-  //       action: 'incity_oneway_booking',
-  //     });
+  // const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  // const triggerFunction = useSelector(
+  //   state => state.globalSlice.triggerFunction,
+  // );
 
-  //     // Reset `triggerFunction` after running
-  //     if (triggerFunction) {
-  //       dispatch(setTriggerFunction(false));
-  //     }
+  // const refreshKey = useSelector(state => state.globalSlice.refreshKey); // For refresh actions
+
+  // const dispatch = useDispatch();
+
+  // const getIncityOneWayBookings = async data => {
+  //   console.log(data, 'runnnnnnnnnnn');
+
+  //   try {
+  //     const response = await ON_DEMAND_BOOKING(data);
+
+  //     // console.log(
+  //     //   response,
+  //     //   'getIncityOneWayBookings response',
+  //     // );
+  //     setIncityOneWayBooking(response.incity_one_way_bookings);
+  //   } catch (error) {
+  //     console.log(error, 'incity_OneWay_bookings  Error');
   //   }
-  // }, [triggerFunction, refreshKey, dispatch]);
+  // };
+  // const getOnDemandOutstationBookings = async data => {
+  //   console.log(data, 'runnnnnnnnnnn');
+
+  //   try {
+  //     const response = await ON_DEMAND_BOOKING(data);
+
+  //     // console.log(response, 'getOnDemandOutstationBookings response');
+  //     setOnDemandOutstationBooking(response.ondemand_outstation_bookings);
+  //   } catch (error) {
+  //     console.log(error, 'ondemand_outstation_bookings  Error');
+  //   }
+  // };
+
+  // const getIncityRoundTripBookings = async data => {
+  //   console.log(data, 'runnnnnnnnnnn');
+
+  //   try {
+  //     const response = await ON_DEMAND_BOOKING(data);
+
+  //     // console.log(
+  //     //   response,
+  //     //  'getIncityRoundTripBookings response',
+  //     // );
+  //     setIncityRoundTripBooking(response.incity_roundtrip_bookings);
+  //   } catch (error) {
+  //     console.log(error, 'incity_roundtrip_bookings  Error');
+  //   }
+  // };
+
+  //////
 
   // useEffect(() => {
+  //   console.log(
+  //     'Triggered by refreshKey, triggerFunction, or languageSwitch roundTrip',
+  //   );
+
+  //   // Run the required functions
   //   getOnDemandOutstationBookings({
   //     action: 'ondemand_outstation_bookings',
   //   });
@@ -336,7 +305,12 @@ const RoundTripBookingView = () => {
   //   getIncityOneWayBookings({
   //     action: 'incity_oneway_booking',
   //   });
-  // }, [languageSwitch]);
+
+  //   // Reset `triggerFunction` after running
+  //   if (triggerFunction) {
+  //     dispatch(setTriggerFunction(false));
+  //   }
+  // }, [triggerFunction, refreshKey, languageSwitch, dispatch]);
 
   const allTrips = [
     ...(incityOneWayBooking || []),

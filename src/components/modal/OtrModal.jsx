@@ -26,6 +26,7 @@ const OtrModal = ({data}) => {
   if (!isDataValid) {
     return null;
   }
+  
 
   return (
     <SafeAreaView style={styles.mainContainer}>

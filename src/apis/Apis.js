@@ -265,7 +265,7 @@ export const CUSTOMER_WANT_TO_CANCEL = body => {
 };
 
 export const WAITING_MINUTE_INSERT = body => {
-  return _Fetch('GET', 'duty-report/waiting_minute_insert_api.php');
+  return _Fetch('POST', 'duty-report/waiting_minute_insert_api.php');
 };
 
 export const DUE_AMOUNT = body => {

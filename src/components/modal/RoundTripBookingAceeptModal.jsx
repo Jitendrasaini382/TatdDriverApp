@@ -22,8 +22,9 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   const [checked1, setChecked1] = useState(false);
   const [checked2, setChecked2] = useState(false);
   const [loader, setLoader] = useState(false);
-  const [driverConsent, setDriverConsent] = useState({});
+  // const [driverConsentt, setDriverConsent] = useState({});
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  const driverConsent = useSelector(e => e?.globalSlice?.driverConsentData);
 
   // console.log(trip, 'popuop datatattatatat');
 
@@ -41,46 +42,65 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
     incentive_eligibility_fullfillment,
     incentive_eligible_amount_fullfillment,
     driver_assignment_in_10_minutes_incentive,
-    'all recieve Data',
+    'all recieve Dataall recieve Dataall recieve Dataall recieve Dataall recieve Dataall recieve Dataall recieve Dataall recieve Dataall recieve Dataall recieve Dataall recieve Dataall recieve Dataall recieve Dataall recieve Dataall recieve Data',
   );
 
-  useEffect(() => {
-    setLoader(true);
-    driverConsentPopupView();
-  }, []);
+  // useEffect(() => {
+  //   setLoader(true);
+  //   // driverConsentPopupView();
+  // }, []);
 
-  const driverConsentPopupView = async () => {
-    setLoader(true);
+  // const driverConsentPopupView = async () => {
+  //   setLoader(true);
 
-    try {
-      const response = await ON_DEMAND_BOOKING({
-        action: 'ondemand_driver_consent_popup_view',
-        current_language: languageSwitch,
-      });
+  //   try {
+  //     const response = await ON_DEMAND_BOOKING({
+  //       action: 'ondemand_driver_consent_popup_view',
+  //       current_language: languageSwitch,
+  //     });
 
-      console.log(
-        response?.ondemand_driver_consent_popup_data,
-        'ondemand_driver_consent_popup_view response',
-      );
-      setLoader(false);
+  //     console.log(
+  //       response?.ondemand_driver_consent_popup_data,
+  //       'ondemand_driver_consent_popup_view response',
+  //     );
+  //     setLoader(false);
 
-      setDriverConsent(response?.ondemand_driver_consent_popup_data);
-    } catch (error) {
-      setLoader(false);
-      console.log(error, 'ondemand_driver_consent_popup_view Error');
-    } finally {
-      setLoader(false);
-    }
-  };
+  //     setDriverConsent(response?.ondemand_driver_consent_popup_data);
+  //   } catch (error) {
+  //     setLoader(false);
+  //     console.log(error, 'ondemand_driver_consent_popup_view Error');
+  //   } finally {
+  //     setLoader(false);
+  //   }
+  // };
 
   const acceptBooking = async () => {
-    console.log(booking_number, 'accept booking number');
+    console.log(
+      {
+        action: 'accept_booking',
+        booking_id: booking_number,
+        incentive: incentive,
+        incentive_eligibility_fullfillment: incentive_eligibility_fullfillment,
+        incentive_eligible_amount_fullfillment:
+          incentive_eligible_amount_fullfillment,
+        driver_assignment_in_10_minutes_incentive:
+          driver_assignment_in_10_minutes_incentive,
+        current_language: languageSwitch,
+      },
+      'accept booking number sending datadata',
+    );
     console.log('final accepttttt Roundtrip');
     // return false;
     try {
       const response = await FINAL_ACCEPT_BOOKING({
         action: 'accept_booking',
         booking_id: booking_number,
+        incentive: incentive,
+        incentive_eligibility_fullfillment: incentive_eligibility_fullfillment,
+        incentive_eligible_amount_fullfillment:
+          incentive_eligible_amount_fullfillment,
+        driver_assignment_in_10_minutes_incentive:
+          driver_assignment_in_10_minutes_incentive,
         current_language: languageSwitch,
       });
 
@@ -255,7 +275,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   checkboxLabel: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold',
     color: AppColors.black,
     flex: 1,

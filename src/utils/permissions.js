@@ -7,27 +7,19 @@ export const requestNotificationPermission = async () => {
       try {
         const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
         if (result === RESULTS.GRANTED) {
-          console.log('Notification permission granted');
           return true; // Permission granted
         } else if (result === RESULTS.DENIED) {
-          console.log('Notification permission denied');
           return false; // Permission denied
         } else if (result === RESULTS.BLOCKED) {
-          console.log('Notification permission blocked');
           return false; // Permission blocked
         }
       } catch (error) {
-        console.log('Error requesting notification permission:', error);
         return false; // Error occurred
       }
     } else {
-      console.log(
-        'Notification permission not required for this Android version',
-      );
       return true; // For Android versions below 33
     }
   } else {
-    console.log('Notification permission not applicable on this platform');
     return true; // Non-Android platforms
   }
 };
@@ -38,16 +30,12 @@ export const checkVibrationPermission = async () => {
     const result = await check(PERMISSIONS.ANDROID.VIBRATE);
     switch (result) {
       case RESULTS.UNAVAILABLE:
-        console.log('Vibration feature is not available on this device');
         break;
       case RESULTS.DENIED:
-        console.log('Vibration permission is denied but requestable');
         break;
       case RESULTS.GRANTED:
-        console.log('Vibration permission is granted');
         break;
       case RESULTS.BLOCKED:
-        console.log('Vibration permission is blocked and cannot be requested');
         break;
     }
   }
@@ -63,13 +51,8 @@ export const checkVibrationSupport = duration => {
         .fill(interval)
         .flatMap(v => [v, interval]);
 
-      // console.log(`Triggering vibration with pattern for ${duration}ms:`, pattern);
-
       Vibration.vibrate(pattern, false); // False to avoid infinite vibration
     } else {
-      console.log('Vibration not supported on this platform');
     }
-  } catch (error) {
-    console.error('Error triggering vibration:', error);
-  }
+  } catch (error) {}
 };

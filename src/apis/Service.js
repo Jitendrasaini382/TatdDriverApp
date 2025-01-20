@@ -74,11 +74,8 @@ axiosClient.interceptors.response.use(
               'Authorization'
             ] = `Bearer ${res.data.jwt}`;
             originalRequest.headers['Authorization'] = `Bearer ${res.data.jwt}`;
-
-            // run retry
             return axiosClient(originalRequest);
           } else {
-            console.error('Failed to refresh token:', res.data);
             store.dispatch(
               setUserAuthStates({
                 key: 'jwt',
@@ -99,9 +96,6 @@ axiosClient.interceptors.response.use(
             );
           }
         } catch (refreshError) {
-          console.error('Error refreshing token:', refreshError);
-          // logout user
-          // store.dispatch({type: 'LOGOUT'});
           store.dispatch(
             setUserAuthStates({
               key: 'jwt',
@@ -117,8 +111,6 @@ axiosClient.interceptors.response.use(
           return Promise.reject(refreshError);
         }
       } else {
-        console.error('Refresh token not available.');
-        // store.dispatch({type: 'LOGOUT'});
         store.dispatch(
           setUserAuthStates({
             key: 'jwt',
@@ -166,8 +158,7 @@ const _Fetch = (method, path, body, headers = {}) => {
       headers: finalHeaders, // Pass merged headers
     })
       .then(response => {
-        console.log('Response data:', response.data);
-
+        // console.log('Response data:', response.data);
         if (response.data.status_code == 200) {
           resolve(response.data);
         } else {
@@ -175,7 +166,7 @@ const _Fetch = (method, path, body, headers = {}) => {
         }
       })
       .catch(err => {
-        console.error('Request error:', err);
+        // console.error('Request error:', err);
         reject(err.response ? err.response.data : err.message);
       });
   });

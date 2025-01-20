@@ -1,15 +1,12 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   TouchableOpacity,
   StyleSheet,
   Text,
   View,
-  ScrollView,
   FlatList,
   Modal,
-  Button,
-  Alert,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import PermanentBookingAcceptModal from '../modal/PermanentBookingAcceptModal';
@@ -53,9 +50,7 @@ const BookingCard = ({booking}) => {
         current_language: languageSwitch,
       });
       setPermanentBookingPopup(response.permanent_booking_popup_data);
-    } catch (error) {
-      console.log(error, 'permanent_booking_view  Error');
-    }
+    } catch (error) {}
   };
 
   return (
@@ -133,26 +128,15 @@ const PermanentBookingView = () => {
     state => state.globalSlice.triggerFunction,
   );
 
-  const refreshKey = useSelector(state => state.globalSlice.refreshKey); // For refresh actions
+  const refreshKey = useSelector(state => state.globalSlice.refreshKey);
 
   useEffect(() => {
-    console.log(
-      'Triggered by refreshKey, triggerFunction, or languageSwitch permanent',
-    );
-
-    // Run the required functions
     getPermanentBookings();
     getPermanentBookingsOthers();
-    // Reset `triggerFunction` after running
     if (triggerFunction) {
       dispatch(setTriggerFunction(false));
     }
   }, [triggerFunction, refreshKey, languageSwitch, dispatch]);
-
-  // useEffect(() => {
-  //   getPermanentBookings();
-  //   getPermanentBookingsOthers();
-  // }, [languageSwitch]);
 
   const getPermanentBookings = async () => {
     try {
@@ -162,11 +146,8 @@ const PermanentBookingView = () => {
         current_language: languageSwitch,
       });
 
-      console.log(response, 'permanent_booking_view current response');
       setPermanentBookings(response.permanent_driver_bookings_my_zone);
-    } catch (error) {
-      console.log(error, 'permanent_booking_view  Error');
-    }
+    } catch (error) {}
   };
 
   const getPermanentBookingsOthers = async () => {
@@ -176,88 +157,58 @@ const PermanentBookingView = () => {
         booking_zone: 'others',
         current_language: languageSwitch,
       });
-
-      console.log(response, 'permanent_booking_view others response');
       setPermanentBookingsOthers(response.permanent_driver_bookings_other_zone);
-    } catch (error) {
-      console.log(error, 'permanent_booking_view  Error');
-    }
+    } catch (error) {}
   };
 
   const combinedBookings = [...permanentBookings, ...permanentBookingsOthers];
 
-  console.log(
-    combinedBookings,
-    'combinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookings',
-  );
+  // const [visibleBookings, setVisibleBookings] = useState([]);
+  // const [currentPage, setCurrentPage] = useState(0);
+  // const [isLoading, setIsLoading] = useState(false);
 
-  const [visibleBookings, setVisibleBookings] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  // const itemsPerPage = 2; // Show 2 items per page
 
-  const itemsPerPage = 2; // Show 2 items per page
+  // useEffect(() => {
+  //   loadMoreBookings();
+  // }, []);
 
-  useEffect(() => {
-    loadMoreBookings();
-  }, []);
+  // const loadMoreBookings = () => {
+  //   if (isLoading) return;
 
-  const loadMoreBookings = () => {
-    if (isLoading) return;
+  //   setIsLoading(true);
+  //   const nextPage = currentPage + 1;
+  //   const startIndex = currentPage * itemsPerPage;
+  //   const endIndex = startIndex + itemsPerPage;
 
-    setIsLoading(true);
-    const nextPage = currentPage + 1;
-    const startIndex = currentPage * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
+  //   const newBookings = combinedBookings.slice(startIndex, endIndex);
 
-    const newBookings = combinedBookings.slice(startIndex, endIndex);
+  //   if (newBookings.length > 0) {
+  //     setVisibleBookings(prev => [...prev, ...newBookings]);
+  //     setCurrentPage(nextPage);
+  //   }
 
-    if (newBookings.length > 0) {
-      setVisibleBookings(prev => [...prev, ...newBookings]);
-      setCurrentPage(nextPage);
-    }
-
-    setIsLoading(false);
-  };
+  //   setIsLoading(false);
+  // };
 
   return (
-    // <FlatList
-    //   data={combinedBookings}
-    //   keyExtractor={(item, index) => `${item.id || index}`}
-    //   renderItem={({item}) => <BookingCard booking={item} />}
-    // />
-
     <FlatList
-      data={visibleBookings}
+      data={combinedBookings}
       keyExtractor={(item, index) => `${item.id || index}`}
       renderItem={({item}) => <BookingCard booking={item} />}
-      onEndReached={loadMoreBookings} // Load more when reaching the end
-      onEndReachedThreshold={0.2} // Trigger when 50% of the list is scrolled
-      ListFooterComponent={
-        isLoading ? <ActivityIndicator size="large" color="blue" /> : null
-      }
     />
 
     // <FlatList
-    //   data={combinedBookings.slice(0, visibleBookings)} // Display only visible bookings
-    //   keyExtractor={(item, index) => `${item.id || index}`} // Use unique keys
+    //   data={visibleBookings}
+    //   keyExtractor={(item, index) => `${item.id || index}`}
     //   renderItem={({item}) => <BookingCard booking={item} />}
-    //   onEndReached={() => setVisibleBookings(visibleBookings + 10)}
-    //   // onEndReachedThreshold={1}
-    //   // windowSize={2}
-    //   showsVerticalScrollIndicator={false}
+    //   onEndReached={loadMoreBookings} // Load more when reaching the end
+    //   onEndReachedThreshold={0.2} // Trigger when 50% of the list is scrolled
+    //   ListFooterComponent={
+    //     isLoading ? <ActivityIndicator size="large" color="blue" /> : null
+    //   }
     // />
   );
-
-  // return (
-  //   <ScrollView>
-  //     {permanentBookings.map((booking, index) => (
-  //       <BookingCard key={index} booking={booking} />
-  //     ))}
-  //     {permanentBookingsOthers.map((booking, index) => (
-  //       <BookingCard key={index} booking={booking} />
-  //     ))}
-  //   </ScrollView>
-  // );
 };
 
 const styles = StyleSheet.create({
@@ -312,7 +263,6 @@ const styles = StyleSheet.create({
   },
   eventContainer: {
     flexDirection: 'row',
-    // marginBottom: 15,
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginTop: 10,

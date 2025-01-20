@@ -19,10 +19,12 @@ import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AddIcon from 'react-native-vector-icons/AntDesign';
+import {useSelector} from 'react-redux';
 
 const DueAmountDetails = ({route, navigation}) => {
   const {bookingNumber} = route?.params;
   const [loader, setLoader] = useState(false);
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   const [allInvoiceData, setAllInvoiceData] = useState();
 
@@ -46,21 +48,24 @@ const DueAmountDetails = ({route, navigation}) => {
   };
   const [isShowExtraMinutesModal, setisShowExtraMinutesModal] = useState(false);
   const [inputValue, setInputValue] = useState('');
+
   const addWaitingMinutes = async () => {
     try {
       const res = await WAITING_MINUTE_INSERT({
         action: 'overtime_minutes',
         booking_id: bookingNumber,
         overtime_minutes: inputValue,
+        current_language: languageSwitch,
       });
 
-      if (res?.msg_type == 'error') {
+      if (res?.status_code == '200') {
         Alert.alert(res?.message);
       }
+
       getInvoiceData(bookingNumber);
       setisShowExtraMinutesModal(false);
       setInputValue('');
-    } catch {}
+    } catch (error) {}
   };
 
   if (loader) {

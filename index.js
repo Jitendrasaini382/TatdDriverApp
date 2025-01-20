@@ -33,7 +33,8 @@ notifee.onBackgroundEvent(async ({type, detail}) => {
     case EventType.PRESS:
       console.log('Notification pressed in background:', detail);
       // Handle notification press, e.g., navigate to a specific screen
-      Alert.alert('ooo');
+      // Alert.alert('ooo');
+      
       break;
     case EventType.DISMISSED:
       console.log('Notification dismissed in background:', detail);

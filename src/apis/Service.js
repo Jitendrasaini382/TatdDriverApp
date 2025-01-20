@@ -158,7 +158,7 @@ const _Fetch = (method, path, body, headers = {}) => {
       headers: finalHeaders, // Pass merged headers
     })
       .then(response => {
-        // console.log('Response data:', response.data);
+        console.log('Response data:', response.data);
         if (response.data.status_code == 200) {
           resolve(response.data);
         } else {
@@ -166,7 +166,7 @@ const _Fetch = (method, path, body, headers = {}) => {
         }
       })
       .catch(err => {
-        // console.error('Request error:', err);
+        console.error('Request error:', err);
         reject(err.response ? err.response.data : err.message);
       });
   });

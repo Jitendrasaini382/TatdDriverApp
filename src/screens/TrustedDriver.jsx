@@ -152,8 +152,10 @@ const TrustedDriver = ({navigation}) => {
       getHomeNotification();
       getHomeNotice();
       getPopup();
-      getAllOndemandBookings();
-      getAllTrustedData();
+      if (isRfdOn) {
+        getAllOndemandBookings();
+        getAllTrustedData();
+      }
 
       return () => {};
     }, []),
@@ -166,7 +168,6 @@ const TrustedDriver = ({navigation}) => {
         getHeadlineData();
         getHomeNotification();
         getHomeNotice();
-        getPopup();
         if (isRfdOn) {
           getAllOndemandBookings();
         }
@@ -319,6 +320,21 @@ const TrustedDriver = ({navigation}) => {
         }),
       );
     } catch (error) {}
+  };
+
+  const onRefreshfetchData = async () => {
+    try {
+      await getHomeNotification();
+      await getHomeNotice();
+      // await getAllTrustedData();
+      // if (isRfdOn) {
+      await getAllOndemandBookings();
+      dispatch(setRefreshKey());
+      // }
+    } catch (error) {
+      // Handle error if needed
+    } finally {
+    }
   };
 
   const getUpdatePopup = async () => {
@@ -569,24 +585,42 @@ const TrustedDriver = ({navigation}) => {
     } catch (error) {}
   };
 
-  const onRefresh = useCallback(async () => {
+  // const onRefresh = async () => {
+  //   setRefreshing(true);
+  //   try {
+  //     await getUpdatePopup();
+  //     await getHeadlineData();
+  //     await getHomeNotification();
+  //     await getHomeNotice();
+  //     await getAllTrustedData();
+  //     setRefreshing(false);
+  //     if (isRfdOn) {
+  //       await getAllOndemandBookings();
+  //       dispatch(setRefreshKey());
+  //     }
+  //   } catch (error) {
+  //     setRefreshing(false);
+  //   } finally {
+  //     setRefreshing(false);
+  //   }
+  // };
+
+  const onRefresh = async () => {
+    const startTime = performance.now(); // Start time measurement
     setRefreshing(true);
     try {
-      dispatch(setRefreshKey());
       await getUpdatePopup();
       await getHeadlineData();
-      await getHomeNotification();
-      await getHomeNotice();
-      await getAllTrustedData();
-      if (isRfdOn) {
-        await getAllOndemandBookings();
-      }
     } catch (error) {
+      // Handle error if needed
       setRefreshing(false);
     } finally {
       setRefreshing(false);
+      const endTime = performance.now(); // End time measurement
+      const duration = (endTime - startTime) / 1000; // Convert milliseconds to seconds
+      console.log(`Refresh took ${duration.toFixed(2)} seconds`);
     }
-  }, [dispatch, getUpdatePopup, triggerFunction, refreshKey]);
+  };
 
   // return false
   const insets = useSafeAreaInsets();
@@ -643,7 +677,10 @@ const TrustedDriver = ({navigation}) => {
 
         <ScrollView
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => (onRefresh(), onRefreshfetchData())}
+            />
           }>
           {showNotification && homeNotificationData ? (
             <View

@@ -50,6 +50,7 @@ const DueAmountDetails = ({route, navigation}) => {
   const addWaitingMinutes = async () => {
     console.log(
       {
+        action: 'overtime_minutes',
         booking_id: bookingNumber,
         overtime_minutes: inputValue,
       },

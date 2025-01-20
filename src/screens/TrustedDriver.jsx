@@ -57,7 +57,12 @@ import {
 } from '../redux/slices/trustedDriverSlice';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
-import {Agent_Icon, AppLogo} from '../assets/images';
+import {
+  Agent_Icon,
+  AppLogo,
+  PremiumDriver,
+  TrustedPartner,
+} from '../assets/images';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import {
@@ -374,10 +379,6 @@ const TrustedDriver = ({navigation}) => {
       });
 
       // Log the response for debugging
-      console.log(
-        response,
-        'responseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update apiresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update apiresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update apiresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update apiresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update apiresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update apiresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update apiresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse App Update api',
-      );
 
       // Check and handle update conditions
       if (response?.app_details) {
@@ -444,6 +445,7 @@ const TrustedDriver = ({navigation}) => {
 
       if (response?.rfd == '1') {
         dispatch(setLoginStatus(true));
+        dispatch(setVideosContent(false));
       } else {
         dispatch(setLoginStatus(false));
       }
@@ -600,12 +602,6 @@ const TrustedDriver = ({navigation}) => {
         current_language: languageSwitch,
       });
 
-      console.log(
-        response?.driver_panel_messages
-          ?.redirect_to_website_trusted_driver_flag,
-        '12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890',
-      );
-
       setHeadLineData(response);
 
       if (
@@ -620,6 +616,7 @@ const TrustedDriver = ({navigation}) => {
 
       if (response?.driver_panel_messages?.rfd == '1') {
         dispatch(setLoginStatus(true));
+        dispatch(setVideosContent(false));
       } else {
         dispatch(setLoginStatus(false));
       }
@@ -802,6 +799,13 @@ const TrustedDriver = ({navigation}) => {
     } catch (err) {
       console.error('VIEW_HEADLINE error:', err);
     }
+  };
+
+  const showVideoContent = () => {
+    if (videosContent) {
+      dispatch(setLoginStatus(false));
+    }
+    dispatch(setVideosContent(true));
   };
 
   return (
@@ -1289,7 +1293,7 @@ const TrustedDriver = ({navigation}) => {
                 {/* Bottom div */}
                 <View style={styles.bottamContent}>
                   <TouchableOpacity
-                    onPress={() => dispatch(setVideosContent(!videosContent))}
+                    onPress={() => showVideoContent()}
                     style={[
                       styles.bottamContent1,
                       videosContent && {backgroundColor: AppColors.mainColor},
@@ -1448,9 +1452,9 @@ const TrustedDriver = ({navigation}) => {
               <Image
                 source={Agent_Icon} // Replace with your actual image path
                 style={{
-                  width: 30,
-                  height: 30,
-                  marginBottom: 10,
+                  width: 40,
+                  height: 40,
+                  marginBottom: 5,
                   // tintColor:
                   //   selected === 'Agent'
                   //     ? AppColors.mainColor
@@ -1473,11 +1477,11 @@ const TrustedDriver = ({navigation}) => {
               onPress={() => handlePress('PremiumDriver')}
               style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
-                source={Agent_Icon} // Replace with your actual image path
+                source={PremiumDriver} // Replace with your actual image path
                 style={{
-                  width: 30,
-                  height: 30,
-                  marginBottom: 10,
+                  width: 40,
+                  height: 40,
+                  marginBottom: 5,
                   // tintColor:
                   //   selected === 'PremiumDriver'
                   //     ? AppColors.mainColor
@@ -1486,52 +1490,7 @@ const TrustedDriver = ({navigation}) => {
                   tintColor: AppColors.black,
                 }}
               />
-              {/* <Svg
-                version="1.0"
-                xmlns="http://www.w3.org/2000/svg"
-                width="30" // Set a larger width for better visibility
-                height="30" // Set a larger height for better visibility
-                viewBox="0 0 512 512" // Ensure this matches the actual size of your content
-                preserveAspectRatio="xMidYMid meet">
-                <G
-                  transform="translate(0,512) scale(0.1,-0.1)"
-                  fill="black"
-                  stroke="black"
-                  strokeWidth="5"
-                  strokeLinejoin="round"
-                  strokeLinecap="round">
-                  <Path d="M1490 4821 c-164 -53 -274 -166 -316 -326 -11 -38 -14 -150 -14 -462 l0 -412 26 -20 c33 -26 54 -26 87 -1 l26 21 3 417 3 417 26 56 c33 69 88 124 159 158 l55 26 325 3 c315 3 326 4 347 24 30 28 29 69 0 96 -23 22 -28 22 -348 21 -282 0 -331 -2 -379 -18z" />
-                  <Path d="M2431 4814 c-27 -35 -27 -65 2 -92 19 -18 35 -22 93 -22 61 0 74 3 92 23 28 30 28 68 -1 95 -19 18 -35 22 -94 22 -65 0 -73 -2 -92 -26z" />
-                  <Path d="M2821 4814 c-26 -33 -26 -54 -1 -87 l21 -26 572 -3 572 -3 56 -26 c71 -33 125 -87 158 -158 l26 -56 3 -995 2 -996 -55 10 -55 10 0 953 c0 927 -1 954 -20 1006 -24 63 -76 117 -145 149 -48 22 -60 23 -306 23 l-256 0 -49 -30 c-57 -36 -91 -89 -100 -158 -11 -80 10 -77 -479 -77 -489 0 -468 -3 -479 78 -9 66 -54 135 -108 164 -41 22 -52 23 -288 23 -179 0 -258 -4 -293 -14 -57 -16 -129 -77 -160 -135 l-22 -41 -3 -1107 -2 -1108 -55 0 -55 0 0 388 0 389 -23 21 c-30 28 -68 28 -95 -1 -22 -23 -22 -27 -22 -410 l0 -387 -99 0 c-146 0 -203 -26 -245 -109 -31 -60 -38 -105 -72 -430 l-28 -264 -60 -38 c-34 -20 -71 -45 -84 -54 l-23 -17 3 -267 3 -268 28 -36 c30 -40 74 -67 107 -67 19 0 20 -6 20 -102 0 -121 19 -174 78 -210 34 -21 51 -23 196 -26 201 -5 237 1 283 41 51 45 63 81 63 192 l0 95 264 0 264 0 4 -114 c4 -132 14 -156 88 -193 41 -21 58 -23 215 -23 157 0 174 2 215 23 25 12 55 37 67 56 20 30 23 47 23 143 0 95 2 109 18 114 9 3 35 14 57 25 37 18 63 19 353 19 l312 0 0 -190 c0 -177 1 -191 20 -210 20 -20 33 -20 600 -20 567 0 580 0 600 20 19 19 20 33 20 273 0 252 0 254 -23 275 -17 16 -36 22 -70 22 l-47 0 0 83 0 84 49 32 c87 56 159 160 195 280 14 47 16 122 16 536 l0 482 -22 33 c-34 49 -67 70 -126 77 l-52 6 0 982 c0 1071 2 1021 -57 1139 -33 65 -116 147 -184 181 -106 55 -109 55 -721 55 l-567 0 -20 -26z" />
-                  <Path d="M699 361 c9 -10 19 -38 23 -63 13 -79 56 -135 127 -164 56 -24 930 -24 986 0 71 29 114 85 127 164 13 82 7 80 269 80 214 0 233 -2 264 -20 65 -40 62 7 62 -1041 0 -902 -1 -951 -17 -944 -10 4 -53 10 -95 13 l-78 5 0 264 c0 291 -3 309 -63 371 -103 108 -275 100 -364 -16 -18 -24 -37 -59 -43 -80 -6 -23 -10 -214 -10 -502 l-1 -465 -25 30 c-111 129 -193 210 -228 226 -49 22 -143 25 -190 5 -92 -38 -149 -125 -150 -226 l0 -65 183 -330 c253 -455 282 -501 353 -567 l61 -58 -337 0 -336 0 0 108 c0 105 -1 109 -27 134 -16 14 -54 40 -85 59 -52 30 -58 37 -63 74 -3 22 -18 162 -34 312 -33 299 -46 349 -107 403 -18 16 -50 34 -71 39 -23 7 -169 11 -370 11 l-333 0 0 1075 c0 1184 -3 1125 62 1165 31 18 50 20 264 20 207 0 232 -2 246 -17z" />
-                  <Path d="M1499 -1432 l29 -29 0 -476 c0 -463 1 -477 20 -496 29 -29 72 -30 102 -3 15 13 18 38 20 162 l3 146 58 3 57 3 0 -146 c0 -132 2 -147 20 -165 29 -29 72 -30 102 -3 15 13 18 38 20 162 l3 146 58 3 57 3 0 -149 c0 -136 2 -152 21 -176 24 -31 66 -35 98 -8 19 16 21 28 23 172 l3 155 58 3 58 3 -3 -468 -3 -468 -29 -62 c-32 -69 -107 -148 -173 -181 -22 -12 -43 -28 -47 -37 -3 -9 -6 -68 -6 -131 l0 -114 -320 0 -320 0 0 123 c0 143 -3 136 -107 192 -40 20 -84 50 -98 66 -34 41 -95 145 -296 507 -180 323 -188 345 -149 395 22 28 74 43 110 32 12 -4 95 -91 186 -195 90 -103 171 -191 180 -194 29 -11 54 -6 74 14 20 20 20 33 20 574 0 304 3 567 6 585 16 80 108 109 165 52z" />
-                  <Path d="M1408 960 c24 -9 41 -40 52 -98 l7 -33 -676 0 -676 0 0 25 c0 40 27 94 52 105 30 12 1209 13 1241 1z" />
-                  <Path d="M81 -358 c4 -43 9 -99 13 -125 l6 -48 -720 0 -719 0 12 113 c7 61 13 118 13 125 1 9 147 12 695 12 l693 0 7 -77z" />
-                  <Path d="M179 -399 c-82 -42 -156 -83 -162 -92 -33 -41 1 -112 52 -112 14 0 108 41 209 92 l184 92 51 -33 51 -33 0 -190 c0 -111 -4 -197 -10 -209 -10 -18 -24 -19 -250 -19 l-240 0 0 78 c0 91 -18 118 -87 178 -39 37 -81 63 -147 72z" />
-                </G>
-              </Svg> */}
 
-              {/* <Svg
-                version="1.0"
-                xmlns="http://www.w3.org/2000/svg"
-                width="35"
-                height="35"
-                viewBox="0 0 512.000000 512.000000"
-                preserveAspectRatio="xMidYMid meet">
-                <G
-                  transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-                  fill="black"
-                  stroke="none">
-                  <Path d="M1490 4821 c-164 -53 -274 -166 -316 -326 -11 -38 -14 -150 -14 -462 l0 -412 26 -20 c33 -26 54 -26 87 -1 l26 21 3 417 3 417 26 56 c33 69 88 124 159 158 l55 26 325 3 c315 3 326 4 347 24 30 28 29 69 0 96 -23 22 -28 22 -348 21 -282 0 -331 -2 -379 -18z" />
-                  <Path d="M2431 4814 c-27 -35 -27 -65 2 -92 19 -18 35 -22 93 -22 61 0 74 3 92 23 28 30 28 68 -1 95 -19 18 -35 22 -94 22 -65 0 -73 -2 -92 -26z" />
-                  <Path d="M2821 4814 c-26 -33 -26 -54 -1 -87 l21 -26 572 -3 572 -3 56 -26 c71 -33 125 -87 158 -158 l26 -56 3 -995 2 -996 -55 10 -55 10 0 953 c0 927 -1 954 -20 1006 -24 63 -76 117 -145 149 -48 22 -60 23 -306 23 l-256 0 -49 -30 c-57 -36 -91 -89 -100 -158 -11 -80 10 -77 -479 -77 -489 0 -468 -3 -479 78 -9 66 -54 135 -108 164 -41 22 -52 23 -288 23 -179 0 -258 -4 -293 -14 -57 -16 -129 -77 -160 -135 l-22 -41 -3 -1107 -2 -1108 -55 0 -55 0 0 388 0 389 -23 21 c-30 28 -68 28 -95 -1 -22 -23 -22 -27 -22 -410 l0 -387 -99 0 c-146 0 -203 -26 -245 -109 -31 -60 -38 -105 -72 -430 l-28 -264 -60 -38 c-34 -20 -71 -45 -84 -54 l-23 -17 3 -267 3 -268 28 -36 c30 -40 74 -67 107 -67 19 0 20 -6 20 -102 0 -121 19 -174 78 -210 34 -21 51 -23 196 -26 201 -5 237 1 283 41 51 45 63 81 63 192 l0 95 264 0 264 0 4 -114 c4 -132 14 -156 88 -193 41 -21 58 -23 215 -23 157 0 174 2 215 23 25 12 55 37 67 56 20 30 23 47 23 143 0 95 2 109 18 114 9 3 35 14 57 25 37 18 63 19 353 19 l312 0 0 -190 c0 -177 1 -191 20 -210 20 -20 33 -20 600 -20 567 0 580 0 600 20 19 19 20 33 20 273 0 252 0 254 -23 275 -17 16 -36 22 -70 22 l-47 0 0 83 0 84 49 32 c87 56 159 160 195 280 14 47 16 122 16 536 l0 482 -22 33 c-34 49 -67 70 -126 77 l-52 6 0 982 c0 1071 2 1021 -57 1139 -33 65 -116 147 -184 181 -106 55 -109 55 -721 55 l-567 0 -20 -26z" />
-                  <Path d="M699 361 c9 -10 19 -38 23 -63 13 -79 56 -135 127 -164 56 -24 930 -24 986 0 71 29 114 85 127 164 13 82 7 80 269 80 214 0 233 -2 264 -20 65 -40 62 7 62 -1041 0 -902 -1 -951 -17 -944 -10 4 -53 10 -95 13 l-78 5 0 264 c0 291 -3 309 -63 371 -103 108 -275 100 -364 -16 -18 -24 -37 -59 -43 -80 -6 -23 -10 -214 -10 -502 l-1 -465 -25 30 c-111 129 -193 210 -228 226 -49 22 -143 25 -190 5 -92 -38 -149 -125 -150 -226 l0 -65 183 -330 c253 -455 282 -501 353 -567 l61 -58 -337 0 -336 0 0 108 c0 105 -1 109 -27 134 -16 14 -54 40 -85 59 -52 30 -58 37 -63 74 -3 22 -18 162 -34 312 -33 299 -46 349 -107 403 -18 16 -50 34 -71 39 -23 7 -169 11 -370 11 l-333 0 0 1075 c0 1184 -3 1125 62 1165 31 18 50 20 264 20 207 0 232 -2 246 -17z" />
-                  <Path d="M1499 -1432 l29 -29 0 -476 c0 -463 1 -477 20 -496 29 -29 72 -30 102 -3 15 13 18 38 20 162 l3 146 58 3 57 3 0 -146 c0 -132 2 -147 20 -165 29 -29 72 -30 102 -3 15 13 18 38 20 162 l3 146 58 3 57 3 0 -149 c0 -136 2 -152 21 -176 24 -31 66 -35 98 -8 19 16 21 28 23 172 l3 155 58 3 58 3 -3 -468 -3 -468 -29 -62 c-32 -69 -107 -148 -173 -181 -22 -12 -43 -28 -47 -37 -3 -9 -6 -68 -6 -131 l0 -114 -320 0 -320 0 0 123 c0 143 -3 136 -107 192 -40 20 -84 50 -98 66 -34 41 -95 145 -296 507 -180 323 -188 345 -149 395 22 28 74 43 110 32 12 -4 95 -91 186 -195 90 -103 171 -191 180 -194 29 -11 54 -6 74 14 20 20 20 33 20 574 0 304 3 567 6 585 16 80 108 109 165 52z" />
-                  <Path d="M1408 960 c24 -9 41 -40 52 -98 l7 -33 -676 0 -676 0 0 25 c0 40 27 94 52 105 30 12 1209 13 1241 1z" />
-                  <Path d="M81 -358 c4 -43 9 -99 13 -125 l6 -48 -720 0 -719 0 12 113 c7 61 13 118 13 125 1 9 147 12 695 12 l693 0 7 -77z" />
-                  <Path d="M179 -399 c-82 -42 -156 -83 -162 -92 -33 -41 1 -112 52 -112 14 0 108 41 209 92 l184 92 51 -33 51 -33 0 -190 c0 -111 -4 -197 -10 -209 -10 -18 -24 -19 -250 -19 l-240 0 0 78 c0 91 -18 118 -87 178 -39 37 -81 63 -147 72z" />
-                </G>
-              </Svg> */}
               <Text
                 style={{
                   fontSize: 12,
@@ -1546,16 +1505,11 @@ const TrustedDriver = ({navigation}) => {
               onPress={() => handlePress('TrustedPartner')}
               style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
-                source={Agent_Icon} // Replace with your actual image path
+                source={TrustedPartner} // Replace with your actual image path
                 style={{
-                  width: 30,
-                  height: 30,
-                  marginBottom: 10,
-                  // tintColor:
-                  //   selected === 'TrustedPartner'
-                  //     ? AppColors.mainColor
-                  //     : AppColors.black,
-
+                  width: 40,
+                  height: 40,
+                  marginBottom: 5,
                   tintColor: AppColors.black,
                 }}
               />

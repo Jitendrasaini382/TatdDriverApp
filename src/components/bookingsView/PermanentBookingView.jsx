@@ -184,12 +184,59 @@ const PermanentBookingView = () => {
 
   const combinedBookings = [...permanentBookings, ...permanentBookingsOthers];
 
+  console.log(
+    combinedBookings,
+    'combinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookingscombinedBookings',
+  );
+
+  const [visibleBookings, setVisibleBookings] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const itemsPerPage = 2; // Show 2 items per page
+
+  useEffect(() => {
+    loadMoreBookings();
+  }, []);
+
+  const loadMoreBookings = () => {
+    if (isLoading) return;
+
+    setIsLoading(true);
+    const nextPage = currentPage + 1;
+    const startIndex = currentPage * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    const newBookings = combinedBookings.slice(startIndex, endIndex);
+
+    if (newBookings.length > 0) {
+      setVisibleBookings(prev => [...prev, ...newBookings]);
+      setCurrentPage(nextPage);
+    }
+
+    setIsLoading(false);
+  };
+
   return (
+    // <FlatList
+    //   data={combinedBookings}
+    //   keyExtractor={(item, index) => `${item.id || index}`}
+    //   renderItem={({item}) => <BookingCard booking={item} />}
+    // />
+
     <FlatList
-      data={combinedBookings}
-      keyExtractor={(item, index) => `${item.id || index}`} // Use unique keys, such as IDs if available
+      data={visibleBookings}
+      keyExtractor={(item, index) => `${item.id || index}`}
       renderItem={({item}) => <BookingCard booking={item} />}
+      onEndReached={loadMoreBookings} // Load more when reaching the end
+      onEndReachedThreshold={0.2} // Trigger when 50% of the list is scrolled
+      ListFooterComponent={
+        isLoading ? <ActivityIndicator size="large" color="blue" /> : null
+      }
     />
+
+    
+
     // <FlatList
     //   data={combinedBookings.slice(0, visibleBookings)} // Display only visible bookings
     //   keyExtractor={(item, index) => `${item.id || index}`} // Use unique keys

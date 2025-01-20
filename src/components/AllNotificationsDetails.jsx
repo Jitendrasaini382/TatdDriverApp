@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Image,
   Text,
@@ -26,7 +26,6 @@ import {
 import {RefreshControl} from 'react-native';
 
 const AllNotificationComponent = () => {
-  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const notificationData = useSelector(e => e?.globalSlice?.notificationData);
@@ -48,14 +47,8 @@ const AllNotificationComponent = () => {
       setIsLoading(true);
       try {
         const response = await DRIVER_NOTIFICATION(data);
-        console.log(
-          response.notifications[0],
-          'response.notificationsresponse.',
-        );
-
         dispatch(setNotificationData(response.notifications));
       } catch (error) {
-        console.error('DRIVER NOTIFICATION error:', error);
       } finally {
         setIsLoading(false);
       }
@@ -77,7 +70,6 @@ const AllNotificationComponent = () => {
         action: 'view_all_notifications',
       });
     } catch (error) {
-      console.log('Error during refresh:', error);
     } finally {
       setRefreshing(false);
     }
@@ -173,7 +165,6 @@ export const NotificationDetailScreen = ({route}) => {
       setBottamButtonText(response);
       dispatch(setStoredRating(response.headline.rate));
     } catch (err) {
-      console.error('VIEW_HEADLINE error:', err);
     } finally {
       setLoader(false);
     }
@@ -190,7 +181,6 @@ export const NotificationDetailScreen = ({route}) => {
         Alert.alert('Success', response.message);
         dispatch(setStoredRating(response.rate));
       } catch (error) {
-        console.error('saveBookingExperience Error:', error);
         Alert.alert(
           'Error',
           'Failed to save booking experience. Please try again.',
@@ -222,22 +212,17 @@ export const NotificationDetailScreen = ({route}) => {
       Alert.alert(response.message);
       setFeedback('');
     } catch (error) {
-      console.error('save_booking_experience_remarks Error:', error);
       Alert.alert('Error', 'Failed to save booking remarks. Please try again.');
     }
   }, [notificationId, feedback]);
 
   const clickStoreHomeNotification = async id => {
-    console.log(id, 'clickStoreHomeNotification clickStoreHomeNotification');
     try {
       const response = await DRIVER_NOTIFICATION({
         action: 'view_headline',
         id: id,
       });
-      console.log(response, 'click store');
-    } catch (err) {
-      console.error('VIEW_HEADLINE error:', err);
-    }
+    } catch (err) {}
   };
 
   return (
@@ -322,7 +307,7 @@ export const NotificationDetailScreen = ({route}) => {
                           fontSize: 18,
                           fontWeight: 'bold',
                         }}>
-                        {bottamButtonText?.btn_text  || "Back"}
+                        {bottamButtonText?.btn_text || 'Back'}
                       </Text>
                     </TouchableOpacity>
                   ) : (
@@ -414,7 +399,6 @@ const styles = StyleSheet.create({
   },
   touchable: {
     flexDirection: 'row',
-    // marginHorizontal: 10,
     paddingVertical: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
@@ -428,9 +412,7 @@ const styles = StyleSheet.create({
     width: 15,
     height: 15,
   },
-  textContainer: {
-    // flex: 1,
-  },
+  textContainer: {},
   previewText: {
     fontSize: 15,
     color: AppColors.black,
@@ -445,7 +427,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    // padding: 20,
     margin: 20,
     justifyContent: 'center',
   },

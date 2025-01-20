@@ -8,7 +8,7 @@ import {
   Pressable,
 } from 'react-native';
 
-import React, {useContext, useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {AppColors} from '../assets/Colors';
 import {DRIVER_FAQ} from '../apis/Apis';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -72,12 +72,9 @@ const AccordionData = () => {
         if (e.status_code === '200') {
           dispatch(setFaqData(e.faq_data));
         } else {
-          console.log('Loading Faq Data');
         }
       })
-      .catch(err => {
-        console.error('FAQ Error:', err);
-      });
+      .catch(err => {});
   }, [faqData]);
 
   useEffect(() => {

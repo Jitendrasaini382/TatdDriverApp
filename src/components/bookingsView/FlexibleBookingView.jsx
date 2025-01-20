@@ -37,13 +37,7 @@ const BookingCard = ({booking, index, total}) => {
         </View>
       </View>
       <Text style={styles.title}>{booking.pickup_address}</Text>
-      {/* <View style={styles.dates}>
-        {booking.date_wie.map((date, idx) => (
-          <Text key={idx} style={styles.dateText}>
-            {date} |
-          </Text>
-        ))}
-      </View> */}
+
       <View style={styles.dates}>
         <Text style={styles.dateText}>{booking.date_wie.join(' | ')}</Text>
       </View>
@@ -109,14 +103,8 @@ const FlexibleBookingView = () => {
   const refreshKey = useSelector(state => state.globalSlice.refreshKey);
 
   useEffect(() => {
-    console.log(
-      'Triggered by refreshKey, triggerFunction, or languageSwitch flexible',
-    );
-
-    // Run the required functions
     getWeeklyBookings();
 
-    // Reset `triggerFunction` after running
     if (triggerFunction) {
       dispatch(setTriggerFunction(false));
     }
@@ -124,43 +112,19 @@ const FlexibleBookingView = () => {
 
   const getWeeklyBookings = async () => {
     try {
-      // console.log('Starting getWeeklyBookings function');
-
-      setLoading(true); // Show loader
-      // console.log('Loader set to true');
+      setLoading(true);
 
       const response = await WEEKLY_BOOKING({
         action: 'weekly_booking_view',
         current_language: languageSwitch,
       });
-      // console.log('WEEKLY_BOOKING API call made');
-
-      console.log(response, 'getWeeklyBookings response received');
 
       setBookingDetails(response?.weeklybookingview);
-      // console.log('Booking details processing complete');
     } catch (error) {
-      console.log(error, 'getWeeklyBookings Error caught');
     } finally {
       setLoading(false);
-      // console.log('Loader set to false');
-      // console.log('getWeeklyBookings function execution complete');
     }
   };
-
-  //   return (
-  //     <ScrollView>
-  //       {bookingDetails.map((booking, index) => (
-  //         <BookingCard
-  //           key={index}
-  //           booking={booking}
-  //           index={index}
-  //           total={bookingDetails.length}
-  //         />
-  //       ))}
-  //     </ScrollView>
-  //   );
-  // };
 
   return (
     <FlatList
@@ -186,10 +150,6 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.mainColor,
     marginBottom: 10,
     marginHorizontal: 5,
-
-    // padding: 12,
-    // marginVertical: 10,
-    // marginHorizontal: 10,
   },
   header: {
     flexDirection: 'row',

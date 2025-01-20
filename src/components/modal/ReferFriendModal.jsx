@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -52,10 +52,7 @@ const ReferFriendModal = ({setReferFriendModal, id}) => {
       setPermanentReferPopup(response?.refer_popup_data);
       setLoader(false);
     } catch (error) {
-      console.log(error, 'getPermanentReferPopup  Error');
     } finally {
-      console.log('run finalyy');
-
       setLoader(false);
     }
   };
@@ -63,11 +60,8 @@ const ReferFriendModal = ({setReferFriendModal, id}) => {
   const getPermanentReferAcceptPopup = async (languageSwitch, id) => {
     try {
       const response = await PERMANENT_REFER_ACCEPT_POPUP(languageSwitch, id);
-      console.log(response, 'getPermanentReferAcceptPopupresponse');
       setPermanentReferAcceptPopup(response?.refer_popup_data);
-    } catch (error) {
-      console.log(error, 'getPermanentReferAcceptPopup  Error');
-    }
+    } catch (error) {}
   };
 
   const referFriend = () => {
@@ -95,7 +89,6 @@ const ReferFriendModal = ({setReferFriendModal, id}) => {
             style={styles.closeButton}
             onPress={() => setReferFriendModal(false)}>
             <Icon name="close" size={25} color={AppColors.white} />
-            {/* <Text style={{color: AppColors.white, fontSize:25, fontWeight:"bold"}} >x</Text> */}
           </TouchableOpacity>
           <View style={styles.content}>
             <Text style={styles.description}>
@@ -157,7 +150,6 @@ const ReferFriendModal = ({setReferFriendModal, id}) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    // backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'flex-end',
   },
   container: {
@@ -166,7 +158,6 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.mainColor,
     borderTopWidth: 1,
     borderTopColor: AppColors.mainColor,
-    // paddingTop: 20,
   },
   closeButton: {
     position: 'absolute',

@@ -1,5 +1,5 @@
-import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useContext} from 'react';
+import React from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {AppColors} from '../assets/Colors';
 import {useDispatch, useSelector} from 'react-redux';
@@ -11,18 +11,12 @@ const ExtraButtons = ({showNeedHelp}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const openNeedHelp = () => {
-    Linking.openURL('https://www.tatd.in/tickets-driver.php');
-  };
-
   return (
     <View style={styles.mainView}>
       <View style={styles.leftView}>
-        {/* <TouchableOpacity onPress={openNeedHelp}> */}
         {showNeedHelp && (
           <TouchableOpacity
             onPress={() => navigation.navigate('TicketsDriver')}>
-            {/* <Text style={styles.leftText}>Need Help?</Text> */}
             <Text style={styles.leftText}>
               {languageSwitch == 'english' ? 'Need Help?' : ' मदद चाहिए?'}
             </Text>
@@ -31,7 +25,6 @@ const ExtraButtons = ({showNeedHelp}) => {
       </View>
       <View style={styles.rightView}>
         <TouchableOpacity onPress={() => dispatch(setMyBookingModal(true))}>
-          {/* <Text style={styles.rightText}>My Bookings</Text> */}
           <Text style={styles.rightText}>
             {languageSwitch == 'english' ? 'My Bookings' : 'मेरी बुकिंगें'}
           </Text>

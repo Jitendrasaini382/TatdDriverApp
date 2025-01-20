@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { AppColors } from '../assets/Colors';
+import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {AppColors} from '../assets/Colors';
 
-const RadioButton = ({ label, selected, onSelect }) => {
+const RadioButton = ({label, selected, onSelect}) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onSelect}>
       <View style={styles.radioCircle}>
@@ -38,8 +38,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 16,
     color: AppColors.black,
-    fontFamily: "Roboto-Regular"
-
+    fontFamily: 'Roboto-Regular',
   },
 });
 

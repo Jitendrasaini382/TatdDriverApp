@@ -1,6 +1,5 @@
 import {
   ActivityIndicator,
-  Alert,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -26,13 +25,9 @@ const MyBonusStatusHistory = () => {
       });
 
       setBonusData(response.bonuses);
-      // console.log(response.bonuses, 'My Bonus History Data');
       setLoader(false);
     } catch (error) {
-      console.log(error, 'My Bonus History Error');
       setLoader(false);
-
-      // Alert.alert('Error', 'Failed to fetch bonus history. Please try again.');
     } finally {
       setLoader(false);
     }

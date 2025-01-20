@@ -21,46 +21,30 @@ const RateUsAtSocialMedia = ({route, navigation}) => {
   const [viewData, setViewData] = useState({});
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
-  console.log(
-    languageSwitch,
-    'languageSwitchlanguageSwitch rate us social media',
-  );
-
   useEffect(() => {
     GetAllSocialMediaData(bookingNumber);
   }, []);
 
   const submitRating = url => {
     if (!url) {
-      console.error('Social media link is missing.');
       return;
     }
     try {
       // Simulate API call or rating submission
-      console.log('Submitting rating for booking number:', bookingNumber);
       rateusSocialMedia(bookingNumber);
       // Open the provided URL
-      Linking.openURL(url)
-        .then(() => console.log('URL opened successfully:', url))
-        .catch(err => console.error('Error opening URL:', err));
-    } catch (error) {
-      console.error('Error during rating submission:', error);
-    }
+      Linking.openURL(url);
+    } catch (error) {}
   };
 
   const GetAllSocialMediaData = async number => {
-    console.log(number, 'b number');
-
     try {
       const response = await RATE_US_SOCIAL_MEDIA_VIEW_DATA({
         booking_id: number,
         utype: 'Driver',
       });
       setViewData(response);
-      console.log(response, 'GetAllSocialMediaData Api response');
-    } catch (error) {
-      console.log(error, 'GetAllSocialMediaData Api error - Error');
-    }
+    } catch (error) {}
   };
 
   const rateusSocialMedia = async number => {
@@ -72,11 +56,7 @@ const RateUsAtSocialMedia = ({route, navigation}) => {
         utype: 'Driver',
         current_language: languageSwitch,
       });
-
-      console.log(response, 'rateusSocialMedia Api response');
-    } catch (error) {
-      console.log(error, 'rateusSocialMedia Api error - Error');
-    }
+    } catch (error) {}
   };
 
   return (

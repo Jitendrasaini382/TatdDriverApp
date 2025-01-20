@@ -1,8 +1,7 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
   ScrollView,
   Alert,
@@ -33,92 +32,34 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
   const {cancel, apply_or_accept, P_ID} = data?.actions;
 
   const handleAccept = (id, name) => {
-    console.log(id, name, '==handleSubmittt');
     if (name == 'Accept') {
-      console.log(name, '--- Accept run');
       handleAcceptPermanentBooking(id);
     } else if (name == 'Apply') {
-      console.log(name, '--- Apply run');
       handleApplyPermanentBooking(id);
     }
   };
 
-  // const handleApplyPermanentBooking = async id => {
-  //   try {
-  //     const response = await APPLY_PERMANENT_BOOKING({
-  //       action: 'send_permanent_application',
-  //       P_ID: id,
-  //     });
-  //     console.log(response, 'APPLY_PERMANENT_BOOKINGAPPLY_PERMANENT_BOOKING');
-  //   } catch (error) {
-  //     console.log(
-  //       error,
-  //       'APPLY_PERMANENT_BOOKINGAPPLY_PERMANENT_BOOKING  Error',
-  //     );
-  //   }
-  // };
-
   const handleApplyPermanentBooking = async id => {
     try {
-      console.log('Function started, received ID:', id);
-
       const payload = {
         action: 'send_permanent_application',
         P_ID: id,
       };
-      console.log('Payload prepared:', payload);
-
       const response = await APPLY_PERMANENT_BOOKING(payload);
-      console.log('Response received:', response);
-
-      console.log(
-        response,
-        'APPLY_PERMANENT_BOOKINGAPPLY_PERMANENT_BOOKING completed successfully',
-      );
       if (response?.status_code == 200) {
-        // Alert.alert(response?.message);
         Alert.alert('Success', response?.message, [{text: 'OK'}]);
         dispatch(setTriggerFunction(true));
-
         setOpenModal(false);
       }
-    } catch (error) {
-      console.log('Error encountered:', error);
-      console.log(
-        error,
-        'APPLY_PERMANENT_BOOKINGAPPLY_PERMANENT_BOOKING Error',
-      );
-    }
+    } catch (error) {}
   };
 
-  // const handleAcceptPermanentBooking = async id => {
-  //   try {
-  //     const response = await ACCEPT_PERMANENT_BOOKING({
-  //       action: 'permanent_instant_driver_assignment_to_customer',
-  //       P_ID: id,
-  //     });
-  //     console.log(response, 'ACCEPT_PERMANENT_BOOKINGACCEPT_PERMANENT_BOOKING');
-  //   } catch (error) {
-  //     console.log(
-  //       error,
-  //       'ACCEPT_PERMANENT_BOOKINGACCEPT_PERMANENT_BOOKING  Error',
-  //     );
-  //   }
-  // };
-
   const handleAcceptPermanentBooking = async id => {
-    console.log('Function called with id:', id);
     try {
-      console.log('Attempting to call ACCEPT_PERMANENT_BOOKING with payload:', {
-        action: 'permanent_instant_driver_assignment_to_customer',
-        P_ID: id,
-      });
-
       const response = await ACCEPT_PERMANENT_BOOKING({
         action: 'permanent_instant_driver_assignment_to_customer',
         P_ID: id,
       });
-      console.log('Response from ACCEPT_PERMANENT_BOOKING:', response);
       if (response?.status_code == 200) {
         const bookingNumber = response?.booking_id;
         navigation.navigate('DutyReportUpdate', {
@@ -130,14 +71,9 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
         dispatch(setTriggerFunction(true));
       }
     } catch (error) {
-      console.log('Caught an error:', error);
       if (error == 'Booking is not in pending status') {
         Alert.alert('This booking already accepted by another driver.');
       }
-      console.log(
-        error,
-        'ACCEPT_PERMANENT_BOOKINGACCEPT_PERMANENT_BOOKING Error',
-      );
     }
   };
 
@@ -166,9 +102,6 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
           </Pressable>
           <Pressable
             onPress={() => {
-              // Alert.alert('Are You Confirm');
-              // handleAcceptPermanentBooking(P_ID);
-              // console.log(P_ID, apply_or_accept, 'accept Button Clickk');
               handleAccept(P_ID, apply_or_accept);
             }}
             style={styles.applyButton}>
@@ -182,7 +115,6 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
 
 const styles = StyleSheet.create({
   card: {
-    // flex:1,
     backgroundColor: AppColors.white,
     borderRadius: 10,
     padding: 20,

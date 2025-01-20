@@ -48,12 +48,8 @@ const AgentLeads = () => {
     let url =
       "whatsapp://send?text=Hi! I'm inviting you to use this referral link - https://tatd.in/driver-interface.php?referrer=ODExODgxMzE0OA%3D%3D";
     Linking.openURL(url)
-      .then(() => {
-        console.log('WhatsApp Opened');
-      })
-      .catch(() => {
-        console.log('Make sure WhatsApp is installed on your device');
-      });
+      .then(() => {})
+      .catch(() => {});
   };
 
   const openFacebookMessenger = () => {
@@ -63,18 +59,11 @@ const AgentLeads = () => {
       "https://www.facebook.com/dialog/send?link=I'm inviting you to use this referral link - https://tatd.in/driver-interface.php?referrer=ODExODgxMzE0OA%3D%3D";
 
     Linking.openURL(messengerUrl)
-      .then(() => {
-        console.log('Facebook Messenger Opened');
-      })
+      .then(() => {})
       .catch(() => {
-        console.log('Facebook Messenger is not installed. Opening browser...');
         Linking.openURL(fallbackUrl)
-          .then(() => {
-            console.log('Opened Facebook Messenger in browser');
-          })
-          .catch(() => {
-            console.log('Failed to open Facebook Messenger in browser');
-          });
+          .then(() => {})
+          .catch(() => {});
       });
   };
 
@@ -85,18 +74,11 @@ const AgentLeads = () => {
       "https://twitter.com/intent/tweet?text=Hi! I'm inviting you to use this referral link - https://tatd.in/driver-interface.php?referrer=ODExODgxMzE0OA%3D%3D"; // URL to open Twitter in a browser
 
     Linking.openURL(twitterUrl)
-      .then(() => {
-        console.log('Twitter Opened');
-      })
+      .then(() => {})
       .catch(() => {
-        console.log('Twitter is not installed. Opening browser...');
         Linking.openURL(fallbackUrl)
-          .then(() => {
-            console.log('Opened Twitter in browser');
-          })
-          .catch(() => {
-            console.log('Failed to open Twitter in browser');
-          });
+          .then(() => {})
+          .catch(() => {});
       });
   };
 
@@ -107,18 +89,11 @@ const AgentLeads = () => {
       "https://www.linkedin.com/shareArticle?mini=true&url=Hi! I'm inviting you to use this referral link - https://tatd.in/driver-interface.php?referrer=ODExODgxMzE0OA%3D%3D"; // URL to open LinkedIn in a browser
 
     Linking.openURL(linkedInUrl)
-      .then(() => {
-        console.log('LinkedIn Opened');
-      })
+      .then(() => {})
       .catch(() => {
-        console.log('LinkedIn is not installed. Opening browser...');
         Linking.openURL(fallbackUrl)
-          .then(() => {
-            console.log('Opened LinkedIn in browser');
-          })
-          .catch(() => {
-            console.log('Failed to open LinkedIn in browser');
-          });
+          .then(() => {})
+          .catch(() => {});
       });
   };
 

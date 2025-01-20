@@ -22,28 +22,18 @@ const TrainingVideo = () => {
   const getTrainingVideo = async () => {
     try {
       const response = await DRIVER_TRAINING_VIDEOS(languageSwitch);
-      console.log(
-        'DRIVER_TRAINING_VIDEOS DRIVER_TRAINING_VIDEOS Response::',
-        response?.response?.training_data,
-      );
       setTrainingVideoData(response?.response?.training_data);
-    } catch (error) {
-      console.log(error, 'DRIVER_TRAINING_VIDEOS  Error');
-    }
+    } catch (error) {}
   };
 
   const storeClickVideo = async id => {
-    console.log('Starting to fetch storeClickVideo data...', id);
     try {
       const response = await DRIVER_TRAINING_VIDEOS_CLICK_STORE({
         action: 'store_training_videos_clicks',
         training_id: id,
         training_type: 'Driver Training',
       });
-      console.log('storeClickVideo Response:', response);
-    } catch (error) {
-      console.error('storeClickVideo Error:', error);
-    }
+    } catch (error) {}
   };
 
   const toggleItem = (index, id) => {

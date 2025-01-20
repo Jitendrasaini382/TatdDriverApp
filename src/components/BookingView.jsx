@@ -1,22 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React from 'react';
 import {
   Image,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   Dimensions,
   Pressable,
-  Linking,
-  Alert,
-  FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {AppColors} from '../assets/Colors';
-import {LeftArrow, RightArrow} from '../assets/images';
+import {LeftArrow} from '../assets/images';
 import {AppFont} from '../assets/FontsFamily';
-import Modal from 'react-native-modal';
-import MyBookingAgencyModal from './modal/MyBookingAgencyModal';
 import RoundTripBookingView from './bookingsView/RoundTripBookingView';
 import PermanentBookingView from './bookingsView/PermanentBookingView';
 import FlexibleBookingView from './bookingsView/FlexibleBookingView';
@@ -30,49 +24,6 @@ const BookingView = ({data, allBookingData, panelData}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
-  
-  // const driverMobileNumber = useSelector(
-  //   e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
-  // );
-  // const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
-
-  // console.log(driverMobileNumber, 'driverMobileNumberdriverMobileNumberdriverMobileNumber');
-
-  // const [agentPanelViewData, setAgentPanelViewData] = useState([]);
-  // const [loading, setLoading] = useState(false);
-
-  // useEffect(() => {
-  //   getAgentPanelView();
-  // }, [languageSwitch]);
-
-  // <Modal
-  //   backdropOpacity={0}
-  //   onBackdropPress={() => dispatch(setMyBookingAgencyModal(false))}
-  //   animationIn={'fadeInDown'}
-  //   animationOut={'fadeOutUp'}
-  //   isVisible={true}>
-  //   <MyBookingAgencyModal
-  //   // setMyBookingAgencyModal={setMyBookingAgencyModal}
-  //   />
-  // </Modal>;
-
-  // const getAgentPanelView = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await ON_DEMAND_BOOKING({
-  //       action: 'agent_panel_view',
-  //       current_language: languageSwitch,
-  //     });
-
-  //     console.log(response, 'getIagent Panel View response');
-  //     setAgentPanelViewData(response.agent_panel_text);
-  //   } catch (error) {
-  //     console.log(error, 'getIagent Panel View  Error');
-  //     setLoading(false);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const handleLoginPress = () => {
     try {
@@ -80,18 +31,10 @@ const BookingView = ({data, allBookingData, panelData}) => {
         decodedToken?.driver_mobile_number,
       ).toString('base64');
       const url = `https://www.tatd.in/agent-login.php?dologin=${encodedMobile}`;
-
-      console.log('Generated URL:', url);
-      // Linking.openURL(url).catch(err => {
-      //   // Alert.alert('An error occurred while opening the URL', err.message);
-      //   console.error('Error opening URL:', err);
-      // });
       navigation.navigate('CommanWebview', {
         url: url,
       });
-    } catch (error) {
-      console.error('Caught error:', error);
-    }
+    } catch (error) {}
   };
 
   return (
@@ -185,8 +128,6 @@ const styles = StyleSheet.create({
   notificationText: {
     color: AppColors.black,
     fontFamily: AppFont.regularFont,
-    // fontWeight: '700',
-    // fontSize: 16,
     fontSize: width * 0.04,
 
     marginVertical: 5,

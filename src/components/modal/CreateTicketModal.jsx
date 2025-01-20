@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -9,14 +8,18 @@ import {
   Alert,
 } from 'react-native';
 
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {AppColors} from '../../assets/Colors';
 import {TICKETS_DRIVER} from '../../apis/Apis';
-import { useDispatch, useSelector } from 'react-redux';
-import { setButtonShow, setShowButtonText, setTicketsData } from '../../redux/slices/globalSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  setButtonShow,
+  setShowButtonText,
+  setTicketsData,
+} from '../../redux/slices/globalSlice';
 
 const CreateTicketModal = ({setCreateTicketModal}) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [field, setField] = useState({
     action: 'create_driver_ticket',
     remarks: '',
@@ -26,14 +29,6 @@ const CreateTicketModal = ({setCreateTicketModal}) => {
     action: 'check_booking_number',
     tbooking_id: '',
   });
-
-
-
-const storeRating = useSelector((e)=>e?.globalSlice?.storeRating)
-
-const  decodedToken = useSelector((e)=>e?.userAuth?.userProfile)
-const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
- const  notificationData = useSelector((e)=>e?.globalSlice?.notificationData)
 
   const handleChange = (name, value) => {
     setField({...field, [name]: value});
@@ -54,17 +49,9 @@ const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
         } else {
           dispatch(setButtonShow(true));
           dispatch(setShowButtonText(response.message));
-
-
-const storeRating = useSelector((e)=>e?.globalSlice?.storeRating)
-
-const  decodedToken = useSelector((e)=>e?.userAuth?.userProfile)
-const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
- const  notificationData = useSelector((e)=>e?.globalSlice?.notificationData)
         }
       })
       .catch(err => {
-        console.log(err, ' Network Error');
       });
   };
 
@@ -73,26 +60,20 @@ const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
       action: 'show_driver_ticket',
     })
       .then(e => {
-        // if (e.message == 'Success') {
-        console.log(e.tickets, 'aaaaaaaaaaaaaaaaaaaaa');
         dispatch(setTicketsData(e.tickets));
-        // }
       })
       .catch(err => {
-        console.log(err, 'show Driver Ticket Error');
       });
   };
 
   const checkBookingNumber = () => {
     TICKETS_DRIVER(checkField)
       .then(async e => {
-        console.log(e, 'runnnnnnnnnnnnnnn');
 
         if (e.status_code == 200) {
           try {
             const result = await TICKETS_DRIVER(field);
             if (result.status_code == 200) {
-              console.log('runnnnnnnnnnnnnnnnn1');
               setCreateTicketModal(false);
               Alert.alert('Success', result.message, [
                 {
@@ -100,7 +81,6 @@ const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
                   onPress: async () => {
                     await checkOpenTicket();
                     await showDriverTicket();
-                    console.log('runnnnnnnnnnnnnnnnn2');
                   },
                 },
               ]);
@@ -108,7 +88,6 @@ const languageSwitch = useSelector((e)=>e?.globalSlice?.languageSwitch)
               Alert.alert('Network Error');
             }
           } catch (err) {
-            console.log(err, 'Create Ticket Catch');
             Alert.alert(
               'Error',
               'An error occurred while creating the ticket.',
@@ -192,7 +171,7 @@ const ticketModalStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e7e7e7',
     padding: 20,
-    position: 'relative', // Add this to position the close button
+    position: 'relative',
   },
   closeButton: {
     position: 'absolute',
@@ -223,7 +202,6 @@ const ticketModalStyles = StyleSheet.create({
     color: '#666',
   },
   input: {
-    // backgroundColor: "#e7e7e7",
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,

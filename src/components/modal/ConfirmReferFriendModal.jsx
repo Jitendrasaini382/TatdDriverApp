@@ -1,8 +1,7 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
   ScrollView,
   Alert,
@@ -35,22 +34,10 @@ const ConfirmReferFriendModal = ({
     P_ID: id,
   };
 
-  console.log(
-    decodedToken?.driver_name,
-    decodedToken?.driver_mobile_number,
-    'refer friend modal==',
-  );
-
   const handleSaveReferPermanent = async () => {
-    console.log(bookingData, 'runnnnnnnnnnn getSaveReferPermanent');
-
     try {
       const response = await SAVE_REFER_PERMANENT(bookingData);
 
-      console.log(response, 'permanent getSaveReferPermanent response');
-      // if (response?.status_code == 200) {
-      //   Alert.alert(response?.message);
-      // }
       if (response?.status_code === 200) {
         Alert.alert('Thanks', response?.message || 'Thanks', [
           {
@@ -63,7 +50,6 @@ const ConfirmReferFriendModal = ({
       }
       setSaveReferPermanent(response);
     } catch (error) {
-      console.log(error, ' getSaveReferPermanent Error');
     }
   };
 
@@ -99,7 +85,6 @@ const ConfirmReferFriendModal = ({
 
 const styles = StyleSheet.create({
   card: {
-    // flex:1,
     backgroundColor: AppColors.white,
     borderRadius: 10,
     padding: 20,
@@ -119,7 +104,6 @@ const styles = StyleSheet.create({
   subHeader: {
     fontSize: 16,
     fontWeight: 'bold',
-    // marginBottom: 10,
     color: AppColors.black,
   },
   listContainer: {

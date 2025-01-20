@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
-  Alert,
   Linking,
   RefreshControl,
   Platform,
@@ -29,7 +28,6 @@ import TrainingVideo from '../components/TrainingVideos';
 import MyBookingAgencyModal from '../components/modal/MyBookingAgencyModal';
 import messaging from '@react-native-firebase/messaging';
 import MyBookingModal from '../components/MyBookingModal';
-import Svg, {Path, G} from 'react-native-svg';
 import DeviceInfo from 'react-native-device-info';
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
@@ -157,9 +155,7 @@ const TrustedDriver = ({navigation}) => {
       getAllOndemandBookings();
       getAllTrustedData();
 
-      return () => {
-        console.log('Screen unfocused, cleanup if necessary.');
-      };
+      return () => {};
     }, []),
   );
 
@@ -167,7 +163,6 @@ const TrustedDriver = ({navigation}) => {
   useEffect(() => {
     const handleAppStateChange = nextAppState => {
       if (nextAppState === 'active') {
-        console.log('App is active, refetching data...');
         getHeadlineData();
         getHomeNotification();
         getHomeNotice();
@@ -189,34 +184,17 @@ const TrustedDriver = ({navigation}) => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   getHeadlineData();
-  //   getPopup();
-  //   getTrainingVideo();
-  //   getTrustedPopupRating();
-  //   getTrustedPopupBooking();
-  //   getTrustedPopupOtr();
-  //   getUpdatePopup();
-  //   getHomeNotification();
-  //   getHomeNotice();
-  // }, []);
-
   useEffect(() => {
     if (jwt) {
       // if (isRfdOn) {
       getPopup();
       // }
       getHeadlineData();
-      // getTrainingVideo();
-      // getTrustedPopupRating();
-      // getTrustedPopupBooking();
-      // getTrustedPopupOtr();
-      // if (isRfdOn) {
-      getAllOndemandBookings();
-      // }
+      if (isRfdOn) {
+        getAllOndemandBookings();
+      }
       getAllTrustedData();
 
-      // getUpdatePopup();
       getHomeNotification();
       getHomeNotice();
     }
@@ -251,63 +229,44 @@ const TrustedDriver = ({navigation}) => {
 
   const getFcmToken = async () => {
     try {
-      console.log('Starting getFcmToken function.');
       let tokenvalue = null;
 
       if (Platform.OS === 'ios') {
-        console.log('Platform is iOS.');
-
         // Register for remote messages
         await messaging().registerDeviceForRemoteMessages();
-        console.log('iOS: Registered device for remote messages.');
 
         // Request permission for push notifications
         const authStatus = await messaging().requestPermission();
-        console.log('iOS: Permission status:', authStatus);
 
         const enabled =
           authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
           authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
         if (!enabled) {
-          console.log('iOS: Permission not granted.');
           return;
         }
 
         // Check APNS token
         const apnsToken = await messaging().getAPNSToken();
-        console.log('iOS: APNS token:', apnsToken);
 
         if (!apnsToken) {
-          console.log('Error: No APNS token retrieved.');
-          console.log(
-            'Ensure the device is configured for Push Notifications.',
-          );
           return;
         }
 
         // Fetch FCM token
         tokenvalue = await messaging().getToken();
-        console.log('iOS: FCM token:', tokenvalue);
       } else {
-        console.log('Platform is Android.');
         requestNotificationPermission();
         // Fetch FCM token for Android
         tokenvalue = await messaging().getToken();
-        console.log('Android: FCM token:', tokenvalue);
       }
 
       if (tokenvalue) {
-        console.log('FCM token generated successfully:', tokenvalue);
-        // Use token as needed
         setFcmToken(tokenvalue);
         saveFcmToken(tokenvalue);
       } else {
-        console.log('Failed to generate FCM token.');
       }
-    } catch (error) {
-      console.log('Error generating FCM token:', error);
-    }
+    } catch (error) {}
   };
 
   const fetchDeviceInfo = async () => {
@@ -347,30 +306,22 @@ const TrustedDriver = ({navigation}) => {
       ) {
         await sendDeviceInfo(fetchedDeviceInfo);
       }
-    } catch (error) {
-      console.error('Error fetching device information:', error);
-    }
+    } catch (error) {}
   };
 
   const sendDeviceInfo = async deviceInfo => {
     try {
-      console.log('Sending device information...', deviceInfo);
       const response = await SAVE_DEVICE_INFO(deviceInfo);
-      console.log('SAVE_DEVICE_INFO response:', response);
       dispatch(
         setUserAuthStates({
           key: 'isDeviceInfo',
           value: true,
         }),
       );
-    } catch (error) {
-      console.error('Error sending device information:', error);
-    }
+    } catch (error) {}
   };
 
   const getUpdatePopup = async () => {
-    console.log('Starting to fetch update popup data...');
-
     try {
       // Fetch update popup data
       const response = await UPDATE_POPUP({
@@ -394,10 +345,7 @@ const TrustedDriver = ({navigation}) => {
       }
       // Set the update popup data
       setUpdatePopupData(response);
-    } catch (error) {
-      // Log any errors encountered during the API call
-      console.error('getUpdatePopup Error:', error);
-    }
+    } catch (error) {}
   };
 
   const saveFcmToken = async fcmtoken => {
@@ -425,11 +373,7 @@ const TrustedDriver = ({navigation}) => {
   });
 
   const handleToggleButton = async () => {
-    console.log('Function handleToggleButton called');
-
-    console.log('Initial isRfdOn:', isRfdOn);
     const newRfdValue = isRfdOn ? '0' : '1';
-    console.log('New RFD Value:', newRfdValue);
 
     // Create updated login button payload
     const updatedLoginButton = {
@@ -437,10 +381,8 @@ const TrustedDriver = ({navigation}) => {
       rfd: newRfdValue,
       current_language: languageSwitch,
     };
-    console.log('Updated loginButton payload:', updatedLoginButton);
 
     try {
-      console.log('Calling LOGIN_BUTTON API with payload:', updatedLoginButton);
       const response = await LOGIN_BUTTON(updatedLoginButton);
 
       if (response?.rfd == '1') {
@@ -450,16 +392,13 @@ const TrustedDriver = ({navigation}) => {
         dispatch(setLoginStatus(false));
       }
 
-      // dispatch(setLoginStatus(response?.login_status));
       if (response?.message?.length <= 30 && response?.message) {
         setLoginMessage('');
-        // Show toast if the message length is 30 or less
         Toast.show({
           type: 'success',
           text1: response?.message,
         });
       } else {
-        // If the message is longer than 30 characters, set it in state
         setLoginMessage(response?.message);
         setTimeout(() => {
           setLoginMessage('');
@@ -489,13 +428,9 @@ const TrustedDriver = ({navigation}) => {
         }
       }
     } catch (error) {
-      console.log('LOGIN API ERROR:', error);
       if (error.response) {
-        console.log('Error Response Data:', error.response.data);
-        console.log('Error Response Status:', error.response.status);
       }
     } finally {
-      console.log('Finally block executed');
     }
   };
 
@@ -511,16 +446,8 @@ const TrustedDriver = ({navigation}) => {
         current_language: languageSwitch,
       });
 
-      // console.log(
-      //   response,
-      //   'getAllOndemandBookingsgetAllOndemandBookingsgetAllOndemandBookings response',
-      // );
       setAllOndemandBookings(response);
     } catch (error) {
-      console.log(
-        error,
-        'getAllOndemandBookingsgetAllOndemandBookingsgetAllOndemandBookings  Error',
-      );
       setLoading(false);
     } finally {
       setLoading(false);
@@ -535,19 +462,11 @@ const TrustedDriver = ({navigation}) => {
         current_language: languageSwitch,
       });
 
-      // console.log(
-      //   response,
-      //   'getAllTrustedDatagetAllTrustedDatagetAllTrustedDatagetAllTrustedData response',
-      // );
       setAllTrustedData(response);
       dispatch(
         setDriverConsentData(response?.ondemand_driver_consent_popup_data),
       );
     } catch (error) {
-      console.log(
-        error,
-        'getAllTrustedDatagetAllTrustedDatagetAllTrustedDatagetAllTrustedData  Error',
-      );
       setLoading(false);
     } finally {
       setLoading(false);
@@ -561,13 +480,10 @@ const TrustedDriver = ({navigation}) => {
       ).toString('base64');
       const url = `https://www.tatd.in/agent-login.php?dologin=${encodedMobile}`;
 
-      console.log('Generated URL:', url);
       navigation.navigate('CommanWebview', {
         url: url,
       });
-    } catch (error) {
-      console.log('Caught error:', error);
-    }
+    } catch (error) {}
   };
 
   const getPopup = async () => {
@@ -584,20 +500,11 @@ const TrustedDriver = ({navigation}) => {
       } else {
         dispatch(setExpressBookingModal(false));
       }
-    } catch (error) {
-      console.log(error, 'GET_POPUPGET_POPUP Error');
-    }
+    } catch (error) {}
   };
 
   const getHeadlineData = async () => {
-    console.log('Starting to fetch headline data...');
-
     try {
-      console.log('Sending request to DRIVER_HEADLINE with:', {
-        action: 'headline_message',
-        current_language: languageSwitch,
-      });
-
       const response = await DRIVER_HEADLINE({
         current_language: languageSwitch,
       });
@@ -637,30 +544,21 @@ const TrustedDriver = ({navigation}) => {
         setShowNeedHelp(false);
       }
       setVideoCount(response?.driver_panel_messages?.training_video_unseen);
-    } catch (error) {
-      console.log('DRIVER_HEADLINE Error:', error);
-    }
+    } catch (error) {}
   };
 
   const getHomeNotification = async () => {
-    console.log('Starting to getHomeNotificationgetHomeNotification data...');
-
     try {
       const response = await DRIVER_NOTIFICATION({
         action: 'view_headline_update',
         current_language: languageSwitch,
       });
-      console.log(response, 'getHomeNotificationgetHomeNotificatio ----- ');
 
       setHomeNotificationData(response);
-    } catch (error) {
-      console.log('getHomeNotificationgetHomeNotification Error:', error);
-    }
+    } catch (error) {}
   };
 
   const getHomeNotice = async () => {
-    console.log('Starting to getHomeNoticegetHomeNotice data...');
-
     try {
       const response = await DRIVER_NOTICE({
         action: 'view_one_awareness',
@@ -668,72 +566,8 @@ const TrustedDriver = ({navigation}) => {
       });
 
       setHomeNoticeData(response);
-    } catch (error) {
-      console.log('getHomeNoticegetHomeNotice Error:', error);
-    }
+    } catch (error) {}
   };
-
-  // const getTrustedPopupRating = async () => {
-  //   console.log(
-  //     'Starting to getTrustedPopupRatinggetTrustedPopupRating data...',
-  //   );
-
-  //   try {
-  //     const response = await GET_TRUSTED_POPUP_DATA({
-  //       action: 'rating_popup_data',
-  //       current_language: languageSwitch,
-  //     });
-
-  //     setRatingTrustedData(response?.rating_popup_data);
-  //   } catch (error) {
-  //     console.log('getTrustedPopupRatinggetTrustedPopupRating Error:', error);
-  //   }
-  // };
-
-  // const getTrainingVideo = async () => {
-  //   try {
-  //     const response = await DRIVER_TRAINING_VIDEOS(languageSwitch);
-  //     console.log(
-  //       'DRIVER_TRAINING_VIDEOS DRIVER_TRAINING_VIDEOS Response::',
-  //       response?.response?.training_data,
-  //     );
-  //     setTrainingVideoData(response?.response?.training_data);
-  //   } catch (error) {
-  //     console.log(error, 'DRIVER_TRAINING_VIDEOS  Error');
-  //   }
-  // };
-
-  // const getTrustedPopupOtr = async () => {
-  //   console.log('Starting to getTrustedPopupOtrgetTrustedPopupOtr data...');
-
-  //   try {
-  //     const response = await GET_TRUSTED_POPUP_DATA({
-  //       action: 'otr_popup_data',
-  //       current_language: languageSwitch,
-  //     });
-
-  //     setOtrTrustedData(response?.otr_popup_data);
-  //   } catch (error) {
-  //     console.log('getTrustedPopupOtrgetTrustedPopupOtr Error:', error);
-  //   }
-  // };
-
-  // const getTrustedPopupBooking = async () => {
-  //   console.log(
-  //     'Starting to getTrustedPopupBookinggetTrustedPopupBooking data...',
-  //   );
-
-  //   try {
-  //     const response = await GET_TRUSTED_POPUP_DATA({
-  //       action: 'booking_popup_data',
-  //       current_language: languageSwitch,
-  //     });
-
-  //     setBookingTrustedData(response?.booking_popup_data);
-  //   } catch (error) {
-  //     console.log('getTrustedPopupBookinggetTrustedPopupBooking Error:', error);
-  //   }
-  // };
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -748,7 +582,6 @@ const TrustedDriver = ({navigation}) => {
         await getAllOndemandBookings();
       }
     } catch (error) {
-      console.log('Error during refresh:', error);
       setRefreshing(false);
     } finally {
       setRefreshing(false);
@@ -773,16 +606,9 @@ const TrustedDriver = ({navigation}) => {
         current_language: languageSwitch,
       });
 
-      console.log(
-        response,
-        'clickStoreHomeNotificationclickStoreHomeNotification response ',
-      );
-
       getHeadlineData();
       getHomeNotification();
-    } catch (err) {
-      console.error('VIEW_HEADLINE error:', err);
-    }
+    } catch (err) {}
   };
 
   const clickStoreHomeNotice = async id => {
@@ -796,9 +622,7 @@ const TrustedDriver = ({navigation}) => {
 
       getHomeNotice();
       getHeadlineData();
-    } catch (err) {
-      console.error('VIEW_HEADLINE error:', err);
-    }
+    } catch (err) {}
   };
 
   const showVideoContent = () => {
@@ -828,28 +652,6 @@ const TrustedDriver = ({navigation}) => {
                 backgroundColor: '#f4f4f4',
                 padding: 16,
               }}>
-              {/* {console.log(
-                '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',
-              )}
-              {console.log(
-                'run-------------------------- trustedd showNotice',
-                showNotice,
-              )}
-              {console.log(
-                'run-------------------------- trustedd showNotification',
-                showNotification,
-              )}
-              {console.log(
-                'run-------------------------- trustedd homeNotificationData',
-                homeNotificationData,
-              )}
-              {console.log(
-                'run-------------------------- trustedd homeNoticeData',
-                homeNoticeData,
-              )}
-              {console.log(
-                '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',
-              )} */}
               <View
                 style={{
                   backgroundColor: '#0056b3',
@@ -892,29 +694,6 @@ const TrustedDriver = ({navigation}) => {
                     }}>
                     {homeNotificationData?.headline?.message}
                   </Text>
-                  {/* <TouchableOpacity
-                    onPress={() =>
-                      clickStoreHomeNotification(
-                        homeNotificationData?.headline?.id,
-                      )
-                    }
-                    style={{
-                      backgroundColor: '#0056b3',
-                      paddingVertical: 12,
-                      borderRadius: 8,
-                      alignItems: 'center',
-                      marginTop: 60,
-                      marginBottom: 5,
-                    }}>
-                    <Text
-                      style={{
-                        color: '#ffffff',
-                        fontSize: 18,
-                        fontWeight: 'bold',
-                      }}>
-                      I Have Read the Updates notification
-                    </Text>
-                  </TouchableOpacity> */}
 
                   {homeNotificationData?.back_btn == '1' ? (
                     <TouchableOpacity
@@ -974,28 +753,6 @@ const TrustedDriver = ({navigation}) => {
                 backgroundColor: '#f4f4f4',
                 padding: 16,
               }}>
-              {/* {console.log(
-                '------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
-              )}
-              {console.log(
-                'run-------------------------- trustedd showNotice',
-                showNotice,
-              )}
-              {console.log(
-                'run-------------------------- trustedd showNotification',
-                showNotification,
-              )}
-              {console.log(
-                'run-------------------------- trustedd homeNotificationData',
-                homeNotificationData,
-              )}
-              {console.log(
-                'run-------------------------- trustedd homeNoticeData',
-                homeNoticeData,
-              )}
-              {console.log(
-                '------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
-              )} */}
               <View
                 style={{
                   backgroundColor: '#0056b3',
@@ -1086,36 +843,9 @@ const TrustedDriver = ({navigation}) => {
             </View>
           ) : (
             <View style={styles.mainContainer}>
-              {/* {console.log(
-                '==============================================================================================================================================================================================================================================================================================================================================================================================================================================',
-              )}
-              {console.log(
-                'run-------------------------- trustedd showNotice',
-                showNotice,
-              )}
-              {console.log(
-                'run-------------------------- trustedd showNotification',
-                showNotification,
-              )}
-              {console.log(
-                'run-------------------------- trustedd homeNotificationData',
-                homeNotificationData,
-              )}
-              {console.log(
-                'run-------------------------- trustedd homeNoticeData',
-                homeNoticeData,
-              )}
-              {console.log(
-                '==============================================================================================================================================================================================================================================================================================================================================================================================================================================',
-              )} */}
               {/* Marquee View */}
               <View style={styles.marqueeView}>
                 <Marquee spacing={20} speed={0.5}>
-                  {/* <Text style={styles.marqueeText}>
-                  {headLineData?.headlines_data?.message || headLineData?.headlines_data?.headlines.map(())}
-                 
-                </Text> */}
-
                   <Text style={styles.marqueeText}>{combinedText}</Text>
                 </Marquee>
               </View>
@@ -1135,12 +865,7 @@ const TrustedDriver = ({navigation}) => {
                     </View>
                     <View style={styles.topRight}>
                       <TouchableOpacity
-                        onPress={() => navigation.navigate('DriverEarning')}
-                        // onPress={()=>checkVibrationSupport()}
-                        // onPress={() =>
-                        //   openMyUrl('https://www.tatd.in/driver-earning.php')
-                        // }
-                      >
+                        onPress={() => navigation.navigate('DriverEarning')}>
                         <View style={styles.earningView}>
                           <Text style={styles.rupeeIcon}>
                             <Icon name="rupee" size={responsiveSize(8)} />{' '}
@@ -1150,12 +875,6 @@ const TrustedDriver = ({navigation}) => {
                         </View>
                       </TouchableOpacity>
                       <TouchableOpacity
-                        // onPress={() =>
-                        //   openMyUrl(
-                        //     'https://www.tatd.in/driver-notifications.php',
-                        //   )
-                        // }
-
                         onPress={() =>
                           navigation.navigate('DriverNotifications')
                         }>
@@ -1328,12 +1047,6 @@ const TrustedDriver = ({navigation}) => {
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    // onPress={() => navigation.navigate('AgentLogin')}
-                    // onPress={() =>
-                    //   navigation.navigate('CommanWebview', {
-                    //     url: `https://www.tatd.in/agent-login.php`,
-                    //   })
-                    // }
                     onPress={() => handleLoginPress()}
                     style={styles.bottamContent3}>
                     <Text style={styles.mainText}>
@@ -1344,20 +1057,14 @@ const TrustedDriver = ({navigation}) => {
                     <Text style={styles.textIcon}>
                       <Icon name="rupee" size={responsiveSize(9)} />{' '}
                       {headLineData?.driver_panel_messages?.agent_panel_earning}
-                      {/* {decodedToken?.TrustedDriverData?.agent_panel_earning} */}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={
-                      () =>
-                        navigation.navigate('CommanWebview', {
-                          url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                        })
-                      // openMyUrl(
-                      //   `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                      // )
+                    onPress={() =>
+                      navigation.navigate('CommanWebview', {
+                        url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                      })
                     }
-                    // onPress={() => navigation.navigate('ClearMyDuePayment')}
                     style={[
                       styles.bottamContent4,
                       {
@@ -1401,9 +1108,6 @@ const TrustedDriver = ({navigation}) => {
                 onToggle={label => dispatch(setCurrentView(label))}
               />
 
-              {/* <ViewAwarenessData /> */}
-              {/* <RoundTripBookingView /> */}
-              {/* <BookingView /> */}
               <Text
                 style={{
                   color: AppColors.red,
@@ -1412,10 +1116,6 @@ const TrustedDriver = ({navigation}) => {
                 }}>
                 {loginMessage}
               </Text>
-
-              {/* <Text style={{color: AppColors.whatsAppIconColor, margin: 10}}>
-              {headLineData?.driver_panel_messages?.booking_score_message}
-            </Text> */}
 
               {/* Main Toggle Content */}
               <>
@@ -1427,7 +1127,6 @@ const TrustedDriver = ({navigation}) => {
                   />
                 ) : null}
               </>
-              {/* <BookingView /> */}
               {videosContent ? <TrainingVideo /> : null}
             </View>
           )}
@@ -1450,16 +1149,11 @@ const TrustedDriver = ({navigation}) => {
               onPress={() => handlePress('Agent')}
               style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
-                source={Agent_Icon} // Replace with your actual image path
+                source={Agent_Icon}
                 style={{
                   width: 40,
                   height: 40,
                   marginBottom: 5,
-                  // tintColor:
-                  //   selected === 'Agent'
-                  //     ? AppColors.mainColor
-                  //     : AppColors.black,
-
                   tintColor: AppColors.black,
                 }}
               />
@@ -1477,15 +1171,11 @@ const TrustedDriver = ({navigation}) => {
               onPress={() => handlePress('PremiumDriver')}
               style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
-                source={PremiumDriver} // Replace with your actual image path
+                source={PremiumDriver}
                 style={{
                   width: 40,
                   height: 40,
                   marginBottom: 5,
-                  // tintColor:
-                  //   selected === 'PremiumDriver'
-                  //     ? AppColors.mainColor
-                  //     : AppColors.black,
 
                   tintColor: AppColors.black,
                 }}
@@ -1505,7 +1195,7 @@ const TrustedDriver = ({navigation}) => {
               onPress={() => handlePress('TrustedPartner')}
               style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
-                source={TrustedPartner} // Replace with your actual image path
+                source={TrustedPartner}
                 style={{
                   width: 40,
                   height: 40,
@@ -1584,7 +1274,6 @@ const TrustedDriver = ({navigation}) => {
             }}>
             <View
               style={{
-                // width: Dimensions.get('window').width * 0.85,
                 width: width * 0.85,
                 backgroundColor: '#fff',
                 borderRadius: 25,
@@ -1723,8 +1412,6 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.mainColor,
     paddingHorizontal: '3%',
     borderRadius: responsiveSize(6),
-    // borderBottomLeftRadius : 0,
-    // borderBottomRightRadius: 0,
     marginBottom: responsiveSize(2),
   },
   topView: {
@@ -1767,7 +1454,6 @@ const styles = StyleSheet.create({
   rupeeIcon: {
     color: AppColors.mainColor,
     textAlign: 'center',
-    // padding: responsiveSize(2),
     fontSize: responsiveSize(9),
   },
   notification: {

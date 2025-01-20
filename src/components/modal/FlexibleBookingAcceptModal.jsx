@@ -26,7 +26,6 @@ const {width} = Dimensions.get('window');
 const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  console.log(booking, 'weekly accept modal booking');
   const [popupData, setPopupData] = useState({});
   const [loader, setLoader] = useState(false);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
@@ -35,22 +34,10 @@ const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
     setLoader(true);
     weeklybookingAcceptPopuup();
   }, []);
-  console.log(
-    booking,
-    'WEEKLY_BOOKING_ACCEPTWEEKLY_BOOKING_ACCEPTWEEKLY_BOOKING_ACCEPT',
-  );
 
   const weeklybookingAcceptPopuup = async () => {
-    console.log('Function weeklybookingAcceptPopuup invoked');
     setLoader(true);
-    console.log('Loader set to true');
     try {
-      console.log('Attempting to call WEEKLY_BOOKING_ACCEPT with params:', {
-        action: 'accept_booking_show_popup_api',
-        current_language: languageSwitch,
-        all_booking_date: booking?.date_wie,
-        FSSubscription_hours: booking?.hours_day,
-      });
       const response = await WEEKLY_BOOKING_ACCEPT({
         action: 'accept_booking_show_popup_api',
         current_language: languageSwitch,
@@ -58,18 +45,12 @@ const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
         FSSubscription_hours: booking?.hours_day,
       });
 
-      console.log('Response received from WEEKLY_BOOKING_ACCEPT:', response);
       setPopupData(response);
       setLoader(false);
-      console.log('Popup data set with:', response);
     } catch (error) {
       setLoader(false);
-      console.log('Loader set to false in catch block');
-
-      console.log('Error caught in weeklybookingAcceptPopuup:', error);
     } finally {
       setLoader(false);
-      console.log('Loader set to false in finally block');
     }
   };
   function formatBookingIds(bookingIds) {
@@ -77,99 +58,25 @@ const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
   }
 
   const acceptBooking = async () => {
-    console.log(
-      'final accepttttt weekly final accepttttt weekly ',
-      booking?.booking_ids,
-      {
-        action: 'accept_booking',
-        booking_ids: formatBookingIds(booking?.booking_ids),
-        current_language: languageSwitch,
-      },
-    );
-    // return false;
-
     try {
-      console.log('Calling FINAL_ACCEPT_WEEKLY_BOOKING API...');
       const response = await FINAL_ACCEPT_WEEKLY_BOOKING({
         action: 'accept_booking',
         booking_ids: formatBookingIds(booking?.booking_ids),
         current_language: languageSwitch,
       });
-      console.log('API Response:', response);
 
       dispatch(setTriggerFunction(true));
       dispatch(setRefreshKey());
 
-      console.log('Dispatched setTriggerFunction with true');
-
       setOpenModal(false);
-      console.log('Modal closed');
 
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking?.booking_ids[0],
         isFirstTime: true,
         isType: 'Weekly',
       });
-      console.log(
-        'Navigated to DutyReportUpdate with bookingNumber:',
-        booking?.booking_ids[0],
-      );
-    } catch (error) {
-      console.log('Error in acceptBooking:', error);
-    }
+    } catch (error) {}
   };
-
-  // const acceptBooking = async () => {
-  //   console.log('final accepttttt weekly final accepttttt weekly ', {
-  //     action: 'accept_booking',
-  //     booking_ids: formatBookingIds(booking?.booking_ids),
-  //     current_language: languageSwitch,
-  //   });
-  //   // return false;
-  //   try {
-  //     const response = await FINAL_ACCEPT_WEEKLY_BOOKING({
-  //       action: 'accept_booking',
-  //       booking_ids: formatBookingIds(booking?.booking_ids),
-  //       current_language: languageSwitch,
-  //     });
-  //     console.log(response, 'acceptBooking response');
-  //     dispatch(setTriggerFunction(true));
-  //     setOpenModal(false);
-  //     navigation.navigate('DutyReportUpdate', {
-  //       bookingNumber: booking?.booking_ids[0],
-  //       isFirstTime: true,
-  //     });
-  //   } catch (error) {
-  //     console.log(error, 'acceptBooking Error');
-  //   }
-  // };
-
-  // const acceptBooking = async () => {
-  //   console.log(booking_number, 'accept booking number');
-  //   console.log('final accepttttt Roundtrip');
-
-  //   try {
-  //     const response = await FINAL_ACCEPT_BOOKING({
-  //       action: 'accept_booking',
-  //       booking_id: booking_number,
-  //       current_language: languageSwitch,
-  //     });
-
-  //     console.log(
-  //       response,
-  //       'acceptBooking response final accepttttt Roundtrip final accepttttt Roundtrip',
-  //     );
-
-  //     dispatch(setTriggerFunction(true));
-
-  //     navigation.navigate('DutyReportUpdate', {
-  //       bookingNumber: booking_number,
-  //       isFirstTime: true,
-  //     });
-  //   } catch (error) {
-  //     console.log(error, 'acceptBooking Error');
-  //   }
-  // };
 
   if (loader) {
     return (
@@ -208,9 +115,6 @@ const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
             <Text style={styles.cancelButtonText}>Cancel</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            // onPress={() => {
-            //   Alert.alert('Are You Confirm');
-            // }}
             onPress={() => acceptBooking()}
             style={styles.applyButton}>
             <Text style={styles.applyButtonText}>Apply</Text>

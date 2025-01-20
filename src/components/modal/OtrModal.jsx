@@ -15,8 +15,6 @@ import {AppFont} from '../../assets/FontsFamily';
 const OtrModal = ({data}) => {
   const dispatch = useDispatch();
 
-  console.log('runn data value', data);
-
   const closeModal = useCallback(() => {
     dispatch(setModalVisible(false));
   }, [dispatch]);
@@ -26,7 +24,6 @@ const OtrModal = ({data}) => {
   if (!isDataValid) {
     return null;
   }
-  
 
   return (
     <SafeAreaView style={styles.mainContainer}>

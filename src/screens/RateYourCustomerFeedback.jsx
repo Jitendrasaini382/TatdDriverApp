@@ -24,11 +24,6 @@ const RateYourCustomerFeedback = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
 
   const submitRating = async () => {
-    // if (!message.trim()) {
-    //   alert('Please enter a message before submitting.');
-    //   return;
-    // }
-
     setLoading(true);
     Keyboard.dismiss();
     try {
@@ -40,7 +35,6 @@ const RateYourCustomerFeedback = ({navigation, route}) => {
         message: message.trim(),
       });
 
-      console.log(response, 'submitRating API response');
       setLoading(false);
       if (response?.status_code == 200) {
         navigation.navigate('RateUsAtSocialMedia', {
@@ -48,7 +42,6 @@ const RateYourCustomerFeedback = ({navigation, route}) => {
         });
       }
     } catch (err) {
-      console.log(err, 'submitRating API error');
       setError('Something went wrong. Please try again later.');
       setLoading(false);
     }

@@ -211,15 +211,8 @@ const ListItem = ({phone, date, amount}) => (
 );
 
 const openWhatsApp = () => {
-  // let url = 'whatsapp://send?text=Hello'; // You can customize the text or add a phone number like: 'whatsapp://send?phone=+123456789&text=Hello'
-  let url = 'whatsapp://send?phone=+919810360792&text=Hello'; // You can customize the text or add a phone number like: 'whatsapp://send?phone=+123456789&text=Hello'
-  Linking.openURL(url)
-    .then(data => {
-      console.log('WhatsApp Opened');
-    })
-    .catch(() => {
-      console.log('Make sure WhatsApp is installed on your device');
-    });
+  let url = 'whatsapp://send?phone=+919810360792&text=Hello';
+  Linking.openURL(url);
 };
 
 const ShowDataList = ({data}) => {

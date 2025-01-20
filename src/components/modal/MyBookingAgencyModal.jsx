@@ -13,7 +13,7 @@ import React from 'react';
 import {AppColors} from '../../assets/Colors';
 import {useDispatch} from 'react-redux';
 import {setMyBookingAgencyModal} from '../../redux/slices/trustedDriverSlice';
-import { AppFont } from '../../assets/FontsFamily';
+import {AppFont} from '../../assets/FontsFamily';
 
 const MyBookingAgencyModal = ({setModalVisible}) => {
   const dispatch = useDispatch();
@@ -21,7 +21,6 @@ const MyBookingAgencyModal = ({setModalVisible}) => {
   return (
     <TouchableWithoutFeedback
       onPress={() => dispatch(setMyBookingAgencyModal(false))}>
-      {/* // <TouchableWithoutFeedback onPress={() => setModalVisible(false)}> */}
       <SafeAreaView style={{flex: 1}}>
         <View
           style={{
@@ -122,10 +121,6 @@ const MyBookingAgencyModal = ({setModalVisible}) => {
                     color={AppColors.mainColor}
                     title="Book Now"
                   />
-
-                  {/* <TouchableOpacity>
-                        <Text > Book Now </Text>
-                    </TouchableOpacity> */}
                 </View>
               </View>
             </View>

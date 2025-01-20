@@ -26,8 +26,6 @@ import SplashScreen from '../../screens/SplashScreen';
 import {AppColors} from '../../assets/Colors';
 import RateYourCustomerFeedback from '../../screens/RateYourCustomerFeedback';
 import RateYourCustomer from '../../screens/RateYourCustomer';
-import OnTimeReach from '../../screens/OnTimeReach';
-import Feedback from '../../screens/RateUsAtSocialMedia';
 import {useSelector} from 'react-redux';
 import DueAmountDetails from '../../screens/DueAmountDetails';
 import RateUsAtSocialMedia from '../../screens/RateUsAtSocialMedia';
@@ -102,7 +100,6 @@ const PrivateRoute = () => {
             name="RateUsAtSocialMedia"
             component={RateUsAtSocialMedia}
           />
-          <Stack.Screen name="OnTimeReach" component={OnTimeReach} />
           <Stack.Screen name="RateYourCustomer" component={RateYourCustomer} />
           <Stack.Screen
             name="RateYourCustomerFeedback"

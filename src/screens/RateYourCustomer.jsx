@@ -23,17 +23,6 @@ const RateYourCustomer = ({navigation, route}) => {
       return;
     }
 
-    console.log(
-      {
-        action: 'rating_detail',
-        booking_id: bookingNumber,
-        rate: rating,
-        current_language: languageSwitch,
-        message: '',
-      },
-      'send start rating',
-    );
-
     // return false;
 
     setLoading(true);
@@ -46,19 +35,13 @@ const RateYourCustomer = ({navigation, route}) => {
         message: '',
       });
 
-      console.log(response, 'submitRating API response');
-      // setLoading(false);
       if (response?.status_code == 200) {
         navigation.navigate('RateYourCustomerFeedback', {
           rate: rating,
           bookingNumber: bookingNumber,
         });
       }
-      //   navigation.navigate('RateUsAtSocialMedia', {
-      //     bookingNumber: bookingNumber,
-      //   });
     } catch (err) {
-      console.log(err, 'submitRating API error');
       setError('Something went wrong. Please try again later.');
       setLoading(false);
     } finally {

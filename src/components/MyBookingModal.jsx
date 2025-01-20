@@ -1,14 +1,12 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Image,
-  Linking,
   Pressable,
   Modal,
-  TouchableWithoutFeedback,
   FlatList,
   SafeAreaView,
   ScrollView,
@@ -34,12 +32,6 @@ const MyBookingModal = ({}) => {
     getMyAllBookings();
   }, [languageSwitch]);
 
-  const openMyUrl = url => {
-    console.log(url, 'open url');
-
-    Linking.openURL(url);
-  };
-
   const [loader, setLoader] = useState(false);
   const getMyAllBookings = () => {
     setLoader(true);
@@ -48,12 +40,9 @@ const MyBookingModal = ({}) => {
       current_language: languageSwitch,
     })
       .then(e => {
-        console.log(e.bookings, 'MY_BOOKING_TOP_NAVBAR data');
         setMyBookingData(e);
       })
-      .catch(err => {
-        console.log(err, 'MY_BOOKING_TOP_NAVBAR erroraaaaaaaaa');
-      })
+      .catch(err => {})
       .finally(e => {
         setLoader(false);
       });
@@ -64,23 +53,16 @@ const MyBookingModal = ({}) => {
   );
 
   const handleSubmit = booking => {
-    console.log(booking, 'handleSubmit Booking');
     dispatch(setMyBookingModal(false));
     if (booking?.bg === AppColors.red) {
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking?.booking_id,
         state: 'cancel',
-        // tripStatus: '',
       });
     } else {
-      // navigation.navigate("DueAmount",{bookingNumber:booking?.booking_id})
-      // return false
       navigation.navigate('DutyReportUpdate', {
         bookingNumber: booking?.booking_id,
         state: '',
-        // isFirstTime:true
-
-        // tripStatus: '0',
       });
     }
   };
@@ -146,13 +128,9 @@ const MyBookingModal = ({}) => {
                           height={40}
                           style={{
                             borderRadius: 10,
-                            // backgroundColor: AppColors.white,
-                            // flexDirection: 'row',
-                            // alignItems: 'center',
                             padding: 10,
                             marginVertical: 5,
                             marginHorizontal: 5,
-                            // justifyContent: 'space-between',
                           }}
                           animation={'wave'}
                         />
@@ -218,60 +196,51 @@ const MyBookingModal = ({}) => {
                 !loader && (
                   <>
                     <ScrollView style={styles.bookingContainer}>
-                      {
-                        myBookingData.clear_my_due_bookings &&
-                        myBookingData.clear_my_due_bookings.length > 0
-                          ? myBookingData.clear_my_due_bookings.map(
-                              (booking, index) => (
-                                <Pressable
-                                  key={index}
-                                  onPress={() =>
-                                    navigation.navigate('DutyReportUpdate', {
-                                      bookingNumber: booking.booking_id,
-                                      state: '',
-                                    })
-                                  }>
-                                  <View
+                      {myBookingData.clear_my_due_bookings &&
+                      myBookingData.clear_my_due_bookings.length > 0
+                        ? myBookingData.clear_my_due_bookings.map(
+                            (booking, index) => (
+                              <Pressable
+                                key={index}
+                                onPress={() =>
+                                  navigation.navigate('DutyReportUpdate', {
+                                    bookingNumber: booking.booking_id,
+                                    state: '',
+                                  })
+                                }>
+                                <View
+                                  style={[
+                                    styles.bookingCard,
+                                    styles.activeBookingCard,
+                                  ]}>
+                                  <Text
                                     style={[
-                                      styles.bookingCard,
-                                      styles.activeBookingCard,
+                                      styles.bookingText,
+                                      styles.activeBookingText,
+                                      {fontWeight: '700'},
                                     ]}>
-                                    <Text
-                                      style={[
-                                        styles.bookingText,
-                                        styles.activeBookingText,
-                                        {fontWeight: '700'},
-                                      ]}>
-                                      {booking.booking_id}
-                                    </Text>
-                                    <Text
-                                      style={[
-                                        styles.bookingText,
-                                        styles.activeBookingText,
-                                        {fontWeight: '700'},
-                                      ]}>
-                                      {'        '}+ {booking.amount}
-                                    </Text>
-                                    <Image
-                                      resizeMode="center"
-                                      style={styles.arrowIcon}
-                                      source={RightArrow}
-                                    />
-                                  </View>
-                                </Pressable>
-                              ),
-                            )
-                          : null
-                        // <Text>No bookings available</Text>
-                      }
+                                    {booking.booking_id}
+                                  </Text>
+                                  <Text
+                                    style={[
+                                      styles.bookingText,
+                                      styles.activeBookingText,
+                                      {fontWeight: '700'},
+                                    ]}>
+                                    {'        '}+ {booking.amount}
+                                  </Text>
+                                  <Image
+                                    resizeMode="center"
+                                    style={styles.arrowIcon}
+                                    source={RightArrow}
+                                  />
+                                </View>
+                              </Pressable>
+                            ),
+                          )
+                        : null}
 
                       <Pressable
-                        // onPress={() =>
-                        //   openMyUrl(
-                        // `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                        //   )
-                        // }
-
                         onPress={() =>
                           navigation.navigate('CommanWebview', {
                             url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,

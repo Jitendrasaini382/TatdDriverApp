@@ -13,7 +13,7 @@ import {OneWayIcon} from '../assets/images';
 import Header from '../components/Header';
 import AllNotificationComponent from '../components/AllNotificationsDetails';
 import {AppColors} from '../assets/Colors';
-import {DRIVER_NOTIFICATION} from '../apis/Apis'; // Assuming this function exists
+import {DRIVER_NOTIFICATION} from '../apis/Apis';
 import {RefreshControl} from 'react-native';
 
 const DriverNotifications = ({navigation}) => {
@@ -30,40 +30,19 @@ const DriverNotifications = ({navigation}) => {
     [navigation],
   );
 
-  // const getAllNotification = useCallback(async data => {
-  //   try {
-  //     await DRIVER_NOTIFICATION(data)
-  //       .then(response => {
-  //         setNotificationData(response.notifications);
-  //       })
-  //       .catch(err => {
-  //         console.log(err, 'DRIVER NOTIFICATION err');
-  //       });
-  //   } catch (error) {
-  //     console.log(error, 'DRIVER NOTIFICATION error');
-  //   }
-  // }, []);
-
   const handleClearAllNotifications = useCallback(async () => {
     try {
       const response = await DRIVER_NOTIFICATION({
         action: 'clear_all_notifications',
       });
-      // getAllNotification();
-      console.log(response.message, 'Clear All Notification Response ');
-    } catch (error) {
-      console.error('Error clearing notifications:', error);
-      // Handle error (e.g., show an alert to the user)
-    }
+    } catch (error) {}
   }, []);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      // dispatch(setRefreshKey());
       await handleClearAllNotifications();
     } catch (error) {
-      console.log('Error during refresh:', error);
     } finally {
       setRefreshing(false);
     }
@@ -137,182 +116,3 @@ const styles = StyleSheet.create({
 });
 
 export default DriverNotifications;
-
-// import {
-//   Image,
-//   StyleSheet,
-//   Text,
-//   TouchableOpacity,
-//   View,
-//   SafeAreaView,
-//   ScrollView,
-// } from 'react-native';
-// import React, {useState, useEffect} from 'react';
-// import ToggleButton from '../components/ToggleButton';
-// import {OneWayIcon} from '../assets/images';
-// import Header from '../components/Header';
-// import AllNotificationComponent from '../components/AllNotificationsDetails';
-// import {AppColors} from '../assets/Colors';
-
-// const DriverNotifications = ({navigation}) => {
-//   const [currentView, setCurrentView] = useState('NOTIFICATIONS');
-
-//   const handleToggle = (label) => {
-//     setCurrentView(label);
-//     if (label === 'NOTICE BOARD') {
-//       navigation.navigate('DriverNotice');
-//     }
-//   };
-
-//   return (
-//     <SafeAreaView style={styles.container}>
-//       <ScrollView contentContainerStyle={styles.scrollView}>
-//         <View style={styles.headerContainer}>
-//           <Header backButton={true} />
-//           <ToggleButton
-//             button1Label="NOTIFICATIONS"
-//             button2Label="NOTICE BOARD"
-//             onToggle={handleToggle}
-//             initialState="NOTIFICATIONS"
-
-//           />
-//         </View>
-
-//         <View style={styles.contentContainer}>
-//           <AllNotificationComponent />
-//         </View>
-//       </ScrollView>
-
-//       <TouchableOpacity
-//         style={styles.clearButton}
-//         onPress={() => console.warn('Clear All Notification')}>
-//         <Text style={styles.clearButtonText}>CLEAR ALL NOTIFICATIONS</Text>
-//         <Image style={styles.clearButtonIcon} source={OneWayIcon} />
-//       </TouchableOpacity>
-//     </SafeAreaView>
-//   );
-// };
-
-// export default DriverNotifications;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: AppColors.white,
-//   },
-//   scrollView: {
-//     flexGrow: 1,
-//   },
-//   headerContainer: {
-//     paddingHorizontal: 16,
-//   },
-//   contentContainer: {
-//     flex: 1,
-//     paddingHorizontal: 16,
-//   },
-//   clearButton: {
-//     flexDirection: 'row',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: 'rgb(255,165,0)',
-//     padding: 20,
-//   },
-//   clearButtonText: {
-//     color: AppColors.white,
-//     fontSize: 16,
-//     fontWeight: '600',
-//     marginRight: 10,
-//   },
-//   clearButtonIcon: {
-//     resizeMode: 'contain',
-//     height: 24,
-//     width: 24,
-//   },
-// });
-
-// import {
-//   Image,
-//   StyleSheet,
-//   Text,
-//   TouchableOpacity,
-//   View,
-//   SafeAreaView,
-//   ScrollView,
-// } from 'react-native';
-// import React, {useState, useEffect} from 'react';
-// import ToggleButton from '../components/ToggleButton';
-// import {OneWayIcon} from '../assets/images';
-// import Header from '../components/Header';
-// import AllNotificationComponent from '../components/AllNotificationsDetails';
-// import AllNoticeBoardDetails from '../components/AllNoticeBoardDetails';
-// import { AppColors } from '../assets/Colors';
-
-// const DriverNotifications = ({navigation}) => {
-//   const [currentView, setCurrentView] = useState('NOTIFICATIONS');
-//   return (
-//     <SafeAreaView style={styles.container}>
-//       <ScrollView contentContainerStyle={styles.scrollView}>
-//         <View style={styles.headerContainer}>
-//           <Header backButton={true} />
-//           <ToggleButton
-//             button1Label="NOTIFICATIONS"
-//             button2Label="NOTICE BOARD"
-//             onToggle={label => setCurrentView(label)}
-//           />
-//         </View>
-
-//         <View style={styles.contentContainer}>
-//           {currentView === 'NOTIFICATIONS' ? (
-//             <AllNotificationComponent />
-//           ) : (
-//             <AllNoticeBoardDetails />
-//           )}
-//         </View>
-//       </ScrollView>
-
-//       <TouchableOpacity
-//         style={styles.clearButton}
-//         onPress={() => console.warn('Clear All Notification')}>
-//         <Text style={styles.clearButtonText}>CLEAR ALL NOTIFICATIONS</Text>
-//         <Image style={styles.clearButtonIcon} source={OneWayIcon} />
-//       </TouchableOpacity>
-//     </SafeAreaView>
-//   );
-// };
-
-// export default DriverNotifications;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: AppColors.white,
-//   },
-//   scrollView: {
-//     flexGrow: 1,
-//   },
-//   headerContainer: {
-//     paddingHorizontal: 16,
-//   },
-//   contentContainer: {
-//     flex: 1,
-//     paddingHorizontal: 16,
-//   },
-//   clearButton: {
-//     flexDirection: 'row',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: 'rgb(255,165,0)',
-//     padding: 20,
-//   },
-//   clearButtonText: {
-//     color: AppColors.white,
-//     fontSize: 16,
-//     fontWeight: '600',
-//     marginRight: 10,
-//   },
-//   clearButtonIcon: {
-//     resizeMode: 'contain',
-//     height: 24,
-//     width: 24,
-//   },
-// });

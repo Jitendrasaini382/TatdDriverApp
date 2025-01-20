@@ -27,8 +27,6 @@ const CheckAgentOtp = ({navigation, route}) => {
   const {mobile} = route.params;
   const [otp, setOtp] = useState('');
 
-  console.log(mobile, 'mmmmm');
-
   const [error, setError] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -47,20 +45,7 @@ const CheckAgentOtp = ({navigation, route}) => {
         return;
       }
       setLoader(true);
-      // const response = await VERIFY_OTP_LOGIN({
-      //   mobile: mobile,
-      //   otp: otp,
-      // });
-
-      // console.log('OTP verification response:', response);
-
-      // if (response.status_code == 200) {
-      // navigation.navigate('AgentPanel');
-      // } else {
-      // setError('Invalid response from server');
-      // }
     } catch (err) {
-      console.error('OTP verification failed:', err);
       setError(err.message || 'OTP verification failed. Please try again.');
     }
   };
@@ -95,10 +80,7 @@ const CheckAgentOtp = ({navigation, route}) => {
               <Text style={styles.otpInfoText}>
                 An OTP is sent to {mobile}{' '}
               </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  console.warn('Resend Otp');
-                }}>
+              <TouchableOpacity>
                 <Text style={styles.resendText}>Resend OTP ?</Text>
               </TouchableOpacity>
             </View>
@@ -141,7 +123,6 @@ const CheckAgentOtp = ({navigation, route}) => {
             <View style={styles.errorView}>
               <Text style={styles.errorText}>{error}</Text>
             </View>
-
 
             <Pressable
               style={styles.verifyButton}
@@ -289,7 +270,7 @@ const styles = StyleSheet.create({
     height: verticalScale(36),
     fontSize: moderateScale(14),
   },
-  
+
   errorView: {
     marginHorizontal: moderateScale(30),
     marginBottom: verticalScale(30),

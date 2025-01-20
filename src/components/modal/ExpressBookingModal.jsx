@@ -34,11 +34,8 @@ const ExpressBookingModal = ({data}) => {
         status: status,
       };
       const response = await EXPRESS_BOOKING_UPDATE(bookingUpdate);
-      console.log(response, 'expressBookingUpdate response');
       dispatch(setExpressBookingModal(false));
-    } catch (error) {
-      console.error('Express Booking Update Error:', error);
-    }
+    } catch (error) {}
   };
 
   return (
@@ -51,12 +48,6 @@ const ExpressBookingModal = ({data}) => {
                 <Text style={styles.headingText}>{data?.title}</Text>
               </View>
               <View style={styles.triangleMainView}>
-                {/* <View style={styles.triangleView}></View>
-                <View
-                  style={[
-                    styles.triangleView,
-                    {transform: [{rotate: '270deg'}]},
-                  ]}></View> */}
                 <Image source={Triangle_Icon} />
               </View>
             </View>
@@ -107,7 +98,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   mainView: {
-    // margin: 15,
     backgroundColor: AppColors.white,
     borderRadius: 8,
     borderColor: AppColors.mainColor,
@@ -121,7 +111,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   mainTopContent: {
-    // paddingRight: 6,
     paddingVertical: 10,
     flexDirection: 'row',
   },
@@ -130,7 +119,6 @@ const styles = StyleSheet.create({
     color: AppColors.mainColor,
     fontSize: 15,
     paddingLeft: 4,
-    // fontWeight: '200',
     fontFamily: 'Poppins-Regular',
   },
   triangleMainView: {display: 'flex', flexDirection: 'column'},
@@ -151,7 +139,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 0.3,
     color: 'rgb(255, 255, 255)',
-    // lineHeight: 24.2,
     fontFamily: AppFont.regularFont,
   },
   mainMiddleView: {
@@ -184,9 +171,7 @@ const styles = StyleSheet.create({
     height: 36,
     fontSize: 14,
     color: AppColors.black,
-    // lineHeight: 20,
     justifyContent: 'center',
-    // textAlign: 'auto',
     textAlign: 'left',
   },
   btnView: {

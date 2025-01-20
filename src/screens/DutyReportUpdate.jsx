@@ -15,7 +15,6 @@ import {
   Keyboard,
   RefreshControl,
 } from 'react-native';
-// import Modal from 'react-native-modal';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import Header from '../components/Header';
 import {Address, CallingGif, Mask} from '../assets/images';
@@ -43,21 +42,11 @@ import {
 import {useSelector} from 'react-redux';
 import {AppFont} from '../assets/FontsFamily';
 import Toast from 'react-native-toast-message';
-import {useRoute} from '@react-navigation/native';
 
 const DutyReportUpdate = ({route, navigation}) => {
-  const {
-    bookingNumber,
-    // tripStatus,
-    state,
-  } = route?.params;
+  const {bookingNumber, state} = route?.params;
   const isFirstTimeVisit = route?.params?.isFirstTime;
   const isType = route?.params?.isType;
-  console.log(bookingNumber, 'bookingggg');
-  // console.log(tripStatus, 'trip status');
-
-  const [cancel, setCancel] = useState(false);
-  const [completeBooking, setCompleteBooking] = useState(false);
   const [modalVisibleOntheway, setModalVisibleOntheway] = useState(false);
   const [loaderOntheWay, setLoaderOntheWay] = useState(false);
   const [modalVisibleRich, setModalVisibleRich] = useState(false);
@@ -65,7 +54,6 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [inputKmsValue, setInputKmsValue] = useState('');
   const [inputEndKmsValue, setInputEndKmsValue] = useState('');
   const [modalVisibleinput, setModalVisibleinput] = useState(false);
-  const [modalVisibleonTimeRich, setModalVisibleonTimeRich] = useState(false);
   const [textWidth, setTextWidth] = useState(0);
   const [modalVisibleEnd, setModalVisibleEnd] = useState(false);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
@@ -79,8 +67,6 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [firstTimePopupData, setfirstTimePopupData] = useState({});
   const [refreshing, setRefreshing] = useState(false);
 
-  console.log(bookingNumber, languageSwitch, 'radio button Booking');
-
   const talkToCustomer = async () => {
     setLoader(true);
     try {
@@ -88,16 +74,10 @@ const DutyReportUpdate = ({route, navigation}) => {
         action: 'confirm_booking',
         booking_number: bookingNumber,
       });
-      console.log(
-        response,
-        'talkToCustomertalkToCustomertalkToCustomer API response ',
-      );
+
       GetAllBookingInfo();
-      console.log(response, 'talk to customer Api response');
     } catch (error) {
       setLoader(false);
-
-      console.log(error.message, 'talk to customer Api error - General Error');
     } finally {
       setLoader(false);
     }
@@ -113,10 +93,6 @@ const DutyReportUpdate = ({route, navigation}) => {
         sub_status: 'Not Picking Call',
       });
 
-      console.log(
-        response,
-        ' notPickupPhoneCustomernotPickupPhoneCustomernotPickupPhoneCustomer response ',
-      );
       GetAllBookingInfo();
       if (response?.msg_type == 'error') {
         // Alert.alert(response?.message);
@@ -131,11 +107,8 @@ const DutyReportUpdate = ({route, navigation}) => {
           text1: 'success',
           text2: response?.message,
         });
-        // GetAllBookingInfo();
-        console.log(response, 'talk to customer Api response');
       }
     } catch (error) {
-      console.log(error, 'talk to customer Api error - General Error');
     } finally {
       setLoader(false);
     }
@@ -146,7 +119,6 @@ const DutyReportUpdate = ({route, navigation}) => {
     try {
       GetAllBookingInfo();
     } catch (error) {
-      console.log('Error during refresh:', error);
     } finally {
       setRefreshing(false);
     }
@@ -161,33 +133,14 @@ const DutyReportUpdate = ({route, navigation}) => {
         sub_status: 'Cancel Booking',
         current_language: languageSwitch,
       });
-      console.log(
-        response,
-        ' customerWantToCancelcustomerWantToCancelcustomerWantToCancelcustomerWantToCancel response ',
-      );
 
       GetAllBookingInfo();
       if (response?.msg_type == 'error') {
-        // Alert.alert(response?.message);
-        Alert.alert(
-          'Success',
-          response?.message || 'No message available', // Full message content with a fallback
-          [{text: 'OK'}], // Action buttons
-        );
-        // Toast.show({
-        //   type: 'error',
-        //   text1: response?.message,
-        //   text1Style: {
-        //     flexWrap: 'wrap', // Ensures the text wraps
-        //     textAlign: 'left', // Align text for better readability
-        //     fontSize: 14,
-        //   },
-        //   // text2:response?.message
-        // });
+        Alert.alert('Success', response?.message || 'No message available', [
+          {text: 'OK'},
+        ]);
       }
-      console.log(response, 'talk to customer Api response');
     } catch (error) {
-      console.log(error.message, 'talk to customder Api error - General Error');
     } finally {
       setLoader(false);
     }
@@ -210,10 +163,9 @@ const DutyReportUpdate = ({route, navigation}) => {
         customerWantToCancel();
         break;
       default:
-        console.log('Invalid option selected');
+        talkToCustomer();
     }
   };
-  // const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
   const driverMobileNumber = useSelector(
     e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
   );
@@ -223,11 +175,6 @@ const DutyReportUpdate = ({route, navigation}) => {
 
   const [bookingInfo, setbookingInfo] = useState({});
   const handleSwipe = () => {
-    // setModalVisibleRich(true);
-    // setModalVisibleinput(true);
-    // return false
-
-    // return false;
     if (bookingInfo?.condition?.next_booking_status_name == 'Accept') {
       setacceptBookingPopup(true);
     } else if (
@@ -240,20 +187,12 @@ const DutyReportUpdate = ({route, navigation}) => {
       setModalVisibleinput(true);
     } else if (bookingInfo?.condition?.next_booking_status_name == 'End') {
       setModalVisibleEnd(true);
-      // return false;
     }
-    // setModalVisibleOntheway(true);
   };
 
   const openPhoneDialer = phoneNumber => {
-    // const phoneNumber = '9810360792';
     let url = `tel:${phoneNumber}`;
-
-    Linking.openURL(url)
-      .then(() => console.log('Phone dialer opened successfully'))
-      .catch(err => {
-        console.error('Error opening phone dialer:', err);
-      });
+    Linking.openURL(url);
   };
 
   const closeModal = () => {
@@ -273,40 +212,13 @@ const DutyReportUpdate = ({route, navigation}) => {
         action: 'duty_report_booking_info',
         booking_id: bookingNumber,
         current_language: languageSwitch,
-        // trip_status: 0,
       });
-
-      console.log(
-        {
-          action: 'duty_report_booking_info',
-          booking_id: bookingNumber,
-          current_language: languageSwitch,
-          // trip_status: tripStatus,
-        },
-        'send action',
-      );
 
       setbookingInfo(response?.duty_report_booking_info);
       const statusId =
         response?.duty_report_booking_info?.condition?.next_booking_status_id;
-      // if (statusId == '15') {
       if (statusId != '') dutyReportTripStatusPopup(statusId);
-      console.log(
-        statusId,
-        'statusIdstatusIdstatusIdstatusIdstatusIdstatusIdstatusIdstatusIdstatusIdstatusIdstatusIdstatusIdstatusIdstatusIdstatusIdstatusId',
-      );
-
-      // }
-      // console.log(
-      // response?.duty_report_booking_info,
-      // 'GetAllBookingInfo success',
-      // );
-      console.log(
-        response?.duty_report_booking_info,
-        'GetAllBookingInfo Api response',
-      );
     } catch (error) {
-      console.log(error, 'GetAllBookingInfo Api error - Error');
     } finally {
       setMainLoader(false);
     }
@@ -322,13 +234,9 @@ const DutyReportUpdate = ({route, navigation}) => {
       const response = await PACKAGE_DETAILS_DUTY_REPORT({
         booking_number: bookingNumber,
       });
-
-      console.log(response, 'packageDetails Api response');
       setPackageDetailsData(response);
     } catch (error) {
       setLoader(false);
-
-      console.log(error.message, 'packageDetails Api error - General Error');
     } finally {
       setLoader(false);
     }
@@ -342,7 +250,6 @@ const DutyReportUpdate = ({route, navigation}) => {
         booking_id: bookingNumber,
         current_language: languageSwitch,
         trip_status: bookingInfo?.condition?.next_booking_status_id,
-        // trip_status: "10"
       });
 
       if (response?.redirect?.redirect == 'duty_report') {
@@ -351,13 +258,10 @@ const DutyReportUpdate = ({route, navigation}) => {
       }
 
       GetAllBookingInfo();
-      console.log(response, 'dutyReportBookingAccept Api response');
       setacceptBookingPopup(false);
     } catch (error) {
-      console.log(error, 'dutyReportBookingAccept Api error - General Error');
       GetAllBookingInfo();
       setacceptBookingPopup(false);
-      // Toast.show('Success')
       Toast.show({
         type: 'success',
         text1: 'success',
@@ -379,10 +283,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         current_language: languageSwitch,
       });
       setpopupsData(response);
-
-      console.log(response, 'dutyReportTripStatusPopup Api response');
     } catch (error) {
-      console.log(error, 'dutyReportTripStatusPopup Api error - General Error');
     } finally {
       setLoader(false);
     }
@@ -399,7 +300,6 @@ const DutyReportUpdate = ({route, navigation}) => {
       });
 
       if (res?.upcoming_booking_data?.upcoming_booking_eligibility == 1) {
-        // Alert.alert(res?.upcoming_booking_data?.upcoming_booking_error_msg);
         setisBookingApiErrPopup(true);
         setModalVisibleOntheway(false);
         setisBookingApiPopupMsge(
@@ -407,12 +307,9 @@ const DutyReportUpdate = ({route, navigation}) => {
         );
         return false;
       } else {
-        // dutyReportTripStatusPopup(20);
         driverOnTheWay();
       }
-      console.log(res, 'isBookingChkApi Responseeeeeeeeeeeeeeeeeeee');
     } catch (err) {
-      console.log(err, 'isBookingUpcommingApiErrrrrrrr');
       driverOnTheWay();
       setLoaderOntheWay(false);
     } finally {
@@ -420,16 +317,6 @@ const DutyReportUpdate = ({route, navigation}) => {
     }
   };
   const driverOnTheWay = async () => {
-    // console.log(
-    // {
-    // action: 'duty_report_booking_ontheway',
-    // booking_id: bookingNumber,
-    // current_language: languageSwitch,
-    // trip_status: bookingInfo?.condition?.next_booking_status_id,
-    // },
-    // 'on the way body data',
-    // );
-    // return false
     try {
       const onTheWayApi = await DRIVER_ON_THE_WAY({
         action: 'duty_report_booking_ontheway',
@@ -438,27 +325,9 @@ const DutyReportUpdate = ({route, navigation}) => {
         trip_status: bookingInfo?.condition?.next_booking_status_id,
       });
 
-      // console.log({
-      // action: 'duty_report_booking_ontheway',
-      // booking_id: bookingNumber,
-      // current_language: languageSwitch,
-      // trip_status: bookingInfo?.condition?.next_booking_status_id,
-      // }," send on the way action");
-
-      console.log(
-        onTheWayApi,
-        'onTheWayApi Responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee ',
-      );
       GetAllBookingInfo();
       setModalVisibleOntheway(false);
-
-      // setModalVisibleRich(true);
-    } catch (err) {
-      console.log(
-        err,
-        'onTheWayApi Response errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',
-      );
-    }
+    } catch (err) {}
   };
 
   const driverBookingReach = async () => {
@@ -475,12 +344,10 @@ const DutyReportUpdate = ({route, navigation}) => {
         GetAllBookingInfo();
         setModalVisibleRich(false);
       }
-      console.log(res, 'duty_report_booking_reach Responseeeeee');
       setModalVisibleRich(false);
       // setModalVisibleinput(true);
       GetAllBookingInfo();
     } catch (err) {
-      console.log(err, 'duty_report_booking_reach Errrrrrrrrrrrrrrrr');
     } finally {
       setReachLoader(false);
     }
@@ -490,17 +357,6 @@ const DutyReportUpdate = ({route, navigation}) => {
   const driverReached = async () => {
     setLoader(true);
     Keyboard.dismiss();
-    console.log(
-      {
-        action: 'duty_report_booking_start',
-        booking_id: bookingNumber,
-        current_language: languageSwitch,
-        trip_status: bookingInfo?.condition?.next_booking_status_id,
-        start_kms: inputKmsValue,
-        otp: inputValue,
-      },
-      'send action by kms apiiiiiiiiiiiiiiiiiiiiiiiiiiii',
-    );
 
     try {
       const res = await DRIVE_START({
@@ -511,8 +367,6 @@ const DutyReportUpdate = ({route, navigation}) => {
         start_kms: inputKmsValue,
         otp: inputValue,
       });
-      console.log(res, 'OTPRESPO');
-      // return false
       if (res?.redirect?.redirect == 'duty_report') {
         GetAllBookingInfo();
         setModalVisibleinput(false);
@@ -522,7 +376,6 @@ const DutyReportUpdate = ({route, navigation}) => {
         Object.keys(res?.start_booking_message).length !== 0
       ) {
         setModalVisibleinput(false);
-        // setModalVisibleEnd(true);
         GetAllBookingInfo();
       } else {
         const msge = res?.otp_error_message;
@@ -532,9 +385,7 @@ const DutyReportUpdate = ({route, navigation}) => {
           text2: msge?.otp_error_message,
         });
       }
-      console.log(res, 'duty_report_booking_reach api response');
     } catch (err) {
-      console.log(err, 'duty_report_booking_reach api ERrrrr');
     } finally {
       setLoader(false);
     }
@@ -543,9 +394,6 @@ const DutyReportUpdate = ({route, navigation}) => {
     setEndModalLoader(true);
 
     Keyboard.dismiss();
-    // setEndModalLoader(false);
-
-    // return false;
 
     try {
       const res = await DRIVE_END({
@@ -558,7 +406,6 @@ const DutyReportUpdate = ({route, navigation}) => {
       });
 
       setInputEndKmsValue('');
-      console.log(res, 'end response api');
       if (res?.redirect == 'duty_report') {
         GetAllBookingInfo();
         setModalVisibleEnd(false);
@@ -573,10 +420,7 @@ const DutyReportUpdate = ({route, navigation}) => {
           navigation.navigate('DueAmount', {bookingNumber});
         }
       }
-
-      console.log(res, 'booking end api response');
     } catch (err) {
-      console.log(err, 'booking end api Err');
       setEndModalLoader(false);
     } finally {
       setEndModalLoader(false);
@@ -590,20 +434,12 @@ const DutyReportUpdate = ({route, navigation}) => {
         booking_id: bookingNumber,
         mobile_number: driverMobileNumber,
       });
-      console.log(
-        {
-          action: 're_send_ontheway_sms',
-          booking_id: bookingNumber,
-        },
-        'resend otp send action',
-      );
+
       Toast.show({
         type: 'success',
         text1: res?.message,
       });
-      console.log(res);
     } catch (err) {
-      console.log(err);
     } finally {
       setLoaderResendOtp(false);
     }
@@ -616,24 +452,10 @@ const DutyReportUpdate = ({route, navigation}) => {
         current_language: languageSwitch,
         type: type,
       });
-      console.log(
-        {
-          action: 'booking_accepted_duty_report_popup',
-          booking_id: bookingNumber,
-          current_language: languageSwitch,
-          type: type,
-        },
-        'send first time popup action send First time popup action',
-      );
 
       setfirstTimePopupData(response?.popupdata);
       setfirstTimePopup(true);
-      console.log(
-        response,
-        'First time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup ResponseFirst time popup Response',
-      );
     } catch (error) {
-      console.log(error, 'dutyReportTripStatusPopup Api error - General Error');
     } finally {
       setLoader(false);
     }
@@ -1629,28 +1451,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                       }}
                     />
                   </View>
-                  <View>
-                    {/* <Text
-                      style={{
-                        fontSize: 18,
-                        color: AppColors.black,
-                        fontFamily: AppFont.mainFont,
-                        textAlign: 'center',
-                        marginTop: 15,
-                      }}>
-                      {popupsData?.popupdata?.start_alert_h3}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        color: AppColors.black,
-                        fontFamily: AppFont.mainFont,
-                        textAlign: 'center',
-                        marginTop: 15,
-                      }}>
-                      {popupsData?.popupdata?.start_alert_p}
-                    </Text> */}
-                  </View>
+                  <View></View>
                   <TouchableOpacity
                     disabled={loader}
                     style={{
@@ -1686,71 +1487,6 @@ const DutyReportUpdate = ({route, navigation}) => {
           <Toast visibilityTime={3000} />
         </View>
       </Modal>
-      {/* on time reach */}
-      {/* <Modal
-        transparent={true}
-        animationType="slide"
-        visible={modalVisibleonTimeRich}
-        onRequestClose={() => setModalVisibleonTimeRich(false)}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          }}>
-          <View
-            style={{
-              backgroundColor: AppColors.white,
-              width: '90%',
-              borderRadius: 10,
-              padding: 20,
-              elevation: 5,
-            }}>
-            <ScrollView>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: AppColors.mainColor,
-                  borderRadius: 20,
-                  marginBottom: 20,
-                  alignSelf: 'flex-end',
-                  width: 40,
-                  height: 40,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                onPress={() => setModalVisibleonTimeRich(false)}>
-                <Icon name="close" size={20} color={AppColors.white} />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  backgroundColor: AppColors.mainColor,
-                  marginTop: 20,
-                  padding: 12,
-                  borderRadius: 6,
-                  width: '60%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginHorizontal: '20%',
-                  marginBottom: 120,
-                }}
-                onPress={() => {
-                  // driverReached();
-                }}>
-                <Text
-                  style={{
-                    color: AppColors.white,
-                    fontWeight: '600',
-                    textAlign: 'center',
-                  }}>
-                  Reach
-                </Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
-        </View>
-      </Modal> */}
 
       {/* End Modal */}
       <Modal

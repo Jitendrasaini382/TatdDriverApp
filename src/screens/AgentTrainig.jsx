@@ -58,9 +58,9 @@ const AgentTrainig = () => {
                 <Text style={styles.mainHeading}>Training Videos</Text>
               </View>
 
-              <View style={{marginTop: 30}}>
+              {/* <View style={{marginTop: 30}}>
                 <TrainingVideo data={item} />
-              </View>
+              </View> */}
             </View>
           </View>
         </View>

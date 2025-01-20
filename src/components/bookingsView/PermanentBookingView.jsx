@@ -8,6 +8,8 @@ import {
   ScrollView,
   FlatList,
   Modal,
+  Button,
+  Alert,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import PermanentBookingAcceptModal from '../modal/PermanentBookingAcceptModal';
@@ -234,8 +236,6 @@ const PermanentBookingView = () => {
         isLoading ? <ActivityIndicator size="large" color="blue" /> : null
       }
     />
-
-    
 
     // <FlatList
     //   data={combinedBookings.slice(0, visibleBookings)} // Display only visible bookings

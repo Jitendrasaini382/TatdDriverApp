@@ -27,29 +27,18 @@ const DueAmount = ({route, navigation}) => {
   }, []);
 
   const getDueAmount = async bookingNumber => {
-    console.log(
-      'Function getDueAmount called with bookingNumber:',
-      bookingNumber,
-    );
-
     try {
       const response = await DUE_AMOUNT({
         booking_number: bookingNumber,
         current_language: languageSwitch,
       });
-      console.log(response, 'Response from DUE_AMOUNT');
 
       if (response.status_code == 200) {
-        console.log('Response status_code is 200');
         setDueData(response.data);
-
-        console.log('setDueData called with:', response.data);
         setLoading(false);
       } else {
-        console.log('Response status_code is not 200:', response.status_code);
       }
     } catch (error) {
-      console.log(error, 'Error caught in getDueAmount');
     } finally {
       setLoading(false);
     }

@@ -44,7 +44,6 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
         Alert.alert('No Data Available');
       }
     } catch (err) {
-      console.error(err, 'Error in SHOW_SINGLE_TICKET_DATA');
       Alert.alert('Error', 'Failed to fetch ticket data');
     } finally {
       setIsLoading(false);
@@ -62,7 +61,6 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
   }
 
   const renderDetailItem = (label, value) => {
-    // if (!value) return null;
     return (
       <View style={styles.contentView}>
         <Text style={styles.leftSectionText}>{label}</Text>
@@ -71,7 +69,6 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
     );
   };
 
-  console.log(ticketDetails, 'show ticket dataattatatatatatata');
 
   return (
     <ScrollView style={styles.container}>
@@ -130,7 +127,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     margin: 20,
     flexDirection: 'row',
-    // flex: 1,
   },
   detailsContainer: {
     flex: 1,

@@ -1,19 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Modal,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {AppColors} from '../../assets/Colors';
-// import Modal from 'react-native-modal';
 import RoundTripBookingAceeptModal from '../modal/RoundTripBookingAceeptModal';
-import {ON_DEMAND_BOOKING} from '../../apis/Apis';
-import {useDispatch, useSelector} from 'react-redux';
-import {setTriggerFunction} from '../../redux/slices/globalSlice';
 import {FlatList} from 'react-native';
 
 const TripCard = ({trip}) => {
@@ -28,7 +17,6 @@ const TripCard = ({trip}) => {
               padding: 8,
               borderRadius: 5,
               borderBottomRightRadius: 0,
-              // marginBottom: 5,
               marginHorizontal: 5,
               alignSelf: 'flex-end',
               backgroundColor: '#FF8C00',
@@ -53,7 +41,6 @@ const TripCard = ({trip}) => {
               alignItems: 'center',
               justifyContent: 'center',
               flexDirection: 'row',
-              // padding: 10,
             }}></View>
         </View>
         <View style={styles.contentWrapper}>
@@ -61,7 +48,6 @@ const TripCard = ({trip}) => {
             <Text style={styles.title}>
               {trip.way_type} - {trip.product_type}
             </Text>
-            {/* {trip.addresses.map((address, index) => ( */}
             <View style={{flexDirection: 'row'}}>
               <View
                 style={{
@@ -75,7 +61,7 @@ const TripCard = ({trip}) => {
                 }}></View>
               <Text style={styles.address}>{trip.pickup_address}</Text>
             </View>
-            {trip.drop_address ? (
+            {trip.drop_address && (
               <View style={{flexDirection: 'row'}}>
                 <View
                   style={{
@@ -89,24 +75,11 @@ const TripCard = ({trip}) => {
                   }}></View>
                 <Text style={styles.address}>{trip.drop_address}</Text>
               </View>
-            ) : (
-              ''
             )}
-            {/* ))} */}
           </View>
 
           <View style={styles.rightContent}>
             <View style={styles.paymentDetails}>
-              {/* {console.log(trip.incentive_eligibility_fullfillment) } */}
-              {/* {trip.night_charge > 0 ? (
-                <View
-                  style={[styles.incentiveBox, {backgroundColor: '#FF8C00'}]}>
-                  <Text
-                    style={[styles.incentiveText, {color: AppColors.white}]}>
-                    + ₹ {trip.night_charge} Night Charge
-                  </Text>
-                </View>
-              ) : null} */}
               {trip.surge > 0 ? (
                 <View
                   style={[
@@ -158,14 +131,6 @@ const TripCard = ({trip}) => {
                 </View>
               ) : null}
 
-              {/* {trip.incentive_eligible_amount_fullfillment > 0 ? (
-              <View style={styles.incentiveBox}>
-                <Text style={styles.incentiveText}>
-                  + Incentive ₹ {trip.incentive_eligible_amount_fullfillment}
-                </Text>
-              </View>
-            ) : null} */}
-
               <View style={{marginRight: 5}}>
                 <Text style={styles.price}>₹ {trip.bugdet_price}</Text>
                 <Text style={styles.package}>
@@ -190,14 +155,6 @@ const TripCard = ({trip}) => {
                 trip={trip}
               />
             </Modal>
-            {/* <Modal
-            backdropOpacity={.6}
-            onBackdropPress={() => setOpenModal(false)}
-            animationIn={'fadeInDown'}
-            animationOut={'fadeOutUp'}
-            isVisible={openModal}>
-            <RoundTripBookingAceeptModal setOpenModal={setOpenModal} />
-          </Modal> */}
           </View>
         </View>
       </View>
@@ -212,7 +169,6 @@ const RoundTripBookingView = ({allBookingData}) => {
     [],
   );
 
-  // Update state when allBookingData changes
   useEffect(() => {
     if (allBookingData) {
       setIncityOneWayBooking(allBookingData?.incity_one_way_bookings || []);
@@ -224,93 +180,6 @@ const RoundTripBookingView = ({allBookingData}) => {
       );
     }
   }, [allBookingData]);
-
-  // const [incityOneWayBooking, setIncityOneWayBooking] = useState(
-  //   allBookingData?.incity_one_way_bookings,
-  // );
-  // const [incityRoundTripBooking, setIncityRoundTripBooking] = useState(
-  //   allBookingData?.incity_roundtrip_bookings,
-  // );
-  // const [onDemandOutstationBooking, setOnDemandOutstationBooking] = useState(
-  //   allBookingData?.ondemand_outstation_bookings,
-  // );
-
-  // const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
-  // const triggerFunction = useSelector(
-  //   state => state.globalSlice.triggerFunction,
-  // );
-
-  // const refreshKey = useSelector(state => state.globalSlice.refreshKey); // For refresh actions
-
-  // const dispatch = useDispatch();
-
-  // const getIncityOneWayBookings = async data => {
-  //   console.log(data, 'runnnnnnnnnnn');
-
-  //   try {
-  //     const response = await ON_DEMAND_BOOKING(data);
-
-  //     // console.log(
-  //     //   response,
-  //     //   'getIncityOneWayBookings response',
-  //     // );
-  //     setIncityOneWayBooking(response.incity_one_way_bookings);
-  //   } catch (error) {
-  //     console.log(error, 'incity_OneWay_bookings  Error');
-  //   }
-  // };
-  // const getOnDemandOutstationBookings = async data => {
-  //   console.log(data, 'runnnnnnnnnnn');
-
-  //   try {
-  //     const response = await ON_DEMAND_BOOKING(data);
-
-  //     // console.log(response, 'getOnDemandOutstationBookings response');
-  //     setOnDemandOutstationBooking(response.ondemand_outstation_bookings);
-  //   } catch (error) {
-  //     console.log(error, 'ondemand_outstation_bookings  Error');
-  //   }
-  // };
-
-  // const getIncityRoundTripBookings = async data => {
-  //   console.log(data, 'runnnnnnnnnnn');
-
-  //   try {
-  //     const response = await ON_DEMAND_BOOKING(data);
-
-  //     // console.log(
-  //     //   response,
-  //     //  'getIncityRoundTripBookings response',
-  //     // );
-  //     setIncityRoundTripBooking(response.incity_roundtrip_bookings);
-  //   } catch (error) {
-  //     console.log(error, 'incity_roundtrip_bookings  Error');
-  //   }
-  // };
-
-  //////
-
-  // useEffect(() => {
-  //   console.log(
-  //     'Triggered by refreshKey, triggerFunction, or languageSwitch roundTrip',
-  //   );
-
-  //   // Run the required functions
-  //   getOnDemandOutstationBookings({
-  //     action: 'ondemand_outstation_bookings',
-  //   });
-  //   getIncityRoundTripBookings({
-  //     action: 'incity_roundtrip_booking',
-  //   });
-  //   getIncityOneWayBookings({
-  //     action: 'incity_oneway_booking',
-  //   });
-
-  //   // Reset `triggerFunction` after running
-  //   if (triggerFunction) {
-  //     dispatch(setTriggerFunction(false));
-  //   }
-  // }, [triggerFunction, refreshKey, languageSwitch, dispatch]);
 
   const allTrips = [
     ...(incityOneWayBooking || []),
@@ -325,23 +194,6 @@ const RoundTripBookingView = ({allBookingData}) => {
       renderItem={({item}) => <TripCard trip={item} />}
     />
   );
-
-  // return (
-  //   <>
-  //     {incityOneWayBooking &&
-  //       incityOneWayBooking.map((trip, index) => (
-  //         <TripCard key={index} trip={trip} />
-  //       ))}
-  //     {incityRoundTripBooking &&
-  //       incityRoundTripBooking.map((e, index) => (
-  //         <TripCard key={index} trip={e} />
-  //       ))}
-  //     {onDemandOutstationBooking &&
-  //       onDemandOutstationBooking.map((x, index) => (
-  //         <TripCard key={index} trip={x} />
-  //       ))}
-  //   </>
-  // );
 };
 
 const styles = StyleSheet.create({

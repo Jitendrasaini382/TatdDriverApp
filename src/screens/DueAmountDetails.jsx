@@ -40,7 +40,6 @@ const DueAmountDetails = ({route, navigation}) => {
 
       setAllInvoiceData(response);
     } catch (response) {
-      console.log(error, 'getInvoiceData Api error - Error');
     } finally {
       setLoader(false);
     }
@@ -48,17 +47,6 @@ const DueAmountDetails = ({route, navigation}) => {
   const [isShowExtraMinutesModal, setisShowExtraMinutesModal] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const addWaitingMinutes = async () => {
-    console.log(
-      {
-        action: 'overtime_minutes',
-        booking_id: bookingNumber,
-        overtime_minutes: inputValue,
-      },
-      'send action    ',
-    );
-
-    // return false
-
     try {
       const res = await WAITING_MINUTE_INSERT({
         action: 'overtime_minutes',
@@ -66,16 +54,13 @@ const DueAmountDetails = ({route, navigation}) => {
         overtime_minutes: inputValue,
       });
 
-      console.log(res, 'waiting response   -------');
       if (res?.msg_type == 'error') {
         Alert.alert(res?.message);
       }
       getInvoiceData(bookingNumber);
       setisShowExtraMinutesModal(false);
       setInputValue('');
-    } catch {
-      console.log(err);
-    }
+    } catch {}
   };
 
   if (loader) {
@@ -245,7 +230,6 @@ const DueAmountDetails = ({route, navigation}) => {
             alignItems: 'center',
           }}>
           <View>
-            {/* {console.log(allInvoiceData?.invoice_data?.waiting_minutes_eligibility,"allInvoiceData?.invoice_data?.waiting_minutes_eligibility")} */}
             {allInvoiceData?.invoice_data?.waiting_minutes_eligibility == 1 && (
               <TouchableOpacity
                 onPress={() => setisShowExtraMinutesModal(true)}

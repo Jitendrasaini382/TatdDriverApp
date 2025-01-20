@@ -41,16 +41,12 @@ const App = () => {
         vibrationPattern: [300, 500],
         importance: AndroidImportance.HIGH,
       });
-    } catch (error) {
-      console.error('Error creating notification channel:', error);
-    }
+    } catch (error) {}
   };
 
   // Handle incoming messages
   const handleIncomingMessages = () => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('Received foreground message:', remoteMessage);
-
       const sound_ = remoteMessage?.data?.sound || 'tatd_driver_three_time';
 
       try {
@@ -67,9 +63,7 @@ const App = () => {
         playSound(sound_);
         checkVibrationSupport(10000);
         triggerVibration();
-      } catch (error) {
-        console.error('Error displaying notification:', error);
-      }
+      } catch (error) {}
     });
 
     return unsubscribe;
@@ -80,16 +74,8 @@ const App = () => {
     try {
       const initialNotification = await notifee.getInitialNotification();
       if (initialNotification) {
-        console.log(
-          'App opened from notification:',
-          initialNotification.notification,
-        );
-        
-        console.log('Press action:', initialNotification.pressAction);
       }
-    } catch (error) {
-      console.error('Error checking initial notification:', error);
-    }
+    } catch (error) {}
   };
 
   // Monitor network connectivity

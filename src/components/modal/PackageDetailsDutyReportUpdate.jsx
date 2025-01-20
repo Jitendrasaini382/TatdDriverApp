@@ -227,8 +227,8 @@ const PackageDetailsDutyReportUpdate = ({
                 <View
                   style={{
                     flexDirection: 'row',
-                    alignItems: 'flex-start', // Ensures alignment
-                    marginVertical: 2, // Consistent spacing
+                    alignItems: 'flex-start',
+                    marginVertical: 2,
                   }}>
                   <View
                     style={{
@@ -236,7 +236,7 @@ const PackageDetailsDutyReportUpdate = ({
                       height: 4,
                       borderRadius: 2,
                       backgroundColor: AppColors.black,
-                      marginTop: 6, // Align dot with text
+                      marginTop: 6,
                     }}
                   />
                   <Text
@@ -260,8 +260,6 @@ const PackageDetailsDutyReportUpdate = ({
               )}
             </View>
 
-            {/* </View>
-          <View style={{margin: 30}}> */}
             {data?.trip_type && (
               <View
                 style={{

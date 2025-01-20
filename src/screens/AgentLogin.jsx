@@ -14,7 +14,6 @@ import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
-import {DRIVER_LOGIN} from '../apis/Apis';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -46,15 +45,9 @@ const AgentLogin = ({navigation}) => {
       }
       setError(null);
       setLoader(true);
-      // const response = await DRIVER_LOGIN(field);
-      // console.log(response, 'rrrrrr');
-      // if (response.status_code == '200') {
       setLoader(false);
       navigation.navigate('CheckAgentOtp', {mobile: field});
-      // }
-    } catch (err) {
-      console.log(err, 'err');
-    }
+    } catch (err) {}
   };
 
   return (
@@ -118,21 +111,19 @@ const AgentLogin = ({navigation}) => {
                     onBlur={() => setIsFocused(false)}
                   />
                 </View>
-
-                {/* <View style={styles.inputView}>
-                  <TextInput
-                    style={styles.inputText}
-                    keyboardType="numeric"
-                    placeholder="Enter Driver Mobile Number"
-                    placeholderTextColor={AppColors.black}
-                  />
-                </View> */}
               </View>
               <View style={{marginHorizontal: moderateScale(30)}}>
-                <Text style={{color:AppColors.red, fontSize: 12}}>{error}</Text>
+                <Text style={{color: AppColors.red, fontSize: 12}}>
+                  {error}
+                </Text>
               </View>
-              <Pressable style={styles.btnView} disabled={loader} onPress={sendOtp}>
-                <Text style={styles.btnText}>{ loader ? "Sending OTP" :"Submit"}</Text>
+              <Pressable
+                style={styles.btnView}
+                disabled={loader}
+                onPress={sendOtp}>
+                <Text style={styles.btnText}>
+                  {loader ? 'Sending OTP' : 'Submit'}
+                </Text>
               </Pressable>
             </View>
           </View>

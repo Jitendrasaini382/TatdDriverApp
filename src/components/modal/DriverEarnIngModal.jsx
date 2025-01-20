@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -28,11 +27,9 @@ const DriverEarningModal = ({setIsModalVisible, bookingNumber}) => {
         action: 'view_earning_popup',
         booking_number: bookingNumber,
       });
-      // console.log(response, 'View Earning PopUp Data');
       setTripDetails(response.earning_details);
       setLoading(false);
     } catch (error) {
-      console.log(error, 'View Earning PopUp error');
     } finally {
       setLoading(false);
     }

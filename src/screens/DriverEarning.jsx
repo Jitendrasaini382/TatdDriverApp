@@ -11,7 +11,6 @@ import {
   Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// import Modal from 'react-native-modal';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import DriverEarningModal from '../components/modal/DriverEarnIngModal';
@@ -35,7 +34,6 @@ const DriverEarning = () => {
       setLifeTimeEarn(response.lifetime_earning);
       setEarnData(response.commission_data);
     } catch (err) {
-      console.error('Error fetching earning data:', err);
     }
   }, []);
 
@@ -44,20 +42,13 @@ const DriverEarning = () => {
       const response = await DRIVER_EARNING({
         action: 'view_all_earnings',
       });
-      console.log(response.bookings, ' : fetching all earnings ');
       setBookingsData(response.bookings);
       setIsLoading(false);
     } catch (error) {
-      console.error('Error fetching all earnings:', error);
     } finally {
       setIsLoading(false);
     }
   }, []);
-
-  // useEffect(() => {
-  //   fetchEarningData();
-  //   fetchAllEarnings();
-  // }, [fetchEarningData, fetchAllEarnings]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -117,17 +108,6 @@ const DriverEarning = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Header backButton={true} />
-      {/* <Modal
-        backdropOpacity={0}
-        onBackdropPress={() => setIsModalVisible(false)}
-        animationIn={'fadeInDown'}
-        animationOut={'fadeOutUp'}
-        isVisible={isModalVisible}>
-        <DriverEarningModal
-          setIsModalVisible={setIsModalVisible}
-          bookingNumber={selectedBookingNumber}
-        />
-      </Modal> */}
 
       <Modal
         animationType="slide"

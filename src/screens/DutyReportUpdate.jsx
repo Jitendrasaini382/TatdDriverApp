@@ -504,33 +504,19 @@ const DutyReportUpdate = ({route, navigation}) => {
 
   const getFirstTimePopupFn = async type => {
     try {
-      console.log('sending getFirstTimePopupFn function...', {
-        action: 'booking_accepted_duty_report_popup',
-        booking_id: bookingNumber,
-        current_language: languageSwitch,
-        type: type,
-      });
+    
       const response = await GET_FIRST_POPUP_DATA({
         action: 'booking_accepted_duty_report_popup',
         booking_id: bookingNumber,
         current_language: languageSwitch,
         type: type,
       });
-      console.log('API response received:', response);
       setfirstTimePopupData(response?.popupdata);
-      console.log('First time popup data set:', response?.popupdata);
-      console.log(
-        response?.popupdata?.acceptpopupparagraph,
-        'Popup paragraph data logged here.',
-      );
-      console.log(response?.popupdata, 'Popup data logged here in detail.');
+     
       setfirstTimePopup(true);
-      console.log('First time popup flag set to true.');
     } catch (error) {
-      console.log(error, 'Response error in popup function.');
     } finally {
       setLoader(false);
-      console.log('Loader set to false in the finally block.');
     }
   };
 

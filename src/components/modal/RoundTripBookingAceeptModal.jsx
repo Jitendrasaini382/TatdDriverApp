@@ -50,10 +50,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
 
       dispatch(setTriggerFunction(true));
       dispatch(setRefreshKey());
-      console.log(
-        response,
-        'responseresponseresponseresponseresponseresponse final acccept',
-      );
+     
       if (response?.status_code == '200') {
         navigation.navigate('DutyReportUpdate', {
           bookingNumber: booking_number,
@@ -62,7 +59,6 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
         });
       }
     } catch (error) {
-      console.log(error, 'response error');
     } finally {
       setLoader(false);
     }

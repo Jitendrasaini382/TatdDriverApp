@@ -10,6 +10,7 @@ import {
   FlatList,
   SafeAreaView,
   ScrollView,
+  Linking,
 } from 'react-native';
 import {RightArrow} from '../assets/images';
 import {AppColors} from '../assets/Colors';
@@ -241,10 +242,15 @@ const MyBookingModal = ({}) => {
                         : null}
 
                       <Pressable
+                        // onPress={() =>
+                        //   navigation.navigate('CommanWebview', {
+                        //     url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                        //   })}
+
                         onPress={() =>
-                          navigation.navigate('CommanWebview', {
-                            url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                          })
+                          Linking.openURL(
+                            `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                          )
                         }>
                         <View
                           style={[

@@ -17,6 +17,7 @@ import FlexibleBookingView from './bookingsView/FlexibleBookingView';
 import {useDispatch, useSelector} from 'react-redux';
 import {Buffer} from 'buffer';
 import {useNavigation} from '@react-navigation/native';
+import {Linking} from 'react-native';
 
 const {width} = Dimensions.get('window');
 
@@ -31,9 +32,10 @@ const BookingView = ({data, allBookingData, panelData}) => {
         decodedToken?.driver_mobile_number,
       ).toString('base64');
       const url = `https://www.tatd.in/agent-login.php?dologin=${encodedMobile}`;
-      navigation.navigate('CommanWebview', {
-        url: url,
-      });
+      // navigation.navigate('CommanWebview', {
+      //   url: url,
+      // });
+      Linking.openURL(url);
     } catch (error) {}
   };
 
@@ -50,16 +52,17 @@ const BookingView = ({data, allBookingData, panelData}) => {
       )}
 
       <View style={styles.notificationContainer}>
-        {data?.driver_panel_messages?.double_booking_eligibility && (
-          <Text style={styles.notificationText}>
-            {data.driver_panel_messages.double_booking_eligibility}
-          </Text>
-        )}
         {data?.driver_panel_messages?.booking_score_message && (
           <Text style={[styles.notificationText, {color: 'green'}]}>
             {data.driver_panel_messages.booking_score_message}
           </Text>
         )}
+        {data?.driver_panel_messages?.double_booking_eligibility && (
+          <Text style={styles.notificationText}>
+            {data.driver_panel_messages.double_booking_eligibility}
+          </Text>
+        )}
+
         {data?.driver_panel_messages?.incident_error_message && (
           <Text style={styles.notificationText}>
             {data.driver_panel_messages.incident_error_message}

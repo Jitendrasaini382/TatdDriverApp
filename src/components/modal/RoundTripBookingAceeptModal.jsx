@@ -34,6 +34,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   } = trip;
 
   const acceptBooking = async () => {
+    setLoader(true);
     try {
       const response = await FINAL_ACCEPT_BOOKING({
         action: 'accept_booking',
@@ -49,23 +50,23 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
 
       dispatch(setTriggerFunction(true));
       dispatch(setRefreshKey());
-
-      navigation.navigate('DutyReportUpdate', {
-        bookingNumber: booking_number,
-        isFirstTime: true,
-        isType: 'Ondemand',
-      });
-    } catch (error) {}
+      console.log(
+        response,
+        'responseresponseresponseresponseresponseresponse final acccept',
+      );
+      if (response?.status_code == '200') {
+        navigation.navigate('DutyReportUpdate', {
+          bookingNumber: booking_number,
+          isFirstTime: true,
+          isType: 'Ondemand',
+        });
+      }
+    } catch (error) {
+      console.log(error, 'response error');
+    } finally {
+      setLoader(false);
+    }
   };
-
-  if (loader) {
-    return (
-      <View
-        style={{flex: 0.5, alignContent: 'center', justifyContent: 'center'}}>
-        <ActivityIndicator size="small" color={AppColors.mainColor} />
-      </View>
-    );
-  }
 
   return (
     <View style={styles.container}>
@@ -130,7 +131,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
       </View>
       <TouchableOpacity
         onPress={() => acceptBooking()}
-        disabled={!(checked1 && checked2)}
+        disabled={!(checked1 && checked2) || loader}
         style={[
           styles.acceptButton,
           {
@@ -211,7 +212,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   checkboxLabel: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: 'bold',
     color: AppColors.black,
     flex: 1,

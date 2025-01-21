@@ -16,6 +16,7 @@ import {
   Keyboard,
   Alert,
   Platform,
+  Linking,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -172,10 +173,11 @@ const DriverLogin = () => {
         response?.message == 'Not Found in Trusted and registration table'
       ) {
         setLoader(false);
-        navigation.navigate('CommanWebview', {
-          url: response?.redirect,
-          isAuthenticated: false,
-        });
+        // navigation.navigate('CommanWebview', {
+        //   url: response?.redirect,
+        //   isAuthenticated: false,
+        // });
+        Linking.openURL(response?.redirect);
       }
     } catch (err) {
       setLoader(false);

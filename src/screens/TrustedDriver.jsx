@@ -221,9 +221,10 @@ const TrustedDriver = ({navigation}) => {
     if (icon === 'Agent') {
       handleLoginPress();
     } else if (icon === 'PremiumDriver') {
-      navigation.navigate('CommanWebview', {
-        url: `https://www.tatd.in/premium-driver.php?step=1`,
-      });
+      // navigation.navigate('CommanWebview', {
+      //   url: `https://www.tatd.in/premium-driver.php?step=1`,
+      // });
+      openMyUrl('https://www.tatd.in/premium-driver.php?step=1');
     } else if (icon === 'TrustedPartner' || 'TrustedDriver') {
       navigation.navigate('TrustedDriver');
     }
@@ -426,22 +427,27 @@ const TrustedDriver = ({navigation}) => {
       if (response?.redirect) {
         switch (response?.redirect) {
           case 'clear-my-due-payment':
-            navigation.navigate('CommanWebview', {
-              url: response?.url,
-            });
+            // navigation.navigate('CommanWebview', {
+            //   url: response?.url,
+            // });
+            openMyUrl(response?.url);
             break;
           case 'driver-training-module':
-            navigation.navigate('CommanWebview', {
-              url: response?.url,
-            });
+            // navigation.navigate('CommanWebview', {
+            //   url: response?.url,
+            // });
+            openMyUrl(response?.url);
+
             break;
           case 'trusted-driver':
             navigation.navigate('TrustedDriver');
             break;
           default:
-            navigation.navigate('CommanWebview', {
-              url: response?.url,
-            });
+            // navigation.navigate('CommanWebview', {
+            //   url: response?.url,
+            // });
+            openMyUrl(response?.url);
+
             break;
         }
       }
@@ -498,9 +504,10 @@ const TrustedDriver = ({navigation}) => {
       ).toString('base64');
       const url = `https://www.tatd.in/agent-login.php?dologin=${encodedMobile}`;
 
-      navigation.navigate('CommanWebview', {
-        url: url,
-      });
+      // navigation.navigate('CommanWebview', {
+      //   url: url,
+      // });
+      openMyUrl(url);
     } catch (error) {}
   };
 
@@ -1099,11 +1106,18 @@ const TrustedDriver = ({navigation}) => {
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('CommanWebview', {
-                        url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                      })
-                    }
+                    // onPress={() =>
+                    //   navigation.navigate('CommanWebview', {
+                    //     url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                    //   })
+
+                    // }
+
+                    onPress={() => {
+                      openMyUrl(
+                        `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                      );
+                    }}
                     style={[
                       styles.bottamContent4,
                       {

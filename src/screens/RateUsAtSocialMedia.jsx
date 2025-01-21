@@ -30,9 +30,7 @@ const RateUsAtSocialMedia = ({route, navigation}) => {
       return;
     }
     try {
-      // Simulate API call or rating submission
       rateusSocialMedia(bookingNumber);
-      // Open the provided URL
       Linking.openURL(url);
     } catch (error) {}
   };
@@ -78,17 +76,9 @@ const RateUsAtSocialMedia = ({route, navigation}) => {
         </View>
         <View style={styles.reviewContainer}>
           <Text style={styles.inspirationText}>{viewData?.content2}</Text>
-          {/* <Text
-            style={{marginHorizontal: 15, alignSelf: 'center', fontSize: 14}}>
-            {viewData?.content3}
-          </Text> */}
+
           <TouchableOpacity
             onPress={() => submitRating(viewData?.social_link)}
-            // onPress={() =>
-            //   navigation.navigate('CommanWebview', {
-            //     url: viewData?.social_link,
-            //   })
-            // }
             style={styles.button}>
             <Text style={styles.buttonText}>{viewData?.content3}</Text>
           </TouchableOpacity>

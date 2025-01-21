@@ -354,7 +354,37 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
   const [acceptBookingPopup, setacceptBookingPopup] = useState(false);
 
+  const showStartAlert = () => {
+    if (!inputValue) {
+      Alert.alert('Please Enter Fisrt OTP');
+      return;
+    } else if (!inputKmsValue) {
+      Alert.alert('Please Enter Fisrt Start KMS');
+      return;
+    } else {
+      Alert.alert(
+        'Are you sure?',
+        `Current Meeter reading is - ${inputKmsValue}`,
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: () => driverReached(),
+          },
+        ],
+        {cancelable: true},
+      );
+    }
+  };
+
   const driverReached = async () => {
+    if (!inputValue) {
+      Alert.alert('Please Enter Fisrt OTP');
+      return;
+    }
     setLoader(true);
     Keyboard.dismiss();
 
@@ -390,6 +420,33 @@ const DutyReportUpdate = ({route, navigation}) => {
       setLoader(false);
     }
   };
+
+  const showEndAlert = startReading => {
+    if (!inputEndKmsValue) {
+      Alert.alert('Please Enter First End KMS');
+      return;
+    } else {
+      const message = `Start Meter Reading: ${startReading}\nEnd Meter Reading: ${inputEndKmsValue}\nTotal Running KMS: ${
+        inputEndKmsValue - startReading
+      }`;
+      Alert.alert(
+        'Are you sure?',
+        message,
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: () => bookingEnd(startReading),
+          },
+        ],
+        {cancelable: true},
+      );
+    }
+  };
+
   const bookingEnd = async kms => {
     setEndModalLoader(true);
 
@@ -444,22 +501,56 @@ const DutyReportUpdate = ({route, navigation}) => {
       setLoaderResendOtp(false);
     }
   };
+
   const getFirstTimePopupFn = async type => {
     try {
+      console.log('sending getFirstTimePopupFn function...', {
+        action: 'booking_accepted_duty_report_popup',
+        booking_id: bookingNumber,
+        current_language: languageSwitch,
+        type: type,
+      });
       const response = await GET_FIRST_POPUP_DATA({
         action: 'booking_accepted_duty_report_popup',
         booking_id: bookingNumber,
         current_language: languageSwitch,
         type: type,
       });
-
+      console.log('API response received:', response);
       setfirstTimePopupData(response?.popupdata);
+      console.log('First time popup data set:', response?.popupdata);
+      console.log(
+        response?.popupdata?.acceptpopupparagraph,
+        'Popup paragraph data logged here.',
+      );
+      console.log(response?.popupdata, 'Popup data logged here in detail.');
       setfirstTimePopup(true);
+      console.log('First time popup flag set to true.');
     } catch (error) {
+      console.log(error, 'Response error in popup function.');
     } finally {
       setLoader(false);
+      console.log('Loader set to false in the finally block.');
     }
   };
+
+  // const getFirstTimePopupFn = async type => {
+  //   try {
+  //     const response = await GET_FIRST_POPUP_DATA({
+  //       action: 'booking_accepted_duty_report_popup',
+  //       booking_id: bookingNumber,
+  //       current_language: languageSwitch,
+  //       type: type,
+  //     });
+
+  //     setfirstTimePopupData(response?.popupdata);
+  //     setfirstTimePopup(true);
+  //   } catch (error) {
+  //   } finally {
+  //     setLoader(false);
+  //   }
+  // };
+
   useEffect(() => {
     if (isFirstTimeVisit && isType) {
       getFirstTimePopupFn(isType);
@@ -746,7 +837,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         </ScrollView>
       )}
       {/* First time popup */}
-      <Modal
+      {/* <Modal
         transparent={true}
         animationType="slide"
         visible={firstTimePopup}
@@ -797,19 +888,37 @@ const DutyReportUpdate = ({route, navigation}) => {
                     fontSize: 18,
                     color: AppColors.white,
                   }}>
-                  {/* Guests are like God */}
                   {firstTimePopupData?.acceptpopupheading}
                 </Text>
               </View>
-              <View style={{marginVertical: 20}}>
+              <View style={{marginVertical: 10}}>
                 <Text
                   style={{
                     fontSize: 18,
                     textAlign: 'flext-start',
-                    color: AppColors.mainColor,
+                    color: AppColors.black,
                   }}>
-                  {/* I accept this duty. */}
-                  {firstTimePopupData?.acceptpopupparagraph}
+                  {firstTimePopupData?.acceptpopupparagraph?.line1}
+                </Text>
+              </View>
+              <View style={{marginVertical: 10}}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    textAlign: 'flext-start',
+                    color: AppColors.black,
+                  }}>
+                  {firstTimePopupData?.acceptpopupparagraph?.line2}
+                </Text>
+              </View>
+              <View style={{marginVertical: 10}}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    textAlign: 'flext-start',
+                    color: AppColors.red,
+                  }}>
+                  {firstTimePopupData?.acceptpopupparagraph?.line3}
                 </Text>
               </View>
 
@@ -818,16 +927,12 @@ const DutyReportUpdate = ({route, navigation}) => {
                   disabled={loader}
                   style={{
                     backgroundColor: AppColors.greyColor,
-
-                    // padding: 12,
                     paddingVertical: 8,
                     paddingHorizontal: 16,
                     borderRadius: 4,
-                    // width: '60%',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    // marginHorizontal: '20%',
-                    marginBottom: 50,
+                    marginBottom: 30,
                   }}
                   onPress={() => {
                     setfirstTimePopup(false);
@@ -840,14 +945,6 @@ const DutyReportUpdate = ({route, navigation}) => {
                       fontFamily: AppFont.regularFont,
                       // textAlign: 'center',
                     }}>
-                    {/* {loader ? (
-                      <ActivityIndicator
-                        color={AppColors.white}
-                        size={'small'}
-                      />
-                    ) : (
-                      firstTimePopupData?.popupdata?.accept_alert_btn
-                    )}dbcasvasvnb */}
                     Close
                   </Text>
                 </TouchableOpacity>
@@ -855,7 +952,143 @@ const DutyReportUpdate = ({route, navigation}) => {
             </ScrollView>
           </View>
         </View>
+      </Modal> */}
+
+      {/* firstpopupstartNew */}
+
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={firstTimePopup}
+        onRequestClose={() => setfirstTimePopup(false)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              backgroundColor: '#FFFFFF',
+              width: '90%',
+              borderRadius: 10,
+              elevation: 5,
+            }}>
+            <View style={{flex: 1}}>
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  backgroundColor: '#0056A4',
+                  borderRadius: 20,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 30,
+                  height: 30,
+                  zIndex: 10,
+                }}
+                onPress={() => setfirstTimePopup(false)}>
+                <Icon name="close" size={16} color="#FFFFFF" />
+              </TouchableOpacity>
+
+              <View
+                style={{
+                  backgroundColor: AppColors.mainColor,
+                  padding: 15,
+                  borderRadius: 5,
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Merriweather-Bold',
+                    fontSize: 18,
+                    color: '#FFFFFF',
+                  }}>
+                  {firstTimePopupData?.acceptpopupheading}
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  marginVertical: 10,
+                  paddingHorizontal: 20,
+                  paddingVertical: 10,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    lineHeight: 22,
+                    textAlign: 'left',
+                    color: '#333333',
+                  }}>
+                   {firstTimePopupData?.acceptpopupparagraph?.line1}
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  marginBottom: 10,
+                  paddingHorizontal: 20,
+                  paddingVertical: 10,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    lineHeight: 22,
+                    textAlign: 'left',
+                    color: '#333333',
+                  }}>
+                   {firstTimePopupData?.acceptpopupparagraph?.line2}
+                </Text>
+              </View>
+
+           
+              <View
+                style={{
+                  marginBottom: 10,
+                  paddingHorizontal: 20,
+                  paddingVertical: 10,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    lineHeight: 22,
+                    textAlign: 'left',
+                    color: '#FF0000',
+                  }}>
+                  {firstTimePopupData?.acceptpopupparagraph?.line3}
+                </Text>
+              </View>
+
+           
+              <View style={{alignItems: 'center', marginTop: 20}}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: AppColors.gray,
+                    paddingVertical: 10,
+                    paddingHorizontal: 30,
+                    borderRadius: 5,
+                    marginBottom: 30,
+                  }}
+                  onPress={() => setfirstTimePopup(false)}>
+                  <Text
+                    style={{
+                      color: '#FFFFFF',
+                      fontSize: 16,
+                      fontFamily: 'Merriweather-Bold',
+                    }}>
+                    Close
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
       </Modal>
+
+      {/* firstPopupend */}
 
       {/* accept bookin popup */}
       <Modal
@@ -1396,6 +1629,39 @@ const DutyReportUpdate = ({route, navigation}) => {
                   keyboardType="number-pad"
                   onChangeText={text => setInputValue(text)}
                 />
+                <View
+                  style={{
+                    alignItems: 'center',
+                    marginBottom: 10,
+                  }}>
+                  <TouchableOpacity
+                    disabled={loaderResendOtp}
+                    onPress={() => dutyReportResendOtp()}>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: '400',
+                        color: AppColors.mainColor,
+                      }}
+                      onLayout={event => {
+                        const {width} = event.nativeEvent.layout;
+                        setTextWidth(width);
+                      }}>
+                      {/* Resend OTP? */}
+                      {loaderResendOtp
+                        ? 'Please Wait...'
+                        : popupsData?.popupdata?.resend_otp_text}
+                    </Text>
+                  </TouchableOpacity>
+                  <View
+                    style={{
+                      marginTop: 2,
+                      height: 1,
+                      backgroundColor: AppColors.mainColor,
+                      width: textWidth,
+                    }}
+                  />
+                </View>
 
                 {popupsData?.popupdata?.start_kms_eligibility == '1' && (
                   <TextInput
@@ -1421,39 +1687,6 @@ const DutyReportUpdate = ({route, navigation}) => {
                   />
                 )}
                 <View style={{marginVertical: 5}}>
-                  <View
-                    style={{
-                      alignItems: 'center',
-                    }}>
-                    <TouchableOpacity
-                      disabled={loaderResendOtp}
-                      onPress={() => dutyReportResendOtp()}>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          fontWeight: '400',
-                          color: AppColors.mainColor,
-                        }}
-                        onLayout={event => {
-                          const {width} = event.nativeEvent.layout;
-                          setTextWidth(width);
-                        }}>
-                        {/* Resend OTP? */}
-                        {loaderResendOtp
-                          ? 'Please Wait...'
-                          : popupsData?.popupdata?.resend_otp_text}
-                      </Text>
-                    </TouchableOpacity>
-                    <View
-                      style={{
-                        marginTop: 2,
-                        height: 1,
-                        backgroundColor: AppColors.mainColor,
-                        width: textWidth,
-                      }}
-                    />
-                  </View>
-                  <View></View>
                   <TouchableOpacity
                     disabled={loader}
                     style={{
@@ -1467,8 +1700,15 @@ const DutyReportUpdate = ({route, navigation}) => {
                       marginHorizontal: '20%',
                       marginBottom: 50,
                     }}
+                    // onPress={() => {
+                    //   driverReached();
+                    // }}
                     onPress={() => {
-                      driverReached();
+                      if (popupsData?.popupdata?.start_kms_eligibility == '1') {
+                        showStartAlert();
+                      } else {
+                        driverReached();
+                      }
                     }}>
                     <Text
                       style={{
@@ -1620,8 +1860,15 @@ const DutyReportUpdate = ({route, navigation}) => {
                     marginHorizontal: '20%',
                     marginBottom: 30,
                   }}
+                  // onPress={() => {
+                  //   bookingEnd(popupsData?.popupdata?.start_meter_reading);
+                  // }}
                   onPress={() => {
-                    bookingEnd(popupsData?.popupdata?.start_meter_reading);
+                    if (popupsData?.popupdata?.end_kms_eligibility == '1') {
+                      showEndAlert(popupsData?.popupdata?.start_meter_reading);
+                    } else {
+                      bookingEnd(popupsData?.popupdata?.start_meter_reading);
+                    }
                   }}>
                   <Text
                     style={{

@@ -970,19 +970,19 @@ const DutyReportUpdate = ({route, navigation}) => {
           }}>
           <View
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: AppColors.white,
               width: '90%',
               borderRadius: 10,
               elevation: 5,
             }}>
-            <View style={{flex: 1}}>
+            <View style={{}}>
               <TouchableOpacity
                 style={{
                   position: 'absolute',
-                  top: 10,
-                  right: 10,
-                  backgroundColor: '#0056A4',
-                  borderRadius: 20,
+                  top: 0,
+                  right: 0,
+                  backgroundColor: AppColors.white,
+                  // borderRadius: 20,
                   alignItems: 'center',
                   justifyContent: 'center',
                   width: 30,
@@ -990,21 +990,23 @@ const DutyReportUpdate = ({route, navigation}) => {
                   zIndex: 10,
                 }}
                 onPress={() => setfirstTimePopup(false)}>
-                <Icon name="close" size={16} color="#FFFFFF" />
+                <Icon name="close" size={16} color={AppColors.black} />
               </TouchableOpacity>
 
               <View
                 style={{
                   backgroundColor: AppColors.mainColor,
                   padding: 15,
+                  paddingVertical: 30,
                   borderRadius: 5,
                   alignItems: 'center',
                 }}>
                 <Text
                   style={{
                     fontFamily: 'Merriweather-Bold',
-                    fontSize: 18,
-                    color: '#FFFFFF',
+                    fontSize: 20,
+                    color: AppColors.white,
+                    fontWeight: 'bold',
                   }}>
                   {firstTimePopupData?.acceptpopupheading}
                 </Text>
@@ -1021,9 +1023,9 @@ const DutyReportUpdate = ({route, navigation}) => {
                     fontSize: 16,
                     lineHeight: 22,
                     textAlign: 'left',
-                    color: '#333333',
+                    color: AppColors.black,
                   }}>
-                   {firstTimePopupData?.acceptpopupparagraph?.line1}
+                  {firstTimePopupData?.acceptpopupparagraph?.line1}
                 </Text>
               </View>
 
@@ -1038,13 +1040,12 @@ const DutyReportUpdate = ({route, navigation}) => {
                     fontSize: 16,
                     lineHeight: 22,
                     textAlign: 'left',
-                    color: '#333333',
+                    color: AppColors.black,
                   }}>
-                   {firstTimePopupData?.acceptpopupparagraph?.line2}
+                  {firstTimePopupData?.acceptpopupparagraph?.line2}
                 </Text>
               </View>
 
-           
               <View
                 style={{
                   marginBottom: 10,
@@ -1056,28 +1057,26 @@ const DutyReportUpdate = ({route, navigation}) => {
                     fontSize: 16,
                     lineHeight: 22,
                     textAlign: 'left',
-                    color: '#FF0000',
+                    color: AppColors.red,
                   }}>
                   {firstTimePopupData?.acceptpopupparagraph?.line3}
                 </Text>
               </View>
 
-           
-              <View style={{alignItems: 'center', marginTop: 20}}>
+              <View style={{alignItems: 'center', marginTop: 10}}>
                 <TouchableOpacity
                   style={{
                     backgroundColor: AppColors.gray,
                     paddingVertical: 10,
                     paddingHorizontal: 30,
                     borderRadius: 5,
-                    marginBottom: 30,
+                    marginBottom: 60,
                   }}
                   onPress={() => setfirstTimePopup(false)}>
                   <Text
                     style={{
-                      color: '#FFFFFF',
+                      color: AppColors.black,
                       fontSize: 16,
-                      fontFamily: 'Merriweather-Bold',
                     }}>
                     Close
                   </Text>

@@ -341,7 +341,7 @@ const DriverLogin = () => {
                   fontSize: 18,
                   fontWeight: 'bold',
                   marginBottom: 10,
-                  color: 'black',
+                  color: AppColors.black,
                 }}>
                 Choose a phone number
               </Text>
@@ -395,7 +395,7 @@ const DriverLogin = () => {
                     <TouchableOpacity
                       style={{}}
                       onPress={() => handleSetNumber(item.toString())}>
-                      <Text style={{fontSize: 18, color: 'black'}}>{item}</Text>
+                      <Text style={{fontSize: 18, color: AppColors.black}}>{item}</Text>
                     </TouchableOpacity>
                   </View>
                 )}

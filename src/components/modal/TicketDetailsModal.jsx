@@ -69,7 +69,6 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
     );
   };
 
-
   return (
     <ScrollView style={styles.container}>
       <TouchableOpacity
@@ -145,7 +144,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   leftSectionText: {
-    color: 'black',
+    color: AppColors.black,
     justifyContent: 'center',
     marginLeft: 7,
     alignContent: 'flex-start',
@@ -160,7 +159,7 @@ const styles = StyleSheet.create({
   },
   rightSectionText: {
     flex: 2,
-    color: 'black',
+    color: AppColors.black,
     justifyContent: 'center',
     marginLeft: 7,
     fontSize: 15,

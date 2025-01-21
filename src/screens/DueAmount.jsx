@@ -102,7 +102,7 @@ const DueAmount = ({route, navigation}) => {
                 }}>
                 <Text
                   style={{
-                    color: 'black',
+                    color: AppColors.black,
                     margin: 5,
                     fontWeight: '600',
                     paddingHorizontal: 10,
@@ -185,6 +185,6 @@ const styles = StyleSheet.create({
   },
   dividerInput: {
     height: 1.2,
-    backgroundColor: 'black',
+    backgroundColor: AppColors.black,
   },
 });

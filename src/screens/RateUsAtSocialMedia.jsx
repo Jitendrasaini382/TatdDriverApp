@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   inspirationText: {
-    color: 'black',
+    color: AppColors.black,
     fontSize: 13,
     // alignSelf: 'center',
   },

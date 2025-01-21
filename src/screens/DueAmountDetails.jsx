@@ -114,7 +114,7 @@ const DueAmountDetails = ({route, navigation}) => {
                 justifyContent: 'center',
               }}
               onPress={() => setisShowExtraMinutesModal(false)}>
-              <Icon name="close" size={20} color="white" />
+              <Icon name="close" size={20} color={AppColors.white} />
             </TouchableOpacity>
 
             <View
@@ -805,7 +805,7 @@ const DueAmountDetails = ({route, navigation}) => {
 
           <Text
             style={{
-              color: 'black',
+              color: AppColors.black,
               fontSize: 12,
               alignSelf: 'center',
               textAlign: 'center',
@@ -897,7 +897,7 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 12,
-    color: 'black',
+    color: AppColors.black,
     marginHorizontal: 5,
   },
   timingsRow: {
@@ -912,11 +912,11 @@ const styles = StyleSheet.create({
   timingLabel: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: 'black',
+    color: AppColors.black,
   },
   timingValue: {
     fontSize: 12,
-    color: 'black',
+    color: AppColors.black,
   },
   chargesSection: {
     // borderWidth: 1,
@@ -938,7 +938,7 @@ const styles = StyleSheet.create({
   chargeHeaderText: {
     fontSize: 12,
     fontWeight: '50',
-    color: 'black',
+    color: AppColors.black,
   },
   chargeRow: {
     flexDirection: 'row',
@@ -949,7 +949,7 @@ const styles = StyleSheet.create({
   },
   chargeText: {
     fontSize: 12,
-    color: 'black',
+    color: AppColors.black,
   },
   totalRow: {
     flexDirection: 'row',
@@ -963,12 +963,12 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontSize: 12,
     fontWeight: '400',
-    color: 'black',
+    color: AppColors.black,
   },
   totalValue: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: 'black',
+    color: AppColors.black,
   },
   advanceSection: {
     flexDirection: 'row',
@@ -982,11 +982,11 @@ const styles = StyleSheet.create({
   },
   advanceLabel: {
     fontSize: 12,
-    color: 'black',
+    color: AppColors.black,
   },
   advanceValue: {
     fontSize: 12,
-    color: 'black',
+    color: AppColors.black,
     textAlign: 'right',
   },
   balanceSection: {

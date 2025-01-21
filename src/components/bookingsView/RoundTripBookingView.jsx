@@ -68,7 +68,7 @@ const TripCard = ({trip}) => {
                     height: 10,
                     width: 10,
                     borderRadius: 5,
-                    backgroundColor: 'black',
+                    backgroundColor: AppColors.black,
                     alignItems: 'flex-start',
                     top: 5,
                     left: 10,

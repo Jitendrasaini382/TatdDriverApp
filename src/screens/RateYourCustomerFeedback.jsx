@@ -104,8 +104,8 @@ const RateYourCustomerFeedback = ({navigation, route}) => {
                     }}>
                     <TextInput
                       placeholder="Tell us more"
-                      placeholderTextColor={'black'}
-                      style={{color: 'black'}}
+                      placeholderTextColor={AppColors.black}
+                      style={{color: AppColors.black}}
                       value={message}
                       onChangeText={text => setMessage(text)}
                     />

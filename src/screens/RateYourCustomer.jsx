@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, SafeAreaView} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  StyleSheet,
+} from 'react-native';
 import Header from '../components/Header';
 import {AirbnbRating} from 'react-native-ratings';
 import {AppColors} from '../assets/Colors';
@@ -97,7 +103,7 @@ const RateYourCustomer = ({navigation, route}) => {
                 count={5}
                 reviews={['VERY BAD', 'Bad', 'AVERAGE', 'GOOD', 'LOVED IT']}
                 defaultRating={0}
-                size={20}
+                size={40}
                 onFinishRating={handleRatingCompleted}
               />
             </View>
@@ -122,3 +128,107 @@ const RateYourCustomer = ({navigation, route}) => {
 };
 
 export default RateYourCustomer;
+
+//////////
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <Header backButton={true} />
+//       <View style={styles.content}>
+//         {/* Header Section */}
+//         <View style={styles.headerBox}>
+//           <Text style={styles.headerText}>Rate Your Customer</Text>
+//         </View>
+
+//         {/* Rating Section */}
+//         <View style={styles.ratingBox}>
+//           <View style={styles.ratingInner}>
+//             <AirbnbRating
+//               count={5}
+//               reviews={['VERY BAD', 'Bad', 'AVERAGE', 'GOOD', 'LOVED IT']}
+//               defaultRating={0}
+//               size={40}
+//               onFinishRating={handleRatingCompleted}
+//               showRating
+//             />
+//           </View>
+//           {/* Submit Button */}
+//           <TouchableOpacity
+//             onPress={handleSubmit}
+//             style={[styles.submitButton, {opacity: loading ? 0.7 : 1}]}
+//             disabled={loading}>
+//             {loading ? (
+//               <ActivityIndicator size="small" color="white" />
+//             ) : (
+//               <Text style={styles.submitText}>SUBMIT</Text>
+//             )}
+//           </TouchableOpacity>
+//         </View>
+//       </View>
+//     </SafeAreaView>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#f5f5f5',
+//   },
+//   content: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     // padding: 20,
+//   },
+//   headerBox: {
+//     backgroundColor: AppColors.mainColor,
+//     width: '90%',
+//     borderRadius: 10,
+//     padding: 20,
+//     marginBottom: 15,
+//     alignItems: 'center',
+//     shadowColor: '#000',
+//     shadowOpacity: 0.2,
+//     shadowRadius: 5,
+//     elevation: 4,
+//   },
+//   headerText: {
+//     color: 'white',
+//     fontSize: 20,
+//     fontWeight: '600',
+//   },
+//   ratingBox: {
+//     backgroundColor: '#fff',
+//     width: '90%',
+//     borderRadius: 10,
+//     padding: 20,
+//     borderWidth: 2,
+//     borderColor: AppColors.mainColor,
+//     shadowColor: '#000',
+//     shadowOpacity: 0.1,
+//     shadowRadius: 5,
+//     elevation: 3,
+//   },
+//   ratingInner: {
+//     marginBottom: 20,
+//     alignItems: 'center',
+//   },
+//   submitButton: {
+//     backgroundColor: AppColors.mainColor,
+//     paddingVertical: 12,
+//     paddingHorizontal: 25,
+//     borderRadius: 8,
+//     alignSelf: 'center',
+//     shadowColor: '#000',
+//     shadowOpacity: 0.2,
+//     shadowRadius: 5,
+//     elevation: 3,
+//   },
+//   submitText: {
+//     color: 'white',
+//     fontSize: 16,
+//     fontWeight: '500',
+//   },
+// });
+
+// export default RateYourCustomer;

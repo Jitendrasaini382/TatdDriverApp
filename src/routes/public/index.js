@@ -6,7 +6,7 @@ import CheckDriverOtp from '../../screens/CheckDriverOtp';
 import SplashScreen from '../../screens/SplashScreen';
 import { AppColors } from '../../assets/Colors';
 import { useSelector } from 'react-redux';
-import CommanWebview from '../../screens/Webview';
+import CommanWebview from '../../screens/CommanWebview';
 
 const Stack = createStackNavigator();
 

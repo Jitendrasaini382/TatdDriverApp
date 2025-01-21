@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {Triangle_Icon} from '../assets/images';
 import {AppColors} from '../assets/Colors';
 import {DUE_AMOUNT} from '../apis/Apis';
 import {useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
 
 const DueAmount = ({route, navigation}) => {
   const [textWidth, setTextWidth] = useState(0);
@@ -21,10 +22,12 @@ const DueAmount = ({route, navigation}) => {
 
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
-  useEffect(() => {
-    setLoading(true);
-    getDueAmount(bookingNumber);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+      getDueAmount(bookingNumber);
+    }, [bookingNumber]),
+  );
 
   const getDueAmount = async bookingNumber => {
     try {

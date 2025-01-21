@@ -412,7 +412,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         return false;
       } else {
         if (res?.message_type == 'error') {
-          // Alert.alert(res?.errormessage?.error_message);
+          Alert.alert(res?.errormessage?.error_message);
           setModalVisibleEnd(false);
         } else {
           setModalVisibleEnd(false);
@@ -805,7 +805,6 @@ const DutyReportUpdate = ({route, navigation}) => {
                 <Text
                   style={{
                     fontSize: 18,
-                    fontWeight: 'bold',
                     textAlign: 'flext-start',
                     color: AppColors.mainColor,
                   }}>
@@ -1393,6 +1392,8 @@ const DutyReportUpdate = ({route, navigation}) => {
                   placeholder="Enter Otp"
                   placeholderTextColor="#aaa"
                   value={inputValue}
+                  maxLength={4}
+                  keyboardType="number-pad"
                   onChangeText={text => setInputValue(text)}
                 />
 
@@ -1415,6 +1416,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                     }
                     placeholderTextColor="#aaa"
                     value={inputKmsValue}
+                    keyboardType="number-pad"
                     onChangeText={text => setInputKmsValue(text)}
                   />
                 )}

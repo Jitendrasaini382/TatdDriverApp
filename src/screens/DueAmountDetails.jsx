@@ -59,7 +59,8 @@ const DueAmountDetails = ({route, navigation}) => {
       });
 
       if (res?.status_code == '200') {
-        Alert.alert(res?.message);
+        // Alert.alert(res?.message);
+        Alert.alert('Success', res?.message);
       }
 
       getInvoiceData(bookingNumber);
@@ -225,7 +226,15 @@ const DueAmountDetails = ({route, navigation}) => {
       </Modal>
 
       <ScrollView style={styles.container}>
-        <Header backButton={true} />
+        <Header
+          backButton={true}
+          customeNavigation={{
+            name: 'DueAmount',
+            params: {
+              bookingNumber: bookingNumber,
+            },
+          }}
+        />
         <View
           style={{
             flexDirection: 'row',
@@ -784,7 +793,10 @@ const DueAmountDetails = ({route, navigation}) => {
               {allInvoiceData?.invoice_data?.total_charges}
             </Text>
           </View>
-          <View
+
+          {/* company Details */}
+
+          {/* <View
             style={[
               styles.divider,
               {backgroundColor: 'grey', height: 0.5, marginVertical: 10},
@@ -800,7 +812,7 @@ const DueAmountDetails = ({route, navigation}) => {
               marginVertical: 15,
             }}>
             {allInvoiceData?.invoice_data?.company_details}
-          </Text>
+          </Text> */}
         </View>
         <TouchableOpacity
           onPress={() =>

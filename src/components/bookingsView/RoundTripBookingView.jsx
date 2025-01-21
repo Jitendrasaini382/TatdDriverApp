@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   incentiveBox: {
-    backgroundColor: AppColors.red,
+    backgroundColor: "#2076bd",
     padding: 5,
     borderRadius: 5,
     marginBottom: 5,

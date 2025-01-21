@@ -168,6 +168,7 @@ const TrustedDriver = ({navigation}) => {
         getHeadlineData();
         getHomeNotification();
         getHomeNotice();
+        getUpdatePopup();
         if (isRfdOn) {
           getAllOndemandBookings();
         }
@@ -324,9 +325,10 @@ const TrustedDriver = ({navigation}) => {
 
   const onRefreshfetchData = async () => {
     try {
+      await getHeadlineData();
       await getHomeNotification();
       await getHomeNotice();
-      // await getAllTrustedData();
+      await getAllTrustedData();
       // if (isRfdOn) {
       await getAllOndemandBookings();
       dispatch(setRefreshKey());
@@ -640,8 +642,8 @@ const TrustedDriver = ({navigation}) => {
         current_language: languageSwitch,
       });
 
-      getHeadlineData();
       getHomeNotification();
+      getHeadlineData();
     } catch (err) {}
   };
 

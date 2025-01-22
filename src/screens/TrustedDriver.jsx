@@ -785,11 +785,6 @@ const TrustedDriver = ({navigation}) => {
                           fontSize: 18,
                           fontWeight: 'bold',
                         }}>
-                        {console.log(
-                          homeNotificationData?.btn_text,
-                          'homeNotificationData?.btn_texthomeNotificationData?.btn_texthomeNotificationData?.btn_texthomeNotificationData?.btn_texthomeNotificationData?.btn_text',
-                        )}
-
                         {homeNotificationData?.btn_text}
                       </Text>
                     </TouchableOpacity>
@@ -885,11 +880,6 @@ const TrustedDriver = ({navigation}) => {
                           fontSize: 18,
                           fontWeight: 'bold',
                         }}>
-                        {console.log(
-                          homeNoticeData?.btn_text,
-                          'homeNoticeData?.btn_texthomeNoticeData?.btn_texthomeNoticeData?.btn_texthomeNoticeData?.btn_texthomeNoticeData?.btn_text',
-                        )}
-
                         {homeNoticeData?.btn_text}
                       </Text>
                     </TouchableOpacity>

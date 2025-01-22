@@ -1379,10 +1379,6 @@ const DutyReportUpdate = ({route, navigation}) => {
                     color: AppColors.white,
                     fontWeight: 'bold',
                   }}>
-                  {console.log(
-                    isBookingApiPopupMsge,
-                    'isBookingApiPopupMsgeisBookingApiPopupMsgeisBookingApiPopupMsgeisBookingApiPopupMsgeisBookingApiPopupMsge',
-                  )}
                   {languageSwitch == 'english'
                     ? 'Guests are like God'
                     : 'अतिथि देवो भव'}
@@ -1553,8 +1549,6 @@ const DutyReportUpdate = ({route, navigation}) => {
       </Modal>
 
       {/* reachmodalend */}
-
-      {/* otp send modal */}
 
       {/* otpsendmodalstart */}
 

@@ -145,6 +145,7 @@ const PermanentBookingView = () => {
         booking_zone: 'current',
         current_language: languageSwitch,
       });
+      console.log(response,"responseresponseresponse current");
 
       setPermanentBookings(response.permanent_driver_bookings_my_zone);
     } catch (error) {}
@@ -157,6 +158,8 @@ const PermanentBookingView = () => {
         booking_zone: 'others',
         current_language: languageSwitch,
       });
+      console.log(response,"responseresponseresponse other");
+      
       setPermanentBookingsOthers(response.permanent_driver_bookings_other_zone);
     } catch (error) {}
   };

@@ -1380,8 +1380,8 @@ const DutyReportUpdate = ({route, navigation}) => {
                     fontWeight: 'bold',
                   }}>
                   {languageSwitch == 'english'
-                    ? 'Guests are like God'
-                    : 'अतिथि देवो भव'}
+                    ? 'Guests are like God:'
+                    : 'अतिथि देवो भव:'}
                 </Text>
               </View>
               <View style={{marginVertical: 20, padding: 15}}>

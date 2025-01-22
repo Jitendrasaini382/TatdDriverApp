@@ -72,7 +72,7 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
       }
     } catch (error) {
       if (error == 'Booking is not in pending status') {
-        Alert.alert('This booking already accepted by another driver.');
+        // Alert.alert('This booking already accepted by another driver.');
       }
     }
   };

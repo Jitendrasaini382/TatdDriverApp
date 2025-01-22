@@ -993,14 +993,14 @@ const TrustedDriver = ({navigation}) => {
                             styles.ratingView,
                             {
                               backgroundColor:
-                                decodedToken?.otr_all_data?.dcr?.background,
+                                decodedToken?.otr_all_data?.rating?.background,
                             },
                           ]}>
                           <Text
                             style={[
                               styles.bottamRightText,
                               {
-                                color: decodedToken?.otr_all_data?.dcr?.color,
+                                color: decodedToken?.otr_all_data?.rating?.color,
                               },
                             ]}>
                             {decodedToken &&
@@ -1010,7 +1010,7 @@ const TrustedDriver = ({navigation}) => {
                             style={[
                               styles.bottamRightText,
                               {
-                                color: decodedToken?.otr_all_data?.dcr?.color,
+                                color: decodedToken?.otr_all_data?.rating?.color,
                               },
                             ]}>
                             {languageSwitch == 'english' ? 'Rating' : 'रेटिंग'}
@@ -1024,7 +1024,7 @@ const TrustedDriver = ({navigation}) => {
                             styles.bookingView,
                             {
                               backgroundColor:
-                                decodedToken?.otr_all_data?.rating?.background,
+                                decodedToken?.otr_all_data?.dcr?.background,
                             },
                           ]}>
                           <Text
@@ -1032,7 +1032,7 @@ const TrustedDriver = ({navigation}) => {
                               styles.bottamRightText,
                               {
                                 color:
-                                  decodedToken?.otr_all_data?.rating?.color,
+                                  decodedToken?.otr_all_data?.dcr?.color,
                               },
                             ]}>
                             {decodedToken &&
@@ -1044,7 +1044,7 @@ const TrustedDriver = ({navigation}) => {
                               styles.bottamRightText,
                               {
                                 color:
-                                  decodedToken?.otr_all_data?.rating?.color,
+                                  decodedToken?.otr_all_data?.dcr?.color,
                               },
                             ]}>
                             {languageSwitch == 'english' ? 'Booking' : 'बुकिंग'}

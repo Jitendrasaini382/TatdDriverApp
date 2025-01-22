@@ -1000,7 +1000,8 @@ const TrustedDriver = ({navigation}) => {
                             style={[
                               styles.bottamRightText,
                               {
-                                color: decodedToken?.otr_all_data?.rating?.color,
+                                color:
+                                  decodedToken?.otr_all_data?.rating?.color,
                               },
                             ]}>
                             {decodedToken &&
@@ -1010,7 +1011,8 @@ const TrustedDriver = ({navigation}) => {
                             style={[
                               styles.bottamRightText,
                               {
-                                color: decodedToken?.otr_all_data?.rating?.color,
+                                color:
+                                  decodedToken?.otr_all_data?.rating?.color,
                               },
                             ]}>
                             {languageSwitch == 'english' ? 'Rating' : 'रेटिंग'}
@@ -1031,8 +1033,7 @@ const TrustedDriver = ({navigation}) => {
                             style={[
                               styles.bottamRightText,
                               {
-                                color:
-                                  decodedToken?.otr_all_data?.dcr?.color,
+                                color: decodedToken?.otr_all_data?.dcr?.color,
                               },
                             ]}>
                             {decodedToken &&
@@ -1043,8 +1044,7 @@ const TrustedDriver = ({navigation}) => {
                             style={[
                               styles.bottamRightText,
                               {
-                                color:
-                                  decodedToken?.otr_all_data?.dcr?.color,
+                                color: decodedToken?.otr_all_data?.dcr?.color,
                               },
                             ]}>
                             {languageSwitch == 'english' ? 'Booking' : 'बुकिंग'}

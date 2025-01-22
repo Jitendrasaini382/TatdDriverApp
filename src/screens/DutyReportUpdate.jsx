@@ -504,7 +504,6 @@ const DutyReportUpdate = ({route, navigation}) => {
 
   const getFirstTimePopupFn = async type => {
     try {
-    
       const response = await GET_FIRST_POPUP_DATA({
         action: 'booking_accepted_duty_report_popup',
         booking_id: bookingNumber,
@@ -512,7 +511,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         type: type,
       });
       setfirstTimePopupData(response?.popupdata);
-     
+
       setfirstTimePopup(true);
     } catch (error) {
     } finally {
@@ -1192,7 +1191,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         </View>
       </Modal>
       {/* on the way popup */}
-      <Modal
+      {/* <Modal
         transparent={true}
         animationType="slide"
         visible={modalVisibleOntheway}
@@ -1258,7 +1257,6 @@ const DutyReportUpdate = ({route, navigation}) => {
                       textAlign: 'center',
                       color: AppColors.mainColor,
                     }}>
-                    {/* I will reach on time */}
                     {popupsData?.popupdata?.ontheway_alert_h3}
                   </Text>
                   <Image
@@ -1279,7 +1277,6 @@ const DutyReportUpdate = ({route, navigation}) => {
                     textAlign: 'center',
                     color: AppColors.mainColor,
                   }}>
-                  {/* Customer's time is very valuable */}
                   {popupsData?.popupdata?.ontheway_alert_p}
                 </Text>
                 <TouchableOpacity
@@ -1296,7 +1293,6 @@ const DutyReportUpdate = ({route, navigation}) => {
                     marginBottom: 120,
                   }}
                   onPress={() => {
-                    // driverOnTheWay();
                     isBookingUpcomming();
                   }}>
                   <Text
@@ -1308,15 +1304,149 @@ const DutyReportUpdate = ({route, navigation}) => {
                     {loaderOntheWay
                       ? 'Please Wait...'
                       : popupsData?.popupdata?.ontheway_alert_btn}
-
-                    {/* On The Way */}
                   </Text>
                 </TouchableOpacity>
               </ScrollView>
             )}
           </View>
         </View>
+      </Modal> */}
+
+      {/* onthewaypopupstart */}
+
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={modalVisibleOntheway}
+        onRequestClose={closeModal}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              backgroundColor: AppColors.white,
+              width: '90%',
+              borderRadius: 10,
+              // padding: 20,
+              elevation: 5,
+              // minHeight: '40%',
+              // flex:.7,
+              alignContent: 'flex-end',
+            }}>
+            {loader ? (
+              <ActivityIndicator size={'small'} color={AppColors.mainColor} />
+            ) : (
+              <View>
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    backgroundColor: AppColors.white,
+                    // borderRadius: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 30,
+                    height: 30,
+                    zIndex: 10,
+                  }}
+                  onPress={closeModal}>
+                  <Icon name="close" size={16} color={AppColors.black} />
+                </TouchableOpacity>
+
+                <View
+                  style={{
+                    backgroundColor: AppColors.mainColor,
+                    padding: 15,
+                    paddingVertical: 30,
+                    borderRadius: 5,
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'Merriweather-Bold',
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      color: AppColors.white,
+                    }}>
+                    {popupsData?.popupdata?.ontheway_alert}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    marginVertical: 10,
+                    paddingHorizontal: 20,
+                    paddingVertical: 10,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      lineHeight: 22,
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      color: AppColors.mainColor,
+                    }}>
+                    {popupsData?.popupdata?.ontheway_alert_h3}
+                  </Text>
+                  <Image
+                    source={Mask}
+                    resizeMode="contain"
+                    style={{
+                      height: 60,
+                      width: 140,
+                      alignSelf: 'center',
+                      marginVertical: 10,
+                    }}
+                  />
+                </View>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    // fontWeight: 'bold',
+                    textAlign: 'center',
+                    color: AppColors.black,
+                  }}>
+                  {popupsData?.popupdata?.ontheway_alert_p}
+                </Text>
+                <TouchableOpacity
+                  disabled={loaderOntheWay}
+                  style={{
+                    backgroundColor: AppColors.mainColor,
+                    marginVertical: 50,
+                    padding: 12,
+                    borderRadius: 6,
+                    width: '60%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginHorizontal: '20%',
+                    marginBottom: 100,
+                  }}
+                  onPress={() => {
+                    isBookingUpcomming();
+                  }}>
+                  <Text
+                    style={{
+                      color: AppColors.white,
+                      fontWeight: '600',
+                      fontSize: 17,
+                      textAlign: 'center',
+                    }}>
+                    {loaderOntheWay
+                      ? 'Please Wait...'
+                      : popupsData?.popupdata?.ontheway_alert_btn}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        </View>
       </Modal>
+
+      {/* onthewaypopupend */}
 
       {/* Is booking Err Modal */}
       <Modal
@@ -1421,7 +1551,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       </Modal>
 
       {/* reach modal */}
-      <Modal
+      {/* <Modal
         transparent={true}
         animationType="slide"
         visible={modalVisibleRich}
@@ -1474,7 +1604,6 @@ const DutyReportUpdate = ({route, navigation}) => {
                     fontSize: 18,
                     color: AppColors.white,
                   }}>
-                  {/* Guests are like God */}
                   {popupsData?.popupdata?.reach_alert}
                 </Text>
               </View>
@@ -1487,7 +1616,6 @@ const DutyReportUpdate = ({route, navigation}) => {
                     color: AppColors.mainColor,
                   }}>
                   {popupsData?.popupdata?.reach_alert_h3}
-                  {/* I have reached the customer's address. */}
                 </Text>
               </View>
               <View style={{marginVertical: 30}}>
@@ -1498,7 +1626,6 @@ const DutyReportUpdate = ({route, navigation}) => {
                     textAlign: 'center',
                     color: AppColors.black,
                   }}>
-                  {/* And ready to provide excellent service. */}
                   {popupsData?.popupdata?.reach_alert_p}
                 </Text>
                 <TouchableOpacity
@@ -1523,7 +1650,121 @@ const DutyReportUpdate = ({route, navigation}) => {
                       fontWeight: '600',
                       textAlign: 'center',
                     }}>
-                    {/* Reach */}
+                    {reachLoader
+                      ? 'Please Wait ...'
+                      : popupsData?.popupdata?.reach_alert_btn}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal> */}
+
+      {/* reachmodalstart */}
+
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={modalVisibleRich}
+        onRequestClose={() => setModalVisibleRich(false)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              backgroundColor: AppColors.white,
+              width: '90%',
+              borderRadius: 10,
+              // padding: 20,
+              elevation: 5,
+            }}>
+            <ScrollView>
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  backgroundColor: AppColors.white,
+                  // borderRadius: 20,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 30,
+                  height: 30,
+                  zIndex: 10,
+                }}
+                onPress={() => {
+                  setModalVisibleRich(false);
+                }}>
+                <Icon name="close" size={16} color={AppColors.black} />
+              </TouchableOpacity>
+              <View
+                style={{
+                  backgroundColor: AppColors.mainColor,
+                  padding: 15,
+                  paddingVertical: 30,
+                  borderRadius: 5,
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Merriweather-Bold',
+                    fontSize: 20,
+                    color: AppColors.white,
+                    fontWeight: 'bold',
+                  }}>
+                  {popupsData?.popupdata?.reach_alert}
+                </Text>
+              </View>
+              <View style={{marginVertical: 20}}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    color: AppColors.mainColor,
+                  }}>
+                  {popupsData?.popupdata?.reach_alert_h3}
+                </Text>
+              </View>
+              <View style={{marginVertical: 30}}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    color: AppColors.black,
+                  }}>
+                  {popupsData?.popupdata?.reach_alert_p}
+                </Text>
+
+                <TouchableOpacity
+                  disabled={reachLoader}
+                  style={{
+                    backgroundColor: AppColors.mainColor,
+                    marginVertical: 50,
+                    padding: 12,
+                    borderRadius: 6,
+                    width: '60%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginHorizontal: '20%',
+                    marginBottom: 100,
+                  }}
+                  onPress={() => {
+                    driverBookingReach();
+                  }}>
+                  <Text
+                    style={{
+                      color: AppColors.white,
+                      fontWeight: '600',
+                      textAlign: 'center',
+                      fontSize: 17,
+                    }}>
                     {reachLoader
                       ? 'Please Wait ...'
                       : popupsData?.popupdata?.reach_alert_btn}
@@ -1535,8 +1776,10 @@ const DutyReportUpdate = ({route, navigation}) => {
         </View>
       </Modal>
 
+      {/* reachmodalend */}
+
       {/* otp send modal */}
-      <Modal
+      {/* <Modal
         transparent={true}
         animationType="slide"
         visible={modalVisibleinput}
@@ -1591,7 +1834,6 @@ const DutyReportUpdate = ({route, navigation}) => {
                       fontSize: 18,
                       color: AppColors.white,
                     }}>
-                    {/* Guests are like God */}
                     {popupsData?.popupdata?.start_alert}
                   </Text>
                 </View>
@@ -1632,7 +1874,6 @@ const DutyReportUpdate = ({route, navigation}) => {
                         const {width} = event.nativeEvent.layout;
                         setTextWidth(width);
                       }}>
-                      {/* Resend OTP? */}
                       {loaderResendOtp
                         ? 'Please Wait...'
                         : popupsData?.popupdata?.resend_otp_text}
@@ -1701,7 +1942,192 @@ const DutyReportUpdate = ({route, navigation}) => {
                         fontWeight: '600',
                         textAlign: 'center',
                       }}>
-                      {/* {Start} */}
+                      {loader
+                        ? 'Please Wait ...'
+                        : popupsData?.popupdata?.start_alert_btn}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
+            )}
+          </View>
+          <Toast visibilityTime={3000} />
+        </View>
+      </Modal> */}
+
+      {/* otpsendmodalstart */}
+
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={modalVisibleinput}
+        onRequestClose={() => setModalVisibleinput(false)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              backgroundColor: AppColors.white,
+              width: '90%',
+              borderRadius: 10,
+              // padding: 20,
+              elevation: 5,
+              // minHeight: 400,
+            }}>
+            {loader ? (
+              <ActivityIndicator
+                color={AppColors.mainColor}
+                style={{flex: 1}}
+                size={'small'}
+              />
+            ) : (
+              <ScrollView keyboardShouldPersistTaps="always">
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    backgroundColor: AppColors.white,
+                    // borderRadius: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 30,
+                    height: 30,
+                    zIndex: 10,
+                  }}
+                  onPress={() => setModalVisibleinput(false)}>
+                  <Icon name="close" size={16} color={AppColors.black} />
+                </TouchableOpacity>
+                <View
+                  style={{
+                    backgroundColor: AppColors.mainColor,
+                    padding: 15,
+                    paddingVertical: 30,
+                    borderRadius: 5,
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'Merriweather-Bold',
+                      fontSize: 20,
+                      color: AppColors.white,
+                    }}>
+                    {popupsData?.popupdata?.start_alert}
+                  </Text>
+                </View>
+
+                <View style={{padding: 20}}>
+                  <TextInput
+                    style={{
+                      borderColor: '#c4c4be',
+                      borderWidth: 1.5,
+                      borderRadius: 8,
+                      paddingHorizontal: 10,
+                      fontSize: 16,
+                      color: '#333',
+                      backgroundColor: '#fff',
+                      marginTop: 20,
+                      padding: 10,
+                    }}
+                    placeholder="Enter Otp"
+                    placeholderTextColor="#aaa"
+                    value={inputValue}
+                    maxLength={4}
+                    keyboardType="number-pad"
+                    onChangeText={text => setInputValue(text)}
+                  />
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      marginBottom: 10,
+                    }}>
+                    <TouchableOpacity
+                      disabled={loaderResendOtp}
+                      onPress={() => dutyReportResendOtp()}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontWeight: '400',
+                          color: AppColors.mainColor,
+                        }}
+                        onLayout={event => {
+                          const {width} = event.nativeEvent.layout;
+                          setTextWidth(width);
+                        }}>
+                        {loaderResendOtp
+                          ? 'Please Wait...'
+                          : popupsData?.popupdata?.resend_otp_text}
+                      </Text>
+                    </TouchableOpacity>
+                    <View
+                      style={{
+                        marginTop: 2,
+                        height: 1,
+                        backgroundColor: AppColors.mainColor,
+                        width: textWidth,
+                      }}
+                    />
+                  </View>
+
+                  {popupsData?.popupdata?.start_kms_eligibility == '1' && (
+                    <TextInput
+                      style={{
+                        borderColor: '#c4c4be',
+                        borderWidth: 1.5,
+                        borderRadius: 8,
+                        paddingHorizontal: 10,
+                        fontSize: 16,
+                        color: '#333',
+                        backgroundColor: '#fff',
+                        marginTop: 20,
+                        padding: 10,
+                      }}
+                      placeholder={
+                        popupsData?.popupdata?.start_kms_placeholder_text ||
+                        'Enter Start KM'
+                      }
+                      placeholderTextColor="#aaa"
+                      value={inputKmsValue}
+                      keyboardType="number-pad"
+                      onChangeText={text => setInputKmsValue(text)}
+                    />
+                  )}
+                </View>
+
+                <View style={{marginVertical: 5}}>
+                  <TouchableOpacity
+                    disabled={loader}
+                    style={{
+                      backgroundColor: AppColors.mainColor,
+                      marginTop: '20%',
+                      padding: 12,
+                      borderRadius: 6,
+                      width: '60%',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginHorizontal: '20%',
+                      marginBottom: 50,
+                    }}
+                    // onPress={() => {
+                    //   driverReached();
+                    // }}
+                    onPress={() => {
+                      if (popupsData?.popupdata?.start_kms_eligibility == '1') {
+                        showStartAlert();
+                      } else {
+                        driverReached();
+                      }
+                    }}>
+                    <Text
+                      style={{
+                        color: AppColors.white,
+                        fontWeight: '600',
+                        textAlign: 'center',
+                      }}>
                       {loader
                         ? 'Please Wait ...'
                         : popupsData?.popupdata?.start_alert_btn}
@@ -1715,8 +2141,10 @@ const DutyReportUpdate = ({route, navigation}) => {
         </View>
       </Modal>
 
+      {/* otpsendmodalend */}
+
       {/* End Modal */}
-      <Modal
+      {/* <Modal
         transparent={true}
         animationType="slide"
         visible={modalVisibleEnd}
@@ -1767,7 +2195,6 @@ const DutyReportUpdate = ({route, navigation}) => {
                     fontSize: 18,
                     color: AppColors.white,
                   }}>
-                  {/* Guests are like God */}
                   {popupsData?.popupdata?.end_alert}
                 </Text>
               </View>
@@ -1861,7 +2288,164 @@ const DutyReportUpdate = ({route, navigation}) => {
                       fontWeight: '600',
                       textAlign: 'center',
                     }}>
-                    {/* End */}
+                    {endModalLoader
+                      ? 'Please Wait...'
+                      : popupsData?.popupdata?.end_alert_btn}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal> */}
+
+      {/* endmodalstart */}
+
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={modalVisibleEnd}
+        onRequestClose={() => setModalVisibleEnd(false)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              backgroundColor: AppColors.white,
+              width: '90%',
+              borderRadius: 10,
+              // padding: 20,
+              elevation: 5,
+              // minHeight: 400,
+            }}>
+            <ScrollView keyboardShouldPersistTaps="always">
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  backgroundColor: AppColors.white,
+                  // borderRadius: 20,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 30,
+                  height: 30,
+                  zIndex: 10,
+                }}
+                onPress={() => setModalVisibleEnd(false)}>
+                <Icon name="close" size={16} color={AppColors.black} />
+              </TouchableOpacity>
+              <View
+                style={{
+                  backgroundColor: AppColors.mainColor,
+                  padding: 15,
+                  paddingVertical: 30,
+                  borderRadius: 5,
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Merriweather-Bold',
+                    fontSize: 18,
+                    color: AppColors.white,
+                  }}>
+                  {popupsData?.popupdata?.end_alert}
+                </Text>
+              </View>
+              <View style={{marginVertical: 10, padding: 20}}>
+                {popupsData?.popupdata?.end_kms_eligibility == '1' && (
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      marginVertical: 10,
+                      textAlign: 'center',
+                      color: AppColors.whatsAppIconColor,
+                    }}>
+                    Package - {popupsData?.popupdata?.Package}
+                  </Text>
+                )}
+                {popupsData?.popupdata?.end_kms_eligibility == '1' && (
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      marginVertical: 10,
+                      color: AppColors.whatsAppIconColor,
+                    }}>
+                    Start Meter Reading -{' '}
+                    {popupsData?.popupdata?.start_meter_reading} KMs
+                  </Text>
+                )}
+                {popupsData?.popupdata?.end_kms_eligibility == '1' ? (
+                  <TextInput
+                    style={{
+                      borderColor: '#c4c4be',
+                      borderWidth: 1.5,
+                      borderRadius: 8,
+                      paddingHorizontal: 10,
+                      fontSize: 16,
+                      color: '#333',
+                      backgroundColor: '#fff',
+                      marginVertical: 10,
+                      padding: 10,
+                    }}
+                    placeholder={
+                      popupsData?.popupdata?.end_kms_placeholder_text ||
+                      'Enter End KMS'
+                    }
+                    placeholderTextColor="#aaa"
+                    value={inputEndKmsValue}
+                    onChangeText={text => setInputEndKmsValue(text)}
+                  />
+                ) : (
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      color: AppColors.mainColor,
+                      marginVertical: 10,
+                    }}>
+                    {popupsData?.popupdata?.end_alert_h3}
+                  </Text>
+                )}
+              </View>
+              <View style={{marginVertical: 10}}>
+                <TouchableOpacity
+                  disabled={endModalLoader}
+                  style={{
+                    backgroundColor: AppColors.mainColor,
+                    marginTop: 20,
+                    padding: 12,
+                    borderRadius: 6,
+                    width: '60%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginHorizontal: '20%',
+                    marginBottom: 30,
+                  }}
+                  // onPress={() => {
+                  //   bookingEnd(popupsData?.popupdata?.start_meter_reading);
+                  // }}
+                  onPress={() => {
+                    if (popupsData?.popupdata?.end_kms_eligibility == '1') {
+                      showEndAlert(popupsData?.popupdata?.start_meter_reading);
+                    } else {
+                      bookingEnd(popupsData?.popupdata?.start_meter_reading);
+                    }
+                  }}>
+                  <Text
+                    style={{
+                      color: AppColors.white,
+                      fontWeight: '600',
+                      textAlign: 'center',
+                    }}>
                     {endModalLoader
                       ? 'Please Wait...'
                       : popupsData?.popupdata?.end_alert_btn}
@@ -1872,6 +2456,8 @@ const DutyReportUpdate = ({route, navigation}) => {
           </View>
         </View>
       </Modal>
+
+      {/* endmodalend */}
     </SafeAreaView>
   );
 };

@@ -76,12 +76,12 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    marginLeft: 15,
+    marginLeft: 12,
     height: 80,
     justifyContent: 'center',
   },
   text: {
-    fontSize: 16,
+    fontSize: 15,
     color: AppColors.black,
   },
 });

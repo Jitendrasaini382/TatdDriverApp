@@ -33,6 +33,7 @@ const TicketsDriver = ({navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
   const [buttonShow, setButtonShow] = useState(false);
   const [showButtonText, setShowButtonText] = useState('');
+  const [error, setError] = useState('');
 
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
@@ -114,7 +115,20 @@ const TicketsDriver = ({navigation}) => {
 
   const handleCreateTicket = async () => {
     if (!field.remarks) {
-      Alert.alert('Error', 'Please enter remarks');
+      setError(
+        languageSwitch == 'hindi'
+          ? 'कृपया अपनी समस्या लिखें।'
+          : 'Please Enter Your Problem',
+      );
+      return;
+    }
+
+    if (field.remarks.length < 50) {
+      setError(
+        languageSwitch == 'hindi'
+          ? 'कृपया पूरी समस्या सही से बताएं।'
+          : 'Please Enter Minimum 50 Characters.',
+      );
       return;
     }
 
@@ -132,12 +146,13 @@ const TicketsDriver = ({navigation}) => {
           await createTicket();
         } else {
           Alert.alert('Error', checkResponse.message);
+          setError('');
         }
       } else {
         await createTicket();
       }
     } catch (error) {
-      Alert.alert('Error', 'An unexpected error occurred. Please try again.');
+      Alert.alert('Error', 'Internal server error');
     }
   };
 
@@ -154,6 +169,7 @@ const TicketsDriver = ({navigation}) => {
         showDriverTicket();
 
         resetFields();
+        setError('');
 
         Alert.alert('Success', createResponse.message, [
           {
@@ -167,7 +183,7 @@ const TicketsDriver = ({navigation}) => {
         Alert.alert('Error', 'Internal server error');
       }
     } catch (error) {
-      Alert.alert('Error', error?.message);
+    //   Alert.alert('Error', error?.message);
     }
   };
 
@@ -329,6 +345,7 @@ const TicketsDriver = ({navigation}) => {
                 value={field.remarks}
                 onChangeText={value => handleChange('remarks', value)}
               />
+              <Text style={{color: 'red'}}>{error}</Text>
 
               <TouchableOpacity
                 onPress={handleCreateTicket}

@@ -117,7 +117,7 @@ const FlexibleBookingAcceptModal = ({setOpenModal, booking}) => {
           <TouchableOpacity
             onPress={() => acceptBooking()}
             style={styles.applyButton}>
-            <Text style={styles.applyButtonText}>Apply</Text>
+            <Text style={styles.applyButtonText}>Accept</Text>
           </TouchableOpacity>
         </View>
       </View>

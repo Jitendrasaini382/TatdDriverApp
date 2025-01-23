@@ -31,6 +31,7 @@ import DueAmountDetails from '../../screens/DueAmountDetails';
 import RateUsAtSocialMedia from '../../screens/RateUsAtSocialMedia';
 import DueAmount from '../../screens/DueAmount';
 import CommanWebview from '../../screens/CommanWebview';
+import RedirectPopUp from '../../screens/RedirectPopUp';
 
 const Stack = createStackNavigator();
 
@@ -113,6 +114,7 @@ const PrivateRoute = () => {
           <Stack.Screen name="SelectYourCity" component={SelectYourCity} />
           <Stack.Screen name="AgentLeads" component={AgentLeads} />
           <Stack.Screen name="CommanWebview" component={CommanWebview} />
+          <Stack.Screen name="RedirectPopUp" component={RedirectPopUp} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

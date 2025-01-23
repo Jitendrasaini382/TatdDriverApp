@@ -40,6 +40,11 @@ const DueAmountDetails = ({route, navigation}) => {
         booking_number: number,
       });
 
+      // console.log(
+      //   response?.invoice_data?.rate_your_customer_flag,
+      //   'responseresponse driver invoice',
+      // );
+
       setAllInvoiceData(response);
     } catch (response) {
     } finally {
@@ -814,26 +819,28 @@ const DueAmountDetails = ({route, navigation}) => {
             {allInvoiceData?.invoice_data?.company_details}
           </Text> */}
         </View>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('RateYourCustomer', {
-              bookingNumber: bookingNumber,
-            })
-          }
-          style={{
-            backgroundColor: AppColors.mainColor,
-            padding: 10,
-            alignItems: 'center',
-            borderRadius: 5,
-            width: '90%',
-            marginHorizontal: '5%',
-            marginVertical: 30,
-            //alignSelf:'center'
-          }}>
-          <Text style={{color: '#ffffff', fontSize: 15}}>
-            Rate Your Customer
-          </Text>
-        </TouchableOpacity>
+        {allInvoiceData?.invoice_data?.rate_your_customer_flag == 0 && (
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('RateYourCustomer', {
+                bookingNumber: bookingNumber,
+              })
+            }
+            style={{
+              backgroundColor: AppColors.mainColor,
+              padding: 10,
+              alignItems: 'center',
+              borderRadius: 5,
+              width: '90%',
+              marginHorizontal: '5%',
+              marginVertical: 30,
+              //alignSelf:'center'
+            }}>
+            <Text style={{color: '#ffffff', fontSize: 15}}>
+              Rate Your Customer
+            </Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

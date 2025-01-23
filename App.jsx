@@ -14,7 +14,7 @@ import messaging from '@react-native-firebase/messaging';
 import store from './src/redux/store';
 import {persistStore} from 'redux-persist';
 import {PersistGate} from 'redux-persist/integration/react';
-import notifee, {AndroidImportance} from '@notifee/react-native';
+import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
 import NetInfo from '@react-native-community/netinfo';
 import {AppColors} from './src/assets/Colors';
 import {checkVibrationSupport} from './src/utils/permissions';
@@ -41,13 +41,13 @@ const App = () => {
         vibrationPattern: [300, 500],
         importance: AndroidImportance.HIGH,
       });
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   // Handle incoming messages
   const handleIncomingMessages = () => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
+      console.log(remoteMessage, 'remoteMessageremoteMessage app.js');
 
       const sound_ = remoteMessage?.data?.sound || 'tatd_driver_three_time';
 
@@ -65,8 +65,7 @@ const App = () => {
         playSound(sound_);
         checkVibrationSupport(10000);
         triggerVibration();
-      } catch (error) {
-      }
+      } catch (error) {}
     });
 
     return unsubscribe;
@@ -101,6 +100,7 @@ const App = () => {
   // useEffect hooks
   useEffect(() => {
     createNotificationChannel();
+    checkInitialNotification();
   }, []);
 
   useEffect(() => {
@@ -109,12 +109,27 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    checkInitialNotification();
+    const unsubscribeNetInfo = monitorNetworkConnection();
+    return () => unsubscribeNetInfo();
   }, []);
 
   useEffect(() => {
-    const unsubscribeNetInfo = monitorNetworkConnection();
-    return () => unsubscribeNetInfo();
+    // Set up foreground event listener
+    const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
+      switch (type) {
+        case EventType.PRESS:
+          console.log('Notification pressed in foreground:', detail);
+          break;
+        case EventType.DISMISSED:
+          console.log('Notification dismissed in foreground:', detail);
+          break;
+        default:
+          console.log('Unhandled event in foreground:', type);
+          break;
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   return (

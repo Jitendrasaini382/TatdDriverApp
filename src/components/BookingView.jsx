@@ -81,8 +81,8 @@ const BookingView = ({data, allBookingData, panelData}) => {
       </View>
 
       <RoundTripBookingView allBookingData={allBookingData} />
-      <PermanentBookingView />
       <FlexibleBookingView />
+      <PermanentBookingView />
     </View>
   );
 };

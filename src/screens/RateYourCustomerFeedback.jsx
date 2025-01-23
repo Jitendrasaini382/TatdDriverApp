@@ -37,9 +37,18 @@ const RateYourCustomerFeedback = ({navigation, route}) => {
 
       setLoading(false);
       if (response?.status_code == 200) {
-        navigation.navigate('RateUsAtSocialMedia', {
-          bookingNumber: bookingNumber,
-        });
+        if (response?.data?.capturesocialmediarating == 0) {
+          navigation.navigate('RedirectPopUp', {
+            bookingNumber: bookingNumber,
+            data: response?.data?.redirect_popup_content,
+          });
+        } else {
+          navigation.navigate('RateUsAtSocialMedia', {
+            bookingNumber: bookingNumber,
+          });
+        }
+      } else {
+        setError('Something went wrong. Please try again later. if ');
       }
     } catch (err) {
       setError('Something went wrong. Please try again later.');
@@ -49,7 +58,7 @@ const RateYourCustomerFeedback = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <View style={{backgroundColor: 'white', height: '100%'}}>
+      <View style={{backgroundColor: AppColors.white, height: '100%'}}>
         <Header backButton={true} />
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

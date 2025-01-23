@@ -508,6 +508,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         current_language: languageSwitch,
         type: type,
       });
+
       setfirstTimePopupData(response?.popupdata);
 
       setfirstTimePopup(true);
@@ -1387,7 +1388,7 @@ const DutyReportUpdate = ({route, navigation}) => {
               <View style={{marginVertical: 20, padding: 15}}>
                 <Text
                   style={{
-                    color: AppColors.black,
+                    color: AppColors.red,
                     textAlign: 'center',
                     fontSize: 14,
                     fontFamily: AppFont.regularFont,

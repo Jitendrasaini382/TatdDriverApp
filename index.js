@@ -6,6 +6,8 @@ import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
 import {playSound} from './src/utils/soundVibration';
 import {checkVibrationSupport} from './src/utils/permissions';
 
+
+
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('Message handled in the background!', remoteMessage);
   // await createNotificationChannel();
@@ -33,7 +35,7 @@ notifee.onBackgroundEvent(async ({type, detail}) => {
     case EventType.PRESS:
       console.log('Notification pressed in background:', detail);
       // Handle notification press, e.g., navigate to a specific screen
-      // Alert.alert('ooo');
+     
       
       break;
     case EventType.DISMISSED:

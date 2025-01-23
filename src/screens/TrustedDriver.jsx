@@ -151,8 +151,8 @@ const TrustedDriver = ({navigation}) => {
       getHeadlineData();
       getHomeNotification();
       getHomeNotice();
-      getPopup();
       if (isRfdOn) {
+        getPopup();
         getAllOndemandBookings();
         getAllTrustedData();
       }
@@ -188,9 +188,9 @@ const TrustedDriver = ({navigation}) => {
 
   useEffect(() => {
     if (jwt) {
-      // if (isRfdOn) {
-      getPopup();
-      // }
+      if (isRfdOn) {
+        getPopup();
+      }
       getHeadlineData();
       if (isRfdOn) {
         getAllOndemandBookings();

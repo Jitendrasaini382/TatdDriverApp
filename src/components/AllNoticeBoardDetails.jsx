@@ -266,7 +266,7 @@ export const NoticeBoardDetailScreen = ({route}) => {
                         paddingVertical: 12,
                         borderRadius: 8,
                         alignItems: 'center',
-                        marginTop: 50,
+                        marginTop: 20,
                         marginBottom: 5,
                       }}>
                       <Text
@@ -288,7 +288,7 @@ export const NoticeBoardDetailScreen = ({route}) => {
                         paddingVertical: 12,
                         borderRadius: 8,
                         alignItems: 'center',
-                        marginTop: 50,
+                        marginTop: 20,
                         marginBottom: 5,
                       }}>
                       <Text

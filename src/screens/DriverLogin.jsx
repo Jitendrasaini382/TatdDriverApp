@@ -116,6 +116,8 @@ const DriverLogin = () => {
     setModalVisible(false);
   };
   const handleOpen = () => {
+    console.log(hasModalOpened, 'hasModalOpenedhasModalOpened');
+
     if (
       simInfo.length > 0 &&
       !simInfo.includes('Please Allow The Permission')
@@ -159,6 +161,7 @@ const DriverLogin = () => {
         app_version: appVersion,
         app_type: appType,
       });
+      setHasModalOpened(false);
       if (response?.status_code == '200' && response?.msg_type == 'error') {
         setLoader(false);
         Alert.alert(response?.message);
@@ -186,6 +189,10 @@ const DriverLogin = () => {
       setLoader(false);
     }
   };
+
+  useEffect(() => {
+    handleOpen();
+  }, []);
 
   const insets = useSafeAreaInsets();
   return (
@@ -278,7 +285,7 @@ const DriverLogin = () => {
           </View>
         </View>
 
-        <Modal
+        {/* <Modal
           visible={isModalVisible}
           transparent={true}
           onRequestClose={handleClose}
@@ -410,6 +417,86 @@ const DriverLogin = () => {
                 You can update your phone number sharing preference in your
                 device settings
               </Text>
+            </View>
+          </View>
+        </Modal> */}
+
+        <Modal
+          visible={isModalVisible}
+          transparent={true}
+          onRequestClose={handleClose}
+          animationType="slide">
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              justifyContent: 'center', // Center the modal vertically
+              alignItems: 'center', // Center the modal horizontally
+            }}>
+            <View
+              style={{
+                width: '90%',
+                backgroundColor: 'white',
+                borderRadius: 10,
+                padding: 20,
+                elevation: 5,
+              }}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                  marginBottom: 20,
+                  color: AppColors.black,
+                }}>
+                Continue with
+              </Text>
+
+              <FlatList
+                data={simInfo}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: 15,
+                    }}
+                    onPress={() => handleSetNumber(item.toString())}>
+                    <View
+                      style={{
+                        backgroundColor: 'grey', // Set gray background for call icon
+                        borderRadius: 18,
+                        height: 36,
+                        width: 36,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginRight: 15,
+                      }}>
+                      <Icon name="phone" size={20} color="white" />
+                      {/* Icon color set to white */}
+                    </View>
+                    <Text style={{fontSize: 18, color: AppColors.black}}>
+                      {item}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              />
+
+              <TouchableOpacity
+                onPress={() => handleClose()}
+                style={{
+                  marginTop: 20,
+                  alignSelf: 'flex-start', // Align text to the left
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: AppColors.primary, // Color for "None of the Above"
+                    fontWeight: 'bold',
+                  }}>
+                  NONE OF THE ABOVE
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>

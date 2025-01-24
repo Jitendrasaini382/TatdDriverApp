@@ -32,6 +32,7 @@ import RateUsAtSocialMedia from '../../screens/RateUsAtSocialMedia';
 import DueAmount from '../../screens/DueAmount';
 import CommanWebview from '../../screens/CommanWebview';
 import RedirectPopUp from '../../screens/RedirectPopUp';
+import {navigationRef} from '../../utils/navigationRef';
 
 const Stack = createStackNavigator();
 
@@ -47,7 +48,7 @@ const PrivateRoute = () => {
         hidden={false}
       />
 
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <Stack.Navigator
           initialRouteName={SplashScreen}
           screenOptions={{

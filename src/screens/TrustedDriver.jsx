@@ -668,11 +668,20 @@ const TrustedDriver = ({navigation}) => {
     } catch (err) {}
   };
 
+  // const showVideoContent = () => {
+
+  //   if (videosContent) {
+  //     dispatch(setLoginStatus(false));
+  //   } else {
+  //     dispatch(setLoginStatus(true));
+  //     dispatch(setVideosContent(true));
+  //   }
+  // };
   const showVideoContent = () => {
-    if (videosContent) {
+    if (!videosContent) { // Only run when videosContent is false
+      dispatch(setVideosContent(true));
       dispatch(setLoginStatus(false));
     }
-    dispatch(setVideosContent(true));
   };
 
   return (

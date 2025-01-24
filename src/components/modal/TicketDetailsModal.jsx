@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 7,
     alignContent: 'flex-start',
-    fontSize: 17,
+    fontSize: 15,
     padding: 5,
     alignItems: 'center',
     alignSelf: 'center',

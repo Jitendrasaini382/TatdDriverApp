@@ -129,30 +129,6 @@ export const NotificationDetailScreen = ({route}) => {
   const [loader, setLoader] = useState(false);
   const [bottamButtonText, setBottamButtonText] = useState({});
 
-  const storeRating = useSelector(e => e?.globalSlice?.storeRating);
-
-  const [feedback, setFeedback] = useState('');
-  const [currentDateTime, setCurrentDateTime] = useState('');
-
-  useEffect(() => {
-    const updateDateTime = () => {
-      const now = new Date();
-      setCurrentDateTime(now.toISOString().slice(0, 19).replace('T', ' '));
-    };
-
-    updateDateTime();
-    const timer = setInterval(updateDateTime, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const shouldShowRating = useCallback(() => {
-    return (
-      notification.headline_type === 'Driver Ticket' &&
-      notification.support_id > 0 &&
-      currentDateTime < notification.end_date
-    );
-  }, [notification, currentDateTime]);
-
   const viewHeadline = useCallback(async () => {
     setLoader(true);
     try {
@@ -168,53 +144,11 @@ export const NotificationDetailScreen = ({route}) => {
     } finally {
       setLoader(false);
     }
-  }, [notificationId, storeRating]);
-
-  const saveBookingExperience = useCallback(
-    async newRating => {
-      try {
-        const response = await DRIVER_NOTIFICATION({
-          action: 'save_booking_experience',
-          headline_id: notificationId,
-          rate: newRating,
-        });
-        Alert.alert('Success', response.message);
-        dispatch(setStoredRating(response.rate));
-      } catch (error) {
-        Alert.alert(
-          'Error',
-          'Failed to save booking experience. Please try again.',
-        );
-      }
-    },
-    [notificationId, storeRating],
-  );
+  }, [notificationId]);
 
   useEffect(() => {
     viewHeadline();
   }, [viewHeadline]);
-
-  const handleStarPress = useCallback(
-    selectedRating => {
-      dispatch(setStoredRating(selectedRating));
-      saveBookingExperience(selectedRating);
-    },
-    [saveBookingExperience, storeRating],
-  );
-
-  const saveBookingRemarks = useCallback(async () => {
-    try {
-      const response = await DRIVER_NOTIFICATION({
-        action: 'save_booking_experience_remarks',
-        headline_id: notificationId,
-        remarks: feedback,
-      });
-      Alert.alert(response.message);
-      setFeedback('');
-    } catch (error) {
-      Alert.alert('Error', 'Failed to save booking remarks. Please try again.');
-    }
-  }, [notificationId, feedback]);
 
   const clickStoreHomeNotification = async id => {
     try {
@@ -338,53 +272,6 @@ export const NotificationDetailScreen = ({route}) => {
                 </View>
               </View>
             </View>
-
-            {shouldShowRating() && (
-              <>
-                <Text style={styles.rateResponseText}>Rate Our Response ?</Text>
-
-                <View style={styles.starContainer}>
-                  {[1, 2, 3, 4, 5].map(star => (
-                    <TouchableOpacity
-                      key={star}
-                      onPress={() => handleStarPress(star)}
-                      style={styles.starButton}>
-                      <Icon
-                        name={star <= storeRating ? 'star' : 'star-o'}
-                        size={30}
-                        color={AppColors.mainColor}
-                      />
-                    </TouchableOpacity>
-                  ))}
-                </View>
-
-                <View style={styles.extraView}>
-                  <View>
-                    <View style={styles.feedbackInputContainer}>
-                      <TextInput
-                        style={styles.inputType}
-                        placeholder="Type your feedback here..."
-                        value={feedback}
-                        onChangeText={setFeedback}
-                        placeholderTextColor={AppColors.black}
-                        multiline
-                      />
-                    </View>
-
-                    <TouchableOpacity
-                      style={styles.btnView}
-                      onPress={saveBookingRemarks}>
-                      <Icon
-                        size={20}
-                        color={AppColors.mainColor}
-                        name="paper-plane"
-                        style={styles.IconType}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </>
-            )}
           </ScrollView>
         )
       )}

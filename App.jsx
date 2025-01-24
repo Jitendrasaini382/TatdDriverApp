@@ -19,6 +19,7 @@ import NetInfo from '@react-native-community/netinfo';
 import {AppColors} from './src/assets/Colors';
 import {checkVibrationSupport} from './src/utils/permissions';
 import {playSound, triggerVibration} from './src/utils/soundVibration';
+import { navigate } from './src/utils/navigationRef';
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -118,13 +119,15 @@ const App = () => {
     const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
       switch (type) {
         case EventType.PRESS:
-          console.log('Notification pressed in foreground:', detail);
+          console.log('Notification pressed in foreground: app.js', detail);
+          navigate('TrustedDriver');
+          console.log("pressed navigateee app.js");
           break;
         case EventType.DISMISSED:
-          console.log('Notification dismissed in foreground:', detail);
+          console.log('Notification dismissed in foreground: app.js', detail);
           break;
         default:
-          console.log('Unhandled event in foreground:', type);
+          console.log('Unhandled event in foreground: app.js', type);
           break;
       }
     });

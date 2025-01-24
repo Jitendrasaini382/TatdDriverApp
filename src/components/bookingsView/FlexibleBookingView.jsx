@@ -22,37 +22,42 @@ const {width} = Dimensions.get('window');
 const BookingCard = ({booking, index, total}) => {
   const [openModal, setOpenModal] = useState(false);
 
+  if (!booking || booking.length === 0) {
+    return null;
+  }
+
   return (
     <View style={styles.card}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Text style={styles.days}>{booking.days} Days | </Text>
+          <Text style={styles.days}>{booking?.days} Days | </Text>
           <Text style={styles.price}>
-            Rs {booking.rs} | {booking.payment_mode}
+            Rs {booking?.rs} | {booking?.payment_mode}
           </Text>
         </View>
         <View style={styles.vehicleType}>
           <Icon color={AppColors.mainColor} name="car" />
-          <Text style={styles.vehicleText}>{booking.vehicle_type}</Text>
+          <Text style={styles.vehicleText}>{booking?.vehicle_type}</Text>
         </View>
       </View>
-      <Text style={styles.title}>{booking.pickup_address}</Text>
+      <Text style={styles.title}>{booking?.pickup_address}</Text>
 
       <View style={styles.dates}>
-        <Text style={styles.dateText}>{booking.date_wie.join(' | ')}</Text>
+        <Text style={styles.dateText}>{booking?.date_wie.join(' | ')}</Text>
       </View>
 
       <View style={styles.times}>
-        {booking.time_wie.map((time, idx) => (
+        {booking?.time_wie.map((time, idx) => (
           <Text key={idx} style={styles.timeText}>
             {time}
           </Text>
         ))}
       </View>
+
       <View style={styles.footer}>
         <Text style={styles.footerText}>
-          <Text style={{fontSize: 20}}>Rs {booking.budget} </Text>
-          {booking.hours_day} Hours/day
+          <Text style={{fontSize: 20}}>Rs {booking?.budget} </Text>
+          {booking?.hours_day} Hours/day
         </Text>
         <TouchableOpacity
           onPress={() => {
@@ -201,10 +206,12 @@ const styles = StyleSheet.create({
   timeText: {
     backgroundColor: '#fff',
     borderRadius: 5,
-    padding: 5,
+    padding: 4,
     color: AppColors.black,
-    margin: 2,
+    fontSize: 9,
+    margin: 1.5,
   },
+
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

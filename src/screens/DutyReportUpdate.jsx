@@ -47,6 +47,7 @@ const DutyReportUpdate = ({route, navigation}) => {
   const {bookingNumber, state} = route?.params;
   const isFirstTimeVisit = route?.params?.isFirstTime;
   const isType = route?.params?.isType;
+  const [cancelState, setCancelState] = useState(state);
   const [modalVisibleOntheway, setModalVisibleOntheway] = useState(false);
   const [loaderOntheWay, setLoaderOntheWay] = useState(false);
   const [modalVisibleRich, setModalVisibleRich] = useState(false);
@@ -214,10 +215,14 @@ const DutyReportUpdate = ({route, navigation}) => {
         current_language: languageSwitch,
       });
 
-      setbookingInfo(response?.duty_report_booking_info);
-      const statusId =
-        response?.duty_report_booking_info?.condition?.next_booking_status_id;
-      if (statusId != '') dutyReportTripStatusPopup(statusId);
+      if (response?.status_code == '200' && response?.message_type == 'error') {
+        setCancelState('cancel');
+      } else {
+        setbookingInfo(response?.duty_report_booking_info);
+        const statusId =
+          response?.duty_report_booking_info?.condition?.next_booking_status_id;
+        if (statusId != '') dutyReportTripStatusPopup(statusId);
+      }
     } catch (error) {
     } finally {
       setMainLoader(false);
@@ -252,9 +257,15 @@ const DutyReportUpdate = ({route, navigation}) => {
         trip_status: bookingInfo?.condition?.next_booking_status_id,
       });
 
-      if (response?.redirect?.redirect == 'duty_report') {
-        GetAllBookingInfo();
-        setacceptBookingPopup(false);
+      if (response?.redirect == 'duty_report') {
+        console.log('runnn end duty report dutyReportBookingAccept', response);
+        if (response?.message_type == 'error') {
+          setCancelState('cancel');
+          setacceptBookingPopup(false);
+        } else {
+          GetAllBookingInfo();
+          setacceptBookingPopup(false);
+        }
       }
 
       GetAllBookingInfo();
@@ -274,6 +285,9 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [popupsData, setpopupsData] = useState({});
 
   const dutyReportTripStatusPopup = async statusId => {
+    if (!statusId) {
+      return null;
+    }
     setLoader(true);
     try {
       const response = await DUTY_REPORT_TRIP_STATUS_POPUP_VIEW({
@@ -303,6 +317,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         setisBookingApiErrPopup(true);
         setModalVisibleOntheway(false);
         setisBookingApiPopupMsge(res?.upcoming_booking_data);
+        GetAllBookingInfo()
         return false;
       } else {
         driverOnTheWay();
@@ -330,6 +345,18 @@ const DutyReportUpdate = ({route, navigation}) => {
 
   const driverBookingReach = async () => {
     setReachLoader(true);
+
+    console.log(
+      {
+        action: 'duty_report_booking_reach',
+        booking_id: bookingNumber,
+        current_language: languageSwitch,
+        trip_status: bookingInfo?.condition?.next_booking_status_id,
+        // trip_status: 20,
+      },
+      'sending language booking reach',
+    );
+
     try {
       const res = await DRIVER_BOOKING_REACH({
         action: 'duty_report_booking_reach',
@@ -338,9 +365,16 @@ const DutyReportUpdate = ({route, navigation}) => {
         trip_status: bookingInfo?.condition?.next_booking_status_id,
         // trip_status: 20,
       });
-      if (res?.redirect?.redirect == 'duty_report') {
-        GetAllBookingInfo();
-        setModalVisibleRich(false);
+
+      if (res?.redirect == 'duty_report') {
+        console.log('runnn end duty report booking reach', res);
+        if (res?.message_type == 'error') {
+          setCancelState('cancel');
+          setModalVisibleRich(false);
+        } else {
+          GetAllBookingInfo();
+          setModalVisibleRich(false);
+        }
       }
       setModalVisibleRich(false);
       // setModalVisibleinput(true);
@@ -395,9 +429,21 @@ const DutyReportUpdate = ({route, navigation}) => {
         start_kms: inputKmsValue,
         otp: inputValue,
       });
-      if (res?.redirect?.redirect == 'duty_report') {
-        GetAllBookingInfo();
-        setModalVisibleinput(false);
+
+      console.log(
+        res?.redirect,
+        'res?.redirect?.redirectres?.redirect?.redirect  reached',
+      );
+      if (res?.redirect == 'duty_report') {
+        console.log('runnn end duty report driver reached', res);
+
+        if (res?.message_type == 'error') {
+          setCancelState('cancel');
+          setModalVisibleinput(false);
+        } else {
+          GetAllBookingInfo();
+          setModalVisibleinput(false);
+        }
       }
       if (
         res?.start_booking_message &&
@@ -461,9 +507,19 @@ const DutyReportUpdate = ({route, navigation}) => {
       });
 
       setInputEndKmsValue('');
+
+      console.log(res?.redirect, 'res?.redirectres?.redirect endddddddd');
+
       if (res?.redirect == 'duty_report') {
-        GetAllBookingInfo();
-        setModalVisibleEnd(false);
+        console.log('runnn end duty report booking end', res);
+        if (res?.message_type == 'error') {
+          setCancelState('cancel');
+          setModalVisibleEnd(false);
+        } else {
+          GetAllBookingInfo();
+          setModalVisibleEnd(false);
+        }
+
         return false;
       } else {
         if (res?.message_type == 'error') {
@@ -550,13 +606,19 @@ const DutyReportUpdate = ({route, navigation}) => {
         flexDirection: 'column',
         backgroundColor: AppColors.white,
       }}>
-      <Header backButton={true} />
+      <Header
+        backButton={true}
+        customeNavigation={{
+          name: 'TrustedDriver',
+        }}
+      />
+
       <Toast visibilityTime={5000} topOffset={50} />
       {mainLoader ? (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <ActivityIndicator size={'small'} color={AppColors.mainColor} />
         </View>
-      ) : state === 'cancel' ? (
+      ) : cancelState === 'cancel' ? (
         <View
           style={{
             marginTop: 30,
@@ -588,7 +650,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                 }}>
                 {languageSwitch === 'english'
                   ? 'Booking is Already Cancelled'
-                  : 'बुकिंग पहले ही Cancelled कर दी गई है।'}
+                  : 'बुकिंग पहले ही कैंसिल कर दी गई है।'}
               </Text>
             </View>
           </View>
@@ -1082,7 +1144,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         <View
           style={{
             flex: 1,
-            justifyContent: 'flex-end',
+            justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
           }}>
@@ -1091,44 +1153,48 @@ const DutyReportUpdate = ({route, navigation}) => {
               backgroundColor: AppColors.white,
               width: '90%',
               borderRadius: 10,
-              padding: 20,
               elevation: 5,
             }}>
-            <ScrollView>
+            <View style={{}}>
               <TouchableOpacity
                 style={{
-                  backgroundColor: AppColors.mainColor,
-                  borderRadius: 20,
-                  marginBottom: 20,
-                  alignSelf: 'flex-end',
-                  width: 40,
-                  height: 40,
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  backgroundColor: AppColors.white,
+                  // borderRadius: 20,
                   alignItems: 'center',
                   justifyContent: 'center',
+                  width: 30,
+                  height: 30,
+                  zIndex: 10,
                 }}
                 onPress={() => setacceptBookingPopup(false)}>
-                <Icon name="close" size={20} color={AppColors.white} />
+                <Icon name="close" size={16} color={AppColors.black} />
               </TouchableOpacity>
               <View
                 style={{
                   backgroundColor: AppColors.mainColor,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                  width: '100%',
-                  padding: 20,
+                  padding: 15,
+                  paddingVertical: 30,
                   borderRadius: 5,
+                  alignItems: 'center',
                 }}>
                 <Text
                   style={{
                     fontFamily: 'Merriweather-Bold',
-                    fontSize: 18,
+                    fontSize: 20,
                     color: AppColors.white,
+                    fontWeight: 'bold',
                   }}>
-                  Guests are like God
+                  {popupsData?.popupdata?.accept_alert}
+
+                  {/* {languageSwitch == 'english'
+                    ? 'Guests are like God:'
+                    : 'अतिथि देवो भव:'} */}
                 </Text>
               </View>
-              <View style={{marginVertical: 20}}>
+              {/* <View style={{marginVertical: 20}}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -1136,43 +1202,65 @@ const DutyReportUpdate = ({route, navigation}) => {
                     textAlign: 'center',
                     color: AppColors.mainColor,
                   }}>
-                  I accept this duty.
+                  
+                </Text>
+              </View> */}
+              <View
+                style={{
+                  marginVertical: 10,
+                  paddingHorizontal: 20,
+                  paddingVertical: 10,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    lineHeight: 22,
+                    textAlign: 'center',
+                    color: AppColors.black,
+                  }}>
+                  {/* {languageSwitch == 'english'
+                    ? 'I accept this duty.'
+                    : 'मुझे ये ड्यूटी स्वीकार है ।'} */}
+                  {popupsData?.popupdata?.accept_alert_h3}
                 </Text>
               </View>
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontFamily: AppFont.regularFont,
-                  textAlign: 'center',
-                  color: AppColors.black,
-                }}>
-                I will reach the customer on time.
-              </Text>
-              <View style={{alignItems: 'center', marginTop: 20}}>
-                <TouchableOpacity
-                  disabled={loader}
-                  style={{
-                    backgroundColor: AppColors.mainColor,
 
-                    // padding: 12,
-                    paddingVertical: 8,
-                    paddingHorizontal: 16,
-                    borderRadius: 4,
-                    // width: '60%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    // marginHorizontal: '20%',
-                    marginBottom: 120,
+              <View
+                style={{
+                  marginVertical: 10,
+                  paddingHorizontal: 20,
+                  paddingVertical: 10,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    lineHeight: 22,
+                    textAlign: 'center',
+                    color: AppColors.black,
+                  }}>
+                  {/* {languageSwitch == 'english'
+                    ? ' I will reach the customer on time.'
+                    : 'मैं समय से कस्टमर के पास पहुँचूँगा'} */}
+                  {popupsData?.popupdata?.accept_alert_p}
+                </Text>
+              </View>
+
+              <View style={{alignItems: 'center', marginTop: 10}}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: AppColors.gray,
+                    paddingVertical: 10,
+                    paddingHorizontal: 30,
+                    borderRadius: 5,
+                    marginBottom: 60,
                   }}
                   onPress={() => {
                     dutyReportBookingAccept();
                   }}>
                   <Text
                     style={{
-                      color: AppColors.white,
-                      // fontWeight: '600',
-                      fontFamily: AppFont.regularFont,
-                      // textAlign: 'center',
+                      color: AppColors.black,
+                      fontSize: 16,
                     }}>
                     {loader ? (
                       <ActivityIndicator
@@ -1185,7 +1273,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-            </ScrollView>
+            </View>
           </View>
         </View>
       </Modal>

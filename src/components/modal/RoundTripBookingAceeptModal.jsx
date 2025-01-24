@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Pressable,
+  Alert,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {FINAL_ACCEPT_BOOKING} from '../../apis/Apis';
@@ -50,13 +51,23 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
 
       dispatch(setTriggerFunction(true));
       dispatch(setRefreshKey());
-     
+
+      console.log(response, 'responseresponseresponseresponseresponseresponse');
+
+      // return false;
+
       if (response?.status_code == '200') {
-        navigation.navigate('DutyReportUpdate', {
-          bookingNumber: booking_number,
-          isFirstTime: true,
-          isType: 'Ondemand',
-        });
+        if (response?.msg_type === 'error') {
+          Alert.alert('Error', response?.message, [{text: 'OK'}]);
+        } else {
+          navigation.navigate('DutyReportUpdate', {
+            bookingNumber: booking_number,
+            isFirstTime: true,
+            isType: 'Ondemand',
+          });
+        }
+      } else {
+        Alert.alert('Error', response?.message, [{text: 'OK'}]);
       }
     } catch (error) {
     } finally {
@@ -135,7 +146,15 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
               checked1 && checked2 ? AppColors.mainColor : '#CCCCCC',
           },
         ]}>
-        <Text style={styles.acceptButtonText}>Accept</Text>
+        <Text style={styles.acceptButtonText}>
+          {loader ? (
+            <>
+              <ActivityIndicator size="small" color="#FFFFFF" /> Please Wait...
+            </>
+          ) : (
+            'Accept'
+          )}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -218,7 +237,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: AppColors.mainColor,
     marginBottom: 20,
-    width: '50%',
+    width: '70%',
     justifyContent: 'center',
     alignSelf: 'center',
     borderRadius: 5,

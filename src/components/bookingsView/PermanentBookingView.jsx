@@ -20,6 +20,10 @@ const BookingCard = ({booking}) => {
   const [openModal, setOpenModal] = useState(false);
   const [referFriendModal, setReferFriendModal] = useState(false);
 
+  if (!booking || booking.length === 0) {
+    return null;
+  }
+
   const {
     sub_product,
     car,
@@ -159,40 +163,12 @@ const PermanentBookingView = () => {
         current_language: languageSwitch,
       });
       // console.log(response,"responseresponseresponse other");
-      
+
       setPermanentBookingsOthers(response.permanent_driver_bookings_other_zone);
     } catch (error) {}
   };
 
   const combinedBookings = [...permanentBookings, ...permanentBookingsOthers];
-
-  // const [visibleBookings, setVisibleBookings] = useState([]);
-  // const [currentPage, setCurrentPage] = useState(0);
-  // const [isLoading, setIsLoading] = useState(false);
-
-  // const itemsPerPage = 2; // Show 2 items per page
-
-  // useEffect(() => {
-  //   loadMoreBookings();
-  // }, []);
-
-  // const loadMoreBookings = () => {
-  //   if (isLoading) return;
-
-  //   setIsLoading(true);
-  //   const nextPage = currentPage + 1;
-  //   const startIndex = currentPage * itemsPerPage;
-  //   const endIndex = startIndex + itemsPerPage;
-
-  //   const newBookings = combinedBookings.slice(startIndex, endIndex);
-
-  //   if (newBookings.length > 0) {
-  //     setVisibleBookings(prev => [...prev, ...newBookings]);
-  //     setCurrentPage(nextPage);
-  //   }
-
-  //   setIsLoading(false);
-  // };
 
   return (
     <FlatList
@@ -200,17 +176,6 @@ const PermanentBookingView = () => {
       keyExtractor={(item, index) => `${item.id || index}`}
       renderItem={({item}) => <BookingCard booking={item} />}
     />
-
-    // <FlatList
-    //   data={visibleBookings}
-    //   keyExtractor={(item, index) => `${item.id || index}`}
-    //   renderItem={({item}) => <BookingCard booking={item} />}
-    //   onEndReached={loadMoreBookings} // Load more when reaching the end
-    //   onEndReachedThreshold={0.2} // Trigger when 50% of the list is scrolled
-    //   ListFooterComponent={
-    //     isLoading ? <ActivityIndicator size="large" color="blue" /> : null
-    //   }
-    // />
   );
 };
 

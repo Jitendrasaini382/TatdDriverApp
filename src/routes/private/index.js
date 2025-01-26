@@ -11,15 +11,6 @@ import DutyReportUpdate from '../../screens/DutyReportUpdate';
 import {NotificationDetailScreen} from '../../components/AllNotificationsDetails';
 import {NoticeBoardDetailScreen} from '../../components/AllNoticeBoardDetails';
 import AgentLogin from '../../screens/AgentLogin';
-import CheckAgentOtp from '../../screens/CheckAgentOtp';
-import AgentPanel from '../../screens/AgentPanel';
-import AgentKyc from '../../screens/AgentKyc';
-import AgentTrainig from '../../screens/AgentTrainig';
-import AgentWallet from '../../screens/AgentWallet';
-import AgentCommisionAdded from '../../screens/AgentCommisionAdded';
-import SelectYourState from '../../screens/SelectYourState';
-import SelectYourCity from '../../screens/SelectYourDist';
-import AgentLeads from '../../screens/AgentLeads';
 import DriverNotifications from '../../screens/DriverNotification';
 import ClearMyDuePayment from '../../screens/ClearMyDuePayment';
 import SplashScreen from '../../screens/SplashScreen';
@@ -47,7 +38,6 @@ const PrivateRoute = () => {
         showHideTransition="slide"
         hidden={false}
       />
-
       <NavigationContainer ref={navigationRef}>
         <Stack.Navigator
           initialRouteName={SplashScreen}
@@ -92,11 +82,6 @@ const PrivateRoute = () => {
           <Stack.Screen name="TicketsDriver" component={TicketsDriver} />
           <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
           <Stack.Screen name="AgentLogin" component={AgentLogin} />
-          <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />
-          <Stack.Screen name="AgentPanel" component={AgentPanel} />
-          <Stack.Screen name="AgentKyc" component={AgentKyc} />
-          <Stack.Screen name="AgentTrainig" component={AgentTrainig} />
-          <Stack.Screen name="AgentWallet" component={AgentWallet} />
           <Stack.Screen name="DueAmount" component={DueAmount} />
           <Stack.Screen
             name="RateUsAtSocialMedia"
@@ -107,13 +92,6 @@ const PrivateRoute = () => {
             name="RateYourCustomerFeedback"
             component={RateYourCustomerFeedback}
           />
-          <Stack.Screen
-            name="AgentCommisionAdded"
-            component={AgentCommisionAdded}
-          />
-          <Stack.Screen name="SelectYourState" component={SelectYourState} />
-          <Stack.Screen name="SelectYourCity" component={SelectYourCity} />
-          <Stack.Screen name="AgentLeads" component={AgentLeads} />
           <Stack.Screen name="CommanWebview" component={CommanWebview} />
           <Stack.Screen name="RedirectPopUp" component={RedirectPopUp} />
         </Stack.Navigator>

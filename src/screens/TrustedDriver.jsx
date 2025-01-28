@@ -678,7 +678,8 @@ const TrustedDriver = ({navigation}) => {
   //   }
   // };
   const showVideoContent = () => {
-    if (!videosContent) { // Only run when videosContent is false
+    if (!videosContent) {
+      // Only run when videosContent is false
       dispatch(setVideosContent(true));
       dispatch(setLoginStatus(false));
     }

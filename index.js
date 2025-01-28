@@ -12,7 +12,7 @@
 // //   console.log('Message handled in the background!', remoteMessage);
 
 // //   // Extract sound from remoteMessage or use default
-// //   const sound_ = remoteMessage?.data?.sound || 'tatd_driver_three_time';
+// //   const sound_ = remoteMessage?.data?.sound || 'tatd_driver_one_time';
 // //   console.log(sound_, 'index sound');
 
 // //   // Play sound only when notification is received
@@ -48,7 +48,7 @@
 // //   console.log('Notification received in the foreground!', remoteMessage);
 
 // //   // Extract sound from remoteMessage or use default
-// //   const sound_ = remoteMessage?.data?.sound || 'tatd_driver_three_time';
+// //   const sound_ = remoteMessage?.data?.sound || 'tatd_driver_one_time';
 
 // //   // Play sound only when notification is received
 // //   playSound(sound_);
@@ -98,67 +98,6 @@
 // // AppRegistry.registerComponent(appName, () => App);
 // //////
 
-import {AppRegistry} from 'react-native';
-import App from './App';
-import {name as appName} from './app.json';
-import messaging from '@react-native-firebase/messaging';
-import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
-import {playSound} from './src/utils/soundVibration';
-import {checkVibrationSupport} from './src/utils/permissions';
-import {navigate} from './src/utils/navigationRef';
-
-let notificationProcessed = false; // Prevent duplicate sound handling
-
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Message handled in the background!', remoteMessage);
-
-  if (notificationProcessed) {
-    console.log(
-      'Duplicate notification detected, ignoring further processing.',
-    );
-    return;
-  }
-  notificationProcessed = true; // Mark as processed
-
-  const sound_ = remoteMessage?.data?.sound || 'tatd_driver_three_time';
-  console.log(sound_, 'index sound');
-
-  playSound(sound_);
-  checkVibrationSupport(10000);
-
-  await notifee.createChannel({
-    id: 'tatd2025',
-    name: 'tatd2025',
-    sound: sound_,
-    vibration: true,
-    vibrationPattern: [500, 300, 500, 300, 500, 300],
-    importance: AndroidImportance.HIGH,
-  });
-
-  setTimeout(() => {
-    notificationProcessed = false; // Reset for the next notification
-  }, 5000); // Adjust timeout duration as needed
-});
-
-notifee.onBackgroundEvent(async ({type, detail}) => {
-  switch (type) {
-    case EventType.PRESS:
-      console.log('Notification pressed in background:', detail);
-      navigate('TrustedDriver');
-      break;
-    case EventType.DISMISSED:
-      console.log('Notification dismissed in background:', detail);
-      break;
-    default:
-      console.log('Unhandled event in background:', type);
-      break;
-  }
-});
-
-AppRegistry.registerComponent(appName, () => App);
-
-// ////////
-
 // import {AppRegistry} from 'react-native';
 // import App from './App';
 // import {name as appName} from './app.json';
@@ -168,48 +107,109 @@ AppRegistry.registerComponent(appName, () => App);
 // import {checkVibrationSupport} from './src/utils/permissions';
 // import {navigate} from './src/utils/navigationRef';
 
-// messaging().setBackgroundMessageHandler(async remoteMessage => {
-//   console.log('Message handled in the background!', remoteMessage);
-//   // await createNotificationChannel();
-//   const sound_ = remoteMessage?.data?.sound || 'tatd_driver_three_time'; // Default to 'sound' if not specified
+// let notificationProcessed = false; // Prevent duplicate sound handling
 
+// messaging().setBackgroundMessageHandler(async remoteMessage => {
+//   console.log('Message handled in the background! index.js', remoteMessage);
+
+//   if (notificationProcessed) {
+//     console.log(
+//       'Duplicate notification detected, ignoring further processing. index.js',
+//     );
+//     return;
+//   }
+//   notificationProcessed = true; // Mark as processed
+
+//   const sound_ = remoteMessage?.data?.sound || 'tatd_driver_one_time';
 //   console.log(sound_, 'index sound');
 
 //   playSound(sound_);
 //   checkVibrationSupport(10000);
 
-//   const channelId = await notifee.createChannel({
+//   await notifee.createChannel({
 //     id: 'tatd2025',
 //     name: 'tatd2025',
 //     sound: sound_,
-//     vibration: true, // Ensure vibration is enabled for this channel
-//     vibrationPattern: [500, 300, 500, 300, 500, 300], // Custom vibration pattern
-//     importance: AndroidImportance.HIGH, // High importance to allow sound and vibration
+//     vibration: true,
+//     vibrationPattern: [500, 300, 500, 300, 500, 300],
+//     importance: AndroidImportance.HIGH,
 //   });
+
+//   setTimeout(() => {
+//     notificationProcessed = false; // Reset for the next notification
+//   }, 5000); // Adjust timeout duration as needed
 // });
 
 // notifee.onBackgroundEvent(async ({type, detail}) => {
 //   switch (type) {
 //     case EventType.PRESS:
-//       console.log('Notification pressed in background:', detail);
-//       // Handle notification press, e.g., navigate to a specific screen
+//       console.log('Notification pressed in background: index.js', detail);
 //       navigate('TrustedDriver');
-//       console.log('pressed navigateee index.js');
-
-//       // navigate('TrustedDriver', {notificationData: detail.notification});
 //       break;
 //     case EventType.DISMISSED:
-//       console.log('Notification dismissed in background:', detail);
-//       // Handle notification dismissal
-//       break;
-//     case EventType.BACKGROUND:
-//       console.log('Background event:', detail);
-//       // Handle background notification events if needed
+//       console.log('Notification dismissed in background:index.js', detail);
 //       break;
 //     default:
-//       console.log('Unhandled event in background:', type);
+//       console.log('Unhandled event in background: index.js', type);
 //       break;
 //   }
 // });
 
 // AppRegistry.registerComponent(appName, () => App);
+
+// ////////
+
+import {AppRegistry} from 'react-native';
+import App from './App';
+import {name as appName} from './app.json';
+import messaging from '@react-native-firebase/messaging';
+import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
+import {playSound} from './src/utils/soundVibration';
+import {checkVibrationSupport} from './src/utils/permissions';
+import {navigate} from './src/utils/navigationRef';
+
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Message handled in the background! index.js', remoteMessage);
+  // await createNotificationChannel();
+  const sound_ = remoteMessage?.data?.sound || 'tatd_driver_one_time'; // Default to 'sound' if not specified
+
+  console.log(sound_, 'index sound');
+
+  playSound(sound_);
+  checkVibrationSupport(10000);
+
+  const channelId = await notifee.createChannel({
+    id: 'tatd2025',
+    name: 'tatd2025',
+    sound: sound_,
+    vibration: true, // Ensure vibration is enabled for this channel
+    vibrationPattern: [500, 300, 500, 300, 500, 300], // Custom vibration pattern
+    importance: AndroidImportance.HIGH, // High importance to allow sound and vibration
+  });
+});
+
+notifee.onBackgroundEvent(async ({type, detail}) => {
+  switch (type) {
+    case EventType.PRESS:
+      console.log('Notification pressed in background: index.js', detail);
+      // Handle notification press, e.g., navigate to a specific screen
+      navigate('TrustedDriver');
+      console.log('pressed navigateee index.js');
+
+      // navigate('TrustedDriver', {notificationData: detail.notification});
+      break;
+    case EventType.DISMISSED:
+      console.log('Notification dismissed in background: index.js', detail);
+      // Handle notification dismissal
+      break;
+    case EventType.BACKGROUND:
+      console.log('Background event: index.js', detail);
+      // Handle background notification events if needed
+      break;
+    default:
+      console.log('Unhandled event in background:index.js ', type);
+      break;
+  }
+});
+
+AppRegistry.registerComponent(appName, () => App);

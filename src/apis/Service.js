@@ -94,6 +94,18 @@ axiosClient.interceptors.response.use(
                 value: false,
               }),
             );
+            store.dispatch(
+              setUserAuthStates({
+                key: 'isFcmSent',
+                value: false,
+              }),
+            );
+            store.dispatch(
+              setUserAuthStates({
+                key: 'isDeviceInfo',
+                value: false,
+              }),
+            );
           }
         } catch (refreshError) {
           store.dispatch(
@@ -105,6 +117,18 @@ axiosClient.interceptors.response.use(
           store.dispatch(
             setUserAuthStates({
               key: 'login',
+              value: false,
+            }),
+          );
+          store.dispatch(
+            setUserAuthStates({
+              key: 'isFcmSent',
+              value: false,
+            }),
+          );
+          store.dispatch(
+            setUserAuthStates({
+              key: 'isDeviceInfo',
               value: false,
             }),
           );
@@ -158,7 +182,7 @@ const _Fetch = (method, path, body, headers = {}) => {
       headers: finalHeaders, // Pass merged headers
     })
       .then(response => {
-        console.log(`Response data: ${path}`, response.data);
+        // console.log(`Response data: ${path}`, response.data);
         if (response.data.status_code == 200) {
           resolve(response.data);
         } else {

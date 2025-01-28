@@ -24,7 +24,7 @@ import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
 import {DRIVER_LOGIN} from '../apis/Apis';
 import {useNavigation} from '@react-navigation/native';
-import {googleLogo, Triangle_Icon} from '../assets/images';
+import {Triangle_Icon} from '../assets/images';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import DeviceInfo from 'react-native-device-info';
 
@@ -116,8 +116,6 @@ const DriverLogin = () => {
     setModalVisible(false);
   };
   const handleOpen = () => {
-    console.log(hasModalOpened, 'hasModalOpenedhasModalOpened');
-
     if (
       simInfo.length > 0 &&
       !simInfo.includes('Please Allow The Permission')

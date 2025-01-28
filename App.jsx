@@ -50,7 +50,7 @@ const App = () => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       console.log(remoteMessage, 'remoteMessageremoteMessage app.js');
 
-      const sound_ = remoteMessage?.data?.sound || 'tatd_driver_three_time';
+      const sound_ = remoteMessage?.data?.sound || 'tatd_driver_one_time';
 
       try {
         await notifee.displayNotification({

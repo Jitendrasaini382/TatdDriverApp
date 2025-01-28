@@ -12,11 +12,6 @@ const TripCard = ({trip}) => {
     return null;
   }
 
-  console.log(
-    trip?.payment_mode,
-    'trip?.payment_modetrip?.payment_modetrip?.payment_modetrip?.payment_mode',
-  );
-
   return (
     <View style={{flexDirection: 'column', marginBottom: 10}}>
       <View

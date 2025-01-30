@@ -170,10 +170,9 @@ import {navigate} from './src/utils/navigationRef';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('Message handled in the background! index.js', remoteMessage);
-  // await createNotificationChannel();
-  const sound_ = remoteMessage?.data?.sound || 'tatd_driver_one_time'; // Default to 'sound' if not specified
+  const sound_ = remoteMessage?.notification?.android?.sound;
 
-  console.log(sound_, 'index sound');
+  console.log(sound_, 'index sound index.js---------');
 
   playSound(sound_);
   checkVibrationSupport(10000);

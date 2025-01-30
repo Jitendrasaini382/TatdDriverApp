@@ -10,7 +10,7 @@ const initialState = {
   rating: 0,
   buttonShow: false,
   showButtonText: '',
-  storedRating: null,
+  storedRating: 0,
   notificationData: [],
   refreshData: false,
   triggerFunction: false,

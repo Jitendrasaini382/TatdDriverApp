@@ -36,6 +36,7 @@ import {
   DRIVER_HEADLINE,
   DRIVER_NOTICE,
   DRIVER_NOTIFICATION,
+  DRIVER_TRAINING_VIDEOS,
   EXPRESS_BOOKING_POPUP,
   GET_FCM_TOKEN,
   LOGIN_BUTTON,
@@ -51,6 +52,7 @@ import {
   setModalVisible,
   setMyBookingAgencyModal,
   setRatingModal,
+  setTrainingVideoData,
   setVideosContent,
 } from '../redux/slices/trustedDriverSlice';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -330,6 +332,7 @@ const TrustedDriver = ({navigation}) => {
       await getHomeNotification();
       await getHomeNotice();
       await getAllTrustedData();
+      getTrainingVideo();
       // if (isRfdOn) {
       await getAllOndemandBookings();
       dispatch(setRefreshKey());
@@ -668,21 +671,25 @@ const TrustedDriver = ({navigation}) => {
     } catch (err) {}
   };
 
-  // const showVideoContent = () => {
+  const getTrainingVideo = async () => {
+    try {
+      const response = await DRIVER_TRAINING_VIDEOS(languageSwitch);
 
-  //   if (videosContent) {
-  //     dispatch(setLoginStatus(false));
-  //   } else {
-  //     dispatch(setLoginStatus(true));
-  //     dispatch(setVideosContent(true));
-  //   }
-  // };
+      if (response?.rfd == '1') {
+        dispatch(setLoginStatus(true));
+        dispatch(setVideosContent(false));
+      } else {
+        dispatch(setLoginStatus(false));
+      }
+      dispatch(setTrainingVideoData(response?.response?.training_data));
+    } catch (error) {}
+  };
+
   const showVideoContent = () => {
-    if (!videosContent) {
-      // Only run when videosContent is false
-      dispatch(setVideosContent(true));
-      dispatch(setLoginStatus(false));
-    }
+    dispatch(setVideosContent(true));
+
+    getTrainingVideo();
+    setLoginMessage('');
   };
 
   return (
@@ -1069,6 +1076,7 @@ const TrustedDriver = ({navigation}) => {
                 <View style={styles.bottamContent}>
                   <TouchableOpacity
                     onPress={() => showVideoContent()}
+                    // onPress={() => dispatch(setVideosContent(!videosContent))}
                     style={[
                       styles.bottamContent1,
                       videosContent && {backgroundColor: AppColors.mainColor},
@@ -1122,6 +1130,10 @@ const TrustedDriver = ({navigation}) => {
                     //   })
 
                     // }
+
+                    // onPress={() => {
+                    //   navigation.navigate('ClearMyDuePayment');
+                    // }}
 
                     onPress={() => {
                       openMyUrl(

@@ -8,12 +8,16 @@ import {
   DRIVER_TRAINING_VIDEOS,
   DRIVER_TRAINING_VIDEOS_CLICK_STORE,
 } from '../apis/Apis';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {setTrainingVideoData} from '../redux/slices/trustedDriverSlice';
 
 const TrainingVideo = () => {
   const [openIndex, setOpenIndex] = useState(null);
-  const [trainingVideoData, setTrainingVideoData] = useState();
+  const dispatch = useDispatch();
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  const trainingVideoData = useSelector(
+    e => e?.trustedDriverSlice?.trainingVideoData,
+  );
 
   useEffect(() => {
     getTrainingVideo();
@@ -22,7 +26,7 @@ const TrainingVideo = () => {
   const getTrainingVideo = async () => {
     try {
       const response = await DRIVER_TRAINING_VIDEOS(languageSwitch);
-      setTrainingVideoData(response?.response?.training_data);
+      dispatch(setTrainingVideoData(response?.response?.training_data));
     } catch (error) {}
   };
 
@@ -33,6 +37,10 @@ const TrainingVideo = () => {
         training_id: id,
         training_type: 'Driver Training',
       });
+
+      setTimeout(() => {
+        getTrainingVideo();
+      }, 3000);
     } catch (error) {}
   };
 
@@ -84,6 +92,13 @@ const AccordionItem = ({
           <Image
             style={styles.icon}
             resizeMode="contain"
+            // source={
+            //   isOpen
+            //     ? OpenEnvelop
+            //     : icon === 'open_envlop.png'
+            //     ? OpenEnvelop
+            //     : CloseEnvelop
+            // }
             source={icon == 'open_envlop.png' ? OpenEnvelop : CloseEnvelop}
           />
         </View>

@@ -1,24 +1,17 @@
 import React, {useState, useCallback} from 'react';
-import {
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-} from 'react-native';
+import {View, SafeAreaView, ScrollView, StyleSheet} from 'react-native';
 import ToggleButton from '../components/ToggleButton';
-import {OneWayIcon} from '../assets/images';
 import Header from '../components/Header';
 import AllNotificationComponent from '../components/AllNotificationsDetails';
 import {AppColors} from '../assets/Colors';
 import {DRIVER_NOTIFICATION} from '../apis/Apis';
 import {RefreshControl} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 
 const DriverNotifications = ({navigation}) => {
   const [currentView, setCurrentView] = useState('NOTIFICATIONS');
   const [refreshing, setRefreshing] = useState(false);
+  const [notificationData, setNotificationData] = useState([]);
 
   const handleToggle = useCallback(
     label => {
@@ -30,23 +23,30 @@ const DriverNotifications = ({navigation}) => {
     [navigation],
   );
 
-  const handleClearAllNotifications = useCallback(async () => {
-    try {
-      const response = await DRIVER_NOTIFICATION({
-        action: 'clear_all_notifications',
-      });
-    } catch (error) {}
-  }, []);
+  // const notificationData = useSelector(e => e?.globalSlice?.notificationData);
+  const dispatch = useDispatch();
 
-  const onRefresh = useCallback(async () => {
+  const getAllNotification = async data => {
+    try {
+      const response = await DRIVER_NOTIFICATION(data);
+      setNotificationData(response.notifications);
+    } catch (error) {
+    } finally {
+    }
+  };
+  const onRefresh = async () => {
     setRefreshing(true);
     try {
-      await handleClearAllNotifications();
+      await getAllNotification({
+        action: 'view_all_notifications',
+        offset: 0,
+        limit: 10,
+      });
     } catch (error) {
     } finally {
       setRefreshing(false);
     }
-  }, []);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -66,16 +66,16 @@ const DriverNotifications = ({navigation}) => {
         </View>
 
         <View style={styles.contentContainer}>
-          <AllNotificationComponent />
+          <AllNotificationComponent data={notificationData} />
         </View>
       </ScrollView>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.clearButton}
         onPress={handleClearAllNotifications}>
         <Text style={styles.clearButtonText}>CLEAR ALL NOTIFICATIONS</Text>
         <Image style={styles.clearButtonIcon} source={OneWayIcon} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </SafeAreaView>
   );
 };

@@ -12,6 +12,7 @@ const initialState = {
   myBookingModal: false,
   splash: true,
   isRefresh: false,
+  trainingVideoData: [],
 };
 
 const trustedDriverSlice = createSlice({
@@ -62,6 +63,9 @@ const trustedDriverSlice = createSlice({
     setIsRefresh: (state, action) => {
       state.isRefresh = action.payload;
     },
+    setTrainingVideoData: (state, action) => {
+      state.trainingVideoData = action.payload;
+    },
   },
 });
 
@@ -78,6 +82,7 @@ export const {
   mainToggleHandle,
   setSplash,
   setIsRefresh,
+  setTrainingVideoData,
 } = trustedDriverSlice.actions;
 
 export default trustedDriverSlice.reducer;

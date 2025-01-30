@@ -19,7 +19,7 @@ import NetInfo from '@react-native-community/netinfo';
 import {AppColors} from './src/assets/Colors';
 import {checkVibrationSupport} from './src/utils/permissions';
 import {playSound, triggerVibration} from './src/utils/soundVibration';
-import { navigate } from './src/utils/navigationRef';
+import {navigate} from './src/utils/navigationRef';
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -31,13 +31,12 @@ const App = () => {
   const persistor = persistStore(store);
   const [isConnected, setIsConnected] = useState(true);
 
-  // Function to create a notification channel
-  const createNotificationChannel = async () => {
+  const createNotificationChannel = async sound => {
     try {
       await notifee.createChannel({
-        id: 'default',
-        name: 'Default Channel',
-        sound: 'sound',
+        id: 'tatd2025',
+        name: 'tatd2025',
+        sound: sound,
         vibration: true,
         vibrationPattern: [300, 500],
         importance: AndroidImportance.HIGH,
@@ -50,22 +49,26 @@ const App = () => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       console.log(remoteMessage, 'remoteMessageremoteMessage app.js');
 
-      const sound_ = remoteMessage?.data?.sound || 'tatd_driver_one_time';
+      // const ssound_ = remoteMessage?.data?.sound;
+      const sound_ = remoteMessage?.notification?.android?.sound;
+      console.log(sound_, 'app.js sound');
+
+      createNotificationChannel(sound_);
+      playSound(sound_);
+      checkVibrationSupport(10000);
+      triggerVibration();
 
       try {
         await notifee.displayNotification({
           title: remoteMessage.notification?.title || remoteMessage.data?.title,
           body: remoteMessage.notification?.body || remoteMessage.data?.body,
           android: {
-            channelId: 'default',
+            channelId: 'tatd2025',
             sound: sound_,
             vibrationPattern: [500, 300, 500, 300, 500, 300],
             importance: AndroidImportance.HIGH,
           },
         });
-        playSound(sound_);
-        checkVibrationSupport(10000);
-        triggerVibration();
       } catch (error) {}
     });
 
@@ -98,9 +101,7 @@ const App = () => {
     return unsubscribe;
   };
 
-  // useEffect hooks
   useEffect(() => {
-    createNotificationChannel();
     checkInitialNotification();
   }, []);
 
@@ -121,7 +122,7 @@ const App = () => {
         case EventType.PRESS:
           console.log('Notification pressed in foreground: app.js', detail);
           navigate('TrustedDriver');
-          console.log("pressed navigateee app.js");
+          console.log('pressed navigateee app.js');
           break;
         case EventType.DISMISSED:
           console.log('Notification dismissed in foreground: app.js', detail);

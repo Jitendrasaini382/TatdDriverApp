@@ -3,7 +3,7 @@ import Sound from 'react-native-sound';
 
 // Function to play sound and trigger vibration
 export const playSound = _sound => {
-  console.log("run sound fun");
+  console.log("run sound fun", _sound);
   
   // Load the sound file (ensure the file is in the correct path)
   const sound = new Sound(`${_sound}.mp3`, Sound.MAIN_BUNDLE, error => {

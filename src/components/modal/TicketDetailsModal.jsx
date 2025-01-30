@@ -74,7 +74,7 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
       <TouchableOpacity
         onPress={() => setTicketDetailsModal(false)}
         style={styles.closeButton}>
-        <Icon name="close" size={12} />
+        <Icon name="close" size={15} />
       </TouchableOpacity>
       <Text style={styles.title}>Ticket Details</Text>
 
@@ -107,11 +107,11 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     backgroundColor: AppColors.silverGrey,
-    height: 20,
-    width: 20,
+    height: 30,
+    width: 30,
     marginRight: 10,
     marginTop: 10,
-    borderRadius: 10,
+    borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-end',

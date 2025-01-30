@@ -23,6 +23,7 @@ import AccordionData from '../components/AccordianData';
 import {useSelector} from 'react-redux';
 
 import {Skeleton} from '@rneui/base';
+import {Button} from 'react-native';
 
 const TicketsDriver = ({navigation}) => {
   const [createTicketModal, setCreateTicketModal] = useState(false);
@@ -34,6 +35,8 @@ const TicketsDriver = ({navigation}) => {
   const [buttonShow, setButtonShow] = useState(false);
   const [showButtonText, setShowButtonText] = useState('');
   const [error, setError] = useState('');
+  const [showButton, setshowButton] = useState(false);
+  const [offset, setOffset] = useState(0);
 
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
@@ -54,12 +57,22 @@ const TicketsDriver = ({navigation}) => {
     setCheckField({...checkField, [name]: value});
   };
 
-  const showDriverTicket = async () => {
+  const showDriverTicket = async data => {
     setLoader(true);
     try {
-      const response = await TICKETS_DRIVER({action: 'show_driver_ticket'});
+      const response = await TICKETS_DRIVER({
+        action: 'show_driver_ticket',
+        offset: offset + data,
+        limit: 10,
+      });
 
-      setTicketData(response?.tickets);
+      if (response?.load_more_flag == '1') {
+        setshowButton(true);
+      } else {
+        setshowButton(false);
+      }
+      setOffset(prevOffset => prevOffset + data);
+      setTicketData(prevTickets => [...prevTickets, ...response?.tickets]);
     } catch (err) {
       setLoader(false);
     } finally {
@@ -84,7 +97,7 @@ const TicketsDriver = ({navigation}) => {
   };
 
   useEffect(() => {
-    showDriverTicket();
+    showDriverTicket(0);
   }, []);
 
   useEffect(() => {
@@ -100,8 +113,9 @@ const TicketsDriver = ({navigation}) => {
   ]);
 
   const onRefresh = async () => {
+    setTicketData([]);
     setRefreshing(true);
-    await Promise.all([showDriverTicket(), checkOpenTicket()]).catch();
+    await Promise.all([showDriverTicket(0), checkOpenTicket()]).catch();
     setRefreshing(false);
   };
 
@@ -183,7 +197,7 @@ const TicketsDriver = ({navigation}) => {
         Alert.alert('Error', 'Internal server error');
       }
     } catch (error) {
-    //   Alert.alert('Error', error?.message);
+      //   Alert.alert('Error', error?.message);
     }
   };
 
@@ -195,12 +209,13 @@ const TicketsDriver = ({navigation}) => {
 
   const renderItem = useCallback(
     ({id, timestamp, ticket_status}, index) => (
-      <View key={id} style={[styles.row, index === 0 && styles.firstRow]}>
-        <TouchableOpacity
-          onPress={() => handleTicketPress(id)}
-          style={styles.cell}>
+      <TouchableOpacity
+        onPress={() => handleTicketPress(id)}
+        // key={id}
+        style={[styles.row, index === 0 && styles.firstRow]}>
+        <View style={styles.cell}>
           <Text style={styles.cellText}>{id}</Text>
-        </TouchableOpacity>
+        </View>
         <View style={[styles.cell2, styles.middleCell]}>
           <Text style={styles.cellText}>{timestamp}</Text>
         </View>
@@ -219,7 +234,7 @@ const TicketsDriver = ({navigation}) => {
             </Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     ),
     [handleTicketPress],
   );
@@ -371,7 +386,7 @@ const TicketsDriver = ({navigation}) => {
         <Modal
           backdropOpacity={0}
           onBackdropPress={() => setTicketDetailsModal(false)}
-          animationIn="fadeInDown"
+          animationIn="bounce"
           animationOut="fadeOutUp"
           isVisible={ticketDetailsModal}>
           <TicketDetails
@@ -427,6 +442,11 @@ const TicketsDriver = ({navigation}) => {
           ) : (
             ticketData && ticketData.map(renderItem)
           )}
+          {showButton ? (
+            <View style={{marginVertical: 10, alignSelf: 'center'}}>
+              <Button title="Load More " onPress={() => showDriverTicket(10)} />
+            </View>
+          ) : null}
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -7,31 +7,27 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
-  Alert,
-  TextInput,
   ActivityIndicator,
+  FlatList,
+  Button,
 } from 'react-native';
 import {CloseEnvelop, OpenEnvelop} from '../assets/images';
 import {useNavigation} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Header from './Header';
 import {DRIVER_NOTIFICATION} from '../apis/Apis';
 import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  setNotificationData,
-  setStoredRating,
-} from '../redux/slices/globalSlice';
-import {RefreshControl} from 'react-native';
+import {setStoredRating} from '../redux/slices/globalSlice';
 
-const AllNotificationComponent = () => {
+const AllNotificationComponent = ({data}) => {
   const navigation = useNavigation();
+  const [notificationData, setNotificationData] = useState(data || []);
+  const storeRating = useSelector(e => e?.globalSlice?.rating);
   const dispatch = useDispatch();
-  const notificationData = useSelector(e => e?.globalSlice?.notificationData);
-  const [refreshing, setRefreshing] = useState(false);
-
+  const [showButton, setshowButton] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [offset, setOffset] = useState(0);
 
   const handleNotificationPress = useCallback(
     notification => {
@@ -42,54 +38,75 @@ const AllNotificationComponent = () => {
     [navigation],
   );
 
-  const getAllNotification = useCallback(
-    async data => {
-      setIsLoading(true);
-      try {
-        const response = await DRIVER_NOTIFICATION(data);
-        dispatch(setNotificationData(response.notifications));
-      } catch (error) {
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [notificationData],
-  );
-
-  useEffect(() => {
-    getAllNotification({
-      action: 'view_all_notifications',
-    });
-  }, []);
-
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
+  const getAllNotification = async data => {
+    setIsLoading(true);
     try {
-      // dispatch(setRefreshKey());
-      await getAllNotification({
+      const response = await DRIVER_NOTIFICATION({
         action: 'view_all_notifications',
+        offset: offset + data,
+        limit: 10,
       });
+
+      if (response?.load_more_flag == '1') {
+        setshowButton(true);
+      } else {
+        setshowButton(false);
+      }
+      setOffset(prevOffset => prevOffset + data);
+      setNotificationData(prevNotifications => [
+        ...prevNotifications,
+        ...response.notifications,
+      ]);
     } catch (error) {
     } finally {
-      setRefreshing(false);
+      setIsLoading(false);
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    getAllNotification(storeRating);
+    dispatch(setStoredRating(10));
+  }, [storeRating]);
 
   if (isLoading) {
     return (
-      <View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>
+      <View style={{alignContent: 'flex-end', justifyContent: 'flex-end'}}>
         <ActivityIndicator size="small" color={AppColors.mainColor} />
       </View>
     );
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }>
-      {notificationData &&
+    <ScrollView style={styles.container}>
+      <FlatList
+        data={notificationData}
+        keyExtractor={item => item?.id.toString()}
+        renderItem={({item}) => (
+          <TouchableOpacity
+            style={styles.touchable}
+            onPress={() => handleNotificationPress(item)}>
+            <View style={styles.iconContainer}>
+              <Image
+                style={styles.icon}
+                resizeMode="contain"
+                source={item?.status === 'unread' ? CloseEnvelop : OpenEnvelop}
+              />
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.previewText}>
+                {item?.message_preview ||
+                  item?.message.substring(0, 50) + '...'}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+      {showButton ? (
+        <View style={{marginVertical: 10, alignSelf: 'center'}}>
+          <Button title="Load More " onPress={() => getAllNotification(10)} />
+        </View>
+      ) : null}
+      {/* {notificationData &&
         notificationData.map(notification => (
           <TouchableOpacity
             key={notification.id}
@@ -114,7 +131,7 @@ const AllNotificationComponent = () => {
               </Text>
             </View>
           </TouchableOpacity>
-        ))}
+        ))} */}
     </ScrollView>
   );
 };
@@ -139,7 +156,6 @@ export const NotificationDetailScreen = ({route}) => {
       });
       setNotification(response.headline);
       setBottamButtonText(response);
-      dispatch(setStoredRating(response.headline.rate));
     } catch (err) {
     } finally {
       setLoader(false);

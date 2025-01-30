@@ -62,8 +62,6 @@ const styles = StyleSheet.create({
   },
   circle: {
     width: 80,
-    // position:"absolute",
-    // height: 80,
     aspectRatio: 1,
     borderRadius: 50,
     backgroundColor: AppColors.mainColor,

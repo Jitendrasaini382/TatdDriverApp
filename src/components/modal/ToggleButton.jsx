@@ -26,7 +26,6 @@ const ToggleButton = ({button1Label, button2Label, onToggle}) => {
   const token = useSelector(e => e.userAuth);
 
   const switchLanguage = async language => {
-    // console.log(token, 'tokennnn');
     try {
       const response = await LANGUAGE_SWITCH({
         action: 'update_language',

@@ -47,11 +47,9 @@ const App = () => {
   // Handle incoming messages
   const handleIncomingMessages = () => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log(remoteMessage, 'remoteMessageremoteMessage app.js');
 
       // const ssound_ = remoteMessage?.data?.sound;
       const sound_ = remoteMessage?.notification?.android?.sound;
-      console.log(sound_, 'app.js sound');
 
       createNotificationChannel(sound_);
       playSound(sound_);
@@ -80,12 +78,8 @@ const App = () => {
     try {
       const initialNotification = await notifee.getInitialNotification();
       if (initialNotification) {
-        console.log(
-          'App opened from notification:',
-          initialNotification.notification,
-        );
+       
 
-        console.log('Press action:', initialNotification.pressAction);
       }
     } catch (error) {
       console.error('Error checking initial notification:', error);
@@ -120,15 +114,11 @@ const App = () => {
     const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
       switch (type) {
         case EventType.PRESS:
-          console.log('Notification pressed in foreground: app.js', detail);
           navigate('TrustedDriver');
-          console.log('pressed navigateee app.js');
           break;
         case EventType.DISMISSED:
-          console.log('Notification dismissed in foreground: app.js', detail);
           break;
         default:
-          console.log('Unhandled event in foreground: app.js', type);
           break;
       }
     });

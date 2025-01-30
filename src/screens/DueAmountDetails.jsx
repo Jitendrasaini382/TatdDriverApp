@@ -40,11 +40,6 @@ const DueAmountDetails = ({route, navigation}) => {
         booking_number: number,
       });
 
-      // console.log(
-      //   response?.invoice_data?.rate_your_customer_flag,
-      //   'responseresponse driver invoice',
-      // );
-
       setAllInvoiceData(response);
     } catch (response) {
     } finally {
@@ -64,7 +59,6 @@ const DueAmountDetails = ({route, navigation}) => {
       });
 
       if (res?.status_code == '200') {
-        // Alert.alert(res?.message);
         Alert.alert('Success', res?.message);
       }
 
@@ -106,7 +100,6 @@ const DueAmountDetails = ({route, navigation}) => {
               padding: 20,
               elevation: 5,
             }}>
-            {/* <ScrollView> */}
             <TouchableOpacity
               style={{
                 backgroundColor: '#16588e',
@@ -225,7 +218,6 @@ const DueAmountDetails = ({route, navigation}) => {
                 </Text>
               </TouchableOpacity>
             </View>
-            {/* </ScrollView> */}
           </View>
         </View>
       </Modal>
@@ -364,33 +356,6 @@ const DueAmountDetails = ({route, navigation}) => {
                 </View>
               </View>
             </View>
-
-            {/* <View style={{flexDirection: 'row', margin: 10}}>
-              <Text style={{color: '#ffffff', fontSize: 12}}>From:</Text>
-              <Text
-                style={{
-                  color: '#ffffff',
-                  fontSize: 12,
-                  marginLeft: 10,
-                  flex: 1,
-                }}>
-                {allInvoiceData?.invoice_data?.pickup_address}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginVertical: 20,
-              }}>
-              <Text
-                style={{color: '#ffffff', fontSize: 12, marginHorizontal: 10}}>
-                To:
-              </Text>
-              <Text style={{color: '#ffffff', fontSize: 12, marginLeft: 10}}>
-                {allInvoiceData?.invoice_data?.drop_address}
-              </Text>
-            </View> */}
           </View>
 
           {/* Timings Section */}
@@ -798,26 +763,6 @@ const DueAmountDetails = ({route, navigation}) => {
               {allInvoiceData?.invoice_data?.total_charges}
             </Text>
           </View>
-
-          {/* company Details */}
-
-          {/* <View
-            style={[
-              styles.divider,
-              {backgroundColor: 'grey', height: 0.5, marginVertical: 10},
-            ]}
-          />
-
-          <Text
-            style={{
-              color: AppColors.black,
-              fontSize: 12,
-              alignSelf: 'center',
-              textAlign: 'center',
-              marginVertical: 15,
-            }}>
-            {allInvoiceData?.invoice_data?.company_details}
-          </Text> */}
         </View>
         {allInvoiceData?.invoice_data?.rate_your_customer_flag == 0 && (
           <TouchableOpacity

@@ -4,14 +4,11 @@ import ToggleButton from '../components/ToggleButton';
 import Header from '../components/Header';
 import AllNotificationComponent from '../components/AllNotificationsDetails';
 import {AppColors} from '../assets/Colors';
-import {DRIVER_NOTIFICATION} from '../apis/Apis';
 import {RefreshControl} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
 
 const DriverNotifications = ({navigation}) => {
   const [currentView, setCurrentView] = useState('NOTIFICATIONS');
   const [refreshing, setRefreshing] = useState(false);
-  const [notificationData, setNotificationData] = useState([]);
 
   const handleToggle = useCallback(
     label => {
@@ -23,29 +20,10 @@ const DriverNotifications = ({navigation}) => {
     [navigation],
   );
 
-  // const notificationData = useSelector(e => e?.globalSlice?.notificationData);
-  const dispatch = useDispatch();
-
-  const getAllNotification = async data => {
-    try {
-      const response = await DRIVER_NOTIFICATION(data);
-      setNotificationData(response.notifications);
-    } catch (error) {
-    } finally {
-    }
-  };
   const onRefresh = async () => {
     setRefreshing(true);
-    try {
-      await getAllNotification({
-        action: 'view_all_notifications',
-        offset: 0,
-        limit: 10,
-      });
-    } catch (error) {
-    } finally {
-      setRefreshing(false);
-    }
+
+    setRefreshing(false);
   };
 
   return (
@@ -66,7 +44,7 @@ const DriverNotifications = ({navigation}) => {
         </View>
 
         <View style={styles.contentContainer}>
-          <AllNotificationComponent data={notificationData} />
+          <AllNotificationComponent />
         </View>
       </ScrollView>
 

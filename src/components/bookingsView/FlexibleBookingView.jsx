@@ -4,12 +4,10 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
   Modal,
   Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-// import Modal from 'react-native-modal';
 import {AppColors} from '../../assets/Colors';
 import FlexibleBookingAcceptModal from '../modal/FlexibleBookingAcceptModal';
 import {AppFont} from '../../assets/FontsFamily';
@@ -66,18 +64,6 @@ const BookingCard = ({booking, index, total}) => {
           style={styles.acceptButton}>
           <Text style={styles.acceptButtonText}>Accept</Text>
         </TouchableOpacity>
-
-        {/* <Modal
-          backdropOpacity={0}
-          onBackdropPress={() => setOpenModal(false)}
-          animationIn={'fadeInDown'}
-          animationOut={'fadeOutUp'}
-          isVisible={openModal}>
-          <FlexibleBookingAcceptModal
-            setOpenModal={setOpenModal}
-            booking={booking}
-          />
-        </Modal> */}
 
         <Modal
           animationType="slide"

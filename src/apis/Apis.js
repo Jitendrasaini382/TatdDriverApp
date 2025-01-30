@@ -1,7 +1,5 @@
 import _Fetch from './Service';
 
-// export const API_BASE_URL = "https://www.tatd.in/app-api/driver/"
-
 export const DRIVER_LOGIN = body => {
   return _Fetch('POST', 'login/driver-login.php', body, {});
 };

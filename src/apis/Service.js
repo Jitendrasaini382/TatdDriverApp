@@ -190,7 +190,7 @@ const _Fetch = (method, path, body, headers = {}) => {
         }
       })
       .catch(err => {
-        // console.error(`Request error: ${path}`, err);
+        // console.log(`Request error: ${path}`, err);
         reject(err.response ? err.response.data : err.message);
       });
   });

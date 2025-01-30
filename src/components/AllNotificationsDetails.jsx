@@ -22,7 +22,7 @@ import {setStoredRating} from '../redux/slices/globalSlice';
 
 const AllNotificationComponent = ({data}) => {
   const navigation = useNavigation();
-  const [notificationData, setNotificationData] = useState(data || []);
+  const [notificationData, setNotificationData] = useState([]);
   const storeRating = useSelector(e => e?.globalSlice?.rating);
   const dispatch = useDispatch();
   const [showButton, setshowButton] = useState(false);
@@ -106,32 +106,6 @@ const AllNotificationComponent = ({data}) => {
           <Button title="Load More " onPress={() => getAllNotification(10)} />
         </View>
       ) : null}
-      {/* {notificationData &&
-        notificationData.map(notification => (
-          <TouchableOpacity
-            key={notification.id}
-            style={styles.touchable}
-            onPress={() => handleNotificationPress(notification)}>
-            <View style={styles.iconContainer}>
-              <Image
-                style={styles.icon}
-                resizeMode="contain"
-                source={
-                  notification.status === 'unread' ? CloseEnvelop : OpenEnvelop
-                }
-              />
-            </View>
-            <View style={styles.textContainer}>
-              <Text
-                style={styles.previewText}
-                //  numberOfLines={1}
-              >
-                {notification.message_preview ||
-                  notification.message.substring(0, 50) + '...'}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ))} */}
     </ScrollView>
   );
 };

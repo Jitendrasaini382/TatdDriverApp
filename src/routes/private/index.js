@@ -21,7 +21,6 @@ import {useSelector} from 'react-redux';
 import DueAmountDetails from '../../screens/DueAmountDetails';
 import RateUsAtSocialMedia from '../../screens/RateUsAtSocialMedia';
 import DueAmount from '../../screens/DueAmount';
-import CommanWebview from '../../screens/CommanWebview';
 import RedirectPopUp from '../../screens/RedirectPopUp';
 import {navigationRef} from '../../utils/navigationRef';
 
@@ -92,7 +91,6 @@ const PrivateRoute = () => {
             name="RateYourCustomerFeedback"
             component={RateYourCustomerFeedback}
           />
-          <Stack.Screen name="CommanWebview" component={CommanWebview} />
           <Stack.Screen name="RedirectPopUp" component={RedirectPopUp} />
         </Stack.Navigator>
       </NavigationContainer>

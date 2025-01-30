@@ -174,10 +174,7 @@ const DriverLogin = () => {
         response?.message == 'Not Found in Trusted and registration table'
       ) {
         setLoader(false);
-        // navigation.navigate('CommanWebview', {
-        //   url: response?.redirect,
-        //   isAuthenticated: false,
-        // });
+
         Linking.openURL(response?.redirect);
       }
     } catch (err) {
@@ -283,142 +280,6 @@ const DriverLogin = () => {
           </View>
         </View>
 
-        {/* <Modal
-          visible={isModalVisible}
-          transparent={true}
-          onRequestClose={handleClose}
-          animationType="slide">
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                width: '100%',
-                backgroundColor: 'white',
-                borderRadius: 10,
-                padding: 20,
-              }}>
-              <View
-                style={{
-                  justifyContent: 'space-between',
-                  alignContent: 'center',
-                  flexDirection: 'row',
-                  marginBottom: 10,
-                }}>
-                <View
-                  style={{
-                    borderRadius: 18,
-                    height: 36,
-                    width: 36,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginRight: 5,
-                  }}>
-                  <Image
-                    style={{
-                      resizeMode: 'center',
-                      height: 30,
-                      width: 30,
-                    }}
-                    source={googleLogo}
-                  />
-                </View>
-                <TouchableOpacity
-                  onPress={handleClose}
-                  style={{
-                    backgroundColor: 'white',
-                    borderRadius: 18,
-                    height: 36,
-                    width: 36,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginRight: 5,
-                  }}>
-                  <Icon name="close" size={20} color={AppColors.greyColor} />
-                </TouchableOpacity>
-              </View>
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: 'bold',
-                  marginBottom: 10,
-                  color: AppColors.black,
-                }}>
-                Choose a phone number
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  marginBottom: 5,
-                  color: '#555',
-                }}>
-                You can choose a phone number that's assigned to your phone, and
-                Google will share it only with this app.
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  marginBottom: 5,
-                  color: '#555',
-                }}>
-                Google won't store the phone number that you share with this app
-                in your Google Account
-              </Text>
-
-              <FlatList
-                data={simInfo}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({item}) => (
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      padding: 5,
-                    }}>
-                    {item !== 'Please Allow The Permission' ? (
-                      <View
-                        style={{
-                          backgroundColor: 'grey',
-                          borderRadius: 18,
-                          height: 36,
-                          width: 36,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          marginRight: 15,
-                        }}>
-                        <Icon
-                          name="phone"
-                          size={20}
-                          color={AppColors.greyColor}
-                        />
-                      </View>
-                    ) : null}
-                    <TouchableOpacity
-                      style={{}}
-                      onPress={() => handleSetNumber(item.toString())}>
-                      <Text style={{fontSize: 18, color: AppColors.black}}>{item}</Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              />
-
-              <Text
-                style={{
-                  fontSize: 12,
-                  marginTop: 15,
-                  color: '#555',
-                }}>
-                You can update your phone number sharing preference in your
-                device settings
-              </Text>
-            </View>
-          </View>
-        </Modal> */}
-
         <Modal
           visible={isModalVisible}
           transparent={true}
@@ -428,8 +289,8 @@ const DriverLogin = () => {
             style={{
               flex: 1,
               backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              justifyContent: 'center', // Center the modal vertically
-              alignItems: 'center', // Center the modal horizontally
+              justifyContent: 'center',
+              alignItems: 'center',
             }}>
             <View
               style={{
@@ -462,7 +323,7 @@ const DriverLogin = () => {
                     onPress={() => handleSetNumber(item.toString())}>
                     <View
                       style={{
-                        backgroundColor: 'grey', // Set gray background for call icon
+                        backgroundColor: 'grey',
                         borderRadius: 18,
                         height: 36,
                         width: 36,
@@ -484,12 +345,12 @@ const DriverLogin = () => {
                 onPress={() => handleClose()}
                 style={{
                   marginTop: 20,
-                  alignSelf: 'flex-start', // Align text to the left
+                  alignSelf: 'flex-start',
                 }}>
                 <Text
                   style={{
                     fontSize: 16,
-                    color: AppColors.primary, // Color for "None of the Above"
+                    color: AppColors.primary,
                     fontWeight: 'bold',
                   }}>
                   NONE OF THE ABOVE

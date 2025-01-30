@@ -52,7 +52,6 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
       dispatch(setTriggerFunction(true));
       dispatch(setRefreshKey());
 
-      console.log(response, 'responseresponseresponseresponseresponseresponse');
 
       // return false;
 

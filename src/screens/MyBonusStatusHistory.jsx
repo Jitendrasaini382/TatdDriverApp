@@ -66,13 +66,6 @@ const MyBonusStatusHistory = () => {
       <SafeAreaView style={{flex: 1}}>
         <Header backButton={true} />
 
-        {/* {loader ? (
-          <ActivityIndicator
-            style={{flex: 1, alignContent: 'center'}}
-            size={'small'}
-            color={AppColors.mainColor}
-          />
-        ) : ( */}
         <ScrollView
           contentContainerStyle={{flexGrow: 1}}
           refreshControl={

@@ -164,35 +164,6 @@ export const NoticeBoardDetailScreen = ({route}) => {
     }, [fetchNoticeData]),
   );
 
-  const formatDate = useCallback(dateString => {
-    const [datePart] = dateString.split(' ');
-    const [year, month, day] = datePart.split('-');
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return `${parseInt(day)} ${months[parseInt(month) - 1]} ${year}`;
-  }, []);
-
-  const handleNoticeFooterPress = useCallback(
-    footerNotice => {
-      navigation.navigate('NoticeBoardDetail', {
-        noticeId: footerNotice.id,
-      });
-    },
-    [navigation],
-  );
-
   return (
     <SafeAreaView style={styles.fullScreenContainer}>
       <Header backButton={true} />

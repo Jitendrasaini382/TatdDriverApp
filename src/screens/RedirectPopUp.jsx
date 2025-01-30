@@ -17,12 +17,6 @@ const RedirectPopUp = ({navigation, route}) => {
 
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     navigation.navigate('TrustedDriver');
-  //   }, 3000);
-  // }, []);
-
   useEffect(() => {
     setTimeout(() => {
       navigation.navigate('TrustedDriver');

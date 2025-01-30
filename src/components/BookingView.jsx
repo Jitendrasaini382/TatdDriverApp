@@ -32,9 +32,6 @@ const BookingView = ({data, allBookingData, panelData}) => {
         decodedToken?.driver_mobile_number,
       ).toString('base64');
       const url = `https://www.tatd.in/agent-login.php?dologin=${encodedMobile}`;
-      // navigation.navigate('CommanWebview', {
-      //   url: url,
-      // });
       Linking.openURL(url);
     } catch (error) {}
   };

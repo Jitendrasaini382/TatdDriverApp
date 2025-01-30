@@ -242,11 +242,6 @@ const MyBookingModal = ({}) => {
                         : null}
 
                       <Pressable
-                        // onPress={() =>
-                        //   navigation.navigate('CommanWebview', {
-                        //     url: `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                        //   })}
-
                         onPress={() =>
                           Linking.openURL(
                             `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,

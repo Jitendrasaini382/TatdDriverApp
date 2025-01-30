@@ -33,8 +33,7 @@ const DriverEarning = () => {
       });
       setLifeTimeEarn(response.lifetime_earning);
       setEarnData(response.commission_data);
-    } catch (err) {
-    }
+    } catch (err) {}
   }, []);
 
   const fetchAllEarnings = useCallback(async () => {
@@ -81,7 +80,7 @@ const DriverEarning = () => {
               </Text>
               <Text style={styles.tripDate}>
                 {item.booking_date} -{' '}
-                <Text style={styles.settlementType}>{item.payment_status}</Text>{' '}
+                <Text style={styles.settlementType}>{item.payment_status}</Text>
                 {item.settle_date}
               </Text>
             </View>

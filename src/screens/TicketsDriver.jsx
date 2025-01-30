@@ -196,9 +196,7 @@ const TicketsDriver = ({navigation}) => {
       } else {
         Alert.alert('Error', 'Internal server error');
       }
-    } catch (error) {
-      //   Alert.alert('Error', error?.message);
-    }
+    } catch (error) {}
   };
 
   // Utility function to reset fields

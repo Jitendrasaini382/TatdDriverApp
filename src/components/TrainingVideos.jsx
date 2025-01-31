@@ -15,9 +15,10 @@ const TrainingVideo = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const dispatch = useDispatch();
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
-  const trainingVideoData = useSelector(
-    e => e?.trustedDriverSlice?.trainingVideoData,
-  );
+  const [trainingVideoData, setTrainingVideoData] = useState([]);
+  // const trainingVideoData = useSelector(
+  //   e => e?.trustedDriverSlice?.trainingVideoData,
+  // );
 
   useEffect(() => {
     getTrainingVideo();
@@ -26,7 +27,8 @@ const TrainingVideo = () => {
   const getTrainingVideo = async () => {
     try {
       const response = await DRIVER_TRAINING_VIDEOS(languageSwitch);
-      dispatch(setTrainingVideoData(response?.response?.training_data));
+      // dispatch(setTrainingVideoData(response?.response?.training_data));
+      setTrainingVideoData(response?.response?.training_data);
     } catch (error) {}
   };
 
@@ -40,7 +42,7 @@ const TrainingVideo = () => {
 
       setTimeout(() => {
         getTrainingVideo();
-      }, 3000);
+      }, 2000);
     } catch (error) {}
   };
 

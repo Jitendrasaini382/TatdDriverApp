@@ -202,7 +202,7 @@ const TrustedDriver = ({navigation}) => {
       getHomeNotification();
       getHomeNotice();
     }
-  }, [jwt, languageSwitch, refreshKey]);
+  }, [languageSwitch, refreshKey]);
 
   const openMyUrl = url => {
     Linking.openURL(url).then(() => {});
@@ -329,7 +329,9 @@ const TrustedDriver = ({navigation}) => {
       await getHomeNotification();
       await getHomeNotice();
       await getAllTrustedData();
-      getTrainingVideo();
+      // if(videosContent){
+      //   getTrainingVideo();
+      // }
       // if (isRfdOn) {
       await getAllOndemandBookings();
       dispatch(setRefreshKey());
@@ -643,14 +645,14 @@ const TrustedDriver = ({navigation}) => {
         dispatch(setVideosContent(false));
       } else {
         dispatch(setLoginStatus(false));
+        dispatch(setVideosContent(true));
       }
-      dispatch(setTrainingVideoData(response?.response?.training_data));
+      // dispatch(setTrainingVideoData(response?.response?.training_data));
     } catch (error) {}
   };
 
   const showVideoContent = () => {
     dispatch(setVideosContent(true));
-
     getTrainingVideo();
     setLoginMessage('');
   };
@@ -1044,7 +1046,16 @@ const TrustedDriver = ({navigation}) => {
                       styles.bottamContent1,
                       videosContent && {backgroundColor: AppColors.mainColor},
                     ]}>
-                    <Text style={styles.absoulteText}>{videoCount || 0}</Text>
+                    <Text
+                      style={[
+                        styles.absoulteText,
+                        {
+                          backgroundColor:
+                            videoCount == 0 ? 'grey' : 'rgb(195, 31, 31)',
+                        },
+                      ]}>
+                      {videoCount}
+                    </Text>
                     <View style={styles.absoulteView}>
                       <Text
                         style={[

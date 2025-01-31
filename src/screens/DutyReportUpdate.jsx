@@ -50,10 +50,11 @@ import {
   PACKAGE_DETAILS_DUTY_REPORT,
   TALK_TO_CUSTOMER,
 } from '../apis/Apis';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {AppFont} from '../assets/FontsFamily';
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
+import DeviceInfo from 'react-native-device-info';
 
 const DutyReportUpdate = ({route, navigation}) => {
   const {bookingNumber, state} = route?.params;
@@ -82,6 +83,8 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const jwtToken = useSelector(e => e?.userAuth?.jwt);
+  const refreshToken = useSelector(e => e?.userAuth?.refreshToken);
+  const dispatch = useDispatch();
 
   const talkToCustomer = async () => {
     setLoader(true);
@@ -390,10 +393,18 @@ const DutyReportUpdate = ({route, navigation}) => {
 
   const showStartAlert = () => {
     if (!inputValue) {
-      Alert.alert('Please Enter Fisrt OTP');
+      Alert.alert(
+        languageSwitch == 'english'
+          ? 'Please Enter Fisrt OTP'
+          : 'कृपया पहले ओटीपी दर्ज करें।',
+      );
       return;
     } else if (!inputKmsValue) {
-      Alert.alert('Please Enter Fisrt Start KMS');
+      Alert.alert(
+        languageSwitch == 'english'
+          ? 'Please Enter First Start KMS'
+          : 'कृपया प्रारंभ KMS दर्ज करें।',
+      );
       return;
     } else {
       Alert.alert(
@@ -467,20 +478,25 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
 
   const driverReached = async () => {
-    if (selectedFile) {
-      formData.append('start_image', {
-        uri: selectedFile.uri,
-        type: selectedFile.type || 'image/jpeg',
-        name: selectedFile.fileName || 'photo.jpg',
-      });
-    } else {
-      Alert.alert('No file selected for upload');
+    console.log('runnnnn');
+
+    if (!selectedFile) {
+      Alert.alert(
+        languageSwitch === 'english'
+          ? 'Please click the Photo for upload'
+          : 'कृपया अपलोड करने के लिए फोटो पर क्लिक करें।',
+      );
       return;
     }
     if (!inputValue) {
-      Alert.alert('Please Enter Fisrt OTP');
+      Alert.alert(
+        languageSwitch === 'english'
+          ? 'Please Enter First OTP'
+          : 'कृपया पहले ओटीपी दर्ज करें।',
+      );
       return;
     }
+
     setLoader(true);
     Keyboard.dismiss();
 
@@ -492,8 +508,15 @@ const DutyReportUpdate = ({route, navigation}) => {
       'trip_status',
       bookingInfo?.condition?.next_booking_status_id,
     );
+    formData.append('start_image', {
+      uri: selectedFile.uri,
+      type: selectedFile.type || 'image/jpeg',
+      name: selectedFile.fileName || 'photo.jpg',
+    });
     formData.append('otp', inputValue);
     formData.append('start_kms', inputKmsValue);
+
+    console.log(formData, 'Form Data for Submission');
 
     try {
       const response = await axios.post(
@@ -508,33 +531,69 @@ const DutyReportUpdate = ({route, navigation}) => {
       );
 
       const res = response?.data;
+      console.log(res, 'API Response');
 
-      if (res?.redirect == 'duty_report') {
-        if (res?.message_type == 'error') {
+      if (res?.redirect === 'duty_report') {
+        if (res?.message_type === 'error') {
           setCancelState('cancel');
           setModalVisibleinput(false);
         } else {
           GetAllBookingInfo();
           setModalVisibleinput(false);
         }
-      }
-      if (
+      } else if (
         res?.start_booking_message &&
-        Object.keys(res?.start_booking_message).length !== 0
+        Object.keys(res.start_booking_message).length !== 0
       ) {
         setModalVisibleinput(false);
         GetAllBookingInfo();
       } else {
-        const msge = res?.otp_error_message;
         Toast.show({
           type: 'error',
           text1: 'Error',
-          text2: msge?.otp_error_message,
+          text2: res?.otp_error_message || 'Something went wrong',
         });
       }
     } catch (error) {
+      console.error('API Call Error:', error);
+
       if (error.response) {
         console.log('Server Response Error:', error.response.data);
+
+        if (error.response.status === 401 || error.response.status === 400) {
+          if (
+            error.response?.data?.message === 'Token has expired' &&
+            !error.config._retry
+          ) {
+            error.config._retry = true;
+
+            if (refreshToken) {
+              try {
+                const appVersion = DeviceInfo.getVersion();
+                const res = await axios.post(
+                  'https://www.tatd.in/app-api/driver/login/refresh_token.php',
+                  {refresh_token: refreshToken, app_version: appVersion},
+                );
+
+                if (res.data?.jwt) {
+                  dispatch(
+                    setUserAuthStates({key: 'jwt', value: res.data.jwt}),
+                  );
+                  dispatch(
+                    setUserAuthStates({
+                      key: 'userProfile',
+                      value: jwtDecode(res.data.jwt),
+                    }),
+                  );
+                  console.log('Token refreshed successfully.');
+                  return driverReached(); // Retry API call with new token
+                }
+              } catch (refreshError) {
+                console.error('Error Refreshing Token:', refreshError);
+              }
+            }
+          }
+        }
       } else if (error.request) {
         console.error('No Response from Server:', error.request);
       } else {
@@ -1822,8 +1881,6 @@ const DutyReportUpdate = ({route, navigation}) => {
                     />
                   </View>
 
-                  {/* <Button title="Open Camera" onPress={handleCameraCapture} /> */}
-
                   {popupsData?.popupdata?.start_kms_eligibility == '1' && (
                     <TextInput
                       style={{
@@ -1854,7 +1911,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                     disabled={loader}
                     style={{
                       backgroundColor: AppColors.mainColor,
-                      marginTop: '20%',
+                      marginTop: '10%',
                       padding: 12,
                       borderRadius: 6,
                       width: '60%',

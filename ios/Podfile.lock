@@ -1035,6 +1035,27 @@ PODS:
   - react-native-gif (1.0.3):
     - FLAnimatedImage
     - React
+  - react-native-image-picker (7.2.3):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-netinfo (11.4.1):
     - React-Core
   - react-native-otp-verify (1.1.8):
@@ -1456,6 +1477,7 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - react-native-device-number (from `../node_modules/react-native-device-number`)
   - react-native-gif (from `../node_modules/react-native-gif`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-otp-verify (from `../node_modules/react-native-otp-verify`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -1586,6 +1608,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-device-number"
   react-native-gif:
     :path: "../node_modules/react-native-gif"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-otp-verify:
@@ -1717,6 +1741,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: bf56147c9775491e53122a94c423ac201417e326
   react-native-device-number: bdacfe5c5faabbdc04e452e2cb7a5c39a0144f52
   react-native-gif: 844d69f610a60e7fd4d639e203213350cb1ff95b
+  react-native-image-picker: fb0c2b3adc3eff6caa3cd6a507a34b9dcc9238dd
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
   react-native-otp-verify: b524a7f44b691644bea08376d6a4782a2df57e09
   react-native-safe-area-context: a240ad4b683349e48b1d51fed1611138d1bdad97

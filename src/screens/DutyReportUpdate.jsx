@@ -482,7 +482,7 @@ const DutyReportUpdate = ({route, navigation}) => {
 
     if (!selectedFile) {
       Alert.alert(
-        languageSwitch === 'english'
+        languageSwitch == 'english'
           ? 'Please click the Photo for upload'
           : 'कृपया अपलोड करने के लिए फोटो पर क्लिक करें।',
       );
@@ -490,7 +490,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     }
     if (!inputValue) {
       Alert.alert(
-        languageSwitch === 'english'
+        languageSwitch == 'english'
           ? 'Please Enter First OTP'
           : 'कृपया पहले ओटीपी दर्ज करें।',
       );
@@ -533,8 +533,8 @@ const DutyReportUpdate = ({route, navigation}) => {
       const res = response?.data;
       console.log(res, 'API Response');
 
-      if (res?.redirect === 'duty_report') {
-        if (res?.message_type === 'error') {
+      if (res?.redirect == 'duty_report') {
+        if (res?.message_type == 'error') {
           setCancelState('cancel');
           setModalVisibleinput(false);
         } else {
@@ -560,9 +560,9 @@ const DutyReportUpdate = ({route, navigation}) => {
       if (error.response) {
         console.log('Server Response Error:', error.response.data);
 
-        if (error.response.status === 401 || error.response.status === 400) {
+        if (error.response.status == 401 || error.response.status == 400) {
           if (
-            error.response?.data?.message === 'Token has expired' &&
+            error.response?.data?.message == 'Token has expired' &&
             !error.config._retry
           ) {
             error.config._retry = true;

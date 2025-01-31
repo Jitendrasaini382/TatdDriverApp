@@ -478,8 +478,6 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
 
   const driverReached = async () => {
-    console.log('runnnnn');
-
     if (!selectedFile) {
       Alert.alert(
         languageSwitch == 'english'
@@ -516,8 +514,6 @@ const DutyReportUpdate = ({route, navigation}) => {
     formData.append('otp', inputValue);
     formData.append('start_kms', inputKmsValue);
 
-    console.log(formData, 'Form Data for Submission');
-
     try {
       const response = await axios.post(
         'https://www.tatd.in/app-api/driver/duty-report/duty_report_booking_start.php',
@@ -531,7 +527,6 @@ const DutyReportUpdate = ({route, navigation}) => {
       );
 
       const res = response?.data;
-      console.log(res, 'API Response');
 
       if (res?.redirect == 'duty_report') {
         if (res?.message_type == 'error') {
@@ -555,11 +550,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         });
       }
     } catch (error) {
-      console.error('API Call Error:', error);
-
       if (error.response) {
-        console.log('Server Response Error:', error.response.data);
-
         if (error.response.status == 401 || error.response.status == 400) {
           if (
             error.response?.data?.message == 'Token has expired' &&
@@ -585,7 +576,6 @@ const DutyReportUpdate = ({route, navigation}) => {
                       value: jwtDecode(res.data.jwt),
                     }),
                   );
-                  console.log('Token refreshed successfully.');
                   return driverReached(); // Retry API call with new token
                 }
               } catch (refreshError) {

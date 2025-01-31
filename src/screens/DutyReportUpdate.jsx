@@ -13,16 +13,27 @@ import {
   TextInput,
   ActivityIndicator,
   Keyboard,
+  PermissionsAndroid,
   RefreshControl,
+  Button,
+  Platform,
 } from 'react-native';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import Header from '../components/Header';
-import {Address, CallingGif, Mask} from '../assets/images';
+import {
+  Address,
+  Agent_Icon,
+  CallingGif,
+  Mask,
+  TrustedPartner,
+} from '../assets/images';
 import {AppColors} from '../assets/Colors';
 import SwipeableButton from '../components/SwipeableButton';
 import RadioButton from '../components/CustomRadioButton';
 import PackageDetailsDutyReportUpdate from '../components/modal/PackageDetailsDutyReportUpdate';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {launchCamera} from 'react-native-image-picker';
+
 import {
   CHECK_IS_BOOKING_IS_UPCOMMING,
   CUSTOMER_NOT_PICKUP_PHONE,
@@ -42,6 +53,7 @@ import {
 import {useSelector} from 'react-redux';
 import {AppFont} from '../assets/FontsFamily';
 import Toast from 'react-native-toast-message';
+import axios from 'axios';
 
 const DutyReportUpdate = ({route, navigation}) => {
   const {bookingNumber, state} = route?.params;
@@ -67,6 +79,9 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [firstTimePopup, setfirstTimePopup] = useState(false);
   const [firstTimePopupData, setfirstTimePopupData] = useState({});
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const jwtToken = useSelector(e => e?.userAuth?.jwt);
 
   const talkToCustomer = async () => {
     setLoader(true);
@@ -399,7 +414,138 @@ const DutyReportUpdate = ({route, navigation}) => {
     }
   };
 
+  const requestCameraPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: 'Camera Permission',
+            message: 'This app needs access to your camera to capture photos.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const handleCameraCapture = async () => {
+    const hasPermission = await requestCameraPermission();
+    if (hasPermission) {
+      launchCamera(
+        {mediaType: 'photo', maxHeight: 600, maxWidth: 800},
+        response => {
+          if (response.didCancel) {
+          } else if (response.errorCode) {
+            console.error('Camera Error:', response.errorMessage);
+          } else {
+            const file = response.assets[0];
+            setSelectedFile(file);
+          }
+        },
+      );
+    } else {
+      Alert.alert(
+        'Permission Denied',
+        'Camera access is required to take photos. Please enable camera permissions in your device settings.',
+        [
+          {text: 'Cancel', style: 'cancel'},
+          {
+            text: 'Open Settings',
+            onPress: () => Linking.openSettings(),
+          },
+        ],
+      );
+    }
+  };
+
   const driverReached = async () => {
+    if (selectedFile) {
+      formData.append('start_image', {
+        uri: selectedFile.uri,
+        type: selectedFile.type || 'image/jpeg',
+        name: selectedFile.fileName || 'photo.jpg',
+      });
+    } else {
+      Alert.alert('No file selected for upload');
+      return;
+    }
+    if (!inputValue) {
+      Alert.alert('Please Enter Fisrt OTP');
+      return;
+    }
+    setLoader(true);
+    Keyboard.dismiss();
+
+    const formData = new FormData();
+    formData.append('action', 'duty_report_booking_start');
+    formData.append('booking_id', bookingNumber);
+    formData.append('current_language', languageSwitch);
+    formData.append(
+      'trip_status',
+      bookingInfo?.condition?.next_booking_status_id,
+    );
+    formData.append('otp', inputValue);
+    formData.append('start_kms', inputKmsValue);
+
+    try {
+      const response = await axios.post(
+        'https://www.tatd.in/app-api/driver/duty-report/duty_report_booking_start.php',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        },
+      );
+
+      const res = response?.data;
+
+      if (res?.redirect == 'duty_report') {
+        if (res?.message_type == 'error') {
+          setCancelState('cancel');
+          setModalVisibleinput(false);
+        } else {
+          GetAllBookingInfo();
+          setModalVisibleinput(false);
+        }
+      }
+      if (
+        res?.start_booking_message &&
+        Object.keys(res?.start_booking_message).length !== 0
+      ) {
+        setModalVisibleinput(false);
+        GetAllBookingInfo();
+      } else {
+        const msge = res?.otp_error_message;
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: msge?.otp_error_message,
+        });
+      }
+    } catch (error) {
+      if (error.response) {
+        console.log('Server Response Error:', error.response.data);
+      } else if (error.request) {
+        console.error('No Response from Server:', error.request);
+      } else {
+        console.error('Error Setting Up Request:', error.message);
+      }
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const driverReachedd = async () => {
     if (!inputValue) {
       Alert.alert('Please Enter Fisrt OTP');
       return;
@@ -1524,6 +1670,103 @@ const DutyReportUpdate = ({route, navigation}) => {
                   </Text>
                 </View>
 
+                {/* <Image
+                  source={selectedFile ? {uri: selectedFile.uri} : Agent_Icon}
+                  style={{
+                    width: 200,
+                    height: 200,
+                    marginBottom: 10,
+                    borderRadius: 10,
+                  }}
+                /> */}
+
+                <TouchableOpacity
+                  style={{
+                    width: 150,
+                    height: 150,
+                    borderRadius: 75,
+                    alignSelf: 'center',
+                    //backgroundColor: "#66a6ff",
+                    backgroundColor: '#66a6ff',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    overflow: 'hidden',
+                    margin: 10,
+                    marginTop: 20,
+                    borderWidth: 5,
+                    borderColor: '#fff',
+                  }}
+                  onPress={handleCameraCapture}>
+                  {selectedFile ? (
+                    <Image
+                      source={{uri: selectedFile?.uri}}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        // resizeMode: "cover",
+                        //borderRadius:70
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      source={TrustedPartner}
+                      style={{
+                        width: 50,
+                        height: 50,
+                        opacity: 0.8,
+                        alignSelf: 'center',
+                        marginVertical: 5,
+                      }}
+                    />
+                  )}
+                  <Text style={{marginBottom: 10}}>
+                    {selectedFile ? (
+                      <Text style={{color: 'white', fontSize: 15}}>Edit</Text>
+                    ) : (
+                      <Text style={{color: 'white', fontSize: 15}}>
+                        Upload Image
+                      </Text>
+                    )}
+                  </Text>
+                </TouchableOpacity>
+
+                {/* <TouchableOpacity
+                  onPress={handleCameraCapture}
+                  style={{
+                    margin: 10,
+                    alignContent: 'center',
+                    alignSelf: 'center',
+                    borderWidth: 1,
+                    width: 150,
+                    height: 150,
+                    borderRadius: 75,
+                  }}>
+                  {selectedFile ? (
+                    <Image
+                      source={{uri: selectedFile.uri}}
+                      style={{
+                        width: 150,
+                        resizeMode: 'center',
+                        height: 150,
+                        // marginBottom: 10,
+                        // borderRadius: 10,
+                        // borderRadius: '50%',
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      source={Agent_Icon}
+                      style={{
+                        width: 150,
+                        height: 140,
+                        resizeMode: 'center',
+                        // marginBottom: 10,
+                        // borderRadius: 10,
+                      }}
+                    />
+                  )}
+                </TouchableOpacity> */}
+
                 <View style={{padding: 20}}>
                   <TextInput
                     style={{
@@ -1534,7 +1777,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                       fontSize: 16,
                       color: '#333',
                       backgroundColor: '#fff',
-                      marginTop: 20,
+                      // marginTop: 10,
                       padding: 10,
                     }}
                     placeholder="Enter Otp"
@@ -1546,7 +1789,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                   />
                   <View
                     style={{
-                      alignItems: 'center',
+                      // alignItems: 'center',
                       marginBottom: 10,
                     }}>
                     <TouchableOpacity
@@ -1557,6 +1800,8 @@ const DutyReportUpdate = ({route, navigation}) => {
                           fontSize: 16,
                           fontWeight: '400',
                           color: AppColors.mainColor,
+                          alignSelf: 'flex-start',
+                          marginVertical: 5,
                         }}
                         onLayout={event => {
                           const {width} = event.nativeEvent.layout;
@@ -1576,6 +1821,8 @@ const DutyReportUpdate = ({route, navigation}) => {
                       }}
                     />
                   </View>
+
+                  {/* <Button title="Open Camera" onPress={handleCameraCapture} /> */}
 
                   {popupsData?.popupdata?.start_kms_eligibility == '1' && (
                     <TextInput

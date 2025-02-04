@@ -32,12 +32,16 @@ import DeviceInfo from 'react-native-device-info';
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
 import {Buffer} from 'buffer';
+import Geolocation from '@react-native-community/geolocation';
+
 import {
+  DRIVER_AVAILABLE_TEN_MINUTES,
   DRIVER_HEADLINE,
   DRIVER_NOTICE,
   DRIVER_NOTIFICATION,
   DRIVER_TRAINING_VIDEOS,
   EXPRESS_BOOKING_POPUP,
+  GET_ALL_AVAILABILITY,
   GET_FCM_TOKEN,
   LOGIN_BUTTON,
   ON_DEMAND_BOOKING,
@@ -45,7 +49,10 @@ import {
   UPDATE_POPUP,
 } from '../apis/Apis';
 import ExpressBookingModal from '../components/modal/ExpressBookingModal';
-import {requestNotificationPermission} from '../utils/permissions';
+import {
+  requestLocationPermission,
+  requestNotificationPermission,
+} from '../utils/permissions';
 import {
   setBookingModal,
   setExpressBookingModal,
@@ -92,10 +99,157 @@ const TrustedDriver = ({navigation}) => {
   const [showNotification, setShowNotification] = useState(false);
   const [showNotice, setShowNotice] = useState(false);
   const appType = Platform.OS;
+  const [isSelected, setIsSelected] = useState(false);
+  const [modalVisibleTenMinutes, setModalVisibleTenMinutes] = useState(false);
+  const [showTenMinuteButton, setShowTenMinute] = useState(false);
+  const [location, setLocation] = useState();
+
+  const [allTripType, setAllTripType] = useState([
+    {
+      label: 'Incity Roundtrip',
+      value: false,
+      way: 2,
+      action: 'Incity',
+    },
+    {
+      label: 'Incity Oneway',
+      value: false,
+      way: 1,
+      action: 'Incity',
+    },
+    {
+      label: 'Outstation Roundtrip',
+      value: false,
+      way: 2,
+      action: 'Outstation',
+    },
+    {
+      label: 'Outstation Oneway',
+      value: false,
+      way: 1,
+      action: 'Outstation',
+    },
+  ]);
+
+  const handleTenMinuteButton = async () => {
+    const hasPermission = await requestLocationPermission();
+    getAllAvailability();
+    if (hasPermission) {
+      getLocation();
+      setIsSelected(true);
+      setModalVisibleTenMinutes(true);
+    } else {
+      setModalVisibleTenMinutes(false);
+    }
+  };
+
+  const getLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        setLocation(position.coords);
+      },
+      error => {
+        if (error.code === 1) {
+          requestLocationPermission();
+        } else if (error.code === 2) {
+          Alert.alert(
+            'Location permission is required. Please enable it in settings.',
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+              {
+                text: 'Go to Settings',
+                onPress: () =>
+                  Linking.sendIntent(
+                    'android.settings.LOCATION_SOURCE_SETTINGS',
+                  ),
+              },
+            ],
+          );
+        } else {
+          console.log('Error fetching location:', error.message);
+        }
+      },
+    );
+  };
 
   const isFcmSent = useSelector(e => e?.userAuth?.isFcmSent);
   const isRfdOn = useSelector(state => state.globalSlice.loginStatus);
   const isDeviceInfo = useSelector(e => e?.userAuth?.isDeviceInfo);
+  const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  const refreshKey = useSelector(state => state?.globalSlice?.refreshKey);
+  const jwt = useSelector(e => e?.userAuth?.jwt);
+
+  const sendDriverAvailableInTenMinutes = async data => {
+    // console.log(location, 'locationlocationlocation');
+
+    try {
+      // console.log({
+      //   action: 'insert_availability',
+      //   latitude: location?.latitude,
+      //   longitude: location?.longitude,
+      //   product_type: data?.action,
+      //   way: data?.way,
+      // });
+
+      // return false;
+
+      const response = await DRIVER_AVAILABLE_TEN_MINUTES({
+        action: 'insert_availability',
+        latitude: location?.latitude,
+        longitude: location?.longitude,
+        product_type: data?.action,
+        way: data?.way,
+      });
+
+      setAllTripType(prevTripTypes =>
+        prevTripTypes.map(trip =>
+          trip.label === data.label ? {...trip, value: true} : {...trip},
+        ),
+      );
+    } catch (error) {
+      console.log(error, 'sendDriverAvailableInTenMinutes error');
+    }
+  };
+
+  const getAllAvailability = async () => {
+    try {
+      const response = await GET_ALL_AVAILABILITY();
+
+      console.log(response, 'resonsesss getAllAvailability');
+      const responsee = {
+        status_code: 200,
+        message: 'success',
+        incity_oneway_flag: 1,
+        incity_roundtrip_flag: 1,
+        outstation_oneway_flag: 1,
+        outstation_roundtrip_flag: 1,
+      };
+      // setAllTripType()
+      setAllTripType(prevTripTypes =>
+        prevTripTypes.map(trip => {
+          if (trip.label === 'Incity Oneway') {
+            return {...trip, value: response?.incity_oneway_flag == 1};
+          }
+          if (trip.label === 'Incity Roundtrip') {
+            return {...trip, value: response?.incity_roundtrip_flag == 1};
+          }
+          if (trip.label === 'Outstation Oneway') {
+            return {...trip, value: response?.outstation_oneway_flag == 1};
+          }
+          if (trip.label === 'Outstation Roundtrip') {
+            return {...trip, value: response?.outstation_roundtrip_flag == 1};
+          }
+          return trip;
+        }),
+      );
+    } catch (error) {
+      console.log(error, 'error getAllAvailability');
+    }
+  };
 
   const [deviceInfo, setDeviceInfo] = useState({
     action: 'save_device_info',
@@ -138,15 +292,6 @@ const TrustedDriver = ({navigation}) => {
     state => state.trustedDriverSlice.myBookingModal,
   );
   const appVersion = DeviceInfo.getVersion();
-
-  const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
-  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
-  const triggerFunction = useSelector(
-    state => state?.globalSlice?.triggerFunction,
-  );
-  const refreshKey = useSelector(state => state?.globalSlice?.refreshKey);
-
-  const jwt = useSelector(e => e?.userAuth?.jwt);
 
   useFocusEffect(
     useCallback(() => {
@@ -524,6 +669,7 @@ const TrustedDriver = ({navigation}) => {
       });
 
       setHeadLineData(response);
+      console.log(response, 'responseresponseresponse headline');
 
       if (
         response?.driver_panel_messages
@@ -540,6 +686,18 @@ const TrustedDriver = ({navigation}) => {
         dispatch(setVideosContent(false));
       } else {
         dispatch(setLoginStatus(false));
+      }
+
+      if (response?.driver_panel_messages?.ten_minutes_access == '1') {
+        setShowTenMinute(true);
+      } else {
+        setShowTenMinute(false);
+      }
+
+      if (response?.driver_panel_messages?.driver_in_10minutes_on_flag == '1') {
+        setIsSelected(true);
+      } else {
+        setIsSelected(false);
       }
 
       if (response?.driver_panel_messages?.driver_notification_flag == '1') {
@@ -665,6 +823,66 @@ const TrustedDriver = ({navigation}) => {
       <SafeAreaView style={{flex: 1}}>
         <Header extraButton={true} showNeedHelp={showNeedHelp} />
         {myBookingModal && <MyBookingModal />}
+
+        {!showTenMinuteButton && (
+          <View style={{alignSelf: 'flex-end'}}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: isSelected ? 'blue' : 'white',
+                borderRadius: 10,
+                margin: 8,
+              }}
+              onPress={handleTenMinuteButton}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: 8,
+                  borderWidth: 2,
+                  borderColor: 'black',
+                  borderRadius: 10,
+                }}>
+                {isSelected ? (
+                  <>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 'bold',
+                        color: 'white',
+                      }}>
+                      10 Minutes
+                    </Text>
+                    <View
+                      style={{
+                        width: 25,
+                        height: 15,
+                        borderRadius: 15,
+                        backgroundColor: '#4cd137',
+                        marginHorizontal: 3,
+                      }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <View
+                      style={{
+                        width: 25,
+                        height: 15,
+                        borderRadius: 15,
+                        backgroundColor: '#ccc',
+                        marginHorizontal: 3,
+                      }}
+                    />
+                    <Text style={{fontSize: 16, color: 'black'}}>
+                      10 Minutes
+                    </Text>
+                  </>
+                )}
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
 
         <ScrollView
           refreshControl={
@@ -1409,6 +1627,142 @@ const TrustedDriver = ({navigation}) => {
             </View>
           </View>
         </Modal>
+
+        <Modal
+          animationIn={'fadeInDown'}
+          animationOut={'fadeOutUp'}
+          backdropOpacity={0}
+          onBackdropPress={() => setModalVisibleTenMinutes(false)}
+          isVisible={modalVisibleTenMinutes}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0,0,0,0.2)',
+            }}>
+            <View
+              style={{
+                backgroundColor: 'white',
+                paddingHorizontal: 10,
+                // borderRadius: 10,
+              }}>
+              {allTripType.map(e => (
+                <View
+                  key={e.label}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    marginVertical: 8,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: AppColors.black,
+                      marginHorizontal: 10,
+                    }}>
+                    {e.label}
+                  </Text>
+                  <TouchableOpacity
+                    disabled={e?.value}
+                    style={{
+                      backgroundColor: e.value ? 'blue' : 'white',
+                      borderRadius: 10,
+                      marginVertical: 8,
+                    }}
+                    onPress={() => {
+                      sendDriverAvailableInTenMinutes(e);
+                    }}>
+                    {!e?.value ? (
+                      <>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            padding: 8,
+                            backgroundColor: !e.value ? 'white' : 'blue',
+                            borderWidth: 2,
+                            borderColor: AppColors.black,
+                            borderRadius: 10,
+                          }}>
+                          <View
+                            style={{
+                              width: 25,
+                              height: 15,
+                              borderRadius: 15,
+                              backgroundColor: !e.value ? 'grey' : '#4cd137',
+                              marginHorizontal: 3,
+                            }}
+                          />
+                          <Text
+                            style={{
+                              fontSize: 16,
+                              fontWeight: 'bold',
+                              color: !e.value ? 'black' : 'white',
+                            }}>
+                            10 Minutes
+                          </Text>
+                        </View>
+                      </>
+                    ) : (
+                      <>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            padding: 8,
+                            backgroundColor: !e.value ? 'white' : 'blue',
+                            borderWidth: 2,
+                            borderColor: AppColors.black,
+                            borderRadius: 10,
+                          }}>
+                          <Text
+                            style={{
+                              fontSize: 16,
+                              fontWeight: 'bold',
+                              color: !e.value ? 'black' : 'white',
+                            }}>
+                            10 Minutes
+                          </Text>
+                          <View
+                            style={{
+                              width: 25,
+                              height: 15,
+                              borderRadius: 15,
+                              // backgroundColor: '#4cd137',
+                              backgroundColor: !e.value ? 'grey' : '#4cd137',
+                              marginHorizontal: 3,
+                            }}
+                          />
+                        </View>
+                      </>
+                    )}
+                    {/* </View> */}
+                  </TouchableOpacity>
+                </View>
+              ))}
+
+              <TouchableOpacity
+                style={{
+                  backgroundColor: 'red',
+                  padding: 10,
+                  borderRadius: 10,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginHorizontal: 100,
+                  marginVertical: 30,
+                }}
+                onPress={() => setModalVisibleTenMinutes(false)}>
+                <Text style={{color: 'white', fontSize: 16}}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
         <Toast visibilityTime={3000} topOffset={20} />
       </SafeAreaView>
     </View>
@@ -1425,7 +1779,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: AppColors.white,
-    marginVertical: responsiveSize(20),
+    // marginVertical: responsiveSize(20),
   },
   marqueeView: {
     paddingHorizontal: '2%',

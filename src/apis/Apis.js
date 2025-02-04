@@ -426,3 +426,20 @@ export const FINAL_ACCEPT_WEEKLY_BOOKING = body => {
 export const DUTY_REPORT_RESEND_OTP = body => {
   return _Fetch('POST', 'duty-report/resend_otp_api.php', {...body}, {});
 };
+
+export const DRIVER_AVAILABLE_TEN_MINUTES = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/driver-available-in-10-minutes.php',
+    {...body},
+    {},
+  );
+};
+
+export const GET_ALL_AVAILABILITY = () => {
+  return _Fetch(
+    'GET',
+    'trusted-driver/driver-available-in-10-minutes.php?action=get_all_availability',
+    {},
+  );
+};

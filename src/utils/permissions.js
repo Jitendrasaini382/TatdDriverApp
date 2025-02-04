@@ -1,4 +1,4 @@
-import {Platform, Vibration} from 'react-native';
+import {Alert, Linking, PermissionsAndroid, Platform, Vibration} from 'react-native';
 import {request, check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 export const requestNotificationPermission = async () => {
@@ -55,4 +55,46 @@ export const checkVibrationSupport = duration => {
     } else {
     }
   } catch (error) {}
+};
+
+export const requestLocationPermission = async () => {
+  if (Platform.OS === 'android') {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Location Permission',
+          message:
+            'This app requires location access to provide services based on your location.',
+          buttonPositive: 'OK',
+          buttonNegative: 'Cancel',
+        },
+      );
+
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      } else {
+        Alert.alert(
+          'Permission Denied',
+          'Location permission is required. Please enable it in settings.',
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Go to Settings',
+              onPress: () => openSettings(),
+            },
+          ],
+        );
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+};
+
+const openSettings = () => {
+  Linking.openSettings();
 };

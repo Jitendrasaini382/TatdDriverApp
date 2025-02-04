@@ -15,7 +15,7 @@ const SplashScreen = ({navigation}) => {
     if (isFocused) {
       timer = setTimeout(() => {
         dispatch(setSplash(false));
-      }, 1000);
+      }, 500);
     }
     return () => clearTimeout(timer);
   }, [isFocused, navigation]);

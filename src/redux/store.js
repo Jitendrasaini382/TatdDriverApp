@@ -1,37 +1,31 @@
 import {configureStore} from '@reduxjs/toolkit';
-import {combineReducers} from 'redux'; // Import combineReducers from Redux
+import {combineReducers} from 'redux';
 import userAuth from './slices/userAuthSlice';
 import trustedDriverSlice from './slices/trustedDriverSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {persistStore, persistReducer} from 'redux-persist';
 import globalSlice from './slices/globalSlice';
+import {thunk} from 'redux-thunk';
+import persistReducer from 'redux-persist/es/persistReducer';
 
-// Combine reducers correctly
 const rootReducer = combineReducers({
   userAuth,
   trustedDriverSlice,
-  globalSlice
+  globalSlice,
 });
-const isDevelopment = process.env.NODE_ENV === 'development';
 
 const persistConfig = {
   key: 'root',
-  storage: AsyncStorage, // You want to store the state in AsyncStorage
-  blacklist: ['trustedDriverSlice',], // You can blacklist this slice if you don't want it persisted
-  whitelist: ['globalSlice','userAuth'], // Persist only the 'userAuth' slice
+  storage: AsyncStorage,
+  blacklist: ['trustedDriverSlice'],
+  whitelist: ['globalSlice', 'userAuth'],
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedreducer = persistReducer(persistConfig, rootReducer);
+const middleware = [thunk];
 
 const store = configureStore({
-  reducer: persistedReducer,
-  middleware: getDefaultMiddleware =>
-    getDefaultMiddleware({
-      serializableCheck: false, // Disable serializableCheck warnings
-      immutableCheck: isDevelopment, // Only enable in development
-    }),
+  reducer: persistedreducer,
+  middleware: () => [...middleware],
 });
-
-export const persistor = persistStore(store); // Create persistor
 
 export default store;

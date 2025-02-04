@@ -12,7 +12,6 @@ import {
 import {Provider} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import store from './src/redux/store';
-import {persistStore} from 'redux-persist';
 import {PersistGate} from 'redux-persist/integration/react';
 import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
 import NetInfo from '@react-native-community/netinfo';
@@ -20,6 +19,7 @@ import {AppColors} from './src/assets/Colors';
 import {checkVibrationSupport} from './src/utils/permissions';
 import {playSound, triggerVibration} from './src/utils/soundVibration';
 import {navigate} from './src/utils/navigationRef';
+import {persistStore} from 'redux-persist';
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -47,7 +47,6 @@ const App = () => {
   // Handle incoming messages
   const handleIncomingMessages = () => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-
       // const ssound_ = remoteMessage?.data?.sound;
       const sound_ = remoteMessage?.notification?.android?.sound;
 
@@ -78,8 +77,6 @@ const App = () => {
     try {
       const initialNotification = await notifee.getInitialNotification();
       if (initialNotification) {
-       
-
       }
     } catch (error) {
       console.error('Error checking initial notification:', error);

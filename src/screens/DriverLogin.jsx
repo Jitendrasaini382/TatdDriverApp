@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,12 +7,7 @@ import {
   Dimensions,
   ScrollView,
   Pressable,
-  Modal,
   Image,
-  FlatList,
-  TouchableOpacity,
-  NativeModules,
-  PermissionsAndroid,
   Keyboard,
   Alert,
   Platform,
@@ -37,64 +32,12 @@ const verticalScale = size => (height / designHeight) * size;
 const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;
 
-const {MyTelephonyModule} = NativeModules;
-
-async function requestPermissions() {
-  if (Platform.OS === 'android') {
-    try {
-      const granted = await PermissionsAndroid.requestMultiple([
-        PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
-        PermissionsAndroid.PERMISSIONS.READ_PHONE_NUMBERS,
-      ]);
-
-      if (
-        granted['android.permission.READ_PHONE_STATE'] ===
-          PermissionsAndroid.RESULTS.GRANTED &&
-        granted['android.permission.READ_PHONE_NUMBERS'] ===
-          PermissionsAndroid.RESULTS.GRANTED
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (err) {
-      return false;
-    }
-  }
-  return true;
-}
-
-const getSimInfo = async () => {
-  const hasPermission = await requestPermissions();
-  if (hasPermission) {
-    try {
-      const simInfo = await MyTelephonyModule.getSimInfo();
-      return simInfo;
-    } catch (error) {
-      return 'Failed to get SIM information';
-    }
-  } else {
-  }
-};
-
-const extractPhoneNumbers = info => {
-  return info.match(/Phone Number: [\+\d]+/g).map(match => {
-    const phoneNumber = match
-      .replace('Phone Number: ', '')
-      .replace(/^(\+91|0)/, '');
-    return Number(phoneNumber);
-  });
-};
-
 const DriverLogin = () => {
   const navigation = useNavigation();
   const [mobile, setMobile] = useState(null);
   const [error, setError] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const [loader, setLoader] = useState(false);
-  const [hasModalOpened, setHasModalOpened] = useState(false);
-  const [simInfo, setSimInfo] = useState([]);
-  const [isModalVisible, setModalVisible] = useState(false);
   const appVersion = DeviceInfo.getVersion();
   const appType = Platform.OS;
 
@@ -105,48 +48,12 @@ const DriverLogin = () => {
     }
   };
 
-  // Function to handle setting the number
-  const handleSetNumber = item => {
-    const lastTenDigits = item.slice(-10);
-    setMobile(lastTenDigits);
-    handleClose();
-  };
-
-  const handleClose = () => {
-    setModalVisible(false);
-  };
-  const handleOpen = () => {
-    if (
-      simInfo.length > 0 &&
-      !simInfo.includes('Please Allow The Permission')
-    ) {
-      if (!hasModalOpened) {
-        setModalVisible(true);
-        setHasModalOpened(true);
-      }
-    } else {
-    }
-  };
-
-  useEffect(() => {
-    fetchSimInfo();
-  }, []);
-
-  const fetchSimInfo = async () => {
+  const sendOtp = async () => {
     try {
-      const info = await getSimInfo();
-      setSimInfo(extractPhoneNumbers(info));
-    } catch (err) {
-      setSimInfo(['Please Allow The Permission']);
-    }
-  };
-
-  const sendOtp = async number => {
-    try {
-      if (!number) {
+      if (!mobile) {
         setError('Please Enter Mobile Number');
         return;
-      } else if (number.length !== 10) {
+      } else if (mobile.length !== 10) {
         setError('Please Enter 10 digit Mobile Number');
         return;
       }
@@ -154,12 +61,11 @@ const DriverLogin = () => {
       Keyboard.dismiss();
       setLoader(true);
       const response = await DRIVER_LOGIN({
-        mobile: number,
+        mobile: mobile,
         user_type: 'Driver',
         app_version: appVersion,
         app_type: appType,
       });
-      setHasModalOpened(false);
       if (response?.status_code == '200' && response?.msg_type == 'error') {
         setLoader(false);
         Alert.alert(response?.message);
@@ -168,13 +74,12 @@ const DriverLogin = () => {
         response?.message == 'OTP sent successfully'
       ) {
         setLoader(false);
-        navigation.navigate('CheckDriverOtp', {mobile: number});
+        navigation.navigate('CheckDriverOtp', {mobile: mobile});
       } else if (
         response?.status_code == '200' &&
         response?.message == 'Not Found in Trusted and registration table'
       ) {
         setLoader(false);
-
         Linking.openURL(response?.redirect);
       }
     } catch (err) {
@@ -184,10 +89,6 @@ const DriverLogin = () => {
       setLoader(false);
     }
   };
-
-  useEffect(() => {
-    handleOpen();
-  }, []);
 
   const insets = useSafeAreaInsets();
   return (
@@ -252,11 +153,9 @@ const DriverLogin = () => {
                     placeholderTextColor="rgb(42, 42, 42)"
                     onFocus={() => {
                       setIsFocused(true);
-                      handleOpen();
                     }}
                     onPressIn={() => {
                       setIsFocused(true);
-                      handleOpen();
                     }}
                     onBlur={() => setIsFocused(false)}
                   />
@@ -271,7 +170,7 @@ const DriverLogin = () => {
               <Pressable
                 style={styles.btnView}
                 disabled={loader}
-                onPress={() => sendOtp(mobile)}>
+                onPress={() => sendOtp()}>
                 <Text style={styles.btnText}>
                   {loader ? 'Sending OTP' : 'Submit'}
                 </Text>
@@ -279,86 +178,6 @@ const DriverLogin = () => {
             </View>
           </View>
         </View>
-
-        <Modal
-          visible={isModalVisible}
-          transparent={true}
-          onRequestClose={handleClose}
-          animationType="slide">
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                width: '90%',
-                backgroundColor: 'white',
-                borderRadius: 10,
-                padding: 20,
-                elevation: 5,
-              }}>
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: 'bold',
-                  marginBottom: 20,
-                  color: AppColors.black,
-                }}>
-                Continue with
-              </Text>
-
-              <FlatList
-                data={simInfo}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({item}) => (
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      marginBottom: 15,
-                    }}
-                    onPress={() => handleSetNumber(item.toString())}>
-                    <View
-                      style={{
-                        backgroundColor: 'grey',
-                        borderRadius: 18,
-                        height: 36,
-                        width: 36,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginRight: 15,
-                      }}>
-                      <Icon name="phone" size={20} color="white" />
-                      {/* Icon color set to white */}
-                    </View>
-                    <Text style={{fontSize: 18, color: AppColors.black}}>
-                      {item}
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              />
-
-              <TouchableOpacity
-                onPress={() => handleClose()}
-                style={{
-                  marginTop: 20,
-                  alignSelf: 'flex-start',
-                }}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    color: AppColors.primary,
-                    fontWeight: 'bold',
-                  }}>
-                  NONE OF THE ABOVE
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
       </ScrollView>
     </View>
   );

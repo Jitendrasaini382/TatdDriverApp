@@ -2,7 +2,6 @@ import {
   ActivityIndicator,
   FlatList,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -12,7 +11,6 @@ import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {MY_BONUS_HISTORY} from '../apis/Apis';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {Button} from 'react-native';
 import {RefreshControl} from 'react-native';
 
 const MyBonusStatusHistory = () => {
@@ -22,40 +20,56 @@ const MyBonusStatusHistory = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [showButton, setshowButton] = useState(false);
   const [offset, setOffset] = useState(0);
+  const [allDataCount, setAllDataCount] = useState(null);
 
-  const getAllBonusData = async data => {
-    setLoader(true);
+  const getAllBonusData = async (newOffset = 0, isRefresh = false) => {
+    if (loader) return; // Prevent multiple simultaneous calls
+    // setLoader(true);
+
+    console.log(newOffset, isRefresh, 'fudsvcsjhdvcjhsxcvjhxv j');
+
+    console.log(
+      {
+        action: 'get_bonus_history',
+        offset: newOffset,
+        limit: 10,
+      },
+      'sending action',
+    );
+
     try {
       const response = await MY_BONUS_HISTORY({
         action: 'get_bonus_history',
-        offset: offset + data,
+        offset: newOffset,
         limit: 10,
       });
 
-      if (response?.load_more_flag == '1') {
-        setshowButton(true);
-      } else {
-        setshowButton(false);
-      }
-      setOffset(prevOffset => prevOffset + data);
-      setBonusData(prevData => [...prevData, ...response.bonuses]);
-      setLoader(false);
+      setAllDataCount(response?.count_booking);
+
+      // If refreshing, replace data; otherwise, append new data
+      setBonusData(
+        isRefresh ? response.bonuses : [...bonusData, ...response.bonuses],
+      );
+
+      setOffset(newOffset + 10); // Update offset for next batch
+      console.log(offset, 'OOOOOOOOOOFEST');
     } catch (error) {
-      setLoader(false);
+      console.error(error);
     } finally {
       setLoader(false);
+      setRefreshing(false);
     }
   };
 
   const onRefresh = async () => {
-    setBonusData([]);
     setRefreshing(true);
-    await getAllBonusData(0);
-    setRefreshing(false);
+    setBonusData([]); // Clear existing data
+    setOffset(0); // Reset offset to fetch fresh data
+    await getAllBonusData(0, true); // Fetch fresh data with offset 0
   };
 
   useEffect(() => {
-    getAllBonusData(0);
+    getAllBonusData();
   }, []);
 
   return (
@@ -66,80 +80,81 @@ const MyBonusStatusHistory = () => {
       <SafeAreaView style={{flex: 1}}>
         <Header backButton={true} />
 
-        <ScrollView
-          contentContainerStyle={{flexGrow: 1}}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }>
-          <View style={styles.content}>
-            <View style={styles.container}>
-              <Text style={styles.title}>My Bonus</Text>
-              <View style={styles.tableContainer}>
-                <View style={styles.headerRow}>
-                  <Text style={[styles.headerCell, styles.createDateCell]}>
-                    Create Date
-                  </Text>
-                  <Text style={[styles.headerCell, styles.nameCell]}>Name</Text>
-                  <Text style={[styles.headerCell, styles.bonusTypeCell]}>
-                    Bonus Type
-                  </Text>
-                  <Text style={[styles.headerCell, styles.paymentStatusCell]}>
-                    Payment Status
-                  </Text>
-                  <Text style={[styles.headerCell, styles.amountCell]}>
-                    Amount
-                  </Text>
-                </View>
-                <FlatList
-                  data={bonusData}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({item, index}) => (
-                    <View
-                      style={[
-                        styles.dataRow,
-                        index % 2 === 0 ? styles.evenRow : styles.oddRow,
-                      ]}>
-                      <Text style={[styles.dataCell, styles.createDateCell]}>
-                        {item.create_date}
-                      </Text>
-                      <Text style={[styles.dataCell, styles.nameCell]}>
-                        {item.name}
-                      </Text>
-                      <Text style={[styles.dataCell, styles.bonusTypeCell]}>
-                        {item.bonus_type}
-                      </Text>
-                      <Text style={[styles.dataCell, styles.paymentStatusCell]}>
-                        {item.payment_status}
-                      </Text>
-                      <Text style={[styles.dataCell, styles.amountCell]}>
-                        {item.amount}
-                      </Text>
-                    </View>
-                  )}
-                />
-                {loader ? (
-                  <ActivityIndicator
-                    style={{
-                      flex: 1,
-                      alignContent: 'center',
-                      marginVertical: 50,
-                    }}
-                    size={'small'}
-                    color={AppColors.mainColor}
-                  />
-                ) : showButton ? (
-                  <View style={{marginVertical: 10, alignSelf: 'center'}}>
-                    <Button
-                      title="Load More "
-                      onPress={() => getAllBonusData(10)}
-                    />
-                  </View>
-                ) : null}
+        <View style={styles.content}>
+          <View style={styles.container}>
+            <Text style={styles.title}>My Bonus</Text>
+            <View style={styles.tableContainer}>
+              <View style={styles.headerRow}>
+                <Text style={[styles.headerCell, styles.createDateCell]}>
+                  Create Date
+                </Text>
+                <Text style={[styles.headerCell, styles.nameCell]}>Name</Text>
+                <Text style={[styles.headerCell, styles.bonusTypeCell]}>
+                  Bonus Type
+                </Text>
+                <Text style={[styles.headerCell, styles.paymentStatusCell]}>
+                  Payment Status
+                </Text>
+                <Text style={[styles.headerCell, styles.amountCell]}>
+                  Amount
+                </Text>
               </View>
             </View>
           </View>
-        </ScrollView>
-        {/* )} */}
+        </View>
+        <View
+          style={{
+            paddingHorizontal: 15,
+            flex: 1,
+          }}>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{paddingBottom: 100}}
+            data={bonusData}
+            keyExtractor={(item, index) => index.toString()}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            onEndReached={() => {
+              if (bonusData.length < allDataCount) {
+                getAllBonusData(offset);
+              }
+            }}
+            onEndReachedThreshold={0.5} // Adjust threshold for better loading behavior
+            ListFooterComponent={
+              loader ? (
+                <ActivityIndicator
+                  size="large"
+                  color={'red'}
+                  style={{alignSelf: 'center'}}
+                />
+              ) : null
+            }
+            renderItem={({item, index}) => (
+              <View
+                style={[
+                  styles.dataRow,
+                  index % 2 === 0 ? styles.evenRow : styles.oddRow,
+                ]}>
+                <Text style={[styles.dataCell, styles.createDateCell]}>
+                  {item.create_date}
+                </Text>
+                <Text style={[styles.dataCell, styles.nameCell]}>
+                  {item.name}
+                </Text>
+                <Text style={[styles.dataCell, styles.bonusTypeCell]}>
+                  {item.bonus_type}
+                </Text>
+                <Text style={[styles.dataCell, styles.paymentStatusCell]}>
+                  {item.payment_status}
+                </Text>
+                <Text style={[styles.dataCell, styles.amountCell]}>
+                  {item.amount}
+                </Text>
+              </View>
+            )}
+          />
+        </View>
       </SafeAreaView>
     </View>
   );
@@ -154,17 +169,17 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: AppColors.white,
     borderRadius: 10,
-    paddingVertical: 20,
+    paddingTop: 20,
     paddingHorizontal: 5,
-    shadowColor: AppColors.black,
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5,
+    // shadowColor: AppColors.black,
+    // shadowOffset: {width: 0, height: 2},
+    // shadowOpacity: 0.1,
+    // shadowRadius: 4,
+    // elevation: 5,
   },
   content: {
     marginTop: 20,
-    padding: 10,
+    paddingHorizontal: 10,
     backgroundColor: AppColors.white,
   },
   title: {
@@ -196,6 +211,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
+    // borderLeftWidth: 1,
+    // borderLefttColor: 'red',
   },
   evenRow: {
     backgroundColor: '#f9f9f9',
@@ -212,6 +229,8 @@ const styles = StyleSheet.create({
   },
   createDateCell: {
     flex: 1.2,
+    borderLeftWidth: 1,
+    borderLeftColor: '#ddd',
   },
   nameCell: {
     flex: 1,

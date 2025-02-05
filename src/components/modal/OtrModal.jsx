@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 14,
     elevation: 13,
-    borderWidth: 0.2,
+    // borderWidth: 0.2,
     backgroundColor: AppColors.white,
   },
   topHeading: {

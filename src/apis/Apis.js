@@ -435,11 +435,23 @@ export const DRIVER_AVAILABLE_TEN_MINUTES = body => {
     {},
   );
 };
+function generateSessionToken() {
+  return Math.random().toString(10).substr(2, 10);
+}
 
-export const GET_ALL_AVAILABILITY = () => {
+export const GET_ALL_AVAILABILITY = body => {
   return _Fetch(
     'GET',
-    'trusted-driver/driver-available-in-10-minutes.php?action=get_all_availability',
+    `trusted-driver/driver-available-in-10-minutes.php?action=get_all_availability&current_language=${body}&${generateSessionToken()}`,
+    {},
+  );
+};
+
+export const APPLY_DRIVER_AVAILABLE_TEN_MINUTES = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/driver-available-in-10-minutes.php',
+    {...body},
     {},
   );
 };

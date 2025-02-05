@@ -368,7 +368,6 @@ const DutyReportUpdate = ({route, navigation}) => {
       setModalVisibleOntheway(false);
     } catch (err) {}
   };
-  const [location, setLocation] = useState(null);
 
   const getLocation = async () => {
     const hasPermission = await requestLocationPermission();
@@ -406,47 +405,69 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
 
   const driverBookingReach = async () => {
+    console.log('Function driverBookingReach called');
+
     const location = await getLocation();
-    // console.log(location, 'LLLLr');
+    console.log(location, 'location');
+
     if (location) {
       setReachLoader(true);
+      // console.log('setReachLoader set to true');
 
       try {
-        const res = await DRIVER_BOOKING_REACH({
+        const requestData = {
           action: 'duty_report_booking_reach',
           booking_id: bookingNumber,
           current_language: languageSwitch,
           trip_status: bookingInfo?.condition?.next_booking_status_id,
           latitude: location?.latitude,
           longitude: location?.longitude,
-        });
-        // return false
+        };
+
+        // console.log(requestData, 'Request Data for DRIVER_BOOKING_REACH');
+
+        const res = await DRIVER_BOOKING_REACH(requestData);
+        // console.log(res, 'Response from DRIVER_BOOKING_REACH');
 
         if (res?.distance_message_flag == 1) {
+          // console.log('Distance message flag is 1');
           Alert.alert('', res?.distance_message, [
             {text: 'OK', onPress: () => setModalVisibleRich(false)},
           ]);
+          // console.log('Alert shown with distance message');
           return false;
         } else {
+          // console.log('Processing redirect condition');
+
           if (res?.redirect == 'duty_report') {
+            // console.log('Redirect is duty_report');
+
             if (res?.message_type == 'error') {
+              // console.log('Message type is error, setting cancel state');
               setCancelState('cancel');
               setModalVisibleRich(false);
             } else {
+              // console.log('Fetching all booking info');
               GetAllBookingInfo();
               setModalVisibleRich(false);
             }
           }
+
+          // console.log('Closing modal and fetching booking info again');
           setModalVisibleRich(false);
-          // setModalVisibleinput(true);
           GetAllBookingInfo();
         }
       } catch (err) {
+        // console.log(err, 'Error caught in catch block');
       } finally {
         setReachLoader(false);
+        // console.log('setReachLoader set to false');
       }
+    } else {
+      // console.log('Location not available, exiting function');
     }
   };
+
   const [acceptBookingPopup, setacceptBookingPopup] = useState(false);
 
   const showStartAlert = () => {

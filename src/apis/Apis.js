@@ -430,7 +430,7 @@ export const DUTY_REPORT_RESEND_OTP = body => {
 export const DRIVER_AVAILABLE_TEN_MINUTES = body => {
   return _Fetch(
     'POST',
-    'trusted-driver/driver-available-in-10-minutes.php',
+    'trusted-driver/driver-available-in-ten-minutes.php',
     {...body},
     {},
   );
@@ -442,7 +442,7 @@ function generateSessionToken() {
 export const GET_ALL_AVAILABILITY = body => {
   return _Fetch(
     'GET',
-    `trusted-driver/driver-available-in-10-minutes.php?action=get_all_availability&current_language=${body}&${generateSessionToken()}`,
+    `trusted-driver/driver-available-in-ten-minutes.php?action=get_all_availability&current_language=${body}&${generateSessionToken()}`,
     {},
   );
 };
@@ -450,7 +450,7 @@ export const GET_ALL_AVAILABILITY = body => {
 export const APPLY_DRIVER_AVAILABLE_TEN_MINUTES = body => {
   return _Fetch(
     'POST',
-    'trusted-driver/driver-available-in-10-minutes.php',
+    'trusted-driver/driver-available-in-ten-minutes.php',
     {...body},
     {},
   );

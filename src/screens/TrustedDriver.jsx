@@ -135,8 +135,8 @@ const TrustedDriver = ({navigation}) => {
   const handleTenMinuteButton = async () => {
     const hasPermission = await requestLocationPermission();
     if (hasPermission) {
-      getAllAvailability();
       getLocation();
+      getAllAvailability();
     } else {
       setModalVisibleTenMinutes(false);
     }

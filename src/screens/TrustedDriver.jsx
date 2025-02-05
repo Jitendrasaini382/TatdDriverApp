@@ -872,12 +872,19 @@ const TrustedDriver = ({navigation}) => {
                       style={{
                         width: 35,
                         height: 20,
+                        alignSelf: 'center',
                         borderRadius: 15,
                         backgroundColor: '#ccc',
                         marginHorizontal: 3,
                       }}
                     />
-                    <Text style={{fontSize: 16, color: 'black'}}>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        color: AppColors.black,
+                        alignSelf: 'center',
+                      }}>
                       10 Minutes
                     </Text>
                   </>
@@ -1702,9 +1709,7 @@ const TrustedDriver = ({navigation}) => {
                 width: '90%',
               }}>
               <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(false), setIsSelected(false);
-                }}
+                onPress={() => setModalVisibleTenMinutes(false)}
                 style={{
                   backgroundColor: AppColors.mainColor,
                   padding: 10,
@@ -1854,11 +1859,10 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: AppColors.white,
-    marginVertical: responsiveSize(10),
+    // marginVertical: responsiveSize(20),
   },
   marqueeView: {
     paddingHorizontal: '2%',
-    // marginVertical:10
   },
   marqueeText: {
     color: AppColors.black,

@@ -409,18 +409,6 @@ const DutyReportUpdate = ({route, navigation}) => {
     const location = await getLocation();
     // console.log(location, 'LLLLr');
     if (location) {
-      console.log(
-        {
-          action: 'duty_report_booking_reach',
-          booking_id: bookingNumber,
-          current_language: languageSwitch,
-          trip_status: bookingInfo?.condition?.next_booking_status_id,
-          latitude: location?.latitude,
-          longitude: location?.longitude,
-        },
-        'driver booking start api',
-      );
-
       setReachLoader(true);
 
       try {
@@ -1867,8 +1855,8 @@ const DutyReportUpdate = ({route, navigation}) => {
                   onPressOut={handlePressOut}
                   activeOpacity={0.8}
                   style={{
-                    alignSelf:"center",
-                    marginTop:20
+                    alignSelf: 'center',
+                    marginTop: 20,
                   }}>
                   <Animated.View style={[styles.button, animatedStyle]}>
                     {selectedFile ? (
@@ -2295,7 +2283,7 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
     elevation: 5, // Shadow for Android
     shadowColor: '#000', // Shadow for iOS
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.3,
     shadowRadius: 5,
   },
@@ -2315,6 +2303,6 @@ const styles = StyleSheet.create({
     color: '#16588e',
     fontSize: 13,
     fontWeight: 'bold',
-    fontWeight:'800'
+    fontWeight: '800',
   },
 });

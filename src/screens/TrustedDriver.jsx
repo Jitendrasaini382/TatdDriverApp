@@ -1854,10 +1854,11 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: AppColors.white,
-    // marginVertical: responsiveSize(20),
+    marginVertical: responsiveSize(10),
   },
   marqueeView: {
     paddingHorizontal: '2%',
+    // marginVertical:10
   },
   marqueeText: {
     color: AppColors.black,

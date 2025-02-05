@@ -55,6 +55,15 @@ import {AppFont} from '../assets/FontsFamily';
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
+import {requestLocationPermission} from '../utils/permissions';
+import Geolocation from '@react-native-community/geolocation';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  FadeIn,
+} from 'react-native-reanimated';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const DutyReportUpdate = ({route, navigation}) => {
   const {bookingNumber, state} = route?.params;
@@ -359,34 +368,95 @@ const DutyReportUpdate = ({route, navigation}) => {
       setModalVisibleOntheway(false);
     } catch (err) {}
   };
+  const [location, setLocation] = useState(null);
+
+  const getLocation = async () => {
+    const hasPermission = await requestLocationPermission();
+    if (hasPermission) {
+      return new Promise((resolve, reject) => {
+        Geolocation.getCurrentPosition(
+          position => {
+            // console.log(position, 'driver current location lat long');
+            resolve(position.coords); // Resolving the Promise with coordinates
+          },
+          error => {
+            if (error.code === 1) {
+              requestLocationPermission(); // Retry if permission error
+            } else if (error.code === 2) {
+              Alert.alert(
+                'Location permission is required. Please enable it in settings.',
+                [
+                  {text: 'Cancel', style: 'cancel'},
+                  {
+                    text: 'Go to Settings',
+                    onPress: () =>
+                      Linking.sendIntent(
+                        'android.settings.LOCATION_SOURCE_SETTINGS',
+                      ),
+                  },
+                ],
+              );
+            } else {
+              reject(new Error('Error fetching location: ' + error.message)); // Reject the promise with error message
+            }
+          },
+        );
+      });
+    }
+  };
 
   const driverBookingReach = async () => {
-    setReachLoader(true);
+    const location = await getLocation();
+    // console.log(location, 'LLLLr');
+    if (location) {
+      console.log(
+        {
+          action: 'duty_report_booking_reach',
+          booking_id: bookingNumber,
+          current_language: languageSwitch,
+          trip_status: bookingInfo?.condition?.next_booking_status_id,
+          latitude: location?.latitude,
+          longitude: location?.longitude,
+        },
+        'driver booking start api',
+      );
 
-    try {
-      const res = await DRIVER_BOOKING_REACH({
-        action: 'duty_report_booking_reach',
-        booking_id: bookingNumber,
-        current_language: languageSwitch,
-        trip_status: bookingInfo?.condition?.next_booking_status_id,
-        // trip_status: 20,
-      });
+      setReachLoader(true);
 
-      if (res?.redirect == 'duty_report') {
-        if (res?.message_type == 'error') {
-          setCancelState('cancel');
-          setModalVisibleRich(false);
+      try {
+        const res = await DRIVER_BOOKING_REACH({
+          action: 'duty_report_booking_reach',
+          booking_id: bookingNumber,
+          current_language: languageSwitch,
+          trip_status: bookingInfo?.condition?.next_booking_status_id,
+          latitude: location?.latitude,
+          longitude: location?.longitude,
+        });
+        // return false
+
+        if (res?.distance_message_flag == 1) {
+          Alert.alert('', res?.distance_message, [
+            {text: 'OK', onPress: () => setModalVisibleRich(false)},
+          ]);
+          return false;
         } else {
-          GetAllBookingInfo();
+          if (res?.redirect == 'duty_report') {
+            if (res?.message_type == 'error') {
+              setCancelState('cancel');
+              setModalVisibleRich(false);
+            } else {
+              GetAllBookingInfo();
+              setModalVisibleRich(false);
+            }
+          }
           setModalVisibleRich(false);
+          // setModalVisibleinput(true);
+          GetAllBookingInfo();
         }
+      } catch (err) {
+      } finally {
+        setReachLoader(false);
       }
-      setModalVisibleRich(false);
-      // setModalVisibleinput(true);
-      GetAllBookingInfo();
-    } catch (err) {
-    } finally {
-      setReachLoader(false);
     }
   };
   const [acceptBookingPopup, setacceptBookingPopup] = useState(false);
@@ -755,6 +825,19 @@ const DutyReportUpdate = ({route, navigation}) => {
       setfirstTimePopup(false);
     }
   }, []);
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.95); // Slightly shrink on press
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1); // Restore size
+  };
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }));
   return (
     <SafeAreaView
       style={{
@@ -1729,7 +1812,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                   }}
                 /> */}
 
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={{
                     width: 150,
                     height: 150,
@@ -1777,44 +1860,37 @@ const DutyReportUpdate = ({route, navigation}) => {
                       </Text>
                     )}
                   </Text>
-                </TouchableOpacity>
-
-                {/* <TouchableOpacity
-                  onPress={handleCameraCapture}
-                  style={{
-                    margin: 10,
-                    alignContent: 'center',
-                    alignSelf: 'center',
-                    borderWidth: 1,
-                    width: 150,
-                    height: 150,
-                    borderRadius: 75,
-                  }}>
-                  {selectedFile ? (
-                    <Image
-                      source={{uri: selectedFile.uri}}
-                      style={{
-                        width: 150,
-                        resizeMode: 'center',
-                        height: 150,
-                        // marginBottom: 10,
-                        // borderRadius: 10,
-                        // borderRadius: '50%',
-                      }}
-                    />
-                  ) : (
-                    <Image
-                      source={Agent_Icon}
-                      style={{
-                        width: 150,
-                        height: 140,
-                        resizeMode: 'center',
-                        // marginBottom: 10,
-                        // borderRadius: 10,
-                      }}
-                    />
-                  )}
                 </TouchableOpacity> */}
+                <TouchableOpacity
+                  onPress={handleCameraCapture}
+                  onPressIn={handlePressIn}
+                  onPressOut={handlePressOut}
+                  activeOpacity={0.8}
+                  style={{
+                    alignSelf:"center",
+                    marginTop:20
+                  }}>
+                  <Animated.View style={[styles.button, animatedStyle]}>
+                    {selectedFile ? (
+                      <Animated.Image
+                        source={{uri: selectedFile?.uri}}
+                        style={styles.image}
+                        entering={FadeIn.duration(500)} // Smooth fade-in animation
+                      />
+                    ) : (
+                      <MaterialCommunityIcons
+                        name="camera"
+                        size={40}
+                        color="#16588e"
+                      />
+                      // <Image source={TrustedPartner} style={styles.placeholderImage} />
+                    )}
+
+                    <Text style={styles.text}>
+                      {selectedFile ? 'Edit' : 'Upload Image'}
+                    </Text>
+                  </Animated.View>
+                </TouchableOpacity>
 
                 <View style={{padding: 20}}>
                   <TextInput
@@ -2206,5 +2282,39 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: 'hidden',
     elevation: 5,
+  },
+  button: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: '#d9d8d4',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+    borderWidth: 5,
+    borderColor: '#fff',
+    elevation: 5, // Shadow for Android
+    shadowColor: '#000', // Shadow for iOS
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+  placeholderImage: {
+    width: 50,
+    height: 50,
+    opacity: 0.8,
+    alignSelf: 'center',
+  },
+  text: {
+    position: 'absolute',
+    bottom: 15,
+    color: '#16588e',
+    fontSize: 13,
+    fontWeight: 'bold',
+    fontWeight:'800'
   },
 });

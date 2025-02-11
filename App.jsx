@@ -3,6 +3,7 @@ import 'react-native-gesture-handler';
 import Route from './src/routes/Routes';
 import {
   ActivityIndicator,
+  Alert,
   LogBox,
   StyleSheet,
   Text,
@@ -73,10 +74,9 @@ const App = () => {
   const handleIncomingMessages = () => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       // const ssound_ = remoteMessage?.data?.sound;
-    
-
+      console.log(remoteMessage,"Notification onmeesse")
       // const sound_ = remoteMessage?.notification?.android?.sound;
-      const channelId = remoteMessage?.notification?.android?.channelId;
+      const channelId = remoteMessage?.data?.channel_id;
       const path = remoteMessage?.data?.path;
 
       console.log(channelId, 'channelIdchannelId app');
@@ -89,14 +89,14 @@ const App = () => {
 
       try {
         await notifee.displayNotification({
-          title: remoteMessage.notification?.title || remoteMessage.data?.title,
-          body: remoteMessage.notification?.body || remoteMessage.data?.body,
-          data: remoteMessage.notification,
+          title: remoteMessage?.data?.title,
+          body: remoteMessage?.data?.body,
+          data: remoteMessage,
           android: {
-            channelId: channelId,
+            channelId,
             // sound: sound_,
             // vibrationPattern: [500, 300, 500, 300, 500, 300],
-            // importance: AndroidImportance.HIGH,
+            importance: AndroidImportance.HIGH,
           },
         });
       } catch (error) {}
@@ -106,15 +106,15 @@ const App = () => {
   };
 
   // Check initial notification on app launch
-  const checkInitialNotification = async () => {
-    try {
-      const initialNotification = await notifee.getInitialNotification();
-      if (initialNotification) {
-      }
-    } catch (error) {
-      console.error('Error checking initial notification:', error);
-    }
-  };
+  // const checkInitialNotification = async () => {
+  //   try {
+  //     const initialNotification = await notifee.getInitialNotification();
+  //     if (initialNotification) {
+  //     }
+  //   } catch (error) {
+  //     console.error('Error checking initial notification:', error);
+  //   }
+  // };
 
   // Monitor network connectivity
   const monitorNetworkConnection = () => {
@@ -126,7 +126,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    checkInitialNotification();
+    // checkInitialNotification();
   }, []);
 
   useEffect(() => {
@@ -164,33 +164,47 @@ const App = () => {
     }
   };
 
-  useEffect(() => {
-    // Set up foreground event listener
-    const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
-      // console.log(detail, 'detail======== app.js');
+  // useEffect(() => {
+  //   // Set up foreground event listener
+  //   const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
+  //     console.log(detail, 'Foreground Event');
 
-      const path = detail?.notification?.data?.path;
-      const messageId = detail?.notification?.id;
-      // console.log(path, 'pathh app-----');
-      // console.log(messageId, 'messageId app');
-      switch ((type, detail)) {
-        case EventType.PRESS:
-          sendNotificationDetails('Press', path, messageId);
-          navigate('TrustedDriver');
-          break;
-        case EventType.DISMISSED:
-          // console.log('Notification dismissed');
-          sendNotificationDetails('Dismiss', path, messageId);
-          break;
-        default:
-          // console.log('Unhandled event type:', type);
+  //     const path = detail?.notification?.data?.path;
+  //     const messageId = detail?.notification?.id;
 
-          break;
-      }
-    });
+  //     if (type === EventType.PRESS) {
+  //       Alert.alert('Notification Pressed', `Path: ${path}`);
+  //       Alert.alert();
+  //       sendNotificationDetails('Press', path, messageId);
+  //       navigate('TrustedDriver');
+  //       // navigate('TrustedDriver'); // Uncomment if you want navigation
+  //     } else if (type === EventType.DISMISSED) {
+  //       console.log('Notification dismissed');
+  //     }
+  //   });
 
-    return () => unsubscribe();
-  }, []);
+  //   // notifee.onBackgroundEvent(async ({type, detail}) => {
+  //   //   console.log('Background Event:', type, detail);
+
+  //   //   const path = detail?.notification?.data?.path;
+  //   //   const messageId = detail?.notification?.id;
+
+  //   //   if (type === EventType.PRESS) {
+  //   //     setTimeout(()=>{
+
+  //   //       Alert.alert('Notification Pressed', `Path: ${path}`);
+  //   //       Alert.alert();
+  //   //       sendNotificationDetails('Press', path, messageId);
+  //   //       navigate('TrustedDriver');
+  //   //     },5000)
+  //   //     // navigate('TrustedDriver'); // Uncomment if you want navigation
+  //   //   } else if (type === EventType.DISMISSED) {
+  //   //     console.log('Notification dismissed');
+  //   //   }
+  //   // });
+
+  //   return () => unsubscribe();
+  // }, []);
 
   return (
     <Provider store={store}>

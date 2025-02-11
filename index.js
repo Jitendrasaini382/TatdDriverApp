@@ -4,111 +4,99 @@ import {name as appName} from './app.json';
 import messaging from '@react-native-firebase/messaging';
 import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
 import {navigate} from './src/utils/navigationRef';
+import {SEND_NOTIFICATION_DETAILS} from './src/apis/Apis';
 
-// Function to create notification channels
-const createNotificationChannels = async () => {
+// 🔹 Function to handle notification click
+const handleNotificationPress = async (notification, action) => {
+  if (!notification?.data) return;
+
+  const path = notification?.data?.data?.path;
+  // console.log(notification?.data?.data,"pfwefssswsdsd")
+  const messageId = notification?.data?.messageId;
+
+  console.log('🔔 Notification Clicked:', path);
+
   try {
-    await notifee.createChannel({
-      id: 'tatd2025',
-      name: 'General Notifications',
-      sound: 'tatd_driver_one_time',
-      vibration: true,
-      vibrationPattern: [300, 500],
-      importance: AndroidImportance.HIGH,
+    console.log({
+      action: 'update',
+      received_status: action,
+      firebase_message_id: messageId,
     });
-
-    await notifee.createChannel({
-      id: 'tatd2025_01',
-      name: 'Driver Alerts',
-      sound: 'tatd_driver_three_time',
-      vibration: true,
-      vibrationPattern: [300, 500],
-      importance: AndroidImportance.HIGH,
+    await SEND_NOTIFICATION_DETAILS({
+      action: 'update',
+      received_status: action,
+      // landing_url: path,
+      firebase_message_id: messageId,
     });
-
-    await notifee.createChannel({
-      id: 'tatd2025_02',
-      name: 'Booking Alerts',
-      sound: 'ten_minute_booking',
-      vibration: true,
-      vibrationPattern: [300, 500],
-      importance: AndroidImportance.HIGH,
-    });
-
-    console.log('Notification channels created successfully index.js');
+    console.log('✅ send notification details successful');
   } catch (error) {
-    console.error('Error creating notification channels:', error);
+    console.error('❌ Error sending notification details:', error);
   }
+
+  setTimeout(() => {
+    navigate('TrustedDriver');
+  }, 2000);
 };
 
-// Background message handler
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Received background message index.js :', remoteMessage);
+// 🔹 Foreground notification listener
+notifee.onForegroundEvent(async ({type, detail}) => {
+  if (type === EventType.PRESS) {
+    console.log(detail, 'wertyuio');
 
-  // const sound_ = remoteMessage?.notification?.android?.sound || 'default';
-
-  const path = remoteMessage?.data?.path;
-
-  // playSound(sound_);
-  // checkVibrationSupport(10000);
-
-  // const channelId = await notifee.createChannel({
-  //   id: 'tatd2025',
-  //   name: 'General Notifications',
-  //   sound: sound_,
-  //   vibration: true,
-  //   vibrationPattern: [500, 300, 500, 300, 500, 300],
-  //   importance: AndroidImportance.HIGH,
-  // });
-
-  const channelId = remoteMessage?.notification?.android?.channelId;
-
-  console.log(channelId, 'channelIdchannelId index');
-
-  // await notifee.displayNotification({
-  //   title: remoteMessage.notification?.title,
-  //   body: remoteMessage.notification?.body,
-  //   data: remoteMessage.notification,
-  //   android: {
-  //     channelId: channelId,
-  //     smallIcon: 'ic_launcher', // Make sure this exists in your project
-
-  //     pressAction: {
-  //       id: 'default',
-  //     },
-  //   },
-  // });
-});
-
-// Handle notification events in the background
-notifee.onBackgroundEvent(async ({type, detail}) => {
-  console.log('Background Event:', type, detail);
-
-  switch (type) {
-    case EventType.PRESS:
-      // Delayed navigation to ensure the app is ready
-      navigate('TrustedDriver');
-      console.log('INDEX.js press type ,detailss press pressed', type, detail);
-
-      break;
-    case EventType.DISMISSED:
-      console.log(
-        'index.js press type ,detailss press dismissed',
-        type,
-        detail,
-      );
-
-      console.log('Notification dismissed');
-      break;
-    default:
-      console.log('Unhandled event type:', type);
-      break;
+    await handleNotificationPress(detail.notification, 'clicked');
+  } else if (type == EventType.DISMISSED) {
+    await handleNotificationPress(detail.notification, 'dismiss');
   }
 });
 
-// Initialize notification channels when the app starts
-(async () => {
-  await createNotificationChannels();
-})();
+// 🔹 Background notification listener
+notifee.onBackgroundEvent(async ({type, detail}) => {
+  if (type === EventType.PRESS) {
+    await handleNotificationPress(detail?.notification, 'clicked');
+  }
+  else if (type == EventType.DISMISSED) {
+    await handleNotificationPress(detail?.notification, 'dismiss');
+  }
+});
 
+// 🔹 Firebase Background Message Handler
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('📩 Background message received:', remoteMessage);
+
+  const channelId = remoteMessage?.data?.channel_id || 'default_channel';
+  const title = remoteMessage?.data?.title || 'New Notification';
+  const body = remoteMessage?.data?.body || 'You have a new message';
+  const sound = remoteMessage?.data?.sound || 'default';
+
+  await notifee.displayNotification({
+    title,
+    body,
+    data: remoteMessage, // Ensure data is passed properly
+
+    android: {
+      channelId: channelId,
+      pressAction: {id: 'default'},
+      importance: AndroidImportance.HIGH,
+    },
+  });
+});
+
+// 🔹 Headless Task for Notification Click (handles killed state)
+messaging().onNotificationOpenedApp(remoteMessage => {
+  console.log(
+    '🚀 App opened from killed state by clicking notification:',
+    remoteMessage,
+  );
+
+  // Call API when notification is clicked
+  handleNotificationPress(remoteMessage);
+});
+
+// 🔹 Register the Headless Task (for Android)
+AppRegistry.registerHeadlessTask(
+  'RNFirebaseBackgroundMessage',
+  () => messaging().setBackgroundMessageHandler,
+);
+
+// 🔹 Register the App
 AppRegistry.registerComponent(appName, () => App);

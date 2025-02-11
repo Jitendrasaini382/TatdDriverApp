@@ -182,7 +182,7 @@ const _Fetch = (method, path, body, headers = {}) => {
       headers: finalHeaders, // Pass merged headers
     })
       .then(response => {
-        // console.log(`Response data: ${path}`, response.data);
+        console.log(`Response data: ${path}`, response.data);
         if (response.data.status_code == 200) {
           resolve(response.data);
         } else {

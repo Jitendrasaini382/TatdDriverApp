@@ -355,7 +355,8 @@ const TrustedDriver = ({navigation}) => {
   };
 
   useEffect(() => {
-    if (!isFcmSent) getFcmToken();
+    if (!isFcmSent)
+       getFcmToken();
     if (!isDeviceInfo) fetchDeviceInfo();
   }, []);
 
@@ -403,6 +404,7 @@ const TrustedDriver = ({navigation}) => {
 
         // Fetch FCM token
         tokenvalue = await messaging().getToken();
+        // console.log(tokenvalue,"t")
       } else {
         requestNotificationPermission();
         // Fetch FCM token for Android
@@ -814,6 +816,14 @@ const TrustedDriver = ({navigation}) => {
     setLoginMessage('');
   };
 
+  useEffect(() => {
+    const fetchToken = async () => {
+      const token = await messaging().getToken();
+      console.log('FCM Token:', token);
+    };
+
+    fetchToken();
+  }, []);
   return (
     <View style={styles.safeArea}>
       <View

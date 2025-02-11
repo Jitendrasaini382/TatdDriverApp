@@ -1,4 +1,10 @@
-import {Alert, Linking, PermissionsAndroid, Platform, Vibration} from 'react-native';
+import {
+  Alert,
+  Linking,
+  PermissionsAndroid,
+  Platform,
+  Vibration,
+} from 'react-native';
 import {request, check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 export const requestNotificationPermission = async () => {

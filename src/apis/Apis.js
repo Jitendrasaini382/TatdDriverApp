@@ -455,3 +455,14 @@ export const APPLY_DRIVER_AVAILABLE_TEN_MINUTES = body => {
     {},
   );
 };
+
+// http://tatd.in/app-api/driver/
+
+export const SEND_NOTIFICATION_DETAILS = body => {
+  return _Fetch(
+    'POST',
+    'login/update-firebase-notification-status.php',
+    {...body},
+    {},
+  );
+};

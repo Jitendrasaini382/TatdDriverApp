@@ -20,6 +20,7 @@ import {checkVibrationSupport} from './src/utils/permissions';
 import {playSound, triggerVibration} from './src/utils/soundVibration';
 import {navigate} from './src/utils/navigationRef';
 import {persistStore} from 'redux-persist';
+import {SEND_NOTIFICATION_DETAILS} from './src/apis/Apis';
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -31,39 +32,71 @@ const App = () => {
   const persistor = persistStore(store);
   const [isConnected, setIsConnected] = useState(true);
 
-  const createNotificationChannel = async sound => {
+  const createNotificationChannel = async () => {
     try {
       await notifee.createChannel({
         id: 'tatd2025',
-        name: 'tatd2025',
-        sound: sound,
+        name: 'General Notifications',
+        sound: 'tatd_driver_one_time',
         vibration: true,
         vibrationPattern: [300, 500],
         importance: AndroidImportance.HIGH,
       });
+
+      await notifee.createChannel({
+        id: 'tatd2025_01',
+        name: 'Driver Alerts',
+        sound: 'tatd_driver_three_time',
+        vibration: true,
+        vibrationPattern: [300, 500],
+        importance: AndroidImportance.HIGH,
+      });
+
+      await notifee.createChannel({
+        id: 'tatd2025_02',
+        name: 'Booking Alerts',
+        sound: 'ten_minute_booking',
+        vibration: true,
+        vibrationPattern: [300, 500],
+        importance: AndroidImportance.HIGH,
+      });
+
+      console.log('Notification channels created successfully app.js');
     } catch (error) {}
   };
+
+  useEffect(() => {
+    createNotificationChannel();
+  }, []);
 
   // Handle incoming messages
   const handleIncomingMessages = () => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       // const ssound_ = remoteMessage?.data?.sound;
-      const sound_ = remoteMessage?.notification?.android?.sound;
+    
 
-      createNotificationChannel(sound_);
-      playSound(sound_);
-      checkVibrationSupport(10000);
-      triggerVibration();
+      // const sound_ = remoteMessage?.notification?.android?.sound;
+      const channelId = remoteMessage?.notification?.android?.channelId;
+      const path = remoteMessage?.data?.path;
+
+      console.log(channelId, 'channelIdchannelId app');
+      console.log(path, 'pathpath app.js');
+
+      // createNotificationChannel(sound_);
+      // playSound(sound_);
+      // checkVibrationSupport(10000);
+      // triggerVibration();
 
       try {
         await notifee.displayNotification({
           title: remoteMessage.notification?.title || remoteMessage.data?.title,
           body: remoteMessage.notification?.body || remoteMessage.data?.body,
+          data: remoteMessage.notification,
           android: {
-            channelId: 'tatd2025',
-            sound: sound_,
-            vibrationPattern: [500, 300, 500, 300, 500, 300],
-            importance: AndroidImportance.HIGH,
+            channelId: channelId,
+            // sound: sound_,
+            // vibrationPattern: [500, 300, 500, 300, 500, 300],
+            // importance: AndroidImportance.HIGH,
           },
         });
       } catch (error) {}
@@ -106,16 +139,52 @@ const App = () => {
     return () => unsubscribeNetInfo();
   }, []);
 
+  const sendNotificationDetails = async (status, path, id) => {
+    console.log(
+      {
+        action: 'update',
+        received_status: status,
+        landing_url: path,
+        firebase_message_id: id,
+      },
+      'sending action app',
+    );
+
+    try {
+      const response = await SEND_NOTIFICATION_DETAILS({
+        action: 'update',
+        received_status: status,
+        landing_url: path,
+        firebase_message_id: id,
+      });
+
+      console.log(response, 'response send notificationnnn == app');
+    } catch (error) {
+      console.log(error, 'sending notificationnnn');
+    }
+  };
+
   useEffect(() => {
     // Set up foreground event listener
     const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
-      switch (type) {
+      // console.log(detail, 'detail======== app.js');
+
+      const path = detail?.notification?.data?.path;
+      const messageId = detail?.notification?.id;
+      // console.log(path, 'pathh app-----');
+      // console.log(messageId, 'messageId app');
+      switch ((type, detail)) {
         case EventType.PRESS:
+          sendNotificationDetails('Press', path, messageId);
           navigate('TrustedDriver');
           break;
         case EventType.DISMISSED:
+          // console.log('Notification dismissed');
+          sendNotificationDetails('Dismiss', path, messageId);
           break;
         default:
+          // console.log('Unhandled event type:', type);
+
           break;
       }
     });

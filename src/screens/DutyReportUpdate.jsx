@@ -847,6 +847,25 @@ const DutyReportUpdate = ({route, navigation}) => {
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{scale: scale.value}],
   }));
+
+  const openMap = latLong => {
+    console.log(latLong,"latLonglatLonglatLong");
+    
+    const [latitude, longitude] = latLong.split(',').map(coord => coord.trim());
+    const url = Platform.select({
+      ios: `maps://app?saddr=Current+Location&daddr=${latitude},${longitude}`,
+      android: `geo:${latitude},${longitude}?q=${latitude},${longitude}`,
+    });
+
+    console.log(url,"urlurlurlurlurlurlurl");
+    
+
+    if (url) {
+      Linking.openURL(url).catch(err =>
+        console.error('Error opening map:', err),
+      );
+    }
+  };
   return (
     <SafeAreaView
       style={{
@@ -971,6 +990,25 @@ const DutyReportUpdate = ({route, navigation}) => {
           <View style={styles.mainView}>
             {/* top */}
             <View style={styles.topSection}>
+              {bookingInfo?.data?.booking_type && (
+                <Text
+                  style={{
+                    fontSize: 28,
+                    fontWeight: 'bold',
+                    color: bookingInfo?.data?.booking_type_color, // White Text
+                    alignSelf: 'center',
+                    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+                    textShadowOffset: {width: 3, height: 3},
+                    // textDecorationLine:"underline",
+                    textShadowRadius: 2,
+                    // padding: 10,
+                    backgroundColor: bookingInfo?.data?.booking_type_bg,
+                    borderRadius: 10,
+                    overflow: 'hidden',
+                  }}>
+                  {bookingInfo?.data?.booking_type}
+                </Text>
+              )}
               <Text style={styles.interviewTimeText}>
                 {bookingInfo?.data?.duty_time_heading}{' '}
                 {bookingInfo?.data?.duty_time_text}
@@ -1015,7 +1053,9 @@ const DutyReportUpdate = ({route, navigation}) => {
               <View style={styles.addressCallContainer}>
                 <View style={{flex: 1}}>
                   {bookingInfo?.data?.pickup_address && (
-                    <View style={styles.addressContainer}>
+                    <TouchableOpacity
+                      onPress={() => openMap(bookingInfo?.data?.c_latlong)}
+                      style={styles.addressContainer}>
                       <Image
                         source={Address}
                         resizeMode="contain"
@@ -1024,7 +1064,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                       <Text style={styles.addressText}>
                         {bookingInfo?.data?.pickup_address}
                       </Text>
-                    </View>
+                    </TouchableOpacity>
                   )}
 
                   {bookingInfo?.data?.drop_address && (

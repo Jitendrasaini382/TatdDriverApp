@@ -3,14 +3,18 @@ import App from './App';
 import {name as appName} from './app.json';
 import messaging from '@react-native-firebase/messaging';
 import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
-import {navigate} from './src/utils/navigationRef';
+// import {navigate, navigationRef} from './src/utils/navigationRef';
 import {SEND_NOTIFICATION_DETAILS} from './src/apis/Apis';
+import { navigationRef } from './src/routes/private';
 
 // 🔹 Function to handle notification click
-const handleNotificationPress = async (notification, action) => {
+const handleNotificationPress = async (notification, action,isAppOpen) => {
   if (!notification?.data) return;
 
   const path = notification?.data?.data?.path;
+  const DutyReportPath = path?.includes('DutyReport/');
+  console.log(DutyReportPath, 'duty report path ');
+  // return false
   // console.log(notification?.data?.data,"pfwefssswsdsd")
   const messageId = notification?.data?.messageId;
 
@@ -32,10 +36,25 @@ const handleNotificationPress = async (notification, action) => {
   } catch (error) {
     console.error('❌ Error sending notification details:', error);
   }
+  if (DutyReportPath) {
+    let bokkingId = path?.split('/')[1];
+    setTimeout(() => {
+      navigationRef?.current?.navigate('DutyReportUpdate', {
+        bookingNumber: bokkingId,
+        state: '',
 
-  setTimeout(() => {
-    navigate('TrustedDriver');
-  }, 2000);
+      });
+     
+    }, isAppOpen?100:2000);
+  }
+  else{
+    setTimeout(() => {
+      // navigate('TrustedDriver');
+      navigationRef?.current?.navigate("TrustedDriver")
+      }, isAppOpen?100:2000);
+  }
+
+ 
 };
 
 // 🔹 Foreground notification listener
@@ -43,7 +62,7 @@ notifee.onForegroundEvent(async ({type, detail}) => {
   if (type === EventType.PRESS) {
     console.log(detail, 'wertyuio');
 
-    await handleNotificationPress(detail.notification, 'clicked');
+    await handleNotificationPress(detail.notification, 'clicked',"isAppOpen");
   } else if (type == EventType.DISMISSED) {
     await handleNotificationPress(detail.notification, 'dismiss');
   }
@@ -53,8 +72,7 @@ notifee.onForegroundEvent(async ({type, detail}) => {
 notifee.onBackgroundEvent(async ({type, detail}) => {
   if (type === EventType.PRESS) {
     await handleNotificationPress(detail?.notification, 'clicked');
-  }
-  else if (type == EventType.DISMISSED) {
+  } else if (type == EventType.DISMISSED) {
     await handleNotificationPress(detail?.notification, 'dismiss');
   }
 });

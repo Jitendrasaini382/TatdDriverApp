@@ -1,7 +1,7 @@
 import {StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import React from 'react';
+import React, {createRef} from 'react';
 import TrustedDriver from '../../screens/TrustedDriver';
 import DriverNotice from '../../screens/DriverNotice';
 import DriverEarning from '../../screens/DriverEarning';
@@ -22,11 +22,11 @@ import DueAmountDetails from '../../screens/DueAmountDetails';
 import RateUsAtSocialMedia from '../../screens/RateUsAtSocialMedia';
 import DueAmount from '../../screens/DueAmount';
 import RedirectPopUp from '../../screens/RedirectPopUp';
-import {navigationRef} from '../../utils/navigationRef';
+// import {navigationRef} from '../../utils/navigationRef';
 import PremiumDriverApply from '../../screens/PremiumDriverApply';
 
 const Stack = createStackNavigator();
-
+export const navigationRef = createRef();
 const PrivateRoute = () => {
   const isSplash = useSelector(e => e?.trustedDriverSlice?.splash);
   return (

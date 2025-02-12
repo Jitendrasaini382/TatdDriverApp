@@ -74,7 +74,7 @@ const App = () => {
   const handleIncomingMessages = () => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       // const ssound_ = remoteMessage?.data?.sound;
-      console.log(remoteMessage,"Notification onmeesse")
+      console.log(remoteMessage,"Notification onmeesse App.js")
       // const sound_ = remoteMessage?.notification?.android?.sound;
       const channelId = remoteMessage?.data?.channel_id;
       const path = remoteMessage?.data?.path;
@@ -105,16 +105,7 @@ const App = () => {
     return unsubscribe;
   };
 
-  // Check initial notification on app launch
-  // const checkInitialNotification = async () => {
-  //   try {
-  //     const initialNotification = await notifee.getInitialNotification();
-  //     if (initialNotification) {
-  //     }
-  //   } catch (error) {
-  //     console.error('Error checking initial notification:', error);
-  //   }
-  // };
+  
 
   // Monitor network connectivity
   const monitorNetworkConnection = () => {
@@ -164,48 +155,7 @@ const App = () => {
     }
   };
 
-  // useEffect(() => {
-  //   // Set up foreground event listener
-  //   const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
-  //     console.log(detail, 'Foreground Event');
-
-  //     const path = detail?.notification?.data?.path;
-  //     const messageId = detail?.notification?.id;
-
-  //     if (type === EventType.PRESS) {
-  //       Alert.alert('Notification Pressed', `Path: ${path}`);
-  //       Alert.alert();
-  //       sendNotificationDetails('Press', path, messageId);
-  //       navigate('TrustedDriver');
-  //       // navigate('TrustedDriver'); // Uncomment if you want navigation
-  //     } else if (type === EventType.DISMISSED) {
-  //       console.log('Notification dismissed');
-  //     }
-  //   });
-
-  //   // notifee.onBackgroundEvent(async ({type, detail}) => {
-  //   //   console.log('Background Event:', type, detail);
-
-  //   //   const path = detail?.notification?.data?.path;
-  //   //   const messageId = detail?.notification?.id;
-
-  //   //   if (type === EventType.PRESS) {
-  //   //     setTimeout(()=>{
-
-  //   //       Alert.alert('Notification Pressed', `Path: ${path}`);
-  //   //       Alert.alert();
-  //   //       sendNotificationDetails('Press', path, messageId);
-  //   //       navigate('TrustedDriver');
-  //   //     },5000)
-  //   //     // navigate('TrustedDriver'); // Uncomment if you want navigation
-  //   //   } else if (type === EventType.DISMISSED) {
-  //   //     console.log('Notification dismissed');
-  //   //   }
-  //   // });
-
-  //   return () => unsubscribe();
-  // }, []);
-
+  
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

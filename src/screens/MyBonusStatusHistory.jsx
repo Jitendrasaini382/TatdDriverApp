@@ -26,33 +26,17 @@ const MyBonusStatusHistory = () => {
     if (loader) return; // Prevent multiple simultaneous calls
     // setLoader(true);
 
-    console.log(newOffset, isRefresh, 'fudsvcsjhdvcjhsxcvjhxv j');
-
-    console.log(
-      {
-        action: 'get_bonus_history',
-        offset: newOffset,
-        limit: 10,
-      },
-      'sending action',
-    );
-
     try {
       const response = await MY_BONUS_HISTORY({
         action: 'get_bonus_history',
         offset: newOffset,
         limit: 10,
       });
-
       setAllDataCount(response?.count_booking);
-
-      // If refreshing, replace data; otherwise, append new data
       setBonusData(
         isRefresh ? response.bonuses : [...bonusData, ...response.bonuses],
       );
-
       setOffset(newOffset + 10); // Update offset for next batch
-      console.log(offset, 'OOOOOOOOOOFEST');
     } catch (error) {
       console.error(error);
     } finally {

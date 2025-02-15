@@ -3,7 +3,6 @@ import 'react-native-gesture-handler';
 import Route from './src/routes/Routes';
 import {
   ActivityIndicator,
-  Alert,
   LogBox,
   StyleSheet,
   Text,
@@ -14,14 +13,10 @@ import {Provider} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import store from './src/redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
-import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
+import notifee, {AndroidImportance} from '@notifee/react-native';
 import NetInfo from '@react-native-community/netinfo';
 import {AppColors} from './src/assets/Colors';
-import {checkVibrationSupport} from './src/utils/permissions';
-import {playSound, triggerVibration} from './src/utils/soundVibration';
-import {navigate} from './src/utils/navigationRef';
 import {persistStore} from 'redux-persist';
-import {SEND_NOTIFICATION_DETAILS} from './src/apis/Apis';
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -73,19 +68,12 @@ const App = () => {
   // Handle incoming messages
   const handleIncomingMessages = () => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      // const ssound_ = remoteMessage?.data?.sound;
-      console.log(remoteMessage,"Notification onmeesse App.js")
-      // const sound_ = remoteMessage?.notification?.android?.sound;
+      // console.log(remoteMessage,"Notification onmeesse App.js")
       const channelId = remoteMessage?.data?.channel_id;
       const path = remoteMessage?.data?.path;
 
-      console.log(channelId, 'channelIdchannelId app');
-      console.log(path, 'pathpath app.js');
-
-      // createNotificationChannel(sound_);
-      // playSound(sound_);
-      // checkVibrationSupport(10000);
-      // triggerVibration();
+      // console.log(channelId, 'channelIdchannelId app');
+      // console.log(path, 'pathpath app.js');
 
       try {
         await notifee.displayNotification({
@@ -104,8 +92,6 @@ const App = () => {
 
     return unsubscribe;
   };
-
-  
 
   // Monitor network connectivity
   const monitorNetworkConnection = () => {
@@ -130,32 +116,6 @@ const App = () => {
     return () => unsubscribeNetInfo();
   }, []);
 
-  const sendNotificationDetails = async (status, path, id) => {
-    console.log(
-      {
-        action: 'update',
-        received_status: status,
-        landing_url: path,
-        firebase_message_id: id,
-      },
-      'sending action app',
-    );
-
-    try {
-      const response = await SEND_NOTIFICATION_DETAILS({
-        action: 'update',
-        received_status: status,
-        landing_url: path,
-        firebase_message_id: id,
-      });
-
-      console.log(response, 'response send notificationnnn == app');
-    } catch (error) {
-      console.log(error, 'sending notificationnnn');
-    }
-  };
-
-  
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

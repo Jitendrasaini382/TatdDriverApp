@@ -18,10 +18,16 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Buffer} from 'buffer';
 import {useNavigation} from '@react-navigation/native';
 import {Linking} from 'react-native';
+import PermanentSubscriptionBookingView from './bookingsView/PermanentSubscriptionBookingView';
 
 const {width} = Dimensions.get('window');
 
-const BookingView = ({data, allBookingData, panelData}) => {
+const BookingView = ({
+  data,
+  allBookingData,
+  panelData,
+  permanentSubscriptionBookingData,
+}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
@@ -79,6 +85,9 @@ const BookingView = ({data, allBookingData, panelData}) => {
 
       <RoundTripBookingView allBookingData={allBookingData} />
       <FlexibleBookingView />
+      <PermanentSubscriptionBookingView
+        permanentSubscriptionBookingData={permanentSubscriptionBookingData}
+      />
       <PermanentBookingView />
     </View>
   );

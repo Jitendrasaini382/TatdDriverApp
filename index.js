@@ -5,10 +5,10 @@ import messaging from '@react-native-firebase/messaging';
 import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
 // import {navigate, navigationRef} from './src/utils/navigationRef';
 import {SEND_NOTIFICATION_DETAILS} from './src/apis/Apis';
-import { navigationRef } from './src/routes/private';
+import {navigationRef} from './src/routes/private';
 
 // 🔹 Function to handle notification click
-const handleNotificationPress = async (notification, action,isAppOpen) => {
+const handleNotificationPress = async (notification, action, isAppOpen) => {
   if (!notification?.data) return;
 
   const path = notification?.data?.data?.path;
@@ -18,51 +18,44 @@ const handleNotificationPress = async (notification, action,isAppOpen) => {
   // console.log(notification?.data?.data,"pfwefssswsdsd")
   const messageId = notification?.data?.messageId;
 
-  console.log('🔔 Notification Clicked:', path);
+  // console.log('🔔 Notification Clicked:', path);
 
   try {
-    console.log({
-      action: 'update',
-      received_status: action,
-      firebase_message_id: messageId,
-    });
     await SEND_NOTIFICATION_DETAILS({
       action: 'update',
       received_status: action,
-      // landing_url: path,
       firebase_message_id: messageId,
     });
-    console.log('✅ send notification details successful');
+    // console.log('✅ send notification details successful');
   } catch (error) {
-    console.error('❌ Error sending notification details:', error);
+    // console.error('❌ Error sending notification details:', error);
   }
   if (DutyReportPath) {
     let bokkingId = path?.split('/')[1];
-    setTimeout(() => {
-      navigationRef?.current?.navigate('DutyReportUpdate', {
-        bookingNumber: bokkingId,
-        state: '',
-
-      });
-     
-    }, isAppOpen?100:2000);
+    setTimeout(
+      () => {
+        navigationRef?.current?.navigate('DutyReportUpdate', {
+          bookingNumber: bokkingId,
+          state: '',
+        });
+      },
+      isAppOpen ? 100 : 2000,
+    );
+  } else {
+    setTimeout(
+      () => {
+        // navigate('TrustedDriver');
+        navigationRef?.current?.navigate('TrustedDriver');
+      },
+      isAppOpen ? 100 : 2000,
+    );
   }
-  else{
-    setTimeout(() => {
-      // navigate('TrustedDriver');
-      navigationRef?.current?.navigate("TrustedDriver")
-      }, isAppOpen?100:2000);
-  }
-
- 
 };
 
 // 🔹 Foreground notification listener
 notifee.onForegroundEvent(async ({type, detail}) => {
   if (type === EventType.PRESS) {
-    console.log(detail, 'wertyuio');
-
-    await handleNotificationPress(detail.notification, 'clicked',"isAppOpen");
+    await handleNotificationPress(detail.notification, 'clicked', 'isAppOpen');
   } else if (type == EventType.DISMISSED) {
     await handleNotificationPress(detail.notification, 'dismiss');
   }

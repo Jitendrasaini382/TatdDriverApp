@@ -64,6 +64,7 @@ import Animated, {
   FadeIn,
 } from 'react-native-reanimated';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {API_BASE_URL} from '../constant/path';
 
 const DutyReportUpdate = ({route, navigation}) => {
   const {bookingNumber, state} = route?.params;
@@ -405,14 +406,10 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
 
   const driverBookingReach = async () => {
-    console.log('Function driverBookingReach called');
-
     const location = await getLocation();
-    console.log(location, 'location');
 
     if (location) {
       setReachLoader(true);
-      // console.log('setReachLoader set to true');
 
       try {
         const requestData = {
@@ -424,47 +421,32 @@ const DutyReportUpdate = ({route, navigation}) => {
           longitude: location?.longitude,
         };
 
-        // console.log(requestData, 'Request Data for DRIVER_BOOKING_REACH');
-
         const res = await DRIVER_BOOKING_REACH(requestData);
-        // console.log(res, 'Response from DRIVER_BOOKING_REACH');
 
         if (res?.distance_message_flag == 1) {
-          // console.log('Distance message flag is 1');
           Alert.alert('', res?.distance_message, [
             {text: 'OK', onPress: () => setModalVisibleRich(false)},
           ]);
-          // console.log('Alert shown with distance message');
           return false;
         } else {
-          // console.log('Processing redirect condition');
-
           if (res?.redirect == 'duty_report') {
-            // console.log('Redirect is duty_report');
-
             if (res?.message_type == 'error') {
-              // console.log('Message type is error, setting cancel state');
               setCancelState('cancel');
               setModalVisibleRich(false);
             } else {
-              // console.log('Fetching all booking info');
               GetAllBookingInfo();
               setModalVisibleRich(false);
             }
           }
 
-          // console.log('Closing modal and fetching booking info again');
           setModalVisibleRich(false);
           GetAllBookingInfo();
         }
       } catch (err) {
-        // console.log(err, 'Error caught in catch block');
       } finally {
         setReachLoader(false);
-        // console.log('setReachLoader set to false');
       }
     } else {
-      // console.log('Location not available, exiting function');
     }
   };
 
@@ -530,7 +512,13 @@ const DutyReportUpdate = ({route, navigation}) => {
     const hasPermission = await requestCameraPermission();
     if (hasPermission) {
       launchCamera(
-        {mediaType: 'photo', maxHeight: 600, maxWidth: 800},
+        {
+          mediaType: 'photo',
+          maxHeight: 500,
+          maxWidth: 500,
+          quality: 0.4,
+          cameraType: 'front',
+        },
         response => {
           if (response.didCancel) {
           } else if (response.errorCode) {
@@ -595,7 +583,7 @@ const DutyReportUpdate = ({route, navigation}) => {
 
     try {
       const response = await axios.post(
-        'https://www.tatd.in/app-api/driver/duty-report/duty_report_booking_start.php',
+        `${API_BASE_URL}/duty-report/duty_report_booking_start.php`,
         formData,
         {
           headers: {
@@ -641,7 +629,7 @@ const DutyReportUpdate = ({route, navigation}) => {
               try {
                 const appVersion = DeviceInfo.getVersion();
                 const res = await axios.post(
-                  'https://www.tatd.in/app-api/driver/login/refresh_token.php',
+                  `${API_BASE_URL}/login/refresh_token.php`,
                   {refresh_token: refreshToken, app_version: appVersion},
                 );
 
@@ -849,16 +837,15 @@ const DutyReportUpdate = ({route, navigation}) => {
   }));
 
   const openMap = latLong => {
-    console.log(latLong,"latLonglatLonglatLong");
-    
+    // console.log(latLong, 'latLonglatLonglatLong');
+    if (!latLong) {
+      return;
+    }
     const [latitude, longitude] = latLong.split(',').map(coord => coord.trim());
     const url = Platform.select({
       ios: `maps://app?saddr=Current+Location&daddr=${latitude},${longitude}`,
       android: `geo:${latitude},${longitude}?q=${latitude},${longitude}`,
     });
-
-    console.log(url,"urlurlurlurlurlurlurl");
-    
 
     if (url) {
       Linking.openURL(url).catch(err =>

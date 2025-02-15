@@ -1,5 +1,9 @@
 import _Fetch from './Service';
 
+function generateSessionToken() {
+  return Math.random().toString(10).substr(2, 10);
+}
+
 export const DRIVER_LOGIN = body => {
   return _Fetch('POST', 'login/driver-login.php', body, {});
 };
@@ -36,7 +40,7 @@ export const TICKETS_DRIVER = body => {
 export const DRIVER_HEADLINE = body => {
   return _Fetch(
     'POST',
-    'trusted-driver/headline_message_api.php?action=headline_message',
+    `trusted-driver/headline_message_api.php?action=headline_message&${generateSessionToken()}`,
     {...body},
     {},
   );
@@ -435,9 +439,6 @@ export const DRIVER_AVAILABLE_TEN_MINUTES = body => {
     {},
   );
 };
-function generateSessionToken() {
-  return Math.random().toString(10).substr(2, 10);
-}
 
 export const GET_ALL_AVAILABILITY = body => {
   return _Fetch(
@@ -456,12 +457,56 @@ export const APPLY_DRIVER_AVAILABLE_TEN_MINUTES = body => {
   );
 };
 
-// http://tatd.in/app-api/driver/
-
 export const SEND_NOTIFICATION_DETAILS = body => {
   return _Fetch(
     'POST',
     'login/update-firebase-notification-status.php',
+    {...body},
+    {},
+  );
+};
+
+export const PERMANENT_SUBSCRIPTION_VIEW = () => {
+  return _Fetch(
+    'GET',
+    `trusted-driver/permanent-subscription-view-api.php?action=show_booking&${generateSessionToken()}`,
+    {},
+  );
+};
+
+export const PERMANENT_SUBSCRIPTION_POPUP_DATA_VIEW = body => {
+  return _Fetch(
+    'GET',
+    `trusted-driver/permanent-subscription-view-api.php?action=booking_popup&PS_ID=${body}`,
+    {},
+  );
+};
+
+export const ACCEPT_PERMANENT_SUBSCRIPTION_BOOKING = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/permanent-subscription-accept-api.php',
+    {...body},
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/trusted-driver/driver-available-in-ten-minutes.php?action=view_popup&product_type=Incity&way=1
+
+export const TEN_MINUTE_AVAILABLE_CLICK_POPUP = body => {
+  return _Fetch(
+    'GET',
+    `trusted-driver/driver-available-in-ten-minutes.php?action=view_popup&product_type=${body?.product_type}&way=${body?.way}`,
+    {},
+  );
+};
+
+// https://www.tatd.in/app-api/driver/
+
+export const ALL_TEN_MINUTE_STATUS_UPDATE = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/driver-available-in-ten-minutes.php',
     {...body},
     {},
   );

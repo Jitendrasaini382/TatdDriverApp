@@ -37,6 +37,7 @@ import {Buffer} from 'buffer';
 import Geolocation from '@react-native-community/geolocation';
 
 import {
+  ALL_TEN_MINUTE_STATUS_UPDATE,
   DRIVER_AVAILABLE_TEN_MINUTES,
   DRIVER_HEADLINE,
   DRIVER_NOTICE,
@@ -47,7 +48,9 @@ import {
   GET_FCM_TOKEN,
   LOGIN_BUTTON,
   ON_DEMAND_BOOKING,
+  PERMANENT_SUBSCRIPTION_VIEW,
   SAVE_DEVICE_INFO,
+  TEN_MINUTE_AVAILABLE_CLICK_POPUP,
   UPDATE_POPUP,
 } from '../apis/Apis';
 import ExpressBookingModal from '../components/modal/ExpressBookingModal';
@@ -104,6 +107,8 @@ const TrustedDriver = ({navigation}) => {
   const [modalVisibleTenMinutes, setModalVisibleTenMinutes] = useState(false);
   const [showTenMinuteButton, setShowTenMinute] = useState(false);
   const [location, setLocation] = useState();
+  const [tenMinuteModalData, setTenMinuteModalData] = useState();
+  const [confirmTenMinuteModal, setConfirmTenMinuteModal] = useState({});
 
   const [allTripType, setAllTripType] = useState([
     {
@@ -182,9 +187,25 @@ const TrustedDriver = ({navigation}) => {
   const refreshKey = useSelector(state => state?.globalSlice?.refreshKey);
   const jwt = useSelector(e => e?.userAuth?.jwt);
 
-  const sendDriverAvailableInTenMinutes = async data => {
-    // console.log(location, 'locationlocationlocation');
+  const openConfirmTenMinuteApplyPopUp = async data => {
+    try {
+      const response = await TEN_MINUTE_AVAILABLE_CLICK_POPUP({
+        product_type: data?.action,
+        way: data?.way,
+      });
 
+      setTenMinuteModalData(response);
+
+      if (response?.status_code == 200) {
+        setConfirmTenMinuteModal({
+          visible: true,
+          key: data,
+        });
+      }
+    } catch (error) {}
+  };
+
+  const sendDriverAvailableInTenMinutes = async data => {
     try {
       const response = await DRIVER_AVAILABLE_TEN_MINUTES({
         action: 'insert_availability',
@@ -199,56 +220,72 @@ const TrustedDriver = ({navigation}) => {
           trip.label === data.label ? {...trip, value: true} : {...trip},
         ),
       );
-    } catch (error) {
-      console.log(error, 'sendDriverAvailableInTenMinutes error');
-    }
+      if (response.status_code == 200) {
+        setConfirmTenMinuteModal({});
+        // setModalVisibleTenMinutes(false);
+      }
+    } catch (error) {}
   };
 
   const getAllAvailability = async () => {
-    try {
-      const response = await GET_ALL_AVAILABILITY(languageSwitch);
+    if (isSelected) {
+      try {
+        const response = await ALL_TEN_MINUTE_STATUS_UPDATE({
+          action: 'active_status_update',
+          current_language: languageSwitch,
+        });
 
-      console.log(
-        response,
-        'responseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponseresponse',
-      );
-
-      if (response?.ten_minutes_poupup_view == '1') {
-        setModalVisibleTenMinutes(true);
-        setIsSelected(true);
-      } else {
-        if (
-          response?.application_success_message &&
-          response?.application_success_message?.length !== 0
-        ) {
+        if (response?.status_code == 200) {
           setIsSelected(false);
-          Alert.alert('Success', response?.application_success_message, [
-            {text: 'OK', onPress: () => getHeadlineData()},
-          ]);
-        } else {
-          setIsSelected(true);
-          navigation.navigate('PremiumDriverApply', {data: response});
+          setAllTripType(prevState =>
+            prevState.map(trip => ({
+              ...trip,
+              value: false,
+            })),
+          );
         }
+      } catch (error) {}
+    } else {
+      try {
+        const response = await GET_ALL_AVAILABILITY(languageSwitch);
+
+        if (response?.ten_minutes_poupup_view == '1') {
+          setModalVisibleTenMinutes(true);
+          setIsSelected(true);
+        } else {
+          if (
+            response?.application_success_message &&
+            response?.application_success_message?.length !== 0
+          ) {
+            setIsSelected(false);
+            Alert.alert('Success', response?.application_success_message, [
+              {text: 'OK', onPress: () => getHeadlineData()},
+            ]);
+          } else {
+            setIsSelected(true);
+            navigation.navigate('TenMinuteDriverApply', {data: response});
+          }
+        }
+        setAllTripType(prevTripTypes =>
+          prevTripTypes.map(trip => {
+            if (trip.label === 'Incity Oneway') {
+              return {...trip, value: response?.incity_oneway_flag == 1};
+            }
+            if (trip.label === 'Incity Roundtrip') {
+              return {...trip, value: response?.incity_roundtrip_flag == 1};
+            }
+            if (trip.label === 'Outstation Oneway') {
+              return {...trip, value: response?.outstation_oneway_flag == 1};
+            }
+            if (trip.label === 'Outstation Roundtrip') {
+              return {...trip, value: response?.outstation_roundtrip_flag == 1};
+            }
+            return trip;
+          }),
+        );
+      } catch (error) {
+        console.log(error, 'error getAllAvailability');
       }
-      setAllTripType(prevTripTypes =>
-        prevTripTypes.map(trip => {
-          if (trip.label === 'Incity Oneway') {
-            return {...trip, value: response?.incity_oneway_flag == 1};
-          }
-          if (trip.label === 'Incity Roundtrip') {
-            return {...trip, value: response?.incity_roundtrip_flag == 1};
-          }
-          if (trip.label === 'Outstation Oneway') {
-            return {...trip, value: response?.outstation_oneway_flag == 1};
-          }
-          if (trip.label === 'Outstation Roundtrip') {
-            return {...trip, value: response?.outstation_roundtrip_flag == 1};
-          }
-          return trip;
-        }),
-      );
-    } catch (error) {
-      console.log(error, 'error getAllAvailability');
     }
   };
 
@@ -302,6 +339,7 @@ const TrustedDriver = ({navigation}) => {
       if (isRfdOn) {
         getPopup();
         getAllOndemandBookings();
+        getPermanentSubscriptionBooking();
         getAllTrustedData();
       }
 
@@ -317,9 +355,11 @@ const TrustedDriver = ({navigation}) => {
         getHomeNotification();
         getHomeNotice();
         getUpdatePopup();
-        if (isRfdOn) {
-          getAllOndemandBookings();
-        }
+        // if (isRfdOn) {
+        getAllOndemandBookings();
+        getPermanentSubscriptionBooking();
+
+        // }
         getAllTrustedData();
       }
     };
@@ -340,9 +380,10 @@ const TrustedDriver = ({navigation}) => {
         getPopup();
       }
       getHeadlineData();
-      if (isRfdOn) {
-        getAllOndemandBookings();
-      }
+      // if (isRfdOn) {
+      getAllOndemandBookings();
+      getPermanentSubscriptionBooking();
+      // }
       getAllTrustedData();
 
       getHomeNotification();
@@ -355,8 +396,7 @@ const TrustedDriver = ({navigation}) => {
   };
 
   useEffect(() => {
-    if (!isFcmSent)
-       getFcmToken();
+    if (!isFcmSent) getFcmToken();
     if (!isDeviceInfo) fetchDeviceInfo();
   }, []);
 
@@ -404,7 +444,6 @@ const TrustedDriver = ({navigation}) => {
 
         // Fetch FCM token
         tokenvalue = await messaging().getToken();
-        // console.log(tokenvalue,"t")
       } else {
         requestNotificationPermission();
         // Fetch FCM token for Android
@@ -482,6 +521,7 @@ const TrustedDriver = ({navigation}) => {
       // }
       // if (isRfdOn) {
       await getAllOndemandBookings();
+      await getPermanentSubscriptionBooking();
       dispatch(setRefreshKey());
       // }
     } catch (error) {
@@ -601,6 +641,10 @@ const TrustedDriver = ({navigation}) => {
 
   const [loading, setLoading] = useState(false);
   const [allOndemandBookings, setAllOndemandBookings] = useState({});
+  const [
+    permanentSubscriptionBookingData,
+    setPermanentSubscriptionBookingData,
+  ] = useState([]);
   const [allTrustedData, setAllTrustedData] = useState({});
 
   const getAllOndemandBookings = async () => {
@@ -616,6 +660,19 @@ const TrustedDriver = ({navigation}) => {
       setLoading(false);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getPermanentSubscriptionBooking = async () => {
+    try {
+      const response = await PERMANENT_SUBSCRIPTION_VIEW();
+      setPermanentSubscriptionBookingData(response?.data);
+    } catch (error) {
+      console.error(
+        'Error in getPermanentSubscriptionBooking:',
+        error?.message || error,
+      );
+    } finally {
     }
   };
 
@@ -816,14 +873,12 @@ const TrustedDriver = ({navigation}) => {
     setLoginMessage('');
   };
 
-  useEffect(() => {
-    const fetchToken = async () => {
-      const token = await messaging().getToken();
-      console.log('FCM Token:', token);
-    };
+  const [selectedButton, setSelectedButton] = useState(null);
 
-    fetchToken();
-  }, []);
+  const handleButtonClick = buttonId => {
+    setSelectedButton(buttonId === selectedButton ? null : buttonId);
+  };
+
   return (
     <View style={styles.safeArea}>
       <View
@@ -837,69 +892,54 @@ const TrustedDriver = ({navigation}) => {
           <View style={{alignSelf: 'flex-end', marginHorizontal: 10}}>
             <TouchableOpacity
               style={{
-                backgroundColor: isSelected ? AppColors.mainColor : 'white',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '50%',
+                borderColor:AppColors.black,
+                borderWidth:1,
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                marginVertical: 8,
                 borderRadius: 50,
-                margin: 8,
-                borderWidth: 1,
-                borderColor: isSelected ? AppColors.mainColor : AppColors.gray,
+                backgroundColor: isSelected
+                  ? AppColors.yellow
+                  : AppColors.mainColor,
               }}
-              onPress={handleTenMinuteButton}>
-              <View
+              onPress={() => handleTenMinuteButton()}>
+              {/* Driver Icon Placement */}
+              {!isSelected && (
+                <Text
+                  style={{
+                    fontSize: 22,
+                    backgroundColor: AppColors.white,
+                    borderRadius: 11,
+                    borderWidth: 1,
+                    borderColor: AppColors.white,
+                  }}>
+                  👮
+                </Text>
+              )}
+              <Text
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: 10,
-                  // borderWidth: 2,
-                  borderColor: 'black',
-                  borderRadius: 10,
+                  fontSize: 15,
+                  fontWeight: 'bold',
+                  color: isSelected ? AppColors.mainColor : AppColors.white,
                 }}>
-                {isSelected ? (
-                  <>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        fontWeight: 'bold',
-                        color: 'white',
-                        alignSelf: 'center',
-                      }}>
-                      In 10 Minutes
-                    </Text>
-                    <View
-                      style={{
-                        width: 35,
-                        height: 20,
-                        alignSelf: 'center',
-                        borderRadius: 15,
-                        backgroundColor: '#ccc',
-                        marginHorizontal: 3,
-                      }}
-                    />
-                  </>
-                ) : (
-                  <>
-                    <View
-                      style={{
-                        width: 35,
-                        height: 20,
-                        alignSelf: 'center',
-                        borderRadius: 15,
-                        backgroundColor: '#ccc',
-                        marginHorizontal: 3,
-                      }}
-                    />
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        fontWeight: 'bold',
-                        color: AppColors.black,
-                        alignSelf: 'center',
-                      }}>
-                      10 Minutes
-                    </Text>
-                  </>
-                )}
-              </View>
+                In 10 Minutes
+              </Text>
+              {isSelected && (
+                <Text
+                  style={{
+                    fontSize: 22,
+                    backgroundColor: AppColors.white,
+                    borderRadius: 11,
+                    borderWidth: 1,
+                    borderColor: AppColors.white,
+                  }}>
+                  👮
+                </Text>
+              )}
             </TouchableOpacity>
           </View>
         )}
@@ -1345,7 +1385,8 @@ const TrustedDriver = ({navigation}) => {
                       styles.bottamContent4,
                       {
                         backgroundColor:
-                          decodedToken?.clear_due_color?.background || 'yellow',
+                          decodedToken?.clear_due_color?.background ||
+                          AppColors.yellow,
                       },
                     ]}>
                     <Text
@@ -1400,6 +1441,9 @@ const TrustedDriver = ({navigation}) => {
                     data={headLineData}
                     allBookingData={allOndemandBookings}
                     panelData={allTrustedData?.agent_panel_view}
+                    permanentSubscriptionBookingData={
+                      permanentSubscriptionBookingData
+                    }
                   />
                 ) : null}
               </>
@@ -1694,161 +1738,176 @@ const TrustedDriver = ({navigation}) => {
         <Modal
           animationType="slide"
           transparent={true}
-          onRequestClose={() => setModalVisibleTenMinutes(false)}
-          visible={modalVisibleTenMinutes}
-
-          // animationIn={'fadeInDown'}
-          // animationOut={'fadeOutUp'}
-          // backdropOpacity={0}
-          // onBackdropPress={() => setModalVisibleTenMinutes(false)}
-          // isVisible={modalVisibleTenMinutes}
-        >
+          onRequestClose={() => {
+            setModalVisibleTenMinutes(false), getHeadlineData();
+          }}
+          visible={modalVisibleTenMinutes}>
           <View
             style={{
               flex: 1,
               justifyContent: 'center',
               alignItems: 'center',
               backgroundColor: 'rgba(0,0,0,0.5)',
-              // marginHorizontal:5
             }}>
             <View
               style={{
                 backgroundColor: 'white',
-                paddingHorizontal: 10,
-                // borderRadius: 10,
+                padding: 20,
                 width: '90%',
+                borderRadius: 10,
+                alignItems: 'center',
               }}>
+              {/* Close Button */}
               <TouchableOpacity
-                onPress={() => setModalVisibleTenMinutes(false)}
+                onPress={() => {
+                  setModalVisibleTenMinutes(false), getHeadlineData();
+                }}
                 style={{
-                  backgroundColor: AppColors.mainColor,
-                  padding: 10,
+                  backgroundColor: '#333',
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  borderRadius: 50,
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   alignSelf: 'flex-end',
-                  borderRadius: 80,
-                  marginTop: 15,
                 }}>
-                <Icon name="close" size={20} color="white" />
+                <Text
+                  style={{color: 'white', fontWeight: 'bold', fontSize: 20}}>
+                  X
+                </Text>
               </TouchableOpacity>
-              {allTripType.map(e => (
-                <View
-                  key={e.label}
+
+              {/* Trip Options */}
+              {allTripType.map((trip, index) => (
+                <TouchableOpacity
+                  key={index}
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     width: '100%',
+                    padding: 15,
                     marginVertical: 8,
-                  }}>
+                    borderRadius: 50,
+                    backgroundColor: trip.value
+                      ? AppColors.yellow
+                      : AppColors.mainColor,
+                  }}
+                  onPress={() => openConfirmTenMinuteApplyPopUp(trip)}>
+                  {/* Driver Icon Placement */}
+                  {!trip.value && (
+                    <Text
+                      style={{
+                        fontSize: 22,
+                        backgroundColor: AppColors.white,
+                        borderRadius: 11,
+                        borderWidth: 1,
+                        borderColor: AppColors.white,
+                      }}>
+                      👮
+                    </Text>
+                  )}
                   <Text
                     style={{
                       fontSize: 15,
-                      color: AppColors.black,
-                      marginHorizontal: 10,
+                      fontWeight: 'bold',
+                      color: trip.value ? AppColors.mainColor : AppColors.white,
+                    }}>
+                    {trip.label}
+                  </Text>
+                  {trip.value && (
+                    <Text
+                      style={{
+                        fontSize: 22,
+                        backgroundColor: AppColors.white,
+                        borderRadius: 11,
+                        borderWidth: 1,
+                        borderColor: AppColors.white,
+                      }}>
+                      👮
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </Modal>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setConfirmTenMinuteModal(false)}
+          visible={Object.keys(confirmTenMinuteModal).length !== 0}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <View
+              style={{
+                width: width * 0.85,
+                backgroundColor: '#fff',
+                borderRadius: 25,
+                padding: 15,
+                alignItems: 'center',
+                shadowColor: '#000',
+                shadowOffset: {width: 0, height: 15},
+                shadowOpacity: 0.3,
+                shadowRadius: 20,
+                elevation: 15,
+                paddingVertical: 50,
+                transform: [{translateY: 20}],
+              }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: '#555',
+                  // textAlign: 'center',
+                  marginBottom: 30,
+                }}>
+                {languageSwitch == 'hindi'
+                  ? tenMinuteModalData?.hindi_message
+                  : tenMinuteModalData?.english_message}
+              </Text>
+              <View
+                style={{
+                  width: '100%',
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                }}>
+                <TouchableOpacity
+                  style={{
+                    padding: 10,
+                  }}
+                  onPress={() => setConfirmTenMinuteModal({})}>
+                  <Text
+                    style={{
+                      color: AppColors.mainColor,
+                      fontSize: 16,
                       fontWeight: 'bold',
                     }}>
-                    {e.label}
+                    Cancel
                   </Text>
-                  <TouchableOpacity
-                    disabled={e?.value}
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    padding: 10,
+                  }}
+                  onPress={() =>
+                    sendDriverAvailableInTenMinutes(confirmTenMinuteModal?.key)
+                  }>
+                  <Text
                     style={{
-                      backgroundColor: e.value
-                        ? AppColors.mainColor
-                        : AppColors.white,
-                      borderRadius: 50,
-                      marginVertical: 8,
-                    }}
-                    onPress={() => {
-                      sendDriverAvailableInTenMinutes(e);
+                      color: AppColors.mainColor,
+                      fontSize: 16,
+                      fontWeight: 'bold',
                     }}>
-                    {!e?.value ? (
-                      <>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            padding: 8,
-                            backgroundColor: !e.value
-                              ? 'white'
-                              : AppColors.mainColor,
-                            borderWidth: 2,
-                            borderColor: AppColors.black,
-                            borderRadius: 10,
-                          }}>
-                          <View
-                            style={{
-                              width: 35,
-                              height: 20,
-                              borderRadius: 15,
-                              backgroundColor: !e.value ? 'grey' : '#ccc',
-                              marginHorizontal: 3,
-                            }}
-                          />
-                          <Text
-                            style={{
-                              fontSize: 14,
-                              fontWeight: 'bold',
-                              color: !e.value
-                                ? AppColors.black
-                                : AppColors.white,
-                            }}>
-                            10 Minutes
-                          </Text>
-                        </View>
-                      </>
-                    ) : (
-                      <>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            padding: 8,
-                            backgroundColor: e.value
-                              ? AppColors.mainColor
-                              : AppColors.white,
-                            borderWidth: 2,
-                            borderColor: AppColors.mainColor,
-                            borderRadius: 50,
-                          }}>
-                          <Text
-                            style={{
-                              fontSize: 14,
-                              fontWeight: 'bold',
-                              color: !e.value ? 'black' : 'white',
-                            }}>
-                            In 10 Minutes
-                          </Text>
-                          <View
-                            style={{
-                              width: 35,
-                              height: 20,
-                              borderRadius: 15,
-                              backgroundColor: e.value ? '#ccc' : '#4cd137',
-                              marginHorizontal: 3,
-                            }}
-                          />
-                        </View>
-                      </>
-                    )}
-                    {/* </View> */}
-                  </TouchableOpacity>
-                </View>
-              ))}
-
-              <TouchableOpacity
-                style={{
-                  backgroundColor: 'red',
-                  padding: 10,
-                  borderRadius: 10,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginHorizontal: 100,
-                  marginVertical: 30,
-                }}
-                onPress={() => setModalVisibleTenMinutes(false)}>
-                <Text style={{color: 'white', fontSize: 16}}>Close</Text>
-              </TouchableOpacity>
+                    Accept
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </Modal>

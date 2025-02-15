@@ -23,7 +23,7 @@ import RateUsAtSocialMedia from '../../screens/RateUsAtSocialMedia';
 import DueAmount from '../../screens/DueAmount';
 import RedirectPopUp from '../../screens/RedirectPopUp';
 // import {navigationRef} from '../../utils/navigationRef';
-import PremiumDriverApply from '../../screens/PremiumDriverApply';
+import TenMinuteDriverApply from '../../screens/TenMinuteDriverApply';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -94,8 +94,8 @@ const PrivateRoute = () => {
           />
           <Stack.Screen name="RedirectPopUp" component={RedirectPopUp} />
           <Stack.Screen
-            name="PremiumDriverApply"
-            component={PremiumDriverApply}
+            name="TenMinuteDriverApply"
+            component={TenMinuteDriverApply}
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -13,12 +13,13 @@ import {Triangle_Icon} from '../assets/images';
 import Header from '../components/Header';
 import {APPLY_DRIVER_AVAILABLE_TEN_MINUTES} from '../apis/Apis';
 import {useSelector} from 'react-redux';
+import YoutubePlayer from 'react-native-youtube-iframe';
 
-const PremiumDriverApply = ({route, navigation}) => {
+const TenMinuteDriverApply = ({route, navigation}) => {
   const {data} = route?.params || null;
+  const [playing, setPlaying] = useState(true);
+  const [selectedLanguage, setSelectedLanguage] = useState('English');
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
-
-  console.log(data, 'datat premium data');
 
   const applyForTenMinute = async () => {
     try {
@@ -33,11 +34,9 @@ const PremiumDriverApply = ({route, navigation}) => {
     } catch (error) {}
   };
 
-  const [selectedLanguage, setSelectedLanguage] = useState('English');
   return (
     <SafeAreaView style={{flex: 1}}>
       <Header backButton={true} />
-
       <ScrollView style={styles.scrollViewContent}>
         <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>
@@ -95,6 +94,19 @@ const PremiumDriverApply = ({route, navigation}) => {
             </TouchableOpacity>
           </View>
 
+          <View style={{margin: 10}}>
+            <YoutubePlayer
+              height={200}
+              play={playing}
+              videoId={data?.video_code}
+              onChangeState={state => {
+                if (state === 'ended') {
+                  setPlaying(false);
+                }
+              }}
+            />
+          </View>
+
           {/* Display Content Based on Selection */}
           <View style={{marginBottom: 50, height: '100%'}}>
             <View style={styles.contentContainer}>
@@ -150,7 +162,7 @@ const PremiumDriverApply = ({route, navigation}) => {
   );
 };
 
-export default PremiumDriverApply;
+export default TenMinuteDriverApply;
 
 const styles = StyleSheet.create({
   toggleContainer: {
@@ -191,7 +203,6 @@ const styles = StyleSheet.create({
   },
   contentText: {
     fontSize: 16,
-    textAlign: 'center',
   },
   //////
   trustedText: {

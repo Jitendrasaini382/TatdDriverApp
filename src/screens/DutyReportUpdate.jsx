@@ -65,6 +65,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {API_BASE_URL} from '../constant/path';
+import {setUserAuthStates} from '../redux/slices/userAuthSlice';
+import {jwtDecode} from 'jwt-decode';
 
 const DutyReportUpdate = ({route, navigation}) => {
   const {bookingNumber, state} = route?.params;
@@ -371,37 +373,59 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
 
   const getLocation = async () => {
+    // console.log('Running getLocation...');
+
     const hasPermission = await requestLocationPermission();
+    // console.log('Permission check result:', hasPermission);
+
     if (hasPermission) {
+      // console.log('Permission granted, fetching location...');
+
       return new Promise((resolve, reject) => {
+        // console.log('Inside Promise...');
+
         Geolocation.getCurrentPosition(
           position => {
-            // console.log(position, 'driver current location lat long');
+            // console.log('Location fetched successfully:', position);
             resolve(position.coords); // Resolving the Promise with coordinates
           },
           error => {
+            // console.log('Location error:', error);
+
             if (error.code === 1) {
-              requestLocationPermission(); // Retry if permission error
+              // console.log('Permission denied, requesting again...');
+              requestLocationPermission();
             } else if (error.code === 2) {
+              // console.log('Location services are OFF, showing alert...');
+
               Alert.alert(
-                'Location permission is required. Please enable it in settings.',
+                'Location Service Disabled',
+                'Please enable location services to proceed.',
                 [
-                  {text: 'Cancel', style: 'cancel'},
                   {
-                    text: 'Go to Settings',
-                    onPress: () =>
+                    text: 'Cancel',
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'Open Setting',
+                    onPress: () => {
                       Linking.sendIntent(
                         'android.settings.LOCATION_SOURCE_SETTINGS',
-                      ),
+                      ); // Opens phone's location settings
+                    },
                   },
                 ],
               );
             } else {
-              reject(new Error('Error fetching location: ' + error.message)); // Reject the promise with error message
+              // console.log('Unhandled location error:', error.message);
+              reject(new Error('Error fetching location: ' + error.message));
             }
           },
         );
+        // console.log('Geolocation request initiated...');
       });
+    } else {
+      // console.log('Permission denied, exiting getLocation...');
     }
   };
 
@@ -652,57 +676,10 @@ const DutyReportUpdate = ({route, navigation}) => {
           }
         }
       } else if (error.request) {
-        console.error('No Response from Server:', error.request);
+        // console.log('No Response from Server:', error.request);
       } else {
-        console.error('Error Setting Up Request:', error.message);
+        // console.log('Error Setting Up Request:', error.message);
       }
-    } finally {
-      setLoader(false);
-    }
-  };
-
-  const driverReachedd = async () => {
-    if (!inputValue) {
-      Alert.alert('Please Enter Fisrt OTP');
-      return;
-    }
-    setLoader(true);
-    Keyboard.dismiss();
-
-    try {
-      const res = await DRIVE_START({
-        action: 'duty_report_booking_start',
-        booking_id: bookingNumber,
-        current_language: languageSwitch,
-        trip_status: bookingInfo?.condition?.next_booking_status_id,
-        start_kms: inputKmsValue,
-        otp: inputValue,
-      });
-
-      if (res?.redirect == 'duty_report') {
-        if (res?.message_type == 'error') {
-          setCancelState('cancel');
-          setModalVisibleinput(false);
-        } else {
-          GetAllBookingInfo();
-          setModalVisibleinput(false);
-        }
-      }
-      if (
-        res?.start_booking_message &&
-        Object.keys(res?.start_booking_message).length !== 0
-      ) {
-        setModalVisibleinput(false);
-        GetAllBookingInfo();
-      } else {
-        const msge = res?.otp_error_message;
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: msge?.otp_error_message,
-        });
-      }
-    } catch (err) {
     } finally {
       setLoader(false);
     }

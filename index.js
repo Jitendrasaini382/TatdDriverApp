@@ -13,7 +13,7 @@ const handleNotificationPress = async (notification, action, isAppOpen) => {
 
   const path = notification?.data?.data?.path;
   const DutyReportPath = path?.includes('DutyReport/');
-  console.log(DutyReportPath, 'duty report path ');
+  // console.log(DutyReportPath, 'duty report path ');
   // return false
   // console.log(notification?.data?.data,"pfwefssswsdsd")
   const messageId = notification?.data?.messageId;
@@ -72,7 +72,7 @@ notifee.onBackgroundEvent(async ({type, detail}) => {
 
 // 🔹 Firebase Background Message Handler
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('📩 Background message received:', remoteMessage);
+  // console.log('📩 Background message received:', remoteMessage);
 
   const channelId = remoteMessage?.data?.channel_id || 'default_channel';
   const title = remoteMessage?.data?.title || 'New Notification';

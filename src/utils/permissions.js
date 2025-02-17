@@ -87,6 +87,9 @@ export const requestLocationPermission = async () => {
             {
               text: 'Cancel',
               style: 'cancel',
+              onPress:()=>{
+                return false
+              }
             },
             {
               text: 'Go to Settings',
@@ -94,6 +97,7 @@ export const requestLocationPermission = async () => {
             },
           ],
         );
+        return;
       }
     } catch (err) {
       console.warn(err);

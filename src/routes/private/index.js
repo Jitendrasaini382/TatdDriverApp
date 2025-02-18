@@ -12,7 +12,6 @@ import {NotificationDetailScreen} from '../../components/AllNotificationsDetails
 import {NoticeBoardDetailScreen} from '../../components/AllNoticeBoardDetails';
 import AgentLogin from '../../screens/AgentLogin';
 import DriverNotifications from '../../screens/DriverNotification';
-import ClearMyDuePayment from '../../screens/ClearMyDuePayment';
 import SplashScreen from '../../screens/SplashScreen';
 import {AppColors} from '../../assets/Colors';
 import RateYourCustomerFeedback from '../../screens/RateYourCustomerFeedback';
@@ -69,10 +68,6 @@ const PrivateRoute = () => {
               title: 'NoticeBoard',
               headerBackTitle: 'Back',
             }}
-          />
-          <Stack.Screen
-            name="ClearMyDuePayment"
-            component={ClearMyDuePayment}
           />
           <Stack.Screen name="DriverEarning" component={DriverEarning} />
           <Stack.Screen

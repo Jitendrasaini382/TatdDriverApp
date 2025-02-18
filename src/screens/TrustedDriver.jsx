@@ -15,6 +15,9 @@ import {
   Modal,
   AppState,
   Alert,
+  Pressable,
+  ActivityIndicator,
+  PermissionsAndroid,
 } from 'react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -51,6 +54,7 @@ import {
   PERMANENT_SUBSCRIPTION_VIEW,
   SAVE_DEVICE_INFO,
   TEN_MINUTE_AVAILABLE_CLICK_POPUP,
+  TEN_MINUTE_STATUS_OFF,
   UPDATE_POPUP,
 } from '../apis/Apis';
 import ExpressBookingModal from '../components/modal/ExpressBookingModal';
@@ -82,6 +86,7 @@ import {
   setLoginStatus,
   setRefreshKey,
 } from '../redux/slices/globalSlice';
+import {check} from 'react-native-permissions';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -110,6 +115,7 @@ const TrustedDriver = ({navigation}) => {
   const [tenMinuteModalData, setTenMinuteModalData] = useState();
   const [confirmTenMinuteModal, setConfirmTenMinuteModal] = useState({});
   const [tenMinuteAcceptLoader, setTenMinuteAcceptLoader] = useState(false);
+  const [confirmTenMinuteLoader, setConfirmTenMinuteLoader] = useState(null);
 
   const [allTripType, setAllTripType] = useState([
     {
@@ -138,12 +144,15 @@ const TrustedDriver = ({navigation}) => {
     },
   ]);
 
+  const [tenMinLoader, settenMinLoader] = useState(false);
   const handleTenMinuteButton = async () => {
-    const hasPermission = await requestLocationPermission();
+    const hasPermission = await check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
     if (hasPermission) {
-      // getLocation();
       const loc = await getLocation();
       if (loc) {
+        settenMinLoader(true);
         setLocation(loc);
         getAllAvailability();
       } else {
@@ -170,10 +179,12 @@ const TrustedDriver = ({navigation}) => {
           position => {
             // console.log('Location fetched successfully:', position);
             // setLocation(position.coords);
+            // settenMinLoader(false);
             resolve(position.coords);
           },
           error => {
             // console.log('Location error:', error);
+            // settenMinLoader(false);
 
             if (error.code === 1) {
               // console.log('Permission denied, requesting again...');
@@ -220,22 +231,47 @@ const TrustedDriver = ({navigation}) => {
   const refreshKey = useSelector(state => state?.globalSlice?.refreshKey);
   const jwt = useSelector(e => e?.userAuth?.jwt);
 
-  const openConfirmTenMinuteApplyPopUp = async data => {
-    try {
-      const response = await TEN_MINUTE_AVAILABLE_CLICK_POPUP({
-        product_type: data?.action,
-        way: data?.way,
-      });
+  const openConfirmTenMinuteApplyPopUp = async (data, index) => {
+    setConfirmTenMinuteLoader(index);
 
-      setTenMinuteModalData(response);
-
-      if (response?.status_code == 200) {
-        setConfirmTenMinuteModal({
-          visible: true,
-          key: data,
+    if (data?.value) {
+      try {
+        const response = await TEN_MINUTE_STATUS_OFF({
+          action: 'active_status_update_one',
+          product_type: data?.action,
+          way: data?.way,
+          current_language: languageSwitch,
         });
+
+        setAllTripType(prevTripTypes =>
+          prevTripTypes.map(trip =>
+            trip.label === data.label ? {...trip, value: false} : {...trip},
+          ),
+        );
+      } catch (error) {
+      } finally {
+        setConfirmTenMinuteLoader(null);
       }
-    } catch (error) {}
+    } else {
+      try {
+        const response = await TEN_MINUTE_AVAILABLE_CLICK_POPUP({
+          product_type: data?.action,
+          way: data?.way,
+        });
+
+        setTenMinuteModalData(response);
+
+        if (response?.status_code == 200) {
+          setConfirmTenMinuteModal({
+            visible: true,
+            key: data,
+          });
+        }
+      } catch (error) {
+      } finally {
+        setConfirmTenMinuteLoader(null);
+      }
+    }
   };
 
   const sendDriverAvailableInTenMinutes = async data => {
@@ -282,7 +318,10 @@ const TrustedDriver = ({navigation}) => {
             })),
           );
         }
-      } catch (error) {}
+      } catch (error) {
+      } finally {
+        settenMinLoader(false);
+      }
     } else {
       try {
         const response = await GET_ALL_AVAILABILITY(languageSwitch);
@@ -322,7 +361,8 @@ const TrustedDriver = ({navigation}) => {
           }),
         );
       } catch (error) {
-        // console.log(error, 'error getAllAvailability');
+      } finally {
+        settenMinLoader(false);
       }
     }
   };
@@ -427,7 +467,7 @@ const TrustedDriver = ({navigation}) => {
       getHomeNotification();
       getHomeNotice();
     }
-  }, [languageSwitch, refreshKey]);
+  }, [languageSwitch, refreshKey, isRfdOn]);
 
   const openMyUrl = url => {
     Linking.openURL(url).then(() => {});
@@ -576,11 +616,9 @@ const TrustedDriver = ({navigation}) => {
         user_type: 'Driver',
       });
 
-      // Log the response for debugging
-
-      // Check and handle update conditions
       if (response?.app_details) {
-        const {version, force_update, app_url} = response.app_details;
+        const {version, force_update, app_url} = response?.app_details;
+
         if (force_update == '1' && app_url) {
           openMyUrl(app_url);
           setUpdateModal(false);
@@ -923,8 +961,8 @@ const TrustedDriver = ({navigation}) => {
         style={{height: insets.top, backgroundColor: AppColors.mainColor}}
       />
       <SafeAreaView style={{flex: 1}}>
-        <Header extraButton={true} showNeedHelp={showNeedHelp} />
-        {myBookingModal && <MyBookingModal />}
+        {/* <Header extraButton={true} showNeedHelp={showNeedHelp} />
+        {myBookingModal && <MyBookingModal />} */}
 
         <ScrollView
           refreshControl={
@@ -939,6 +977,8 @@ const TrustedDriver = ({navigation}) => {
                 flex: 1,
                 backgroundColor: '#f4f4f4',
                 padding: 16,
+                justifyContent: 'center',
+                alignContent: 'center',
               }}>
               <View
                 style={{
@@ -1131,72 +1171,80 @@ const TrustedDriver = ({navigation}) => {
             </View>
           ) : (
             <>
+              <Header extraButton={true} showNeedHelp={showNeedHelp} />
+              {myBookingModal && <MyBookingModal />}
+
               {showTenMinuteButton && (
-                <View style={{alignSelf: 'flex-end', marginHorizontal: 10}}>
-                  <TouchableOpacity
+                <View style={{alignSelf: 'center', marginHorizontal: 10}}>
+                  <Pressable
+                    disabled={tenMinLoader}
+                    onPress={() => handleTenMinuteButton()}
                     style={{
                       flexDirection: 'row',
+                      borderWidth: 2,
+                      borderColor: AppColors.toggleYellow,
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      width: '50%',
-                      borderColor: AppColors.black,
-                      borderWidth: 1,
-                      paddingHorizontal: 10,
-                      paddingVertical: 5,
-                      marginVertical: 8,
-                      borderRadius: 50,
-                      backgroundColor: isSelected
-                        ? AppColors.yellow
-                        : AppColors.mainColor,
-                    }}
-                    onPress={() => handleTenMinuteButton()}>
-                    {/* Driver Icon Placement */}
-                    {!isSelected && (
-                      <Text
-                        style={{
-                          fontSize: 22,
-                          backgroundColor: AppColors.white,
-                          borderRadius: 11,
-                          borderWidth: 1,
-                          borderColor: AppColors.white,
-                        }}>
-                        👮
-                      </Text>
-                    )}
+                      padding: 15,
+                      borderRadius: 30,
+                      shadowColor: '#000',
+                      shadowOffset: {width: 0, height: 4},
+                      shadowOpacity: 0.5,
+                      shadowRadius: 4,
+                      elevation: 5,
+                      marginVertical: 10,
+                      alignSelf: 'center',
+                      paddingHorizontal: 30,
+                      backgroundColor:
+                        isSelected && allTripType.find(e => e?.value)
+                          ? AppColors.black
+                          : AppColors.toggleGrey,
+                    }}>
                     <Text
                       style={{
-                        fontSize: 15,
+                        fontSize: 20,
                         fontWeight: 'bold',
-                        color: isSelected
-                          ? AppColors.mainColor
-                          : AppColors.white,
+                        marginRight: 15,
+                        color: AppColors.toggleYellow,
                       }}>
-                      In 10 Minutes
+                      DRIVER IN 10 MINUTES
                     </Text>
-                    {isSelected && (
-                      <Text
-                        style={{
-                          fontSize: 22,
-                          backgroundColor: AppColors.white,
-                          borderRadius: 11,
-                          borderWidth: 1,
-                          borderColor: AppColors.white,
-                        }}>
-                        👮
-                      </Text>
+                    {tenMinLoader ? (
+                      <ActivityIndicator
+                        size={'large'}
+                        color={AppColors.toggleYellow}
+                      />
+                    ) : (
+                      <ToggleSwitch
+                        isOn={isSelected && allTripType.find(e => e?.value)}
+                        onColor={AppColors.toggleYellow}
+                        offColor={AppColors.white}
+                        thumbOnStyle={{
+                          backgroundColor: '#333',
+                          shadowColor: 'red',
+                          shadowOffset: {width: 0, height: 2},
+                          shadowOpacity: 1,
+                          shadowRadius: 5,
+                          elevation: 10,
+                        }}
+                        thumbOffStyle={{backgroundColor: '#333'}}
+                        size="medium"
+                        onToggle={() => handleTenMinuteButton()}
+                      />
                     )}
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               )}
 
               <View style={styles.mainContainer}>
                 {/* Marquee View */}
-                <View style={styles.marqueeView}>
-                  <Marquee spacing={20} speed={0.5}>
-                    <Text style={styles.marqueeText}>{combinedText}</Text>
-                  </Marquee>
-                </View>
-
+                {combinedText && (
+                  <View style={styles.marqueeView}>
+                    <Marquee spacing={20} speed={0.5}>
+                      <Text style={styles.marqueeText}>{combinedText}</Text>
+                    </Marquee>
+                  </View>
+                )}
                 {/* Middle Container */}
                 <View style={styles.middleContainer}>
                   <View style={styles.middleContent}>
@@ -1591,24 +1639,12 @@ const TrustedDriver = ({navigation}) => {
 
         {/* Modals */}
 
-        {/* <Modal
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setOpenModal(false)}
-          visible={openModal}> */}
-
         <Modal
           animationType="slide"
           transparent={true}
           onRequestClose={() => dispatch(setModalVisible(false))}
           visible={isModalVisible}
-          style={{justifyContent: 'center', alignItems: 'center'}}
-          // backdropOpacity={0}
-          // onBackdropPress={() => dispatch(setModalVisible(false))}
-          // animationIn={'fadeInDown'}
-          // animationOut={'fadeOutUp'}
-          // isVisible={isModalVisible}
-        >
+          style={{justifyContent: 'center', alignItems: 'center'}}>
           <OtrModal data={allTrustedData?.otr_popup_data} />
         </Modal>
 
@@ -1616,14 +1652,7 @@ const TrustedDriver = ({navigation}) => {
           animationType="slide"
           transparent={true}
           onRequestClose={() => dispatch(setRatingModal(false))}
-          visible={ratingModal}
-
-          // backdropOpacity={0}
-          // onBackdropPress={() => dispatch(setRatingModal(false))}
-          // animationIn={'fadeInDown'}
-          // animationOut={'fadeOutUp'}
-          // isVisible={ratingModal}
-        >
+          visible={ratingModal}>
           <RatingModal data={allTrustedData?.rating_popup_data} />
         </Modal>
 
@@ -1631,14 +1660,7 @@ const TrustedDriver = ({navigation}) => {
           animationType="slide"
           transparent={true}
           onRequestClose={() => dispatch(setBookingModal(false))}
-          visible={bookingModal}
-
-          // backdropOpacity={0}
-          // onBackdropPress={() => dispatch(setBookingModal(false))}
-          // animationIn={'fadeInDown'}
-          // animationOut={'fadeOutUp'}
-          // isVisible={bookingModal}
-        >
+          visible={bookingModal}>
           <BookingModal data={allTrustedData?.booking_popup_data} />
         </Modal>
 
@@ -1646,14 +1668,7 @@ const TrustedDriver = ({navigation}) => {
           animationType="slide"
           transparent={true}
           onRequestClose={() => dispatch(setMyBookingAgencyModal(false))}
-          visible={myBookingAgencyModal}
-
-          // backdropOpacity={0}
-          // onBackdropPress={() => dispatch(setMyBookingAgencyModal(false))}
-          // animationIn={'fadeInDown'}
-          // animationOut={'fadeOutUp'}
-          // isVisible={myBookingAgencyModal}
-        >
+          visible={myBookingAgencyModal}>
           <MyBookingAgencyModal />
         </Modal>
 
@@ -1661,14 +1676,7 @@ const TrustedDriver = ({navigation}) => {
           animationType="slide"
           transparent={true}
           onRequestClose={() => dispatch(setExpressBookingModal(false))}
-          visible={popupData == 1 && expressBookingModal && expressPopupData}
-
-          // backdropOpacity={0}
-          // onBackdropPress={() => dispatch(setExpressBookingModal(false))}
-          // animationIn={'fadeInDown'}
-          // animationOut={'fadeOutUp'}
-          // isVisible={popupData == 1 && expressBookingModal && expressPopupData}
-        >
+          visible={popupData == 1 && expressBookingModal && expressPopupData}>
           <ExpressBookingModal data={expressPopupData} />
         </Modal>
 
@@ -1676,12 +1684,7 @@ const TrustedDriver = ({navigation}) => {
           animationType="slide"
           transparent={true}
           onRequestClose={() => setUpdateModal(false)}
-          visible={updateModal}
-
-          // backdropOpacity={0.5}
-          // onBackdropPress={() => setUpdateModal(false)}
-          // isVisible={updateModal}
-        >
+          visible={updateModal}>
           <View
             style={{
               flex: 1,
@@ -1794,7 +1797,8 @@ const TrustedDriver = ({navigation}) => {
           animationType="slide"
           transparent={true}
           onRequestClose={() => {
-            setModalVisibleTenMinutes(false), getHeadlineData();
+            setModalVisibleTenMinutes(false);
+            getHeadlineData();
           }}
           visible={modalVisibleTenMinutes}>
           <View
@@ -1802,87 +1806,124 @@ const TrustedDriver = ({navigation}) => {
               flex: 1,
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: 'rgba(0,0,0,0.5)',
+              backgroundColor: 'black',
             }}>
+            <Text
+              style={{
+                fontSize: 28,
+                // fontWeight: 'bold',
+                color: 'white',
+                alignSelf: 'center',
+                textShadowColor: 'rgba(0, 0, 0, 0.2)',
+                textShadowOffset: {width: 3, height: 3},
+                // textDecorationLine:"underline",
+                textShadowRadius: 2,
+                // padding: 10,
+                backgroundColor: '',
+                borderRadius: 10,
+                // overflow: 'hidden',
+                marginBottom: 20,
+              }}>
+              Driver In 10 Minutes
+            </Text>
             <View
               style={{
-                backgroundColor: 'white',
+                backgroundColor: 'black',
                 padding: 20,
                 width: '90%',
                 borderRadius: 10,
                 alignItems: 'center',
               }}>
-              {/* Close Button */}
               <TouchableOpacity
                 onPress={() => {
-                  setModalVisibleTenMinutes(false), getHeadlineData();
+                  setModalVisibleTenMinutes(false);
+                  getHeadlineData();
                 }}
                 style={{
-                  backgroundColor: '#333',
-                  paddingHorizontal: 15,
-                  paddingVertical: 10,
-                  borderRadius: 50,
+                  margin: 5,
+                  marginTop: 0,
+                  marginRight: 17,
+                  borderWidth: 1,
+                  borderRadius: 5,
+                  paddingHorizontal: 5,
+                  borderColor: 'rgb(204,204,204)',
+                  flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  alignSelf: 'flex-end',
+                  alignSelf: 'flex-start',
                 }}>
                 <Text
-                  style={{color: 'white', fontWeight: 'bold', fontSize: 20}}>
-                  X
+                  style={{
+                    color: AppColors.white,
+                    margin: 5,
+                    opacity: 0.8,
+                  }}>
+                  Back
                 </Text>
               </TouchableOpacity>
 
-              {/* Trip Options */}
               {allTripType.map((trip, index) => (
-                <TouchableOpacity
+                <Pressable
+                  onPress={() => openConfirmTenMinuteApplyPopUp(trip, index)}
                   key={index}
                   style={{
                     flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '100%',
+                    borderWidth: 2,
+                    borderColor: AppColors.toggleYellow,
+                    // alignItems: 'center',
+                    // justifyContent: '',
                     padding: 15,
+                    borderRadius: 30,
+                    shadowColor: '#000',
+                    shadowOffset: {width: 0, height: 4},
+                    shadowOpacity: 0.5,
+                    shadowRadius: 4,
+                    elevation: 5,
                     marginVertical: 8,
-                    borderRadius: 50,
-                    backgroundColor: trip.value
-                      ? AppColors.yellow
-                      : AppColors.mainColor,
-                  }}
-                  onPress={() => openConfirmTenMinuteApplyPopUp(trip)}>
-                  {/* Driver Icon Placement */}
-                  {!trip.value && (
+                    width: '100%',
+                    backgroundColor: trip?.value
+                      ? AppColors.black
+                      : AppColors.toggleGrey,
+                  }}>
+                  <View style={{flex: 0.8}}>
                     <Text
                       style={{
-                        fontSize: 22,
-                        backgroundColor: AppColors.white,
-                        borderRadius: 11,
-                        borderWidth: 1,
-                        borderColor: AppColors.white,
+                        fontSize: 20,
+                        // fontWeight: 'bold',
+                        marginRight: 15,
+                        color: AppColors.toggleYellow,
+                        // textAlign: 'center',
                       }}>
-                      👮
+                      {trip?.label}
                     </Text>
-                  )}
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      fontWeight: 'bold',
-                      color: trip.value ? AppColors.mainColor : AppColors.white,
-                    }}>
-                    {trip.label}
-                  </Text>
-                  {trip.value && (
-                    <Text
-                      style={{
-                        fontSize: 22,
-                        backgroundColor: AppColors.white,
-                        borderRadius: 11,
-                        borderWidth: 1,
-                        borderColor: AppColors.white,
-                      }}>
-                      👮
-                    </Text>
-                  )}
-                </TouchableOpacity>
+                  </View>
+                  <View style={{flex: 0.2}}>
+                    {confirmTenMinuteLoader == index ? (
+                      <ActivityIndicator
+                        size={'small'}
+                        color={AppColors.toggleYellow}
+                      />
+                    ) : (
+                      <ToggleSwitch
+                        isOn={trip?.value}
+                        onColor={AppColors.toggleYellow}
+                        offColor={AppColors.white}
+                        thumbOnStyle={{
+                          backgroundColor: '#333',
+                          shadowColor: AppColors.toggleYellow,
+                          shadowOffset: {width: 0, height: 2},
+                          shadowOpacity: 1,
+                          shadowRadius: 5,
+                          elevation: 10,
+                        }}
+                        thumbOffStyle={{backgroundColor: '#333'}}
+                        size="medium"
+                        onToggle={() =>
+                          openConfirmTenMinuteApplyPopUp(trip, index)
+                        }
+                      />
+                    )}
+                  </View>
+                </Pressable>
               ))}
             </View>
           </View>
@@ -1890,7 +1931,7 @@ const TrustedDriver = ({navigation}) => {
 
         <Modal
           animationType="slide"
-          transparent={true}
+          transparent={false}
           onRequestClose={() => setConfirmTenMinuteModal(false)}
           visible={Object.keys(confirmTenMinuteModal).length !== 0}>
           <View
@@ -1898,6 +1939,7 @@ const TrustedDriver = ({navigation}) => {
               flex: 1,
               justifyContent: 'center',
               alignItems: 'center',
+              backgroundColor: 'rgba(0,0,0,0.8)',
             }}>
             <View
               style={{
@@ -1917,9 +1959,9 @@ const TrustedDriver = ({navigation}) => {
               <Text
                 style={{
                   fontSize: 16,
-                  color: '#555',
-                  // textAlign: 'center',
+                  color: AppColors.black,
                   marginBottom: 30,
+                  fontWeight: 'bold',
                 }}>
                 {languageSwitch == 'hindi'
                   ? tenMinuteModalData?.hindi_message
@@ -1935,11 +1977,17 @@ const TrustedDriver = ({navigation}) => {
                 <TouchableOpacity
                   style={{
                     padding: 10,
+                    backgroundColor: AppColors.greyColor,
+                    borderRadius: 50,
+                    paddingHorizontal: 20,
+                    borderWidth: 1,
+                    elevation: 5,
+                    borderColor: AppColors.black,
                   }}
                   onPress={() => setConfirmTenMinuteModal({})}>
                   <Text
                     style={{
-                      color: AppColors.mainColor,
+                      color: AppColors.black,
                       fontSize: 16,
                       fontWeight: 'bold',
                     }}>
@@ -1949,6 +1997,12 @@ const TrustedDriver = ({navigation}) => {
                 <TouchableOpacity
                   style={{
                     padding: 10,
+                    paddingHorizontal: 20,
+                    backgroundColor: AppColors.toggleYellow,
+                    borderRadius: 50,
+                    elevation: 5,
+                    borderWidth: 1,
+                    borderColor: AppColors.black,
                   }}
                   disabled={tenMinuteAcceptLoader}
                   onPress={() =>
@@ -1956,7 +2010,7 @@ const TrustedDriver = ({navigation}) => {
                   }>
                   <Text
                     style={{
-                      color: AppColors.mainColor,
+                      color: AppColors.black,
                       fontSize: 16,
                       fontWeight: 'bold',
                     }}>

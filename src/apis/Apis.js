@@ -491,8 +491,6 @@ export const ACCEPT_PERMANENT_SUBSCRIPTION_BOOKING = body => {
   );
 };
 
-// https://www.tatd.in/app-api/driver/trusted-driver/driver-available-in-ten-minutes.php?action=view_popup&product_type=Incity&way=1
-
 export const TEN_MINUTE_AVAILABLE_CLICK_POPUP = body => {
   return _Fetch(
     'GET',
@@ -501,7 +499,14 @@ export const TEN_MINUTE_AVAILABLE_CLICK_POPUP = body => {
   );
 };
 
-// https://www.tatd.in/app-api/driver/
+export const TEN_MINUTE_STATUS_OFF = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/driver-available-in-ten-minutes.php',
+    {...body},
+    {},
+  );
+};
 
 export const ALL_TEN_MINUTE_STATUS_UPDATE = body => {
   return _Fetch(

@@ -12,6 +12,7 @@ import {NotificationDetailScreen} from '../../components/AllNotificationsDetails
 import {NoticeBoardDetailScreen} from '../../components/AllNoticeBoardDetails';
 import AgentLogin from '../../screens/AgentLogin';
 import DriverNotifications from '../../screens/DriverNotification';
+import ClearMyDuePayment from '../../screens/ClearMyDuePayment';
 import SplashScreen from '../../screens/SplashScreen';
 import {AppColors} from '../../assets/Colors';
 import RateYourCustomerFeedback from '../../screens/RateYourCustomerFeedback';
@@ -23,6 +24,15 @@ import DueAmount from '../../screens/DueAmount';
 import RedirectPopUp from '../../screens/RedirectPopUp';
 // import {navigationRef} from '../../utils/navigationRef';
 import TenMinuteDriverApply from '../../screens/TenMinuteDriverApply';
+import AgentPanel from '../../screens/AgentPanel';
+import AgentKyc from '../../screens/AgentKyc';
+import AgentWallet from '../../screens/AgentWallet';
+import SelectYourState from '../../screens/SelectYourState';
+import SelectYourCity from '../../screens/SelectYourCity';
+import AgentTraining from '../../screens/AgentTraining';
+import AgentLeads from '../../screens/AgentLeads';
+import AgentCommisionAdded from '../../screens/AgentCommisionAdded';
+import CheckAgentOtp from '../../screens/CheckAgentOtp';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -69,6 +79,10 @@ const PrivateRoute = () => {
               headerBackTitle: 'Back',
             }}
           />
+          <Stack.Screen
+            name="ClearMyDuePayment"
+            component={ClearMyDuePayment}
+          />
           <Stack.Screen name="DriverEarning" component={DriverEarning} />
           <Stack.Screen
             name="MyBonusStatusHistory"
@@ -92,6 +106,20 @@ const PrivateRoute = () => {
             name="TenMinuteDriverApply"
             component={TenMinuteDriverApply}
           />
+
+          <Stack.Screen name="AgentPanel" component={AgentPanel} />
+          <Stack.Screen name="AgentKyc" component={AgentKyc} />
+          <Stack.Screen name="AgentWallet" component={AgentWallet} />
+          <Stack.Screen name="SelectYourState" component={SelectYourState} />
+          <Stack.Screen name="SelectYourCity" component={SelectYourCity} />
+          <Stack.Screen name="AgentTraining" component={AgentTraining} />
+          <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />
+
+          <Stack.Screen
+            name="AgentCommisionAdded"
+            component={AgentCommisionAdded}
+          />
+          {/* <Stack.Screen name="AgentLeads" component={AgentLeads} /> */}
         </Stack.Navigator>
       </NavigationContainer>
     </>

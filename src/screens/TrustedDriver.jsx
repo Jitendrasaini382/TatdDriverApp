@@ -1462,7 +1462,8 @@ const TrustedDriver = ({navigation}) => {
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => handleLoginPress()}
+                      // onPress={() => handleLoginPress()}
+                      onPress={() => navigation.navigate('AgentPanel')}
                       style={styles.bottamContent3}>
                       <Text style={styles.mainText}>
                         {languageSwitch == 'english'
@@ -1478,11 +1479,12 @@ const TrustedDriver = ({navigation}) => {
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => {
-                        openMyUrl(
-                          `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                        );
-                      }}
+                      // onPress={() => {
+                      //   openMyUrl(
+                      //     `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                      //   );
+                      // }}
+                      onPress={() => navigation.navigate('ClearMyDuePayment')}
                       style={[
                         styles.bottamContent4,
                         {

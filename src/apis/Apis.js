@@ -516,3 +516,47 @@ export const ALL_TEN_MINUTE_STATUS_UPDATE = body => {
     {},
   );
 };
+
+export const CLEAR_MY_DUE_VIEW = body => {
+  return _Fetch(
+    'GET',
+    `clear-my-due/clear-my-due-view-api.php?action=view_clear_my_due&current_language=${body}`,
+    {},
+  );
+};
+
+export const PAY_CMD_CREATE_ORDER_ID = body => {
+  return _Fetch('POST', 'payment/create-order-id.php', {...body}, {});
+};
+
+export const GET_ALL_AGENT_PANEL_INFO = () => {
+  return _Fetch('GET', 'agent/agent-panel-info-api.php', {});
+};
+
+export const GET_AGENT_TRAINING_VIDEOS = () => {
+  return _Fetch('GET', 'agent/agent-training-video-api.php', {});
+};
+
+export const GET_AGENT_WALLET = () => {
+  return _Fetch('GET', 'agent/agent-wallet-api.php', {});
+};
+
+export const GET_AGENT_NERTWORK_AND_LEADS = () => {
+  return _Fetch('GET', 'agent/agent-network-and-lead-info-api.php', {});
+};
+
+export const AGENT_WALLET_DETAILS = body => {
+  return _Fetch('POST', 'agent/agent-commission-added-api.php', {...body});
+};
+
+export const GET_AGENT_KYC_INFO = body => {
+  return _Fetch('POST', 'agent/get-agent-kyc-info-api.php', {...body}, {});
+};
+
+export const GET_AGENT_KYC_SEND_OTP = () => {
+  return _Fetch('GET', 'agent/agent-kyc-otp-api.php', {});
+};
+
+export const GET_AGENT_KYC_UPDATE_DETAILS = body => {
+  return _Fetch('POST', 'agent/agent-kyc-update-api.php', {...body}, {});
+};

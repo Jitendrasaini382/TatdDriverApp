@@ -8,6 +8,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import YoutubePlayer from 'react-native-youtube-iframe';
@@ -15,35 +17,15 @@ import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
 import {CloseEnvelop, OpenEnvelop} from '../assets/images';
-import {DRIVER_TRAINING_VIDEOS_CLICK_STORE, GET_AGENT_TRAINING_VIDEOS} from '../apis/Apis';
+import {
+  DRIVER_TRAINING_VIDEOS_CLICK_STORE,
+  GET_AGENT_TRAINING_VIDEOS,
+  STORE_AGENT_TRAINING_VIDEOS_CLICK,
+} from '../apis/Apis';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
 const designHeight = height;
-const item = [
-  {
-    eligibility: '0',
-    icon: 'open_envlop.png',
-    id: '9',
-    subject: 'Video देखें,  Login और अपनी reference verification पूरी करें। ',
-    videoId: 'uuCULpkpKrA',
-  },
-  {
-    eligibility: '0',
-    icon: 'open_envlop.png',
-    id: '2',
-    subject: 'Login करने के बाद आपको अपनी मर्जी की बुकिंग उठानी होगी।',
-    videoId: '4HDKAi75-Vo',
-  },
-  {
-    eligibility: '0',
-    icon: 'open_envlop.png',
-    id: '3',
-    subject: 'बुकिंग उठाने के बाद आपको उस बुकिंग को पूरा करना होगा।',
-    videoId: 'u892FTsKLKk',
-  },
-];
-
 const scale = size => (width / designWidth) * size;
 const verticalScale = size => (height / designHeight) * size;
 const moderateScale = (size, factor = 0.5) =>
@@ -51,19 +33,26 @@ const moderateScale = (size, factor = 0.5) =>
 
 const AgentTraining = () => {
   const [openIndex, setOpenIndex] = useState(null);
-  const[trainingVideos,settrainingVideos]=useState([])
+  const [trainingVideos, settrainingVideos] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [loader, setLoader] = useState(false);
+
   const getAgentTrainingVideos = async () => {
-    try { 
-      const res =await GET_AGENT_TRAINING_VIDEOS();
-    //   console.log(res,"traing videos");
-      settrainingVideos(res?.videos)
+    try {
+      const res = await GET_AGENT_TRAINING_VIDEOS();
+      //   console.log(res,"traing videos");
+      settrainingVideos(res?.videos);
     } catch {
       console.log(err);
+    } finally {
+      setRefreshing(false);
+      setLoader(false);
     }
   };
 
   useEffect(() => {
     getAgentTrainingVideos();
+    setLoader(true);
   }, []);
   const toggleItem = (index, id) => {
     storeClickVideo(id);
@@ -74,80 +63,89 @@ const AgentTraining = () => {
     }
   };
   const storeClickVideo = async id => {
-      try {
-        // const response = await DRIVER_TRAINING_VIDEOS_CLICK_STORE({
-        //   action: 'store_training_videos_clicks',
-        //   training_id: id,
-        //   training_type: 'Driver Training',
-        // });
-  
-        setTimeout(() => {
-          getAgentTrainingVideos();
-        }, 2000);
-      } catch (error) {}
-    };
+    console.log(id);
+    // return false
+    try {
+      const response = await STORE_AGENT_TRAINING_VIDEOS_CLICK({
+        training_id: id,
+        training_type: 'Agent Training',
+      });
+
+      setTimeout(() => {
+        getAgentTrainingVideos();
+      }, 2000);
+    } catch (error) {}
+  };
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header backButton={true} />
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <View style={styles.mainContainer}>
-          <View style={styles.contentContainer}>
-            <View style={styles.mainView}>
-              <View style={styles.mainTopView}>
-                <View style={styles.mainTopContent}>
-                  <View style={styles.headingView}>
-                    <Text style={styles.headingText}>
-                      Trusted & Trained Driver
-                    </Text>
+      {loader ? (
+        <ActivityIndicator
+          size={'large'}
+          color={AppColors.mainColor}
+          style={{flex: 1, alignContent: 'center'}}
+        />
+      ) : (
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                setRefreshing(true);
+                getAgentTrainingVideos();
+              }}
+            />
+          }
+          contentContainerStyle={styles.scrollViewContent}>
+          <View style={styles.mainContainer}>
+            <View style={styles.contentContainer}>
+              <View style={styles.mainView}>
+                <View style={styles.mainTopView}>
+                  <View style={styles.mainTopContent}>
+                    <View style={styles.headingView}>
+                      <Text style={styles.headingText}>
+                        Trusted & Trained Driver
+                      </Text>
+                    </View>
+                    <View style={styles.triangleMainView}>
+                      <View style={styles.triangleView}></View>
+                      <View
+                        style={[
+                          styles.triangleView,
+                          styles.rotatedTriangle,
+                        ]}></View>
+                    </View>
                   </View>
-                  <View style={styles.triangleMainView}>
-                    <View style={styles.triangleView}></View>
-                    <View
-                      style={[
-                        styles.triangleView,
-                        styles.rotatedTriangle,
-                      ]}></View>
-                  </View>
+                  <Text style={styles.mainHeading}>Training Videos</Text>
                 </View>
-                <Text style={styles.mainHeading}>Training Videos</Text>
-              </View>
 
-              <View style={{marginTop: 30}}>
-                <View style={styles.container}>
-                  {trainingVideos &&
-                    trainingVideos.map((item, index) => (
-                      <AccordionItem
-                        key={index}
-                        title={item.video_subject}
-                        videoId={item.video_id}
-                        id={item.id}
-                        icon={item.icon}
-                        eligibility={item.eligibility}
-                        isOpen={openIndex === index}
-                        onToggle={() => toggleItem(index, item.id)}
-                        index={index + 1}
-                      />
-                    ))}
+                <View style={{marginTop: 30}}>
+                  <View style={styles.container}>
+                    {trainingVideos &&
+                      trainingVideos.map((item, index) => (
+                        <AccordionItem
+                          key={index}
+                          title={item.video_subject}
+                          videoId={item.video_url?.split('/').reverse()[0]}
+                          id={item.video_id}
+                          icon={item.icon}
+                          isOpen={openIndex === index}
+                          onToggle={() => toggleItem(index, item.video_id)}
+                          index={index + 1}
+                        />
+                      ))}
+                  </View>
                 </View>
               </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
 
-const AccordionItem = ({
-  title,
-  videoId,
-  isOpen,
-  onToggle,
-  index,
-  icon,
-  id,
-  eligibility,
-}) => {
+const AccordionItem = ({title, videoId, isOpen, onToggle, index, icon, id}) => {
   return (
     <View style={styles.itemContainer}>
       <TouchableOpacity style={styles.touchable} onPress={onToggle}>

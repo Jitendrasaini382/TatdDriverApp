@@ -83,69 +83,79 @@ const ClearMyDuePayment = () => {
           <View style={styles.mainInnerView}>
             <Text style={styles.title}>Clear My Due</Text>
           </View>
-          <View style={styles.tableContainer}>
-            <View style={styles.tableHeader}>
-              <View style={[styles.headerCell, styles.borderLeft]}>
-                <Text style={styles.headerText}>Booking Id</Text>
-              </View>
-              <View style={[styles.headerCell, styles.borderLeft]}>
-                <Text style={styles.headerText}>Schedule Date</Text>
-              </View>
-              <View style={[styles.headerCell, styles.borderLeft]}>
-                <Text style={[styles.headerText]}>Status</Text>
-              </View>
-              <View style={[styles.headerCell4, styles.borderLeft]}>
-                <Text style={[styles.headerText]}>Amount</Text>
-              </View>
-            </View>
-            <ScrollView>
-              {allData?.all_bookings &&
-                allData?.all_bookings.map((item, index) => (
-                  <View key={index} style={styles.tableRow}>
-                    <View style={styles.bookingIdCell}>
-                      <Text style={[styles.cellText]}>{item?.booking_id}</Text>
-                      <TouchableOpacity onPress={() => handleEyePress(item)}>
-                        <Icon
-                          name="eye"
-                          size={18}
-                          color={AppColors.mainColor}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                    <View style={[styles.bookingIdCell, styles.borderLeft]}>
-                      <Text style={[styles.cellText]}>
-                        {item?.schedule_date}
-                      </Text>
-                    </View>
-                    <View style={[styles.bookingIdCell, styles.borderLeft]}>
-                      <Text style={[styles.cellText]}>{item?.status}</Text>
-                    </View>
-                    <View style={[styles.bookingIdCell4, styles.borderLeft]}>
-                      <Text style={[styles.cellText]}>{item?.amount}</Text>
-                    </View>
+          {allData?.all_bookings?.length !== 0 && (
+            <View style={styles.tableContainer}>
+              {allData?.all_bookings?.length !== 0 && (
+                <View style={styles.tableHeader}>
+                  <View style={[styles.headerCell, styles.borderLeft]}>
+                    <Text style={styles.headerText}>Booking Id</Text>
                   </View>
-                ))}
-            </ScrollView>
-            <Modal
-              backdropOpacity={0}
-              onBackdropPress={() => setMyDuePaymentModal(false)}
-              animationIn={'fadeInDown'}
-              animationOut={'fadeOutUp'}
-              isVisible={myDuePaymentModal}>
-              <ClearMyDuePaymentModal
-                setMyDuePaymentModal={setMyDuePaymentModal}
-                tripDetails={selectedTrip}
-              />
-            </Modal>
-          </View>
-          <TouchableOpacity onPress={handlePayment} style={styles.payButton}>
-            <Text style={styles.payButtonText}>
-              {allData?.payment?.message}
-            </Text>
-          </TouchableOpacity>
+                  <View style={[styles.headerCell, styles.borderLeft]}>
+                    <Text style={styles.headerText}>Schedule Date</Text>
+                  </View>
+                  <View style={[styles.headerCell, styles.borderLeft]}>
+                    <Text style={[styles.headerText]}>Status</Text>
+                  </View>
+                  <View style={[styles.headerCell4, styles.borderLeft]}>
+                    <Text style={[styles.headerText]}>Amount</Text>
+                  </View>
+                </View>
+              )}
+
+              <ScrollView>
+                {allData?.all_bookings &&
+                  allData?.all_bookings.map((item, index) => (
+                    <View key={index} style={styles.tableRow}>
+                      <View style={styles.bookingIdCell}>
+                        <Text style={[styles.cellText]}>
+                          {item?.booking_id}
+                        </Text>
+                        <TouchableOpacity onPress={() => handleEyePress(item)}>
+                          <Icon
+                            name="eye"
+                            size={18}
+                            color={AppColors.mainColor}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                      <View style={[styles.bookingIdCell, styles.borderLeft]}>
+                        <Text style={[styles.cellText]}>
+                          {item?.schedule_date}
+                        </Text>
+                      </View>
+                      <View style={[styles.bookingIdCell, styles.borderLeft]}>
+                        <Text style={[styles.cellText]}>{item?.status}</Text>
+                      </View>
+                      <View style={[styles.bookingIdCell4, styles.borderLeft]}>
+                        <Text style={[styles.cellText]}>{item?.amount}</Text>
+                      </View>
+                    </View>
+                  ))}
+              </ScrollView>
+              <Modal
+                backdropOpacity={0}
+                onBackdropPress={() => setMyDuePaymentModal(false)}
+                animationIn={'fadeInDown'}
+                animationOut={'fadeOutUp'}
+                isVisible={myDuePaymentModal}>
+                <ClearMyDuePaymentModal
+                  setMyDuePaymentModal={setMyDuePaymentModal}
+                  tripDetails={selectedTrip}
+                />
+              </Modal>
+            </View>
+          )}
+
+          {allData?.payment?.message && (
+            <TouchableOpacity onPress={handlePayment} style={styles.payButton}>
+              <Text style={styles.payButtonText}>
+                {allData?.payment?.message}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
         <View style={styles.youtubeView}>
-          <YoutubePlayer height={500} videoId={'SsG_qwb0zLs'} />
+          <YoutubePlayer height={500} videoId={allData?.training_video || ''} />
         </View>
       </View>
     </SafeAreaView>

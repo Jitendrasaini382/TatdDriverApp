@@ -119,7 +119,7 @@ const PrivateRoute = () => {
             name="AgentCommisionAdded"
             component={AgentCommisionAdded}
           />
-          {/* <Stack.Screen name="AgentLeads" component={AgentLeads} /> */}
+          <Stack.Screen name="AgentLeads" component={AgentLeads} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

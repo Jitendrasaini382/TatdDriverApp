@@ -4,7 +4,7 @@ import React from 'react';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 
-const AgentLeadsModal = ({setAgentLeadsModal}) => {
+const AgentLeadsModal = ({setAgentLeadsModal, data}) => {
   return (
     <View
       style={{
@@ -12,9 +12,10 @@ const AgentLeadsModal = ({setAgentLeadsModal}) => {
         margin: 20,
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 3,shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+
         shadowColor: AppColors.gray,
       }}>
       <TouchableOpacity
@@ -54,10 +55,7 @@ const AgentLeadsModal = ({setAgentLeadsModal}) => {
           lineHeight: 25,
           fontWeight: '400',
         }}>
-        As soon as you connect the driver to your network, the registration link
-        will be sent to the driver via message. If you stay connected to your
-        network and maintain contact, your network will grow larger, and you
-        will benefit more.
+        {data}
       </Text>
 
       <TouchableOpacity

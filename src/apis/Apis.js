@@ -536,6 +536,11 @@ export const GET_ALL_AGENT_PANEL_INFO = () => {
 export const GET_AGENT_TRAINING_VIDEOS = () => {
   return _Fetch('GET', 'agent/agent-training-video-api.php', {});
 };
+export const STORE_AGENT_TRAINING_VIDEOS_CLICK = (body) => {
+  return _Fetch('POST', 'agent/agent-store-training-videos-clicks-api.php', {...body});
+};
+
+
 
 export const GET_AGENT_WALLET = () => {
   return _Fetch('GET', 'agent/agent-wallet-api.php', {});
@@ -560,3 +565,15 @@ export const GET_AGENT_KYC_SEND_OTP = () => {
 export const GET_AGENT_KYC_UPDATE_DETAILS = body => {
   return _Fetch('POST', 'agent/agent-kyc-update-api.php', {...body}, {});
 };
+export const GET_AGENT_SELECT_STATE = () => {
+  return _Fetch('GET', 'agent/agent-select-your-state-api.php', {}, {});
+};
+
+export const GET_AGENT_SELECT_CITY = body => {
+  console.log(body,"GET_AGENT_SELECT_CITY")
+  return _Fetch('POST', 'agent/agent-select-your-zone-api.php', {...body}, {});
+};
+
+
+
+

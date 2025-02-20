@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -13,6 +13,11 @@ import {
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AppColors} from '../assets/Colors';
+import {useSelector} from 'react-redux';
+import {
+  GET_AGENT_KYC_SEND_OTP,
+  GET_AGENT_KYC_UPDATE_DETAILS,
+} from '../apis/Apis';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -24,8 +29,17 @@ const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;
 
 const CheckAgentOtp = ({navigation, route}) => {
-  const {mobile} = route.params;
+  const {data, response} = route?.params;
+  const [validate, setValidate] = useState(response?.OTP || null);
+  useEffect(()=>{
+    setValidate(response?.OTP)
+  },[route])
+
+  console.log(route.params);
   const [otp, setOtp] = useState('');
+  const mobile = useSelector(
+    e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
+  );
 
   const [error, setError] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -34,9 +48,24 @@ const CheckAgentOtp = ({navigation, route}) => {
   const handleChangeOtp = e => {
     setOtp(e);
   };
+  const resendOtp = async () => {
+    // return false;
+    try {
+      const response = await GET_AGENT_KYC_SEND_OTP();
+
+      if (response?.status_code == 200) {
+        setValidate(response?.OTP);
+
+        // navigation.navigate('CheckAgentOtp', {response: response, data: data});
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+    }
+  };
 
   const verifyOtp = async () => {
-    return false;
+    // return false;
 
     try {
       if (!otp) {
@@ -45,10 +74,29 @@ const CheckAgentOtp = ({navigation, route}) => {
       } else if (otp.length !== 4) {
         setError('Please enter a 4-digit OTP');
         return;
+      } else if (otp != validate) {
+        console.log('otp:', otp, 'validate', validate);
+        setError('Please enter valid otp.');
+      } else {
+        updateDetails();
       }
-      setLoader(true);
     } catch (err) {
       setError(err.message || 'OTP verification failed. Please try again.');
+    } finally {
+      setLoader(false);
+    }
+  };
+  const updateDetails = async () => {
+    try{
+      const res = await GET_AGENT_KYC_UPDATE_DETAILS({
+       ...data,
+      });
+      console.log(res,"rerere")
+      if (res.status_code == '200') {
+        navigation.navigate('AgentKyc', {res});
+      }
+    }catch(err){
+      console.log(err)
     }
   };
   return (
@@ -82,7 +130,7 @@ const CheckAgentOtp = ({navigation, route}) => {
               <Text style={styles.otpInfoText}>
                 An OTP is sent to {mobile}{' '}
               </Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => resendOtp()}>
                 <Text style={styles.resendText}>Resend OTP ?</Text>
               </TouchableOpacity>
             </View>
@@ -128,7 +176,7 @@ const CheckAgentOtp = ({navigation, route}) => {
 
             <Pressable
               style={styles.verifyButton}
-              disabled={loader}
+              // disabled={loader}
               onPress={verifyOtp}>
               <Text style={styles.verifyButtonText}>
                 {loader ? 'Please Wait' : 'Verify'}

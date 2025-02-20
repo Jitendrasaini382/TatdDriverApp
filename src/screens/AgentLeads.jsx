@@ -26,9 +26,15 @@ import {
 import {AppFont} from '../assets/FontsFamily';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
+import {useRoute} from '@react-navigation/native';
 
-const AgentLeads = () => {
+const AgentLeads = ({navigation}) => {
+  const route = useRoute();
   const [agentLeadsModal, setAgentLeadsModal] = useState(false);
+
+  console.log('====================================');
+  console.log(route, 'routeroute');
+  console.log('====================================');
 
   useEffect(() => {
     setAgentLeadsModal(true);
@@ -161,7 +167,10 @@ const AgentLeads = () => {
         animationIn={'fadeInDown'}
         animationOut={'fadeOutUp'}
         isVisible={agentLeadsModal}>
-        <AgentLeadsModal setAgentLeadsModal={setAgentLeadsModal} />
+        <AgentLeadsModal
+          setAgentLeadsModal={setAgentLeadsModal}
+          data={route?.params?.data?.popup_message}
+        />
       </Modal>
     </SafeAreaView>
   );

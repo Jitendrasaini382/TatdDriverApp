@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Header from '../components/Header';
@@ -39,8 +40,10 @@ const data = [
 
 const AgentWallet = ({navigation}) => {
   const [agentWalletData, setagentWalletData] = useState({});
+  const [loader, setLoader] = useState(false);
   useEffect(() => {
     getAgentWallet();
+    setLoader(true);
   }, []);
   const getAgentWallet = async () => {
     try {
@@ -52,6 +55,8 @@ const AgentWallet = ({navigation}) => {
       });
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -119,19 +124,22 @@ const AgentWallet = ({navigation}) => {
             ₹{agentWalletData?.my_balance_earning}
           </Text>
         </View>
+        {loader ? (
+          <ActivityIndicator size={'large'} color={AppColors.mainColor} />
+        ) : (
+          agentWalletData?.response?.map((item, index) => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('AgentCommisionAdded', item)}
+              key={index.toString()}>
+              {renderTripItem({item})} 
+            </TouchableOpacity>
+          ))
+        )}
 
-        {agentWalletData?.response?.map((item, index) => (
-          <TouchableOpacity
-            onPress={() => navigation.navigate('AgentCommisionAdded', item)}
-            key={index.toString()}>
-            {renderTripItem({item})}
-          </TouchableOpacity>
-        ))}
-
-        {console.log(
+        {/* {console.log(
           agentWalletData,
           'agentWalletDataagentWalletDataagentWalletDataagentWalletData',
-        )}
+        )} */}
       </ScrollView>
     </SafeAreaView>
   );

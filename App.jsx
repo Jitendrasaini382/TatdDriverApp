@@ -17,6 +17,8 @@ import notifee, {AndroidImportance} from '@notifee/react-native';
 import NetInfo from '@react-native-community/netinfo';
 import {AppColors} from './src/assets/Colors';
 import {persistStore} from 'redux-persist';
+import { enableScreens } from 'react-native-screens';
+
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -25,6 +27,7 @@ TextInput.defaultProps.allowFontScaling = false;
 LogBox.ignoreAllLogs();
 
 const App = () => {
+  enableScreens(false)
   const persistor = persistStore(store);
   const [isConnected, setIsConnected] = useState(true);
 

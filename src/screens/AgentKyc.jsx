@@ -193,13 +193,18 @@ import {
   TextInput,
   Alert,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {GET_AGENT_KYC_INFO, GET_AGENT_KYC_SEND_OTP} from '../apis/Apis';
 import {Keyboard} from 'react-native';
+import { useRoute } from '@react-navigation/native';
 
 const AgentKyc = ({navigation}) => {
+  const route = useRoute()
+  console.log(route);
+  
   const [agentKycInfo, setAgentKycInfo] = useState({
     beneficiaryName: '',
     accountNumber: '',
@@ -210,9 +215,11 @@ const AgentKyc = ({navigation}) => {
 
   const [errors, setErrors] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
     getAllAgentKycInfo();
+    setLoader(true);
   }, []);
 
   const getAllAgentKycInfo = async () => {
@@ -227,6 +234,8 @@ const AgentKyc = ({navigation}) => {
       });
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -235,10 +244,10 @@ const AgentKyc = ({navigation}) => {
 
     // return false;
     try {
-      const response = await GET_AGENT_KYC_SEND_OTP(data);
+      const response = await GET_AGENT_KYC_SEND_OTP();
 
       if (response?.status_code == 200) {
-        navigation.navigate('CheckAgentOtp', {response: response});
+        navigation.navigate('CheckAgentOtp', {response: response, data: data});
       }
     } catch (error) {
       console.error(error);
@@ -321,50 +330,64 @@ const AgentKyc = ({navigation}) => {
   return (
     <SafeAreaView style={{backgroundColor: AppColors.white, flex: 1}}>
       <Header backButton={true} />
-      <ScrollView keyboardShouldPersistTaps={'always'} style={styles.container}>
-        <Text style={styles.title}>Bank Details</Text>
-        <View style={styles.card}>
-          <DetailInput
-            label="Beneficiary Name"
-            value={agentKycInfo.beneficiaryName}
-            onChangeText={text => handleInputChange('beneficiaryName', text)}
-            error={errors.beneficiaryName}
-          />
-          <DetailInput
-            label="Beneficiary Account Number"
-            value={agentKycInfo.accountNumber}
-            onChangeText={text => handleInputChange('accountNumber', text)}
-            keyboardType="numeric"
-            error={errors.accountNumber}
-          />
-          <DetailInput
-            label="Reconfirm Account Number"
-            value={agentKycInfo.confirmAccountNumber}
-            onChangeText={text =>
-              handleInputChange('confirmAccountNumber', text)
-            }
-            keyboardType="numeric"
-            error={errors.confirmAccountNumber}
-          />
-          <DetailInput
-            label="Bank Name"
-            value={agentKycInfo.bankName}
-            onChangeText={text => handleInputChange('bankName', text)}
-            error={errors.bankName}
-          />
-          <DetailInput
-            label="IFSC Code"
-            value={agentKycInfo.ifscCode}
-            onChangeText={text => handleInputChange('ifscCode', text)}
-            error={errors.ifscCode}
-          />
-          <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
-            <Text style={styles.buttonText}>
-              {isEditing ? 'Update' : 'Edit'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+      {loader ? (
+        <ActivityIndicator size={'large'} color={AppColors.mainColor} 
+        style={{flex: 1, alignContent: 'center'}}
+        
+        />
+      ) : (
+        <ScrollView
+          keyboardShouldPersistTaps={'always'}
+          style={styles.container}>
+
+          <Text style={styles.title}>Bank Details</Text>{
+            route?.params?.res?.message &&<Text style={{color:"green",fontSize:13,marginBottom:5}}>{route?.params?.res?.message}
+          </Text>
+          }
+          
+          <View style={styles.card}>
+            <DetailInput
+              label="Beneficiary Name"
+              value={agentKycInfo.beneficiaryName}
+              onChangeText={text => handleInputChange('beneficiaryName', text)}
+              error={errors.beneficiaryName}
+            />
+            <DetailInput
+              label="Beneficiary Account Number"
+              value={agentKycInfo.accountNumber}
+              onChangeText={text => handleInputChange('accountNumber', text)}
+              keyboardType="numeric"
+              error={errors.accountNumber}
+            />
+            <DetailInput
+              label="Reconfirm Account Number"
+              value={agentKycInfo.confirmAccountNumber}
+              onChangeText={text =>
+                handleInputChange('confirmAccountNumber', text)
+              }
+              keyboardType="numeric"
+              error={errors.confirmAccountNumber}
+            />
+            <DetailInput
+              label="Bank Name"
+              value={agentKycInfo.bankName}
+              onChangeText={text => handleInputChange('bankName', text)}
+              error={errors.bankName}
+            />
+            <DetailInput
+              label="IFSC Code"
+              value={agentKycInfo.ifscCode}
+              onChangeText={text => handleInputChange('ifscCode', text)}
+              error={errors.ifscCode}
+            />
+            <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
+              <Text style={styles.buttonText}>
+                {isEditing ? 'Update' : 'Edit'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

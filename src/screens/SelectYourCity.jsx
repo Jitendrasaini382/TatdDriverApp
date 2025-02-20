@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,32 +6,42 @@ import {
   StyleSheet,
   Image,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import {RightArrow_White} from '../assets/images';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
+import {GET_AGENT_SELECT_CITY} from '../apis/Apis';
+import {useSelector} from 'react-redux';
 
 const SelectYourCity = ({route, navigation}) => {
   const {state} = route.params;
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  const [data, setData] = useState({});
 
-  const citiesByState = {
-    Delhi: [
-      'Central Delhi',
-      'East Delhi',
-      'North Delhi',
-      'South Delhi',
-      'West Delhi',
-    ],
-    Haryana: ['Faridabad', 'Gurgaon', 'Manesar'],
-    Karnataka: ['Bangalore'],
-    Maharashtra: ['Mumbai', 'Navi Mumbai', 'Pune', 'Thane'],
-    Telangana: ['Hyderabad'],
-    'Uttar Pradesh': ['Ghaziabad', 'Greater Noida', 'Noida'],
+  const [cities, setCities] = useState([]);
+  const [loader, setLoader] = useState(false);
+  const getCities = async () => {
+    try {
+      const res = await GET_AGENT_SELECT_CITY({
+        state,
+        current_language: languageSwitch,
+        lead_type: 'Driver',
+      });
+      console.log(res);
+      setData(res);
+      setCities(res?.zones);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoader(false);
+    }
   };
-
-  const cities = citiesByState[state] || [];
-
+  useEffect(() => {
+    setLoader(true);
+    getCities();
+  }, []);
   return (
     <SafeAreaView style={styles.mainContainer}>
       <Header backButton={true} />
@@ -40,23 +50,27 @@ const SelectYourCity = ({route, navigation}) => {
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Select Your City</Text>
         </View>
-        <View style={[styles.buttonContainer,{marginTop:10}]}>
-          {cities.map((city, index) => (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("AgentLeads")
-              }}
-              key={index}
-              style={styles.button}>
-              <Text style={styles.buttonText}>{city}</Text>
-              <Image
-                style={styles.arrowImage}
-                resizeMode="center"
-                source={RightArrow_White}
-              />
-            </TouchableOpacity>
-          ))}
-        </View>
+        {loader ? (
+          <ActivityIndicator color={AppColors.mainColor} size={'large'} />
+        ) : (
+          <View style={[styles.buttonContainer, {marginTop: 10}]}>
+            {cities.map((city, index) => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('AgentLeads', {data: data});
+                }}
+                key={index}
+                style={styles.button}>
+                <Text style={styles.buttonText}>{city}</Text>
+                <Image
+                  style={styles.arrowImage}
+                  resizeMode="center"
+                  source={RightArrow_White}
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -80,10 +94,10 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     color: AppColors.mainColor,
     // fontFamily: AppFont.regularFont,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     // textDecorationLine:"underline",
-    borderBottomColor:AppColors.mainColor,
-    borderBottomWidth:1
+    borderBottomColor: AppColors.mainColor,
+    borderBottomWidth: 1,
   },
   button: {
     backgroundColor: '#005a8c',

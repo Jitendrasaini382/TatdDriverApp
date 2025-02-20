@@ -10,6 +10,7 @@ import {
   FlatList,
   Dimensions,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -51,15 +52,18 @@ const MyLeadsDATA = [
 
 const AgentPanel = ({navigation}) => {
   useEffect(() => {
-    [setAgentPanelModal(true)];
+    // [setAgentPanelModal(true)];
   }, []);
 
   const [myNetworkData, setMyNetworkData] = useState(true);
   const [allAgentInfo, setAllAgentInfo] = useState(null);
   const [agentPanelModal, setAgentPanelModal] = useState(false);
   const [networkAndLeadsData, setnetworkAndLeadsData] = useState(null);
+  const [leadsLoader, setleadsLoader] = useState(false);
+
   useEffect(() => {
     // setAgentPanelModal(true);
+    setleadsLoader(true);
     getAllAgentInfo();
     getNetworkAndLeads();
   }, []);
@@ -73,7 +77,6 @@ const AgentPanel = ({navigation}) => {
       setAllAgentInfo(response);
     } catch (error) {}
   };
-
   const getNetworkAndLeads = async () => {
     try {
       // Fetch update popup data
@@ -84,6 +87,8 @@ const AgentPanel = ({navigation}) => {
       // setAllAgentInfo(response);
     } catch (error) {
       console.log(error);
+    } finally {
+      setleadsLoader(false);
     }
   };
 
@@ -229,15 +234,19 @@ const AgentPanel = ({navigation}) => {
         </View>
 
         {/* showing Data View */}
-        <View style={styles.bottamContainer}>
-          <ShowDataList
-            data={
-              myNetworkData
-                ? networkAndLeadsData?.my_network
-                : networkAndLeadsData?.my_leads
-            }
-          />
-        </View>
+        {leadsLoader ? (
+          <ActivityIndicator size={'large'} color={AppColors.mainColor} />
+        ) : (
+          <View style={styles.bottamContainer}>
+            <ShowDataList
+              data={
+                myNetworkData
+                  ? networkAndLeadsData?.my_network
+                  : networkAndLeadsData?.my_leads
+              }
+            />
+          </View>
+        )}
 
         {/* Modals */}
 

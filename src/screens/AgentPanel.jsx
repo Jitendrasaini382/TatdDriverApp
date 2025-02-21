@@ -11,6 +11,7 @@ import {
   Dimensions,
   Alert,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -34,23 +35,6 @@ const responsiveSize = size => {
   return (width / 411.42857142857144) * size;
 };
 
-const MyNetworkDATA = [
-  {phone: '9595856995', date: '02 Jun 2024 17:51 PM', amount: '283 Rs'},
-  {phone: '9500551047', date: '29 Mar 2024 10:39 AM', amount: '55 Rs'},
-  {phone: '961007344', date: '09 Apr 2024 07:35 AM', amount: '119 Rs'},
-  {phone: '909794411', date: '02 Jan 2024 09:06 AM', amount: '28 Rs'},
-  {phone: '901966369', date: '03 Oct 2023 14:52 PM', amount: '67 Rs'},
-  {phone: '968992293', date: '17 Jun 2024 17:34 PM', amount: '143 Rs'},
-  {phone: '9717253684', date: '04 Aug 2023 15:51 PM', amount: '255 Rs'},
-];
-
-const MyLeadsDATA = [
-  {phone: '900000000', date: '02 Jan 2024 09:06 AM', amount: '28 Rs'},
-  {phone: '901966369', date: '03 Oct 2023 14:52 PM', amount: '67 Rs'},
-  {phone: '968992293', date: '17 Jun 2024 17:34 PM', amount: '143 Rs'},
-  {phone: '9717253684', date: '04 Aug 2023 15:51 PM', amount: '1255 Rs'},
-];
-
 const AgentPanel = ({navigation}) => {
   const [myNetworkData, setMyNetworkData] = useState(true);
   const [allAgentInfo, setAllAgentInfo] = useState(null);
@@ -58,6 +42,7 @@ const AgentPanel = ({navigation}) => {
   const [networkAndLeadsData, setnetworkAndLeadsData] = useState(null);
   const [leadsLoader, setleadsLoader] = useState(false);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     setAgentPanelModal(true);
@@ -76,20 +61,19 @@ const AgentPanel = ({navigation}) => {
     } catch (error) {
     } finally {
       setleadsLoader(false);
+      setRefreshing(false);
     }
   };
   const getNetworkAndLeads = async () => {
     try {
       // Fetch update popup data
       const response = await GET_AGENT_NERTWORK_AND_LEADS();
-      // console.log(response, 'leadssssss');
       setnetworkAndLeadsData(response);
-
-      // setAllAgentInfo(response);
     } catch (error) {
       console.log(error);
     } finally {
       setleadsLoader(false);
+      setRefreshing(false);
     }
   };
 
@@ -97,174 +81,192 @@ const AgentPanel = ({navigation}) => {
     <SafeAreaView style={styles.safeArea}>
       <Header backButton={true} />
 
-      <View style={styles.mainContainer}>
-        {/* Middle Container */}
-        <View style={styles.middleContainer}>
-          <View style={styles.middleContent}>
-            {/* Top div */}
-            <View style={styles.topView}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('AgentWallet');
-                }}
-                style={styles.topLeft}>
-                <Text style={styles.topLeftText}>
-                  <Icon
-                    name="rupee"
-                    color={AppColors.white}
-                    size={15}
-                    style={{}}
-                  />
-                  {allAgentInfo?.my_earning}
-                </Text>
-              </TouchableOpacity>
-              <View style={styles.topRight}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('SelectYourState')}
-                  style={styles.btnView}>
-                  <Icon
-                    name="plus"
-                    color={AppColors.white}
-                    size={10}
-                    style={styles.iconStyle}
-                  />
-                  <Image source={ArrowFadeBlue} style={styles.arrowImage} />
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            {/* Bottom div */}
-            <View style={styles.bottamView}>
-              <View style={styles.driverNameView}>
-                <Text style={styles.driverNameText}>
-                  {allAgentInfo?.driver_name}
-                </Text>
-              </View>
-              <View style={styles.bottamRightView}>
-                <TouchableOpacity
-                  style={styles.rightBottam}
-                  onPress={() => setMyNetworkData(true)}>
-                  <Text
-                    style={{
-                      color: myNetworkData
-                        ? AppColors.mainColor
-                        : AppColors.silverGrey,
-                    }}>
-                    {allAgentInfo?.my_network}
-                  </Text>
-                  <Text
-                    style={{
-                      color: myNetworkData
-                        ? AppColors.mainColor
-                        : AppColors.silverGrey,
-                    }}>
-                    My Network
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.rightBottam}
-                  onPress={() => setMyNetworkData(false)}>
-                  <Text
-                    style={{
-                      color: myNetworkData
-                        ? AppColors.silverGrey
-                        : AppColors.mainColor,
-                    }}>
-                    {allAgentInfo?.my_leads}
-                  </Text>
-                  <Text
-                    style={{
-                      color: myNetworkData
-                        ? AppColors.silverGrey
-                        : AppColors.mainColor,
-                    }}>
-                    My Leads
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-
-          {/* Bottom div */}
-          <View style={styles.bottamContent}>
-            <TouchableOpacity
-              onPress={() => {
-                // return false;
-                navigation.navigate('AgentKyc');
+      {leadsLoader ? (
+        <ActivityIndicator
+          size={'large'}
+          color={AppColors.mainColor}
+          style={{flex: 1, alignContent: 'center'}}
+        />
+      ) : (
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                setRefreshing(true);
+                getAllAgentInfo();
+                getNetworkAndLeads();
               }}
-              style={styles.bottamContent2}>
-              <Text style={styles.mainText}>My Bank</Text>
-              <Text style={styles.textIcon}>Details</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('AgentTraining')}
-              style={styles.bottamContent1}>
-              <Text style={styles.absoulteText}>
-                {allAgentInfo?.training_video_unseen}
-              </Text>
-              <View style={styles.absoulteView}>
-                <Text style={[styles.bottamContent1Text, ,]}>Training</Text>
-                <Text style={[styles.bottamContent1Text]}>Videos</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                // return false;
-                navigation.navigate('AgentWallet');
-              }}
-              style={styles.bottamContent3}>
-              <Text style={styles.mainText}>Wallet Balance</Text>
-              <Text style={styles.textIcon}>
-                <Icon name="rupee" size={responsiveSize(9)} />{' '}
-                {allAgentInfo?.my_balance_earning}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                // return false;
-                navigation.navigate('AgentWallet');
-              }}
-              style={styles.bottamContent4}>
-              <Text style={styles.mainText}>My Earning</Text>
-              <Text style={styles.textIcon}>
-                <Icon name="rupee" size={responsiveSize(9)} />{' '}
-                {allAgentInfo?.my_earning}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* showing Data View */}
-        {leadsLoader ? (
-          <ActivityIndicator size={'large'} color={AppColors.mainColor} />
-        ) : (
-          <View style={styles.bottamContainer}>
-            <ShowDataList
-              data={
-                myNetworkData
-                  ? networkAndLeadsData?.my_network
-                  : networkAndLeadsData?.my_leads
-              }
-              myNetworkData={myNetworkData}
-              navigation={navigation}
             />
+          }>
+          <View style={styles.mainContainer}>
+            {/* Middle Container */}
+            <View style={styles.middleContainer}>
+              <View style={styles.middleContent}>
+                {/* Top div */}
+                <View style={styles.topView}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('AgentWallet');
+                    }}
+                    style={styles.topLeft}>
+                    <Text style={styles.topLeftText}>
+                      <Icon
+                        name="rupee"
+                        color={AppColors.white}
+                        size={15}
+                        style={{}}
+                      />
+                      {allAgentInfo?.my_earning}
+                    </Text>
+                  </TouchableOpacity>
+                  <View style={styles.topRight}>
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate('SelectYourState')}
+                      style={styles.btnView}>
+                      <Icon
+                        name="plus"
+                        color={AppColors.white}
+                        size={10}
+                        style={styles.iconStyle}
+                      />
+                      <Image source={ArrowFadeBlue} style={styles.arrowImage} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
+                {/* Bottom div */}
+                <View style={styles.bottamView}>
+                  <View style={styles.driverNameView}>
+                    <Text style={styles.driverNameText}>
+                      {allAgentInfo?.driver_name}
+                    </Text>
+                  </View>
+                  <View style={styles.bottamRightView}>
+                    <TouchableOpacity
+                      style={styles.rightBottam}
+                      onPress={() => setMyNetworkData(true)}>
+                      <Text
+                        style={{
+                          color: myNetworkData
+                            ? AppColors.mainColor
+                            : AppColors.silverGrey,
+                        }}>
+                        {allAgentInfo?.my_network}
+                      </Text>
+                      <Text
+                        style={{
+                          color: myNetworkData
+                            ? AppColors.mainColor
+                            : AppColors.silverGrey,
+                        }}>
+                        My Network
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.rightBottam}
+                      onPress={() => setMyNetworkData(false)}>
+                      <Text
+                        style={{
+                          color: myNetworkData
+                            ? AppColors.silverGrey
+                            : AppColors.mainColor,
+                        }}>
+                        {allAgentInfo?.my_leads}
+                      </Text>
+                      <Text
+                        style={{
+                          color: myNetworkData
+                            ? AppColors.silverGrey
+                            : AppColors.mainColor,
+                        }}>
+                        My Leads
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+
+              {/* Bottom div */}
+              <View style={styles.bottamContent}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('AgentKyc');
+                  }}
+                  style={styles.bottamContent2}>
+                  <Text style={styles.mainText}>My Bank</Text>
+                  <Text style={styles.textIcon}>Details</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('AgentTraining')}
+                  style={styles.bottamContent1}>
+                  <Text style={styles.absoulteText}>
+                    {allAgentInfo?.training_video_unseen}
+                  </Text>
+                  <View style={styles.absoulteView}>
+                    <Text style={[styles.bottamContent1Text, ,]}>Training</Text>
+                    <Text style={[styles.bottamContent1Text]}>Videos</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    // return false;
+                    navigation.navigate('AgentWallet');
+                  }}
+                  style={styles.bottamContent3}>
+                  <Text style={styles.mainText}>Wallet Balance</Text>
+                  <Text style={styles.textIcon}>
+                    <Icon name="rupee" size={responsiveSize(9)} />{' '}
+                    {allAgentInfo?.my_balance_earning}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    // return false;
+                    navigation.navigate('AgentWallet');
+                  }}
+                  style={styles.bottamContent4}>
+                  <Text style={styles.mainText}>My Earning</Text>
+                  <Text style={styles.textIcon}>
+                    <Icon name="rupee" size={responsiveSize(9)} />{' '}
+                    {allAgentInfo?.my_earning}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* showing Data View */}
+            {leadsLoader ? (
+              <ActivityIndicator size={'large'} color={AppColors.mainColor} />
+            ) : (
+              <View style={styles.bottamContainer}>
+                <ShowDataList
+                  data={
+                    myNetworkData
+                      ? networkAndLeadsData?.my_network
+                      : networkAndLeadsData?.my_leads
+                  }
+                  myNetworkData={myNetworkData}
+                  navigation={navigation}
+                />
+              </View>
+            )}
+
+            {/* Modals */}
           </View>
-        )}
-
-        {/* Modals */}
-
-        <Modal
-          backdropOpacity={0}
-          onBackdropPress={() => setAgentPanelModal(false)}
-          animationIn={'fadeInDown'}
-          animationOut={'fadeOutUp'}
-          isVisible={agentPanelModal}>
-          <AgentPanelModal
-            setAgentPanelModal={setAgentPanelModal}
-            data={allAgentInfo}
-          />
-        </Modal>
-      </View>
+        </ScrollView>
+      )}
+      <Modal
+        backdropOpacity={0}
+        onBackdropPress={() => setAgentPanelModal(false)}
+        animationIn={'fadeInDown'}
+        animationOut={'fadeOutUp'}
+        isVisible={agentPanelModal}>
+        <AgentPanelModal
+          setAgentPanelModal={setAgentPanelModal}
+          data={allAgentInfo}
+        />
+      </Modal>
     </SafeAreaView>
   );
 };

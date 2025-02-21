@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   SafeAreaView,
@@ -486,7 +486,11 @@ const TrustedDriver = ({navigation}) => {
   const handlePress = icon => {
     setSelected(icon);
     if (icon === 'Agent') {
-      navigation.navigate('AgentPanel');
+      if (isRfdOn) {
+        navigation.navigate('AgentPanel');
+      } else {
+        showPopover();
+      }
     } else if (icon === 'PremiumDriver') {
       openMyUrl('https://www.tatd.in/premium-driver.php?step=1');
     } else if (icon === 'TrustedPartner' || 'TrustedDriver') {
@@ -619,13 +623,12 @@ const TrustedDriver = ({navigation}) => {
       if (response?.app_details) {
         const {version, force_update, app_url} = response?.app_details;
 
-        if (force_update == '1' && app_url) {
-          openMyUrl(app_url);
-          setUpdateModal(false);
-        }
-
-        if (appVersion < version) {
+        if (parseFloat(appVersion) < parseFloat(version)) {
           setUpdateModal(true);
+          if (force_update == '1' && app_url) {
+            openMyUrl(app_url);
+            setUpdateModal(false);
+          }
         }
       }
       // Set the update popup data
@@ -693,18 +696,16 @@ const TrustedDriver = ({navigation}) => {
       if (response?.redirect) {
         switch (response?.redirect) {
           case 'clear-my-due-payment':
-            openMyUrl(response?.url);
+            navigation.navigate('ClearMyDuePayment');
             break;
           case 'driver-training-module':
             openMyUrl(response?.url);
-
             break;
           case 'trusted-driver':
             navigation.navigate('TrustedDriver');
             break;
           default:
             openMyUrl(response?.url);
-
             break;
         }
       }
@@ -771,7 +772,6 @@ const TrustedDriver = ({navigation}) => {
     }
   };
 
- 
   const getPopup = async () => {
     try {
       const response = await EXPRESS_BOOKING_POPUP({
@@ -946,6 +946,23 @@ const TrustedDriver = ({navigation}) => {
     setSelectedButton(buttonId === selectedButton ? null : buttonId);
   };
 
+  const viewRef = useRef(null); // Reference to the View
+  const [popoverVisible, setPopoverVisible] = useState(false);
+  const [popoverPosition, setPopoverPosition] = useState({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  });
+  const showPopover = () => {
+    if (viewRef.current) {
+      viewRef.current.measure((fx, fy, width, height, px, py) => {
+        console.log({x: px, y: py, width, height});
+        setPopoverPosition({x: px, y: py, width, height});
+        setPopoverVisible(true);
+      });
+    }
+  };
   return (
     <View style={styles.safeArea}>
       <View
@@ -1273,7 +1290,7 @@ const TrustedDriver = ({navigation}) => {
                             <Text style={styles.notificationCount}>0</Text>
                           </View>
                         </TouchableOpacity>
-                        <View style={styles.toggleView}>
+                        <View ref={viewRef} style={styles.toggleView}>
                           <ToggleSwitch
                             isOn={isRfdOn}
                             onColor={AppColors.mainColor}
@@ -1296,7 +1313,12 @@ const TrustedDriver = ({navigation}) => {
 
                       <View style={styles.bottamRightView}>
                         <TouchableOpacity
-                          onPress={() => dispatch(setModalVisible(true))}>
+                          onPress={() => dispatch(setModalVisible(true))}
+
+                          // onPress={() =>
+                          //   navigation.navigate('SuspensionInactivationRequest')
+                          // }
+                          >
                           <View
                             style={[
                               styles.otrView,
@@ -1454,7 +1476,13 @@ const TrustedDriver = ({navigation}) => {
                     </TouchableOpacity>
                     <TouchableOpacity
                       // onPress={() => handleLoginPress()}
-                      onPress={() => navigation.navigate('AgentPanel')}
+                      onPress={() => {
+                        if (isRfdOn) {
+                          navigation.navigate('AgentPanel');
+                        } else {
+                          showPopover();
+                        }
+                      }}
                       style={styles.bottamContent3}>
                       <Text style={styles.mainText}>
                         {languageSwitch == 'english'
@@ -2016,6 +2044,47 @@ const TrustedDriver = ({navigation}) => {
         </Modal>
 
         <Toast visibilityTime={3000} topOffset={20} />
+        <Modal transparent animationType="fade" visible={popoverVisible}>
+          <TouchableOpacity
+            style={{flex: 1, backgroundColor: 'rgba(121, 129, 116, 0.48)'}}
+            activeOpacity={1}
+            onPress={() => setPopoverVisible(false)}>
+            <View
+              style={{
+                position: 'absolute',
+                top: popoverPosition.y, // Align with the target view's top
+                left: popoverPosition.x - 120, // Position to the left
+                width: 110,
+                backgroundColor: AppColors.white,
+                padding: 10,
+                borderRadius: 5,
+                elevation: 5,
+                shadowColor: '#000',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.25,
+                shadowRadius: 4,
+              }}>
+              <View
+                style={{
+                  position: 'absolute',
+                  top: 5,
+                  right: -10,
+                  width: 0,
+                  height: 0,
+                  borderLeftWidth: 10,
+                  borderRightWidth: 10,
+                  borderBottomWidth: 10,
+                  borderLeftColor: 'transparent',
+                  borderRightColor: 'transparent',
+                  borderBottomColor: AppColors.white, // Matches the popover background
+                }}
+              />
+              <Text style={{color: AppColors.black, fontSize: 15}}>
+                Turn It ON.
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </Modal>
       </SafeAreaView>
     </View>
   );

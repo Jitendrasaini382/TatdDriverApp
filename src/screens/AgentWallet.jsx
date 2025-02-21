@@ -176,7 +176,11 @@ const AgentWallet = ({navigation}) => {
         )}
 
         {loader ? (
-          <ActivityIndicator size={'large'} color={AppColors.mainColor} />
+          <ActivityIndicator
+            size={'large'}
+            color={AppColors.mainColor}
+            style={{flex: 1, alignContent: 'center'}}
+          />
         ) : (
           agentWalletData?.response?.map((item, index) => (
             <TouchableOpacity

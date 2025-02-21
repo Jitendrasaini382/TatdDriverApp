@@ -14,10 +14,7 @@ import {AppFont} from '../assets/FontsFamily';
 import RoundTripBookingView from './bookingsView/RoundTripBookingView';
 import PermanentBookingView from './bookingsView/PermanentBookingView';
 import FlexibleBookingView from './bookingsView/FlexibleBookingView';
-import {useDispatch, useSelector} from 'react-redux';
-import {Buffer} from 'buffer';
 import {useNavigation} from '@react-navigation/native';
-import {Linking} from 'react-native';
 import PermanentSubscriptionBookingView from './bookingsView/PermanentSubscriptionBookingView';
 
 const {width} = Dimensions.get('window');
@@ -29,25 +26,12 @@ const BookingView = ({
   permanentSubscriptionBookingData,
 }) => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
-  const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
-
-  // const handleLoginPress = () => {
-  //   try {
-  //     const encodedMobile = Buffer.from(
-  //       decodedToken?.driver_mobile_number,
-  //     ).toString('base64');
-  //     const url = `https://www.tatd.in/agent-login.php?dologin=${encodedMobile}`;
-  //     Linking.openURL(url);
-  //   } catch (error) {}
-  // };
 
   return (
     <View style={styles.container}>
       {panelData && (
         <View style={styles.connectContainer}>
           <Pressable
-            // onPress={handleLoginPress}
             onPress={() => navigation.navigate('AgentPanel')}
             style={styles.connectButton}>
             <Icon color={AppColors.white} size={15} name="plus" />

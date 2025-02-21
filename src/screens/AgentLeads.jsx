@@ -36,10 +36,6 @@ const AgentLeads = ({navigation}) => {
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
   const [agentLeadsModal, setAgentLeadsModal] = useState(false);
 
-  // console.log('====================================');
-  // console.log(route, 'routeroute');
-  // console.log('====================================');
-
   useEffect(() => {
     setAgentLeadsModal(true);
     agentReferal();
@@ -62,7 +58,7 @@ const AgentLeads = ({navigation}) => {
   };
 
   const openWhatsApp = () => {
-    const message = `${referralData.shareMessage} ${referralData.referralurl}`;
+    const message = `${referralData?.shareMessage} ${referralData?.referralurl}`;
     const url = `whatsapp://send?text=${encodeURIComponent(message)}`;
 
     Linking.openURL(url)

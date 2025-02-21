@@ -29,6 +29,7 @@ import {AppColors} from '../assets/Colors';
 import {useRoute} from '@react-navigation/native';
 import {AGENT_ADD_CUSTOMER, AGENT_REFERAL_URL} from '../apis/Apis';
 import {useSelector} from 'react-redux';
+import {Keyboard} from 'react-native';
 
 const AgentLeads = ({navigation}) => {
   const route = useRoute();
@@ -138,25 +139,24 @@ const AgentLeads = ({navigation}) => {
       }
 
       seterr('');
-
-      // setLoading(true); // If you have a loading state
-
+      Keyboard.dismiss();
       const res = await AGENT_ADD_CUSTOMER({
         customer_mobile: mobile,
         city: route?.params?.city || '',
         lead_type: 'Driver',
         current_language: languageSwitch,
+        zone: route?.params?.zone || '',
       });
-      // Alert.alert(res.message)
+      if(res?.status_code == 200){
 
-      Alert.alert('Success', res?.message);
+
+        Alert.alert('Success', res?.message);
+      }
       setMobile('');
-
-      console.log(res, 'Addcustomer');
-      // Handle success (e.g., show a message or navigate)
     } catch (err) {
-      console.error('Error adding customer:', err);
-      seterr('Failed to add customer. Please try again.');
+      setMobile('');
+      // seterr('Failed to add customer. Please try again..');
+      navigation.navigate("AgentPanel")
     } finally {
       // setLoading(false); // Stop loading
     }
@@ -166,7 +166,9 @@ const AgentLeads = ({navigation}) => {
     <SafeAreaView style={styles.container}>
       <Header backButton={true} />
 
-      <ScrollView style={styles.contentContainer}>
+      <ScrollView
+        keyboardShouldPersistTaps="always"
+        style={styles.contentContainer}>
         <View style={styles.topView}>
           <Text style={styles.title}>ADD YOUR DRIVER</Text>
           <View style={styles.inputContainer}>

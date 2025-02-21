@@ -29,13 +29,11 @@ const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;
 
 const CheckAgentOtp = ({navigation, route}) => {
-  const {data, response} = route?.params;
+  const {data, response} = route?.params || {};
   const [validate, setValidate] = useState(response?.OTP || null);
-  useEffect(()=>{
-    setValidate(response?.OTP)
-  },[route])
-
-  console.log(route.params);
+  useEffect(() => {
+    setValidate(response?.OTP);
+  }, [route]);
   const [otp, setOtp] = useState('');
   const mobile = useSelector(
     e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
@@ -55,8 +53,6 @@ const CheckAgentOtp = ({navigation, route}) => {
 
       if (response?.status_code == 200) {
         setValidate(response?.OTP);
-
-        // navigation.navigate('CheckAgentOtp', {response: response, data: data});
       }
     } catch (error) {
       console.error(error);
@@ -65,8 +61,6 @@ const CheckAgentOtp = ({navigation, route}) => {
   };
 
   const verifyOtp = async () => {
-    // return false;
-
     try {
       if (!otp) {
         setError('Please Enter OTP');
@@ -87,16 +81,15 @@ const CheckAgentOtp = ({navigation, route}) => {
     }
   };
   const updateDetails = async () => {
-    try{
+    try {
       const res = await GET_AGENT_KYC_UPDATE_DETAILS({
-       ...data,
+        ...data,
       });
-      console.log(res,"rerere")
       if (res.status_code == '200') {
         navigation.navigate('AgentKyc', {res});
       }
-    }catch(err){
-      console.log(err)
+    } catch (err) {
+      console.log(err);
     }
   };
   return (

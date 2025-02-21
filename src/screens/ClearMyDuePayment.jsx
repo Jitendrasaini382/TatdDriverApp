@@ -77,7 +77,6 @@ const ClearMyDuePayment = ({navigation}) => {
         action: 'clear_my_due',
         payment_amount: amount,
       });
-      console.log('Response received from CLEAR_MY_DUE_VIEW:', response);
       if (response?.status_code == 200) {
         navigation.navigate('RazorPayPaymentScreen', {
           data: response?.razor_order_id_data,

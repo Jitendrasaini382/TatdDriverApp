@@ -19,7 +19,6 @@ const SelectYourCity = ({route, navigation}) => {
   const {state} = route.params;
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
   const [data, setData] = useState({});
-
   const [cities, setCities] = useState([]);
   const [loader, setLoader] = useState(false);
   const getCities = async () => {
@@ -61,7 +60,11 @@ const SelectYourCity = ({route, navigation}) => {
             {cities.map((city, index) => (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('AgentLeads', {data: data, city: city});
+                  navigation.navigate('AgentLeads', {
+                    data: data,
+                    city: city,
+                    zone: state,
+                  });
                 }}
                 key={index}
                 style={styles.button}>

@@ -33,14 +33,7 @@ const ThankYouDriverDue = ({navigation}) => {
           <Text style={styles.title}>TAT D</Text>
           <Text style={styles.subtitle}>Trusted and Trained Driver</Text>
           <Text style={styles.heading}>Payment Confirmation</Text>
-          <Text style={styles.text}>
-            {data}
-            {/* We received the amount of Rs 43. Payment ID is{' '}
-            <Text style={styles.paymentId}>pay_PxulleOHQxf3iG</Text>. {'\n'}
-            Booking ID marked as{' '}
-            <Text style={styles.status}>SETTLED BY DRIVER.</Text> {'\n'}
-            www.tatd.in */}
-          </Text>
+          <Text style={styles.text}>{data}</Text>
         </View>
       </View>
     </SafeAreaView>

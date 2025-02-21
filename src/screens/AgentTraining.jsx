@@ -18,7 +18,6 @@ import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
 import {CloseEnvelop, OpenEnvelop} from '../assets/images';
 import {
-  DRIVER_TRAINING_VIDEOS_CLICK_STORE,
   GET_AGENT_TRAINING_VIDEOS,
   STORE_AGENT_TRAINING_VIDEOS_CLICK,
 } from '../apis/Apis';
@@ -40,7 +39,6 @@ const AgentTraining = () => {
   const getAgentTrainingVideos = async () => {
     try {
       const res = await GET_AGENT_TRAINING_VIDEOS();
-      //   console.log(res,"traing videos");
       settrainingVideos(res?.videos);
     } catch {
       console.log(err);
@@ -63,8 +61,7 @@ const AgentTraining = () => {
     }
   };
   const storeClickVideo = async id => {
-    console.log(id);
-    // return false
+    // console.log(id);
     try {
       const response = await STORE_AGENT_TRAINING_VIDEOS_CLICK({
         training_id: id,
@@ -125,12 +122,12 @@ const AgentTraining = () => {
                       trainingVideos.map((item, index) => (
                         <AccordionItem
                           key={index}
-                          title={item.video_subject}
-                          videoId={item.video_url?.split('/').reverse()[0]}
-                          id={item.video_id}
-                          icon={item.icon}
+                          title={item?.video_subject}
+                          videoId={item?.video_url?.split('/').reverse()[0]}
+                          id={item?.video_id}
+                          icon={item?.icon}
                           isOpen={openIndex === index}
-                          onToggle={() => toggleItem(index, item.video_id)}
+                          onToggle={() => toggleItem(index, item?.video_id)}
                           index={index + 1}
                         />
                       ))}

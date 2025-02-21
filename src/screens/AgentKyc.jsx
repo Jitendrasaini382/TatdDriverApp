@@ -18,8 +18,6 @@ import {useRoute} from '@react-navigation/native';
 
 const AgentKyc = ({navigation}) => {
   const route = useRoute();
-  console.log(route);
-
   const [agentKycInfo, setAgentKycInfo] = useState({
     beneficiaryName: '',
     accountNumber: '',
@@ -55,9 +53,6 @@ const AgentKyc = ({navigation}) => {
   };
 
   const handleSubmit = async data => {
-    console.log(data, 'sending data');
-
-    // return false;
     try {
       const response = await GET_AGENT_KYC_SEND_OTP();
 
@@ -161,14 +156,14 @@ const AgentKyc = ({navigation}) => {
             <DetailInput
               // isEditing={isEditing}
               label="Beneficiary Name"
-              value={agentKycInfo.beneficiaryName}
+              value={agentKycInfo?.beneficiaryName}
               onChangeText={text => handleInputChange('beneficiaryName', text)}
               error={errors.beneficiaryName}
             />
             <DetailInput
               // isEditing={isEditing}
               label="Beneficiary Account Number"
-              value={agentKycInfo.accountNumber}
+              value={agentKycInfo?.accountNumber}
               onChangeText={text => handleInputChange('accountNumber', text)}
               keyboardType="numeric"
               error={errors.accountNumber}
@@ -176,7 +171,7 @@ const AgentKyc = ({navigation}) => {
             <DetailInput
               // isEditing={isEditing}
               label="Reconfirm Account Number"
-              value={agentKycInfo.confirmAccountNumber}
+              value={agentKycInfo?.confirmAccountNumber}
               onChangeText={text =>
                 handleInputChange('confirmAccountNumber', text)
               }
@@ -186,14 +181,14 @@ const AgentKyc = ({navigation}) => {
             <DetailInput
               // isEditing={isEditing}
               label="Bank Name"
-              value={agentKycInfo.bankName}
+              value={agentKycInfo?.bankName}
               onChangeText={text => handleInputChange('bankName', text)}
               error={errors.bankName}
             />
             <DetailInput
               // isEditing={isEditing}
               label="IFSC Code"
-              value={agentKycInfo.ifscCode}
+              value={agentKycInfo?.ifscCode}
               onChangeText={text => handleInputChange('ifscCode', text)}
               error={errors.ifscCode}
             />

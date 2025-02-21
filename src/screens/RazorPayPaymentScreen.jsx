@@ -35,28 +35,29 @@ const RazorPayPaymentScreen = ({navigation}) => {
   }, [data]);
 
   const verifyPayment = async id => {
+    if (!id) {
+      navigation.navigate('ClearMyDuePayment');
+      return false;
+    }
     try {
-      console.log('verifyPayment function called with payment Id:', id);
+      //   console.log('verifyPayment function called with payment Id:', id);
       const response = await VERIFY_PAYMENT_INFO(id);
-      console.log('Response received:', response);
+      //   console.log('Response received:', response);
 
       if (response?.status_code == 200) {
         navigation.navigate('ThankYouDriverDue', {
           data: response?.payment_details?.message,
         });
       }
-
       setVerifyData(response);
     } catch (error) {
-      console.error('Error in verifyPayment:', error);
+      //   console.error('Error in verifyPayment:', error);
     } finally {
-      console.log('verifyPayment function execution completed.');
+      //   console.log('verifyPayment function execution completed.');
     }
   };
 
   const handlePayment = () => {
-    console.log(options, 'sending handle payment ');
-
     var options = {
       page_type: 'clear_my_due_test',
       description: 'Clear My Due Test',

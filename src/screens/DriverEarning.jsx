@@ -64,7 +64,7 @@ const DriverEarning = () => {
     ({item}) => (
       <TouchableOpacity
         style={styles.tripItem}
-        onPress={() => handleEyeIconPress(item.booking_number)}>
+        onPress={() => handleEyeIconPress(item?.booking_number)}>
         <View style={styles.tripHeader}>
           <Icon
             name="eye"
@@ -75,16 +75,16 @@ const DriverEarning = () => {
           <View style={styles.contentContainer}>
             <View style={styles.tripInfo}>
               <Text style={styles.tripType}>
-                {item.package_detail} - {item.booking_number} -{' '}
-                {item.payment_mode}
+                {item?.package_detail} - {item?.booking_number} -{' '}
+                {item?.payment_mode}
               </Text>
               <Text style={styles.tripDate}>
-                {item.booking_date} -{' '}
-                <Text style={styles.settlementType}>{item.payment_status}</Text>
-                {item.settle_date}
+                {item?.booking_date} -{' '}
+                <Text style={styles.settlementType}>{item?.payment_status}</Text>
+                {item?.settle_date}
               </Text>
             </View>
-            <Text style={styles.tripAmount}>₹{item.revised_supply_cost}</Text>
+            <Text style={styles.tripAmount}>₹{item?.revised_supply_cost}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -144,7 +144,7 @@ const DriverEarning = () => {
           <FlatList
             data={bookingsData}
             renderItem={renderTripItem}
-            keyExtractor={item => item.booking_number}
+            keyExtractor={item => item?.booking_number}
             style={styles.tripList}
           />
         </>

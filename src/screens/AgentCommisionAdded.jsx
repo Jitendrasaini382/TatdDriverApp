@@ -13,9 +13,12 @@ import {AppFont} from '../assets/FontsFamily';
 import {AppColors} from '../assets/Colors';
 import Header from '../components/Header';
 import {AGENT_WALLET_DETAILS} from '../apis/Apis';
+import {useRoute} from '@react-navigation/native';
 
-const AgentCommisionAdded = ({route}) => {
-  const {agent_id} = route.params;
+const AgentCommisionAdded = ({navigation}) => {
+  const route = useRoute();
+  const {agent_id} = route?.params;
+
   const [walletData, setwalletData] = useState({});
   const [loader, setLoader] = useState(false);
   const agentWalletDetils = async () => {

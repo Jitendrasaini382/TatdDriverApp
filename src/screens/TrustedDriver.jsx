@@ -486,11 +486,11 @@ const TrustedDriver = ({navigation}) => {
   const handlePress = icon => {
     setSelected(icon);
     if (icon === 'Agent') {
-      if (isRfdOn) {
-        navigation.navigate('AgentPanel');
-      } else {
-        showPopover();
-      }
+      // if (isRfdOn) {
+      navigation.navigate('AgentPanel');
+      // } else {
+      //   showPopover();
+      // }
     } else if (icon === 'PremiumDriver') {
       openMyUrl('https://www.tatd.in/premium-driver.php?step=1');
     } else if (icon === 'TrustedPartner' || 'TrustedDriver') {
@@ -1313,12 +1313,7 @@ const TrustedDriver = ({navigation}) => {
 
                       <View style={styles.bottamRightView}>
                         <TouchableOpacity
-                          onPress={() => dispatch(setModalVisible(true))}
-
-                          // onPress={() =>
-                          //   navigation.navigate('SuspensionInactivationRequest')
-                          // }
-                          >
+                          onPress={() => dispatch(setModalVisible(true))}>
                           <View
                             style={[
                               styles.otrView,
@@ -1477,11 +1472,11 @@ const TrustedDriver = ({navigation}) => {
                     <TouchableOpacity
                       // onPress={() => handleLoginPress()}
                       onPress={() => {
-                        if (isRfdOn) {
-                          navigation.navigate('AgentPanel');
-                        } else {
-                          showPopover();
-                        }
+                        // if (isRfdOn) {
+                        navigation.navigate('AgentPanel');
+                        // } else {
+                        // showPopover();
+                        // }
                       }}
                       style={styles.bottamContent3}>
                       <Text style={styles.mainText}>

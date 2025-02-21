@@ -70,7 +70,6 @@ const AgentPanel = ({navigation}) => {
       const response = await GET_AGENT_NERTWORK_AND_LEADS();
       setnetworkAndLeadsData(response);
     } catch (error) {
-      console.log(error);
     } finally {
       setleadsLoader(false);
       setRefreshing(false);
@@ -251,8 +250,6 @@ const AgentPanel = ({navigation}) => {
                 />
               </View>
             )}
-
-            {/* Modals */}
           </View>
         </ScrollView>
       )}
@@ -273,7 +270,6 @@ const AgentPanel = ({navigation}) => {
 
 const ListItem = ({customer_number, datetime, total_earning, navigation}) => (
   <View style={styles.containerList}>
-    {/* <View style={styles.leftView}> */}
     <TouchableOpacity
       onPress={() => {
         navigation.navigate('AgentWallet', {
@@ -296,13 +292,11 @@ const ListItem = ({customer_number, datetime, total_earning, navigation}) => (
         <Icon color={AppColors.whatsAppIconColor} size={18} name="whatsapp" />
       </TouchableOpacity>
     </View>
-    {/* </View> */}
   </View>
 );
 
 const ListItem2 = ({customer_number, datetime, total_earning}) => (
   <View style={styles.containerList}>
-    {/* <View style={styles.leftView}> */}
     <View style={{flex: 0.35, justifyContent: 'center', alignItems: 'center'}}>
       <Text style={styles.phoneText}>{customer_number}</Text>
     </View>
@@ -318,7 +312,6 @@ const ListItem2 = ({customer_number, datetime, total_earning}) => (
         <Icon color={AppColors.whatsAppIconColor} size={18} name="whatsapp" />
       </TouchableOpacity>
     </View>
-    {/* </View> */}
   </View>
 );
 
@@ -329,10 +322,10 @@ const openWhatsApp = phoneNumber => {
     let message = encodeURIComponent('Hello! 👋');
     let url = `https://wa.me/${number}?text=${message}`;
     Linking.openURL(url).catch(() => {
-      Alert.alert('Error', 'Could not open WhatsApp');
+      // Alert.alert('Error', 'Could not open WhatsApp');
     });
   } else {
-    Alert.alert('Invalid Number', 'Please enter a valid phone number');
+    // Alert.alert('Invalid Number', 'Please enter a valid phone number');
   }
 };
 

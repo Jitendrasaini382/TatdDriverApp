@@ -593,7 +593,6 @@ export const GET_AGENT_SELECT_CITY = body => {
 };
 
 export const GET_AGENT_NETWORK_CLICK_DETAILS = body => {
-  console.log(body, 'GET_AGENT_NETWORK_CLICK_DETAILS');
   return _Fetch(
     'POST',
     'agent/agent-commission-added-wallet-api.php',
@@ -603,7 +602,6 @@ export const GET_AGENT_NETWORK_CLICK_DETAILS = body => {
 };
 
 export const AGENT_REFERAL_URL = body => {
-  console.log(body, 'GET_AGENT_NETWORK_CLICK_DETAILS');
   return _Fetch('GET', 'agent/agent-referral-url-api.php', {...body}, {});
 };
 

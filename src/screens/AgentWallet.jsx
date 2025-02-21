@@ -42,8 +42,6 @@ const data = [
 
 const AgentWallet = ({navigation}) => {
   const route = useRoute();
-  console.log(route);
-  console.log(route);
   const isFromMyNetwork = route?.params?.from == 'myNetwork';
   const [agentWalletData, setagentWalletData] = useState({});
   const [loader, setLoader] = useState(false);
@@ -137,7 +135,6 @@ const AgentWallet = ({navigation}) => {
             refreshing={refreshing}
             onRefresh={() => {
               setRefreshing(true);
-              // getAgentTrainingVideos();
               getAgentWallet();
             }}
           />
@@ -190,11 +187,6 @@ const AgentWallet = ({navigation}) => {
             </TouchableOpacity>
           ))
         )}
-
-        {/* {console.log(
-          agentWalletData,
-          'agentWalletDataagentWalletDataagentWalletDataagentWalletData',
-        )} */}
       </ScrollView>
     </SafeAreaView>
   );

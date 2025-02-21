@@ -35,7 +35,6 @@ import AgentCommisionAdded from '../../screens/AgentCommisionAdded';
 import CheckAgentOtp from '../../screens/CheckAgentOtp';
 import RazorPayPaymentScreen from '../../screens/RazorPayPaymentScreen';
 import ThankYouDriverDue from '../../screens/ThankYouDriverDue';
-import SuspensionInactivationRequest from '../../screens/SuspensionInactivationRequest';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -120,10 +119,6 @@ const PrivateRoute = () => {
           <Stack.Screen
             name="ThankYouDriverDue"
             component={ThankYouDriverDue}
-          />
-          <Stack.Screen
-            name="SuspensionInactivationRequest"
-            component={SuspensionInactivationRequest}
           />
 
           <Stack.Screen

@@ -7,6 +7,8 @@ import {
   ScrollView,
   SafeAreaView,
   Alert,
+  ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
@@ -15,12 +17,17 @@ import {AppColors} from '../assets/Colors';
 import Header from '../components/Header';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {AppFont} from '../assets/FontsFamily';
-import {CLEAR_MY_DUE_VIEW, PAY_CMD_CREATE_ORDER_ID} from '../apis/Apis';
+import {
+  CLEAR_MY_DUE_VIEW,
+  GET_CMD_PACKAGE_DETAIL,
+  PAY_CMD_CREATE_ORDER_ID,
+} from '../apis/Apis';
 import {useSelector} from 'react-redux';
 
-const ClearMyDuePayment = () => {
+const ClearMyDuePayment = ({navigation}) => {
   const [myDuePaymentModal, setMyDuePaymentModal] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [selectedTrip, setSelectedTrip] = useState(null);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
   const [allData, setAllData] = useState({});
@@ -32,60 +39,83 @@ const ClearMyDuePayment = () => {
 
   const getClearMyDueData = async () => {
     try {
-      console.log('Function getClearMyDueData started');
-
-      // Fetch update popup data
       const response = await CLEAR_MY_DUE_VIEW(languageSwitch);
       console.log('Response received from CLEAR_MY_DUE_VIEW:', response);
-
-      console.log(response, '----------------');
       setAllData(response);
     } catch (error) {
       console.error('Error in getClearMyDueData:', error);
     } finally {
       setLoader(false);
-      console.log('Function getClearMyDueData ended finally');
+      setRefreshing(false);
     }
   };
 
-  const handleEyePress = trip => {
-    setSelectedTrip(trip);
-    setMyDuePaymentModal(true);
-  };
+  const getPackageDetails = async id => {
+    console.log('getPackageDetails called with id:', id);
+    setLoader(true);
+  
+    try {
+      console.log('Fetching package details...');
+      const response = await GET_CMD_PACKAGE_DETAIL(id, languageSwitch);
+      
+      console.log('Response received:', response);
+      setMyDuePaymentModal(true);
+      setSelectedTrip(response);
+    } catch (error) {
+      console.error('Error fetching package details:', error);
+    } finally {
+      console.log('Stopping loader...');
+      setLoader(false);
+    }
+};
+
 
   const handlePayment = async amount => {
-    console.log(amount, 'aaaaaaaa');
-    return false;
-
     try {
       console.log('Function handlePayment started');
-
-      // Fetch update popup data
       const response = await PAY_CMD_CREATE_ORDER_ID({
-        action: 'clear my due',
+        action: 'clear_my_due',
         payment_amount: amount,
       });
       console.log('Response received from CLEAR_MY_DUE_VIEW:', response);
-
-      console.log(response, '----------------');
+      if (response?.status_code == 200) {
+        navigation.navigate('RazorPayPaymentScreen', {
+          data: response?.razor_order_id_data,
+        });
+      }
     } catch (error) {
-      console.error('Error in handlePayment:', error);
     } finally {
-      console.log('Function handlePayment ended finally');
     }
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header backButton={true} />
-      <View style={styles.contentContainer}>
-        <View style={styles.container}>
-          <View style={styles.mainInnerView}>
-            <Text style={styles.title}>Clear My Due</Text>
-          </View>
-          {allData?.all_bookings?.length !== 0 && (
-            <View style={styles.tableContainer}>
-              {allData?.all_bookings?.length !== 0 && (
+
+      {loader ? (
+        <ActivityIndicator
+          size={'large'}
+          style={{flex: 1, alignContent: 'center'}}
+          color={AppColors.mainColor}
+        />
+      ) : (
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                setRefreshing(true);
+                getClearMyDueData();
+              }}
+            />
+          }
+          style={styles.contentContainer}>
+          <View style={styles.container}>
+            <View style={styles.mainInnerView}>
+              <Text style={styles.title}>Clear My Due</Text>
+            </View>
+            {allData?.all_bookings?.length !== 0 && (
+              <View style={styles.tableContainer}>
                 <View style={styles.tableHeader}>
                   <View style={[styles.headerCell, styles.borderLeft]}>
                     <Text style={styles.headerText}>Booking Id</Text>
@@ -100,64 +130,74 @@ const ClearMyDuePayment = () => {
                     <Text style={[styles.headerText]}>Amount</Text>
                   </View>
                 </View>
-              )}
 
-              <ScrollView>
-                {allData?.all_bookings &&
-                  allData?.all_bookings.map((item, index) => (
-                    <View key={index} style={styles.tableRow}>
-                      <View style={styles.bookingIdCell}>
-                        <Text style={[styles.cellText]}>
-                          {item?.booking_id}
-                        </Text>
-                        <TouchableOpacity onPress={() => handleEyePress(item)}>
-                          <Icon
-                            name="eye"
-                            size={18}
-                            color={AppColors.mainColor}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                      <View style={[styles.bookingIdCell, styles.borderLeft]}>
-                        <Text style={[styles.cellText]}>
-                          {item?.schedule_date}
-                        </Text>
-                      </View>
-                      <View style={[styles.bookingIdCell, styles.borderLeft]}>
-                        <Text style={[styles.cellText]}>{item?.status}</Text>
-                      </View>
-                      <View style={[styles.bookingIdCell4, styles.borderLeft]}>
-                        <Text style={[styles.cellText]}>{item?.amount}</Text>
-                      </View>
-                    </View>
-                  ))}
-              </ScrollView>
-              <Modal
-                backdropOpacity={0}
-                onBackdropPress={() => setMyDuePaymentModal(false)}
-                animationIn={'fadeInDown'}
-                animationOut={'fadeOutUp'}
-                isVisible={myDuePaymentModal}>
-                <ClearMyDuePaymentModal
-                  setMyDuePaymentModal={setMyDuePaymentModal}
-                  tripDetails={selectedTrip}
-                />
-              </Modal>
-            </View>
-          )}
+                <View>
+                  {allData?.all_bookings &&
+                    allData?.all_bookings.map((item, index) => (
+                      <TouchableOpacity
+                        onPress={() => getPackageDetails(item?.booking_id)}
+                        key={index}
+                        style={styles.tableRow}>
+                        <View style={styles.bookingIdCell}>
+                          <Text style={[styles.cellText]}>
+                            {item?.booking_id}
+                          </Text>
+                          <TouchableOpacity
+                            onPress={() => getPackageDetails(item?.booking_id)}>
+                            <Icon
+                              name="eye"
+                              size={18}
+                              color={AppColors.mainColor}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                        <View style={[styles.bookingIdCell, styles.borderLeft]}>
+                          <Text style={[styles.cellText]}>
+                            {item?.schedule_date}
+                          </Text>
+                        </View>
+                        <View style={[styles.bookingIdCell, styles.borderLeft]}>
+                          <Text style={[styles.cellText]}>{item?.status}</Text>
+                        </View>
+                        <View
+                          style={[styles.bookingIdCell4, styles.borderLeft]}>
+                          <Text style={[styles.cellText]}>{item?.amount}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    ))}
+                </View>
+                <Modal
+                  backdropOpacity={0}
+                  onBackdropPress={() => setMyDuePaymentModal(false)}
+                  animationIn={'fadeInDown'}
+                  animationOut={'fadeOutUp'}
+                  isVisible={myDuePaymentModal}>
+                  <ClearMyDuePaymentModal
+                    setMyDuePaymentModal={setMyDuePaymentModal}
+                    tripDetails={selectedTrip}
+                  />
+                </Modal>
+              </View>
+            )}
 
-          {allData?.payment?.message && (
-            <TouchableOpacity onPress={handlePayment} style={styles.payButton}>
-              <Text style={styles.payButtonText}>
-                {allData?.payment?.message}
-              </Text>
-            </TouchableOpacity>
-          )}
-        </View>
-        <View style={styles.youtubeView}>
-          <YoutubePlayer height={500} videoId={allData?.training_video || ''} />
-        </View>
-      </View>
+            {allData?.payment?.message && (
+              <TouchableOpacity
+                onPress={() => handlePayment(allData?.payment?.payable_amount)}
+                style={styles.payButton}>
+                <Text style={styles.payButtonText}>
+                  {allData?.payment?.message}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          <View style={styles.youtubeView}>
+            <YoutubePlayer
+              height={500}
+              videoId={allData?.training_video || ''}
+            />
+          </View>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

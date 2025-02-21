@@ -25,3 +25,4 @@ export const Agent_Icon = require('./agentPanel.png');
 export const Diamond_Icon = require('./dimond.png');
 export const TrustedPartner = require('./trustedPartner.png');
 export const PremiumDriver = require('./premiumDriver.png');
+export const ThankuLogo = require('./thankuLogo.png');

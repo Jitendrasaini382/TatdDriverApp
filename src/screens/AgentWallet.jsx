@@ -15,7 +15,8 @@ import Header from '../components/Header';
 import {Wallet_Icon} from '../assets/images';
 import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
-import {GET_AGENT_WALLET} from '../apis/Apis';
+import {GET_AGENT_NETWORK_CLICK_DETAILS, GET_AGENT_WALLET} from '../apis/Apis';
+import {useRoute} from '@react-navigation/native';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
@@ -39,17 +40,41 @@ const data = [
 ];
 
 const AgentWallet = ({navigation}) => {
+  const route = useRoute();
+  console.log(route)
+  console.log(route);
+  const isFromMyNetwork = route?.params?.from == 'myNetwork';
   const [agentWalletData, setagentWalletData] = useState({});
   const [loader, setLoader] = useState(false);
   useEffect(() => {
-    getAgentWallet();
+    if (isFromMyNetwork) {
+      myNetworkAgentsData();
+    } else {
+      getAgentWallet();
+    }
     setLoader(true);
-  }, []);
+  }, [navigation]);
   const getAgentWallet = async () => {
     try {
       const res = await GET_AGENT_WALLET();
       console.log(res);
 
+      setagentWalletData({
+        ...res,
+      });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoader(false);
+    }
+  };
+  const myNetworkAgentsData = async () => {
+    try {
+      const res = await GET_AGENT_NETWORK_CLICK_DETAILS({
+        customer_number: route?.params?.customer_number,
+      });
+      setLoader(false);
+      console.log(res);
       setagentWalletData({
         ...res,
       });
@@ -101,8 +126,9 @@ const AgentWallet = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header backButton={true} />
-
+      <Header
+      backButton={true}
+      />
       <ScrollView>
         <View style={styles.topContent}>
           <Text style={styles.mainHeadingText}>
@@ -124,6 +150,19 @@ const AgentWallet = ({navigation}) => {
             ₹{agentWalletData?.my_balance_earning}
           </Text>
         </View>
+        {isFromMyNetwork && (
+          <Text
+            style={{
+              fontSize: 14,
+              color: 'black',
+              fontWeight: '500',
+              marginHorizontal: 10,
+              marginVertical:5
+            }}>
+            {agentWalletData?.heading}
+          </Text>
+        )}
+
         {loader ? (
           <ActivityIndicator size={'large'} color={AppColors.mainColor} />
         ) : (
@@ -131,7 +170,7 @@ const AgentWallet = ({navigation}) => {
             <TouchableOpacity
               onPress={() => navigation.navigate('AgentCommisionAdded', item)}
               key={index.toString()}>
-              {renderTripItem({item})} 
+              {renderTripItem({item})}
             </TouchableOpacity>
           ))
         )}

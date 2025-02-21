@@ -27,57 +27,85 @@ import {AppFont} from '../assets/FontsFamily';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {useRoute} from '@react-navigation/native';
+import {AGENT_ADD_CUSTOMER, AGENT_REFERAL_URL} from '../apis/Apis';
+import {useSelector} from 'react-redux';
 
 const AgentLeads = ({navigation}) => {
   const route = useRoute();
+  const [mobile, setMobile] = useState('');
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
   const [agentLeadsModal, setAgentLeadsModal] = useState(false);
 
-  console.log('====================================');
-  console.log(route, 'routeroute');
-  console.log('====================================');
+  // console.log('====================================');
+  // console.log(route, 'routeroute');
+  // console.log('====================================');
 
   useEffect(() => {
     setAgentLeadsModal(true);
+    agentReferal();
   }, []);
 
-  const textToCopy =
-    "Hi! I'm inviting you to use this referral link - https://tatd.in/driver-interface.php?referrer=ODExODgxMzE0OA%3D%3D";
+  const [referralData, setreferralData] = useState(null);
+  const agentReferal = async () => {
+    try {
+      const res = await AGENT_REFERAL_URL();
+      console.log(res);
+      setreferralData(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const copyToClipboard = () => {
-    Clipboard.setString(textToCopy);
-    Alert.alert(
-      "Hi! I'm inviting you to use this referral link - https://tatd.in/driver-interface.php?referrer=ODExODgxMzE0OA%3D%3D",
-    );
+    Clipboard.setString(referralData?.referralurl);
+    Alert.alert('Copied Successfully', `${referralData?.referralurl}`);
   };
 
   const openWhatsApp = () => {
-    let url =
-      "whatsapp://send?text=Hi! I'm inviting you to use this referral link - https://tatd.in/driver-interface.php?referrer=ODExODgxMzE0OA%3D%3D";
+    const message = `${referralData.shareMessage} ${referralData.referralurl}`;
+    const url = `whatsapp://send?text=${encodeURIComponent(message)}`;
+
     Linking.openURL(url)
       .then(() => {})
-      .catch(() => {});
+      .catch(() => {
+        Alert.alert('WhatsApp is not installed on your device');
+      });
   };
 
   const openFacebookMessenger = () => {
-    const messengerUrl =
-      "fb-messenger://share?link=Hi! I'm inviting you to use this referral link - https://tatd.in/driver-interface.php?referrer=ODExODgxMzE0OA%3D%3D";
-    const fallbackUrl =
-      "https://www.facebook.com/dialog/send?link=I'm inviting you to use this referral link - https://tatd.in/driver-interface.php?referrer=ODExODgxMzE0OA%3D%3D";
+    // if (!shareMessage || !referralUrl) {
+    //   alert("Invalid referral data");
+    //   return;
+    // }
+
+    const encodedMessage = encodeURIComponent(
+      `${referralData?.shareMessage} - ${referralData?.referralurl}`,
+    );
+
+    // Messenger App Link
+    const messengerUrl = `fb-messenger://share?link=${encodeURIComponent(
+      referralData?.referralurl,
+    )}`;
+
+    // Web Fallback (if Messenger app is not installed)
+    const fallbackUrl = `https://www.facebook.com/dialog/send?app_id=YOUR_APP_ID&link=${encodeURIComponent(
+      referralData?.referralUrl,
+    )}&redirect_uri=${encodeURIComponent(referralData?.referralurl)}`;
 
     Linking.openURL(messengerUrl)
       .then(() => {})
       .catch(() => {
         Linking.openURL(fallbackUrl)
           .then(() => {})
-          .catch(() => {});
+          .catch(() => {
+            Alert.alert('Could not open Messenger');
+          });
       });
   };
 
   const openTwitter = () => {
-    const twitterUrl =
-      "twitter://post?message=Hi! I'm inviting you to use this referral link - https://tatd.in/driver-interface.php?referrer=ODExODgxMzE0OA%3D%3D"; // You can customize the message by changing the text after 'message='
-    const fallbackUrl =
-      "https://twitter.com/intent/tweet?text=Hi! I'm inviting you to use this referral link - https://tatd.in/driver-interface.php?referrer=ODExODgxMzE0OA%3D%3D"; // URL to open Twitter in a browser
+    const twitterUrl = `twitter://post?message=${referralData?.shareMessage}-${referralData?.referralurl}`; // You can customize the message by changing the text after 'message='
+    const fallbackUrl = `https://twitter.com/intent/tweet?text=${referralData?.shareMessage}-${referralData?.referralurl}`; // URL to open Twitter in a browser
 
     Linking.openURL(twitterUrl)
       .then(() => {})
@@ -89,10 +117,8 @@ const AgentLeads = ({navigation}) => {
   };
 
   const openLinkedIn = () => {
-    const linkedInUrl =
-      "linkedin://shareArticle?mini=true&url=Hi! I'm inviting you to use this referral link - https://tatd.in/driver-interface.php?referrer=ODExODgxMzE0OA%3D%3D"; // You can customize the message by changing the text after 'url='
-    const fallbackUrl =
-      "https://www.linkedin.com/shareArticle?mini=true&url=Hi! I'm inviting you to use this referral link - https://tatd.in/driver-interface.php?referrer=ODExODgxMzE0OA%3D%3D"; // URL to open LinkedIn in a browser
+    const linkedInUrl = `linkedin://shareArticle?mini=true&url=${referralData?.shareMessage}-${referralData?.referralUrl}`;
+    const fallbackUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${referralData?.shareMessage}- ${referralData?.referralUrl}`; // URL to open LinkedIn in a browser
 
     Linking.openURL(linkedInUrl)
       .then(() => {})
@@ -101,6 +127,43 @@ const AgentLeads = ({navigation}) => {
           .then(() => {})
           .catch(() => {});
       });
+  };
+  const [err, seterr] = useState('');
+  const addCustomer = async () => {
+    try {
+      if (mobile.trim().length == 0) {
+        seterr('Please enter a mobile number.');
+        return;
+      }
+
+      if (mobile.length !== 10) {
+        seterr('Please enter a valid 10-digit mobile number.');
+        return;
+      }
+
+      seterr('');
+
+      // setLoading(true); // If you have a loading state
+
+      const res = await AGENT_ADD_CUSTOMER({
+        customer_mobile: mobile,
+        city: route?.params?.city || '',
+        lead_type: 'Driver',
+        current_language: languageSwitch,
+      });
+      // Alert.alert(res.message)
+
+      Alert.alert('Success', res?.message);
+      setMobile('');
+
+      console.log(res, 'Addcustomer');
+      // Handle success (e.g., show a message or navigate)
+    } catch (err) {
+      console.error('Error adding customer:', err);
+      seterr('Failed to add customer. Please try again.');
+    } finally {
+      // setLoading(false); // Stop loading
+    }
   };
 
   return (
@@ -112,14 +175,28 @@ const AgentLeads = ({navigation}) => {
           <Text style={styles.title}>ADD YOUR DRIVER</Text>
           <View style={styles.inputContainer}>
             <TextInput
+              onChangeText={e => {
+                setMobile(e);
+                // console.log('e')
+              }}
+              inputMode="numeric"
+              maxLength={10}
+              value={mobile}
               style={styles.input}
               placeholder="Driver का नंबर ?"
               placeholderTextColor="#999"
             />
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+              onPress={() => {
+                addCustomer();
+              }}
+              style={styles.button}>
               <Text style={styles.buttonText}>Send</Text>
             </TouchableOpacity>
           </View>
+          <Text style={{color: 'red', fontSize: 14, marginVertical: 5}}>
+            {err}
+          </Text>
         </View>
         <View style={styles.middleView}>
           <View style={styles.middleLeftView}>

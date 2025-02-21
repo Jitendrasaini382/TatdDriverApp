@@ -244,6 +244,8 @@ const AgentPanel = ({navigation}) => {
                   ? networkAndLeadsData?.my_network
                   : networkAndLeadsData?.my_leads
               }
+              myNetworkData={myNetworkData}
+              navigation={navigation}
             />
           </View>
         )}
@@ -263,7 +265,33 @@ const AgentPanel = ({navigation}) => {
   );
 };
 
-const ListItem = ({customer_number, datetime, total_earning}) => (
+const ListItem = ({customer_number, datetime, total_earning, navigation}) => (
+  <View style={styles.containerList}>
+    {/* <View style={styles.leftView}> */}
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('AgentWallet', {from: 'myNetwork',customer_number:customer_number});
+      }}
+      style={{flex: 0.35, justifyContent: 'center', alignItems: 'center'}}>
+      <Text style={styles.phoneText}>{customer_number}</Text>
+    </TouchableOpacity>
+    <View style={{flex: 0.35, justifyContent: 'center', alignItems: 'center'}}>
+      <Text style={styles.dateText}>{datetime}</Text>
+    </View>
+    <View style={{flex: 0.2, justifyContent: 'center', alignItems: 'center'}}>
+      <Text style={styles.amountText}>{total_earning} Rs</Text>
+    </View>
+
+    <View style={{flex: 0.1, justifyContent: 'center', alignItems: 'center'}}>
+      <TouchableOpacity onPress={() => openWhatsApp(customer_number)}>
+        <Icon color={AppColors.whatsAppIconColor} size={18} name="whatsapp" />
+      </TouchableOpacity>
+    </View>
+    {/* </View> */}
+  </View>
+);
+
+const ListItem2 = ({customer_number, datetime, total_earning}) => (
   <View style={styles.containerList}>
     {/* <View style={styles.leftView}> */}
     <View style={{flex: 0.35, justifyContent: 'center', alignItems: 'center'}}>
@@ -299,7 +327,7 @@ const openWhatsApp = phoneNumber => {
   }
 };
 
-const ShowDataList = ({data}) => {
+const ShowDataList = ({data, navigation, myNetworkData}) => {
   return (
     <FlatList
       data={data}
@@ -312,12 +340,18 @@ const ShowDataList = ({data}) => {
                 color: AppColors.black,
                 fontSize: 14,
               }}>
-              {MyNetworkDATA ? 'No network data found' : 'No leads data found'}
+              {myNetworkData ? 'No network data found' : 'No leads data found'}
             </Text>
           </>
         );
       }}
-      renderItem={({item}) => <ListItem {...item} />}
+      renderItem={({item}) =>
+        myNetworkData ? (
+          <ListItem {...item} navigation={navigation} />
+        ) : (
+          <ListItem2 {...item} />
+        )
+      }
       keyExtractor={item => item.phone}
       contentContainerStyle={{
         paddingVertical: 5,

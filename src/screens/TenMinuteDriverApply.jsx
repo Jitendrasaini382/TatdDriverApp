@@ -98,7 +98,11 @@ const TenMinuteDriverApply = ({route, navigation}) => {
             <YoutubePlayer
               height={200}
               play={playing}
-              videoId={data?.video_code}
+              videoId={
+                selectedLanguage === 'English'
+                  ? data?.english_video_code
+                  : data?.hindi_video_code
+              }
               onChangeState={state => {
                 if (state === 'ended') {
                   setPlaying(false);

@@ -525,8 +525,26 @@ export const CLEAR_MY_DUE_VIEW = body => {
   );
 };
 
+export const GET_CMD_PACKAGE_DETAIL = (id, lang) => {
+  return _Fetch(
+    'GET',
+    `clear-my-due/view-package-detail-api.php?action=view_package&booking_number=${id}&current_language=${lang}`,
+    {},
+    {},
+  );
+};
+
 export const PAY_CMD_CREATE_ORDER_ID = body => {
   return _Fetch('POST', 'payment/create-order-id.php', {...body}, {});
+};
+
+export const VERIFY_PAYMENT_INFO = body => {
+  return _Fetch(
+    'GET',
+    `payment/verify-payment.php?action=clear_my_due_thanks&razorpay_payment_id=${body}`,
+    {...body},
+    {},
+  );
 };
 
 export const GET_ALL_AGENT_PANEL_INFO = () => {
@@ -536,11 +554,11 @@ export const GET_ALL_AGENT_PANEL_INFO = () => {
 export const GET_AGENT_TRAINING_VIDEOS = () => {
   return _Fetch('GET', 'agent/agent-training-video-api.php', {});
 };
-export const STORE_AGENT_TRAINING_VIDEOS_CLICK = (body) => {
-  return _Fetch('POST', 'agent/agent-store-training-videos-clicks-api.php', {...body});
+export const STORE_AGENT_TRAINING_VIDEOS_CLICK = body => {
+  return _Fetch('POST', 'agent/agent-store-training-videos-clicks-api.php', {
+    ...body,
+  });
 };
-
-
 
 export const GET_AGENT_WALLET = () => {
   return _Fetch('GET', 'agent/agent-wallet-api.php', {});
@@ -570,10 +588,26 @@ export const GET_AGENT_SELECT_STATE = () => {
 };
 
 export const GET_AGENT_SELECT_CITY = body => {
-  console.log(body,"GET_AGENT_SELECT_CITY")
+  console.log(body, 'GET_AGENT_SELECT_CITY');
   return _Fetch('POST', 'agent/agent-select-your-zone-api.php', {...body}, {});
 };
 
+export const GET_AGENT_NETWORK_CLICK_DETAILS = body => {
+  console.log(body, 'GET_AGENT_NETWORK_CLICK_DETAILS');
+  return _Fetch(
+    'POST',
+    'agent/agent-commission-added-wallet-api.php',
+    {...body},
+    {},
+  );
+};
 
+export const AGENT_REFERAL_URL = body => {
+  console.log(body, 'GET_AGENT_NETWORK_CLICK_DETAILS');
+  return _Fetch('GET', 'agent/agent-referral-url-api.php', {...body}, {});
+};
 
-
+export const AGENT_ADD_CUSTOMER = body => {
+  console.log(body, 'AGENT_ADD_CUSTOMER');
+  return _Fetch('POST', 'agent/agent-add-customer-api.php', {...body}, {});
+};

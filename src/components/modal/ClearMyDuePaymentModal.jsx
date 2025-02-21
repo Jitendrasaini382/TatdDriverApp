@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Dimensions,
   ScrollView,
   StyleSheet,
   Text,
@@ -7,7 +8,8 @@ import {
   View,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
-import { AppFont } from '../../assets/FontsFamily';
+import {AppFont} from '../../assets/FontsFamily';
+const {width} = Dimensions.get('window');
 
 const DetailRow = ({label, value}) => (
   <View style={styles.detailRow}>
@@ -18,6 +20,19 @@ const DetailRow = ({label, value}) => (
 
 const ClearMyDuePaymentModal = ({setMyDuePaymentModal, tripDetails}) => {
   if (!tripDetails) return null;
+
+  // console.log(tripDetails, 'tripDetails >>>>>>>>>>>>>>>>>>>>>>>>>>');
+
+  const ggg = {
+    booking_type: 'Permanent',
+    line1: 'Salary - Rs ',
+    line2: 'Working Days - ',
+    line3: 'Working Hours - ',
+    line4: ' Overtime - 90 Rs Per Hour',
+    line5: 'Trial 1 hours - 234 Rs का है। ',
+    line6: 'ध्यान रहे - हमे कस्टमर की परेशानी कम करनी है उसे बढ़ाना नहीं।',
+    status_code: 200,
+  };
 
   return (
     <ScrollView>
@@ -32,19 +47,211 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal, tripDetails}) => {
         </View>
 
         <View style={styles.contentContainer}>
-          <DetailRow label="Trip Type:" value={tripDetails.tripType} />
-          <DetailRow label="Package:" value={tripDetails.package} />
-          <DetailRow label="Package Price : Cash" value={`Rs ${tripDetails.amount}`} />
-          <DetailRow label="GST : 5%" value={`Rs ${tripDetails.gst}`} />
-          <DetailRow label="Commission : 20%" value={`Rs ${tripDetails.gst}`} />
-          <View style={styles.divider} />
-          <DetailRow label="Net Earning:" value={`Rs ${tripDetails.gst}`} />
-          <View style={styles.divider} />
+          {tripDetails?.line1 && (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginBottom: 10,
+              }}>
+              <Text
+                style={{
+                  color: AppColors.black,
+                  marginBottom: 10,
+                  fontFamily: AppFont.regularFont,
+                  fontSize: 13,
+                }}>
+                {tripDetails?.line1}
+              </Text>
+              {/* <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  Rs. {tripDetails?.Salary}
+                </Text> */}
+            </View>
+          )}
+          {tripDetails?.line2 && (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginBottom: 10,
+              }}>
+              <Text
+                style={{
+                  color: AppColors.black,
+                  marginBottom: 10,
+                  fontFamily: AppFont.regularFont,
+                  fontSize: 13,
+                }}>
+                {tripDetails?.line2}
+              </Text>
+              {/* <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  {tripDetails?.Working_Days}
+                </Text> */}
+            </View>
+          )}
+          {tripDetails?.line3 && (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginBottom: 10,
+              }}>
+              <Text
+                style={{
+                  color: AppColors.black,
+                  marginBottom: 10,
+                  fontFamily: AppFont.regularFont,
+                  fontSize: 13,
+                }}>
+                {tripDetails?.line3}
+              </Text>
+              {/* <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  {tripDetails?.Working_Hours}
+                </Text> */}
+            </View>
+          )}
+          {tripDetails?.line4 && (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginBottom: 10,
+              }}>
+              <Text
+                style={{
+                  color: AppColors.black,
+                  marginBottom: 10,
+                  fontFamily: AppFont.regularFont,
+                  fontSize: 13,
+                }}>
+                {tripDetails?.line4}
+              </Text>
+              {/* <Text
+                  style={{
+                    color: AppColors.black,
+                    marginBottom: 10,
+                    fontFamily: AppFont.regularFont,
+                    fontSize: 13,
+                  }}>
+                  {tripDetails?.Overtime}
+                </Text> */}
+            </View>
+          )}
+
+          {tripDetails?.line5 && (
+            <View style={styles.container}>
+              <View style={styles.textContainer}>
+                <Text
+                  style={[
+                    styles.text,
+                    {color: AppColors.black, fontSize: width * 0.045},
+                  ]}>
+                  {tripDetails?.line5}
+                </Text>
+              </View>
+            </View>
+          )}
+
+          {/* <View
+            style={{
+              marginTop: 10,
+              marginBottom: 20,
+            }}> */}
+          {tripDetails?.line6 && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'flex-start', // Ensures alignment
+                // marginVertical: 2, // Consistent spacing
+                marginTop: 2,
+              }}>
+              <View
+                style={{
+                  width: 4,
+                  height: 4,
+                  borderRadius: 2,
+                  backgroundColor: AppColors.black,
+                  marginTop: 6, // Align dot with text
+                }}
+              />
+              <Text
+                style={{
+                  color: AppColors.mainColor,
+                  marginLeft: 10,
+                  fontFamily: AppFont.regularFont,
+                  fontWeight: 'bold',
+                  fontSize: width * 0.045,
+                }}>
+                {tripDetails?.line6}
+              </Text>
+            </View>
+          )}
+          {/* </View> */}
+
+          {tripDetails?.booking_type && (
+            <DetailRow label="Trip Type:" value={tripDetails?.booking_type} />
+          )}
+          {tripDetails?.package && (
+            <DetailRow label="Package:" value={tripDetails?.package} />
+          )}
+          {tripDetails?.package_price && (
+            <DetailRow
+              label="Package Price : Cash"
+              value={`Rs ${tripDetails.package_price}`}
+            />
+          )}
+          {tripDetails?.gst_price && (
+            <DetailRow
+              label="GST : 5%"
+              value={`Rs ${tripDetails?.gst_price}`}
+            />
+          )}
+          {tripDetails?.commision_amount && (
+            <DetailRow
+              label="Commission : 20%"
+              value={`Rs ${tripDetails?.commision_amount}`}
+            />
+          )}
+
+          {tripDetails?.net_earning && (
+            <>
+              <View style={styles.divider} />
+              <DetailRow
+                label="Net Earning:"
+                value={`Rs ${tripDetails?.net_earning}`}
+              />
+              <View style={styles.divider} />
+            </>
+          )}
 
           <View style={styles.bulletPointContainer}>
-            <BulletPoint text="Overtime Charges- Rs 2 Per Minute" />
-            <BulletPoint text="Night Charges - Rs 200 Applied only in case you travel between 10:00 PM to 06:00 AM" />
-            <BulletPoint text="Return to TAT D- Rs. 307" />
+            {tripDetails?.overtime_charges_line && (
+              <BulletPoint text={tripDetails?.overtime_charges_line} />
+            )}
+            {tripDetails?.night_charges_line && (
+              <BulletPoint text={tripDetails?.night_charges_line} />
+            )}
+            {tripDetails?.return_to_tatd && (
+              <BulletPoint text={tripDetails?.return_to_tatd} />
+            )}
           </View>
         </View>
 
@@ -153,6 +360,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
 
 export default ClearMyDuePaymentModal;

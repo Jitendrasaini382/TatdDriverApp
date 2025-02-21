@@ -57,7 +57,7 @@ const SelectYourCity = ({route, navigation}) => {
             {cities.map((city, index) => (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('AgentLeads', {data: data});
+                  navigation.navigate('AgentLeads', {data: data, city: city});
                 }}
                 key={index}
                 style={styles.button}>

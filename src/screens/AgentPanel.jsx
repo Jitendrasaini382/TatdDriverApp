@@ -26,6 +26,7 @@ import {
   GET_AGENT_NERTWORK_AND_LEADS,
   GET_ALL_AGENT_PANEL_INFO,
 } from '../apis/Apis';
+import {useSelector} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
 
@@ -51,31 +52,31 @@ const MyLeadsDATA = [
 ];
 
 const AgentPanel = ({navigation}) => {
-  useEffect(() => {
-    // [setAgentPanelModal(true)];
-  }, []);
-
   const [myNetworkData, setMyNetworkData] = useState(true);
   const [allAgentInfo, setAllAgentInfo] = useState(null);
   const [agentPanelModal, setAgentPanelModal] = useState(false);
   const [networkAndLeadsData, setnetworkAndLeadsData] = useState(null);
   const [leadsLoader, setleadsLoader] = useState(false);
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   useEffect(() => {
-    // setAgentPanelModal(true);
+    setAgentPanelModal(true);
     setleadsLoader(true);
     getAllAgentInfo();
     getNetworkAndLeads();
-  }, []);
+  }, [languageSwitch]);
 
   const getAllAgentInfo = async () => {
     try {
-      // Fetch update popup data
-      const response = await GET_ALL_AGENT_PANEL_INFO();
-      console.log(response, '----------');
+      const response = await GET_ALL_AGENT_PANEL_INFO({
+        current_language: languageSwitch,
+      });
 
       setAllAgentInfo(response);
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setleadsLoader(false);
+    }
   };
   const getNetworkAndLeads = async () => {
     try {
@@ -258,7 +259,10 @@ const AgentPanel = ({navigation}) => {
           animationIn={'fadeInDown'}
           animationOut={'fadeOutUp'}
           isVisible={agentPanelModal}>
-          <AgentPanelModal setAgentPanelModal={setAgentPanelModal} />
+          <AgentPanelModal
+            setAgentPanelModal={setAgentPanelModal}
+            data={allAgentInfo}
+          />
         </Modal>
       </View>
     </SafeAreaView>
@@ -270,7 +274,10 @@ const ListItem = ({customer_number, datetime, total_earning, navigation}) => (
     {/* <View style={styles.leftView}> */}
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('AgentWallet', {from: 'myNetwork',customer_number:customer_number});
+        navigation.navigate('AgentWallet', {
+          from: 'myNetwork',
+          customer_number: customer_number,
+        });
       }}
       style={{flex: 0.35, justifyContent: 'center', alignItems: 'center'}}>
       <Text style={styles.phoneText}>{customer_number}</Text>
@@ -593,6 +600,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     borderColor: AppColors.mainColor,
     borderRadius: 8,
+    flex: 1,
   },
   containerList: {
     flexDirection: 'row',

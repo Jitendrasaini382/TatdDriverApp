@@ -547,8 +547,8 @@ export const VERIFY_PAYMENT_INFO = body => {
   );
 };
 
-export const GET_ALL_AGENT_PANEL_INFO = () => {
-  return _Fetch('GET', 'agent/agent-panel-info-api.php', {});
+export const GET_ALL_AGENT_PANEL_INFO = body => {
+  return _Fetch('GET', `agent/agent-panel-info-api.php`, {...body}, {});
 };
 
 export const GET_AGENT_TRAINING_VIDEOS = () => {

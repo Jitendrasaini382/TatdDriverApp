@@ -32,21 +32,24 @@ const BookingView = ({
   const dispatch = useDispatch();
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
 
-  const handleLoginPress = () => {
-    try {
-      const encodedMobile = Buffer.from(
-        decodedToken?.driver_mobile_number,
-      ).toString('base64');
-      const url = `https://www.tatd.in/agent-login.php?dologin=${encodedMobile}`;
-      Linking.openURL(url);
-    } catch (error) {}
-  };
+  // const handleLoginPress = () => {
+  //   try {
+  //     const encodedMobile = Buffer.from(
+  //       decodedToken?.driver_mobile_number,
+  //     ).toString('base64');
+  //     const url = `https://www.tatd.in/agent-login.php?dologin=${encodedMobile}`;
+  //     Linking.openURL(url);
+  //   } catch (error) {}
+  // };
 
   return (
     <View style={styles.container}>
       {panelData && (
         <View style={styles.connectContainer}>
-          <Pressable onPress={handleLoginPress} style={styles.connectButton}>
+          <Pressable
+            // onPress={handleLoginPress}
+            onPress={() => navigation.navigate('AgentPanel')}
+            style={styles.connectButton}>
             <Icon color={AppColors.white} size={15} name="plus" />
             <Image style={styles.rightArrow} source={LeftArrow} />
           </Pressable>

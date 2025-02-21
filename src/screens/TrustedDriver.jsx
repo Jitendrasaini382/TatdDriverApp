@@ -478,7 +478,7 @@ const TrustedDriver = ({navigation}) => {
     if (!isDeviceInfo) fetchDeviceInfo();
   }, []);
 
-  const currentRoute = route.name;
+  const currentRoute = route?.name;
 
   const [selected, setSelected] = useState(currentRoute);
   const [showNeedHelp, setShowNeedHelp] = useState();
@@ -486,7 +486,7 @@ const TrustedDriver = ({navigation}) => {
   const handlePress = icon => {
     setSelected(icon);
     if (icon === 'Agent') {
-      handleLoginPress();
+      navigation.navigate('AgentPanel');
     } else if (icon === 'PremiumDriver') {
       openMyUrl('https://www.tatd.in/premium-driver.php?step=1');
     } else if (icon === 'TrustedPartner' || 'TrustedDriver') {
@@ -771,16 +771,7 @@ const TrustedDriver = ({navigation}) => {
     }
   };
 
-  const handleLoginPress = () => {
-    try {
-      const encodedMobile = Buffer.from(
-        decodedToken?.driver_mobile_number,
-      ).toString('base64');
-      const url = `https://www.tatd.in/agent-login.php?dologin=${encodedMobile}`;
-      openMyUrl(url);
-    } catch (error) {}
-  };
-
+ 
   const getPopup = async () => {
     try {
       const response = await EXPRESS_BOOKING_POPUP({

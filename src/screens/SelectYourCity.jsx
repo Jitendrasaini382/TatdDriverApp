@@ -46,13 +46,17 @@ const SelectYourCity = ({route, navigation}) => {
     <SafeAreaView style={styles.mainContainer}>
       <Header backButton={true} />
 
-      <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Select Your City</Text>
-        </View>
-        {loader ? (
-          <ActivityIndicator color={AppColors.mainColor} size={'large'} />
-        ) : (
+      {loader ? (
+        <ActivityIndicator
+          color={AppColors.mainColor}
+          size={'large'}
+          style={{flex: 1, alignContent: 'center'}}
+        />
+      ) : (
+        <View style={styles.container}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Select Your City</Text>
+          </View>
           <View style={[styles.buttonContainer, {marginTop: 10}]}>
             {cities.map((city, index) => (
               <TouchableOpacity
@@ -70,8 +74,8 @@ const SelectYourCity = ({route, navigation}) => {
               </TouchableOpacity>
             ))}
           </View>
-        )}
-      </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };

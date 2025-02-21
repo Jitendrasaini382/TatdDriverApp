@@ -3,7 +3,8 @@ import React from 'react';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 
-const AgentPanelModal = ({setAgentPanelModal}) => {
+const AgentPanelModal = ({setAgentPanelModal, data}) => {
+  if (!data) return null;
   return (
     <View style={{flex: 1}}>
       <View style={styles.container}>
@@ -31,9 +32,11 @@ const AgentPanelModal = ({setAgentPanelModal}) => {
                 lineHeight: 20,
                 fontWeight: '600',
               }}>
-              The agent panel connects your trusted Service Partners with the
+              {/* The agent panel connects your trusted Service Partners with the
               company for better customer service. Reliable Service Partners
-              keep your tat d agency running, benefiting you for life.
+              keep your tat d agency running, benefiting you for life. */}
+
+              {data?.alert_line1}
             </Text>
             <Text
               style={{
@@ -46,8 +49,9 @@ const AgentPanelModal = ({setAgentPanelModal}) => {
                 lineHeight: 20,
                 fontWeight: '600',
               }}>
-              Earn Rs 250 per Service Partner you connect, plus a 1% referral
-              commission on their bookings for 6 months.
+              {data?.alert_line2}
+              {/* Earn Rs 250 per Service Partner you connect, plus a 1% referral
+              commission on their bookings for 6 months. */}
             </Text>
             <Text
               style={{
@@ -60,8 +64,9 @@ const AgentPanelModal = ({setAgentPanelModal}) => {
                 lineHeight: 20,
                 fontWeight: '600',
               }}>
-              Referral bonuses are paid every Wednesday provided your dues with
-              the company exceed Rs 50.
+              {/* Referral bonuses are paid every Wednesday provided your dues with
+              the company exceed Rs 50. */}
+              {data?.alert_line1}
             </Text>
             <TouchableOpacity
               onPress={() => setAgentPanelModal(false)}

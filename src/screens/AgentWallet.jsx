@@ -9,6 +9,7 @@ import {
   Image,
   ScrollView,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Header from '../components/Header';
@@ -41,11 +42,13 @@ const data = [
 
 const AgentWallet = ({navigation}) => {
   const route = useRoute();
-  console.log(route)
+  console.log(route);
   console.log(route);
   const isFromMyNetwork = route?.params?.from == 'myNetwork';
   const [agentWalletData, setagentWalletData] = useState({});
   const [loader, setLoader] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
   useEffect(() => {
     if (isFromMyNetwork) {
       myNetworkAgentsData();
@@ -66,6 +69,7 @@ const AgentWallet = ({navigation}) => {
       console.log(err);
     } finally {
       setLoader(false);
+      setRefreshing(false);
     }
   };
   const myNetworkAgentsData = async () => {
@@ -126,10 +130,18 @@ const AgentWallet = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header
-      backButton={true}
-      />
-      <ScrollView>
+      <Header backButton={true} />
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              setRefreshing(true);
+              // getAgentTrainingVideos();
+              getAgentWallet();
+            }}
+          />
+        }>
         <View style={styles.topContent}>
           <Text style={styles.mainHeadingText}>
             My Lifetime Earning ₹{agentWalletData?.my_earning}
@@ -157,7 +169,7 @@ const AgentWallet = ({navigation}) => {
               color: 'black',
               fontWeight: '500',
               marginHorizontal: 10,
-              marginVertical:5
+              marginVertical: 5,
             }}>
             {agentWalletData?.heading}
           </Text>

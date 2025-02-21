@@ -242,11 +242,17 @@ const MyBookingModal = ({}) => {
                         : null}
 
                       <Pressable
-                        onPress={() =>
-                          Linking.openURL(
-                            `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                          )
-                        }>
+                        onPress={() => {
+                          navigation.navigate('ClearMyDuePayment'),
+                            dispatch(setMyBookingModal(false));
+                        }}
+
+                        // onPress={() =>
+                        //   Linking.openURL(
+                        //     `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
+                        //   )
+                        // }
+                      >
                         <View
                           style={[
                             styles.bookingCard,

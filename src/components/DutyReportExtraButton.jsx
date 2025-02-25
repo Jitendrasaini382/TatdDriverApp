@@ -1,15 +1,29 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {AppColors} from '../assets/Colors';
-import {useDispatch, useSelector} from 'react-redux';
-import {setMyBookingModal} from '../redux/slices/trustedDriverSlice';
+import {useSelector} from 'react-redux';
 
-const ExtraButtons = ({showNeedHelp}) => {
+const DutyReportExtraButton = ({
+  showNeedHelp,
+  showBack,
+  customeNavigation = null,
+  bookingNumber = '',
+}) => {
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   const navigation = useNavigation();
-  const dispatch = useDispatch();
+
+  const handlePress = useCallback(() => {
+    if (customeNavigation && customeNavigation.name) {
+      navigation.navigate(
+        customeNavigation.name,
+        customeNavigation.params || {},
+      );
+    } else {
+      navigation.goBack();
+    }
+  }, [navigation, customeNavigation]);
 
   return (
     <View style={styles.mainView}>
@@ -17,7 +31,9 @@ const ExtraButtons = ({showNeedHelp}) => {
         {showNeedHelp && (
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate('TicketsDriver', {bookingNumber: ''})
+              navigation.navigate('TicketsDriver', {
+                bookingNumber: bookingNumber,
+              })
             }>
             <Text style={styles.leftText}>
               {languageSwitch == 'english' ? 'Need Help?' : ' मदद चाहिए?'}
@@ -25,18 +41,32 @@ const ExtraButtons = ({showNeedHelp}) => {
           </TouchableOpacity>
         )}
       </View>
-      <View style={styles.rightView}>
-        <TouchableOpacity onPress={() => dispatch(setMyBookingModal(true))}>
-          <Text style={styles.rightText}>
-            {languageSwitch == 'english' ? 'My Bookings' : 'मेरी बुकिंगें'}
-          </Text>
-        </TouchableOpacity>
+      <View
+        style={{alignItems: 'center', display: 'flex', flexDirection: 'row'}}>
+        {showBack && (
+          <TouchableOpacity
+            onPress={() => handlePress()}
+            style={{
+              margin: 5,
+              marginRight: 17,
+              borderWidth: 1,
+              borderRadius: 5,
+              paddingHorizontal: 5,
+              borderColor: 'rgb(204,204,204)',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Text style={{color: AppColors.black, margin: 5, opacity: 0.8}}>
+              Back
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
 };
 
-export default ExtraButtons;
+export default DutyReportExtraButton;
 
 const styles = StyleSheet.create({
   mainView: {

@@ -24,8 +24,11 @@ import {useSelector} from 'react-redux';
 
 import {Skeleton} from '@rneui/base';
 import {Button} from 'react-native';
+import {useRoute} from '@react-navigation/native';
 
 const TicketsDriver = ({navigation}) => {
+  const route = useRoute();
+  const {bookingNumber} = route?.params || '';
   const [createTicketModal, setCreateTicketModal] = useState(false);
   const [ticketDetailsModal, setTicketDetailsModal] = useState(false);
   const [selectedTicketId, setSelectedTicketId] = useState(null);
@@ -43,12 +46,12 @@ const TicketsDriver = ({navigation}) => {
   const [field, setField] = useState({
     action: 'create_driver_ticket',
     remarks: '',
-    tbooking_id: '',
+    tbooking_id: bookingNumber,
     cuurent_language: languageSwitch,
   });
   const [checkField, setCheckField] = useState({
     action: 'check_booking_number',
-    tbooking_id: '',
+    tbooking_id: bookingNumber,
     current_language: languageSwitch,
   });
 

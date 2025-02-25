@@ -17,7 +17,7 @@ import {useRoute} from '@react-navigation/native';
 
 const AgentCommisionAdded = ({navigation}) => {
   const route = useRoute();
-  const {agent_id} = route?.params;
+  const {agent_id} = route?.params || "";
 
   const [walletData, setwalletData] = useState({});
   const [loader, setLoader] = useState(false);

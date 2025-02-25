@@ -22,7 +22,6 @@ import {
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import ToggleSwitch from 'toggle-switch-react-native';
-// import Modal from 'react-native-modal';
 import {AppColors} from '../assets/Colors';
 import Header from '../components/Header';
 import OtrModal from '../components/modal/OtrModal';
@@ -36,7 +35,6 @@ import MyBookingModal from '../components/MyBookingModal';
 import DeviceInfo from 'react-native-device-info';
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
-import {Buffer} from 'buffer';
 import Geolocation from '@react-native-community/geolocation';
 
 import {
@@ -59,6 +57,7 @@ import {
 } from '../apis/Apis';
 import ExpressBookingModal from '../components/modal/ExpressBookingModal';
 import {
+  checkBatteryOptimization,
   requestLocationPermission,
   requestNotificationPermission,
 } from '../utils/permissions';
@@ -146,10 +145,12 @@ const TrustedDriver = ({navigation}) => {
 
   const [tenMinLoader, settenMinLoader] = useState(false);
   const handleTenMinuteButton = async () => {
+    const isBatteryDisable = await checkBatteryOptimization();
+
     const hasPermission = await check(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
     );
-    if (hasPermission) {
+    if (hasPermission && isBatteryDisable) {
       const loc = await getLocation();
       if (loc) {
         settenMinLoader(true);
@@ -804,6 +805,17 @@ const TrustedDriver = ({navigation}) => {
           response?.driver_panel_messages
             ?.redirect_to_website_trusted_driver_url,
         );
+      }
+
+      if (
+        response?.driver_panel_messages?.ten_minute_my_active_booking_flag == 1
+      ) {
+        navigation.navigate('DutyReportUpdate', {
+          bookingNumber:
+            response?.driver_panel_messages
+              ?.ten_minute_my_active_booking_number,
+          state: '',
+        });
       }
 
       if (response?.driver_panel_messages?.rfd == '1') {

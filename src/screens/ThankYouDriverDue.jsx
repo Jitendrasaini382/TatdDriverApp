@@ -7,7 +7,7 @@ import {useRoute} from '@react-navigation/native';
 const ThankYouDriverDue = ({navigation}) => {
   const route = useRoute();
 
-  const {data} = route?.params;
+  const {data} = route?.params || {};
 
   useEffect(() => {
     const timer = setTimeout(() => {

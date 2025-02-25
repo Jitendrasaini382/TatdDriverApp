@@ -67,6 +67,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {API_BASE_URL} from '../constant/path';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
 import {jwtDecode} from 'jwt-decode';
+import DutyReportHeader from '../components/DutyReportHeader';
 
 const DutyReportUpdate = ({route, navigation}) => {
   const {bookingNumber, state} = route?.params;
@@ -837,8 +838,11 @@ const DutyReportUpdate = ({route, navigation}) => {
         flexDirection: 'column',
         backgroundColor: AppColors.white,
       }}>
-      <Header
-        backButton={true}
+      <DutyReportHeader
+        extraButton={true}
+        showNeedHelp={true}
+        showBack={true}
+        bookingNumber={bookingNumber}
         customeNavigation={{
           name: 'TrustedDriver',
         }}

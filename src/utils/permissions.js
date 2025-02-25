@@ -6,6 +6,8 @@ import {
   Vibration,
 } from 'react-native';
 import {request, check, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import IntentLauncher from '@yz1311/react-native-intent-launcher';
+import notifee from '@notifee/react-native';
 
 export const requestNotificationPermission = async () => {
   if (Platform.OS === 'android') {
@@ -87,9 +89,9 @@ export const requestLocationPermission = async () => {
             {
               text: 'Cancel',
               style: 'cancel',
-              onPress:()=>{
-                return false
-              }
+              onPress: () => {
+                return false;
+              },
             },
             {
               text: 'Go to Settings',
@@ -107,4 +109,32 @@ export const requestLocationPermission = async () => {
 
 const openSettings = () => {
   Linking.openSettings();
+};
+
+export const openBatteryOptimizationSettings = () => {
+  if (Platform.OS === 'android') {
+    try {
+      IntentLauncher.startActivity({
+        action: 'android.settings.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS',
+        data: 'package:com.tatd.driver', // Replace with your app's package name
+      });
+    } catch (error) {
+      Linking.openSettings();
+      // Alert.alert('Error', 'Could not open battery optimization settings.');
+    }
+  } else {
+    // Alert.alert('Not Supported', 'This feature is only available on Android.');
+  }
+};
+
+export const checkBatteryOptimization = async () => {
+  const isOptimized = await notifee.isBatteryOptimizationEnabled();
+  console.log(isOptimized, 'Battery optimization status');
+
+  if (isOptimized) {
+    openBatteryOptimizationSettings();
+    return false;
+  } else {
+    return true;
+  }
 };

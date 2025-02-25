@@ -13,12 +13,14 @@ import {Provider} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import store from './src/redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
-import notifee, {AndroidImportance} from '@notifee/react-native';
+import notifee, {
+  AndroidImportance,
+  AndroidVisibility,
+} from '@notifee/react-native';
 import NetInfo from '@react-native-community/netinfo';
 import {AppColors} from './src/assets/Colors';
 import {persistStore} from 'redux-persist';
-import { enableScreens } from 'react-native-screens';
-
+import {enableScreens} from 'react-native-screens';
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -27,7 +29,7 @@ TextInput.defaultProps.allowFontScaling = false;
 LogBox.ignoreAllLogs();
 
 const App = () => {
-  enableScreens(false)
+  enableScreens(false);
   const persistor = persistStore(store);
   const [isConnected, setIsConnected] = useState(true);
 
@@ -38,6 +40,7 @@ const App = () => {
         name: 'General Notifications',
         sound: 'tatd_driver_one_time',
         vibration: true,
+        visibility: AndroidVisibility.PUBLIC,
         vibrationPattern: [300, 500],
         importance: AndroidImportance.HIGH,
       });
@@ -47,6 +50,7 @@ const App = () => {
         name: 'Driver Alerts',
         sound: 'tatd_driver_three_time',
         vibration: true,
+        visibility: AndroidVisibility.PUBLIC,
         vibrationPattern: [300, 500],
         importance: AndroidImportance.HIGH,
       });
@@ -55,6 +59,7 @@ const App = () => {
         id: 'tatd2025_02',
         name: 'Booking Alerts',
         sound: 'ten_minute_booking',
+        visibility: AndroidVisibility.PUBLIC,
         vibration: true,
         vibrationPattern: [300, 500],
         importance: AndroidImportance.HIGH,
@@ -104,10 +109,6 @@ const App = () => {
 
     return unsubscribe;
   };
-
-  useEffect(() => {
-    // checkInitialNotification();
-  }, []);
 
   useEffect(() => {
     const unsubscribeMessages = handleIncomingMessages();

@@ -18,10 +18,12 @@ import YoutubePlayer from 'react-native-youtube-iframe';
 const TenMinuteDriverApply = ({route, navigation}) => {
   const {data} = route?.params || null;
   const [playing, setPlaying] = useState(true);
+  const [loader, setLoader] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
   const applyForTenMinute = async () => {
+    setLoader(true);
     try {
       const response = await APPLY_DRIVER_AVAILABLE_TEN_MINUTES({
         action: 'insert_applications',
@@ -31,7 +33,10 @@ const TenMinuteDriverApply = ({route, navigation}) => {
         Alert.alert('Success', response?.message);
         navigation.navigate('TrustedDriver');
       }
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setLoader(false);
+    }
   };
 
   return (
@@ -146,6 +151,7 @@ const TenMinuteDriverApply = ({route, navigation}) => {
 
               <TouchableOpacity
                 onPress={() => applyForTenMinute()}
+                disabled={loader}
                 // onPress={() => Alert.alert('apply for 10 minute')}
                 style={{
                   flex: 1,
@@ -156,7 +162,9 @@ const TenMinuteDriverApply = ({route, navigation}) => {
                   borderRadius: 8,
                   marginHorizontal: 5,
                 }}>
-                <Text style={{color: 'white', fontSize: 16}}>Apply</Text>
+                <Text style={{color: 'white', fontSize: 16}}>
+                  {loader ? 'Please Wait...' : 'Apply'}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>

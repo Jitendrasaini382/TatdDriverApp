@@ -6,6 +6,7 @@ import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
 // import {navigate, navigationRef} from './src/utils/navigationRef';
 import {SEND_NOTIFICATION_DETAILS} from './src/apis/Apis';
 import {navigationRef} from './src/routes/private';
+import {checkBatteryOptimization} from './src/utils/permissions';
 
 // 🔹 Function to handle notification click
 const handleNotificationPress = async (notification, action, isAppOpen) => {
@@ -91,6 +92,8 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
     },
   });
 });
+
+checkBatteryOptimization();
 
 // 🔹 Headless Task for Notification Click (handles killed state)
 messaging().onNotificationOpenedApp(remoteMessage => {

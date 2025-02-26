@@ -7,6 +7,10 @@ import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
 import {SEND_NOTIFICATION_DETAILS} from './src/apis/Apis';
 import {navigationRef} from './src/routes/private';
 import {checkBatteryOptimization} from './src/utils/permissions';
+import {enableScreens} from 'react-native-screens';
+import './gesture-handler';
+
+enableScreens();
 
 // 🔹 Function to handle notification click
 const handleNotificationPress = async (notification, action, isAppOpen) => {

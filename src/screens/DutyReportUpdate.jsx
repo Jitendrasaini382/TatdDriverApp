@@ -25,6 +25,7 @@ import {
   Agent_Icon,
   CallingGif,
   Mask,
+  NavigationIcon,
   TrustedPartner,
 } from '../assets/images';
 import {AppColors} from '../assets/Colors';
@@ -814,23 +815,54 @@ const DutyReportUpdate = ({route, navigation}) => {
     transform: [{scale: scale.value}],
   }));
 
-  const openMap = latLong => {
-    // console.log(latLong, 'latLonglatLonglatLong');
-    if (!latLong) {
-      return;
-    }
-    const [latitude, longitude] = latLong.split(',').map(coord => coord.trim());
-    const url = Platform.select({
-      ios: `maps://app?saddr=Current+Location&daddr=${latitude},${longitude}`,
-      android: `geo:${latitude},${longitude}?q=${latitude},${longitude}`,
-    });
+  function createLatLng(latLngStr) {
+    const [lat, lng] = latLngStr.split(',').map(Number);
+    return {lat, lng};
+  }
 
-    if (url) {
-      Linking.openURL(url).catch(err =>
-        console.error('Error opening map:', err),
-      );
+  const openMap = async latLong => {
+    // console.log(latLong, 'Received latLong input');
+
+    if (
+      !latLong ||
+      typeof latLong !== 'string' ||
+      !latLong.includes(',') ||
+      latLong.split(',').length !== 2 ||
+      latLong.split(',').some(coord => isNaN(parseFloat(coord.trim())))
+    ) {
+      return null;
     }
+
+    const currentLocation = await getLocation();
+    // console.log(currentLocation, 'Fetched current location');
+
+    const customerLocation = createLatLng(latLong);
+    // console.log(customerLocation, 'Processed customer location');
+
+    // console.log('Stopping execution here...');
+    // return false;
+
+    const googleMapsAppURL = `google.navigation:q=${customerLocation.lat},${customerLocation.lng}&mode=d`;
+    // console.log(googleMapsAppURL, 'Generated Google Maps App URL');
+
+    const googleMapsWebURL = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation.latitude},${currentLocation.longitude}&destination=${customerLocation.lat},${customerLocation.lng}&travelmode=driving`;
+    // console.log(googleMapsWebURL, 'Generated Google Maps Web URL');
+
+    // Try opening Google Maps App
+    Linking.canOpenURL('google.navigation:q=0,0')
+      .then(supported => {
+        // console.log(supported, 'Can open Google Maps App');
+        if (supported) {
+          // console.log('Opening Google Maps App...');
+          Linking.openURL(googleMapsAppURL);
+        } else {
+          // console.log('Opening Google Maps Web...');
+          Linking.openURL(googleMapsWebURL);
+        }
+      })
+      .catch(err => console.error('Error opening Google Maps', err));
   };
+
   return (
     <SafeAreaView
       style={{
@@ -1010,14 +1042,44 @@ const DutyReportUpdate = ({route, navigation}) => {
             </Modal>
             {/* middle */}
             <View style={styles.middleSection}>
-              <View style={styles.nameTypeContainer}>
-                <Text style={styles.nameText}>
-                  {bookingInfo?.data?.customer_name}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={{color: AppColors.black, marginRight: 10}}>
+                  {/* {bookingInfo?.data?.customer_name} */}
+                  {bookingInfo?.data?.customer_name?.slice(0, 10)}
                 </Text>
-                <Text style={styles.typeText}>
+
+                <TouchableOpacity
+                  style={{
+                    width: 40,
+                    height: 40,
+                    backgroundColor: AppColors.white,
+                    borderRadius: 20,
+                    overflow: 'hidden',
+                    elevation: 5,
+                  }}
+                  onPress={() =>
+                    openPhoneDialer(bookingInfo?.data?.circle_phone)
+                  }>
+                  <Image
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                    source={CallingGif}
+                    resizeMode="cover"
+                  />
+                </TouchableOpacity>
+
+                <Text style={{color: AppColors.black, marginLeft: 10}}>
                   {bookingInfo?.data?.way_type}
                 </Text>
               </View>
+
               <View style={styles.addressCallContainer}>
                 <View style={{flex: 1}}>
                   {bookingInfo?.data?.pickup_address && (
@@ -1049,21 +1111,31 @@ const DutyReportUpdate = ({route, navigation}) => {
                   )}
                 </View>
 
-                <View style={{flex: 0.2, alignItems: 'flex-end'}}>
-                  <TouchableOpacity
-                    style={styles.callingGif}
-                    onPress={() => {
-                      openPhoneDialer(bookingInfo?.data?.circle_phone);
+                {bookingInfo?.data?.c_latlong && (
+                  <View
+                    style={{
+                      flex: 0.2,
+                      alignItems: 'flex-end',
+                      alignSelf: 'center',
                     }}>
-                    {/* <View style={styles.callingGif}> */}
-                    <Image
-                      style={{width: '100%', height: '100%'}}
-                      source={CallingGif}
-                      resizeMode="cover"
-                    />
-                    {/* </View> */}
-                  </TouchableOpacity>
-                </View>
+                    <TouchableOpacity
+                      style={{
+                        width: 35,
+                        height: 35,
+                      }}
+                      onPress={() => openMap(bookingInfo?.data?.c_latlong)}>
+                      <Image
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          transform: [{rotate: '30deg'}],
+                        }}
+                        source={NavigationIcon}
+                        resizeMode="cover"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
               </View>
             </View>
 

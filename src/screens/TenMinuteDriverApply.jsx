@@ -14,6 +14,7 @@ import Header from '../components/Header';
 import {APPLY_DRIVER_AVAILABLE_TEN_MINUTES} from '../apis/Apis';
 import {useSelector} from 'react-redux';
 import YoutubePlayer from 'react-native-youtube-iframe';
+import {AppColors} from '../assets/Colors';
 
 const TenMinuteDriverApply = ({route, navigation}) => {
   const {data} = route?.params || null;
@@ -139,14 +140,16 @@ const TenMinuteDriverApply = ({route, navigation}) => {
                 onPress={() => navigation.goBack()}
                 style={{
                   flex: 1,
-                  backgroundColor: 'black',
+                  backgroundColor: AppColors.black,
                   paddingVertical: 12,
                   justifyContent: 'center',
                   alignItems: 'center',
                   borderRadius: 8,
                   marginHorizontal: '5%',
                 }}>
-                <Text style={{color: 'white', fontSize: 16}}>Cancel</Text>
+                <Text style={{color: AppColors.white, fontSize: 16}}>
+                  Cancel
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -155,14 +158,14 @@ const TenMinuteDriverApply = ({route, navigation}) => {
                 // onPress={() => Alert.alert('apply for 10 minute')}
                 style={{
                   flex: 1,
-                  backgroundColor: '#16588e',
+                  backgroundColor: AppColors.mainColor,
                   paddingVertical: 15,
                   justifyContent: 'center',
                   alignItems: 'center',
                   borderRadius: 8,
                   marginHorizontal: 5,
                 }}>
-                <Text style={{color: 'white', fontSize: 16}}>
+                <Text style={{color: AppColors.white, fontSize: 16}}>
                   {loader ? 'Please Wait...' : 'Apply'}
                 </Text>
               </TouchableOpacity>

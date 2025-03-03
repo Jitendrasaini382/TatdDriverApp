@@ -39,6 +39,7 @@ import Geolocation from '@react-native-community/geolocation';
 
 import {
   ALL_TEN_MINUTE_STATUS_UPDATE,
+  CHECK_PREMIUM_DRIVER_ELIGIBLE,
   DRIVER_AVAILABLE_TEN_MINUTES,
   DRIVER_HEADLINE,
   DRIVER_NOTICE,
@@ -115,6 +116,8 @@ const TrustedDriver = ({navigation}) => {
   const [confirmTenMinuteModal, setConfirmTenMinuteModal] = useState({});
   const [tenMinuteAcceptLoader, setTenMinuteAcceptLoader] = useState(false);
   const [confirmTenMinuteLoader, setConfirmTenMinuteLoader] = useState(null);
+
+  const [loaderPremium, setLoaderPremium] = useState(false);
 
   const [allTripType, setAllTripType] = useState([
     {
@@ -484,6 +487,39 @@ const TrustedDriver = ({navigation}) => {
   const [selected, setSelected] = useState(currentRoute);
   const [showNeedHelp, setShowNeedHelp] = useState();
 
+  const handlePressPremiumDriver = async () => {
+    setLoaderPremium(true);
+
+    try {
+      // Fetch update popup data
+      const response = await CHECK_PREMIUM_DRIVER_ELIGIBLE({
+        action: 'premium-diver-eligible',
+        current_language: languageSwitch,
+      });
+
+      console.log(
+        response,
+        'responseresponseresponseresponseresponseresponse------',
+      );
+
+      if (response?.status_code == 200) {
+        if (response?.eligible == '0') {
+          Alert.alert('Success', response?.message);
+        } else if (
+          response?.eligible == '1' &&
+          response?.message == 'success'
+        ) {
+          navigation.navigate('PremiumDriver');
+        }
+      } else {
+        navigation.navigate('TrustedDriver');
+      }
+    } catch (error) {
+    } finally {
+      setLoaderPremium(false);
+    }
+  };
+
   const handlePress = icon => {
     setSelected(icon);
     if (icon === 'Agent') {
@@ -493,7 +529,8 @@ const TrustedDriver = ({navigation}) => {
       //   showPopover();
       // }
     } else if (icon === 'PremiumDriver') {
-      openMyUrl('https://www.tatd.in/premium-driver.php?step=1');
+      // openMyUrl('https://www.tatd.in/premium-driver.php?step=1');
+      // navigation.navigate('PremiumDriver');
     } else if (icon === 'TrustedPartner' || 'TrustedDriver') {
       navigation.navigate('TrustedDriver');
     }
@@ -1619,7 +1656,8 @@ const TrustedDriver = ({navigation}) => {
 
             {/* Premium Driver */}
             <TouchableOpacity
-              onPress={() => handlePress('PremiumDriver')}
+              // onPress={() => handlePress('PremiumDriver')}
+              onPress={() => handlePressPremiumDriver()}
               style={{alignItems: 'center', justifyContent: 'center'}}>
               <Image
                 source={PremiumDriver}

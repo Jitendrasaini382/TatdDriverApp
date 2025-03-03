@@ -35,6 +35,9 @@ import AgentCommisionAdded from '../../screens/AgentCommisionAdded';
 import CheckAgentOtp from '../../screens/CheckAgentOtp';
 import RazorPayPaymentScreen from '../../screens/RazorPayPaymentScreen';
 import ThankYouDriverDue from '../../screens/ThankYouDriverDue';
+import PremiumDriver from '../../screens/PremiumDriver';
+import PremiumDriverRegistration from '../../screens/PremiumDriverRegistration';
+import PremiumDriverRegistrationProcess from '../../screens/PremiumDriverRegistrationProcess';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -131,6 +134,17 @@ const PrivateRoute = () => {
             component={AgentCommisionAdded}
           />
           <Stack.Screen name="AgentLeads" component={AgentLeads} />
+          <Stack.Screen name="PremiumDriver" component={PremiumDriver} />
+
+          <Stack.Screen
+            name="PremiumDriverRegistration"
+            component={PremiumDriverRegistration}
+          />
+
+          <Stack.Screen
+            name="PremiumDriverRegistrationProcess"
+            component={PremiumDriverRegistrationProcess}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </>

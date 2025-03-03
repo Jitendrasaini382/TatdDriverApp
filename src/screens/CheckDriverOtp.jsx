@@ -142,6 +142,8 @@ const CheckDriverOtp = ({navigation, route}) => {
       const response = await VERIFY_OTP_LOGIN({
         mobile: mobile,
         otp: otp,
+        app_version: appVersion,
+        app_type: appType,
       });
 
       if (response?.jwt && response?.refresh_token) {

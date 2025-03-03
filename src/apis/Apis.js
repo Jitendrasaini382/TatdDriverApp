@@ -609,3 +609,31 @@ export const AGENT_ADD_CUSTOMER = body => {
   console.log(body, 'AGENT_ADD_CUSTOMER');
   return _Fetch('POST', 'agent/agent-add-customer-api.php', {...body}, {});
 };
+
+//
+
+export const CHECK_PREMIUM_DRIVER_ELIGIBLE = body => {
+  console.log(body, 'CHECK_PREMIUM_DRIVER_ELIGIBLE');
+
+  // return false;
+  return _Fetch(
+    'POST',
+    'registration/premium-driver-eligible-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const PREMIUM_DRIVER_APPLY = body => {
+  console.log(body, 'PREMIUM_DRIVER_APPLY PREMIUM_DRIVER_APPLY');
+
+  // return false;
+  return _Fetch(
+    'POST',
+    'registration/premium-driver-apply-api.php',
+    {...body},
+    {},
+  );
+};
+
+//

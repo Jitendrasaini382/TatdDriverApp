@@ -94,7 +94,13 @@ const CheckAgentOtp = ({navigation, route}) => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
+      <Header
+        backButton={true}
+        customeNavigation={{
+          name: 'AgentPanel',
+          params: {},
+        }}
+      />
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.contentContainer}>
           <View style={styles.card}>

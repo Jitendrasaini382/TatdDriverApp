@@ -26,4 +26,5 @@ export const Diamond_Icon = require('./dimond.png');
 export const TrustedPartner = require('./trustedPartner.png');
 export const PremiumDriver = require('./premiumDriver.png');
 export const ThankuLogo = require('./thankuLogo.png');
-export const NavigationIcon = require('./navigation.png')
+export const NavigationIcon = require('./navigation.png');
+export const PremiumDriverImage = require('./premiumDriverImage.png');

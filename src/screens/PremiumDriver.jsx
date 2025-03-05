@@ -12,7 +12,6 @@ import {
 import {Triangle_Icon} from '../assets/images';
 import Header from '../components/Header';
 import {
-  APPLY_DRIVER_AVAILABLE_TEN_MINUTES,
   PREMIUM_DRIVER_APPLY,
 } from '../apis/Apis';
 import {useSelector} from 'react-redux';

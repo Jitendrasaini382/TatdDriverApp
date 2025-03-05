@@ -53,11 +53,9 @@ const ClearMyDuePayment = ({navigation}) => {
   const getPackageDetails = async id => {
     console.log('getPackageDetails called with id:', id);
     setLoader(true);
-  
     try {
       console.log('Fetching package details...');
       const response = await GET_CMD_PACKAGE_DETAIL(id, languageSwitch);
-      
       console.log('Response received:', response);
       setMyDuePaymentModal(true);
       setSelectedTrip(response);
@@ -69,7 +67,6 @@ const ClearMyDuePayment = ({navigation}) => {
     }
 };
 
-
   const handlePayment = async amount => {
     try {
       console.log('Function handlePayment started');
@@ -77,9 +74,12 @@ const ClearMyDuePayment = ({navigation}) => {
         action: 'clear_my_due',
         payment_amount: amount,
       });
-      if (response?.status_code == 200) {
+      if (response?.status_code == 200 && response?.razor_order_id_data) {
         navigation.navigate('RazorPayPaymentScreen', {
-          data: response?.razor_order_id_data,
+          pageType: 'clear_my_due_test',
+          description: 'Clear My Due Test',
+          amount: response?.razor_order_id_data?.amount,
+          orderId: response?.razor_order_id_data?.orderId,
         });
       }
     } catch (error) {

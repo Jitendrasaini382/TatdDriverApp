@@ -42,6 +42,7 @@ import {
   DRIVE_END,
   DRIVE_START,
   DRIVER_BOOKING_REACH,
+  DRIVER_HEADLINE,
   DRIVER_ON_THE_WAY,
   DUTY_REPORT_BOOKING_ACCEPT,
   DUTY_REPORT_RESEND_OTP,
@@ -69,6 +70,7 @@ import {API_BASE_URL} from '../constant/path';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
 import {jwtDecode} from 'jwt-decode';
 import DutyReportHeader from '../components/DutyReportHeader';
+import {setIsNeedHelpShow} from '../redux/slices/trustedDriverSlice';
 
 const DutyReportUpdate = ({route, navigation}) => {
   const {bookingNumber, state} = route?.params;
@@ -99,6 +101,20 @@ const DutyReportUpdate = ({route, navigation}) => {
   const jwtToken = useSelector(e => e?.userAuth?.jwt);
   const refreshToken = useSelector(e => e?.userAuth?.refreshToken);
   const dispatch = useDispatch();
+
+  const getHeadlineData = async () => {
+    try {
+      const response = await DRIVER_HEADLINE({
+        current_language: languageSwitch,
+      });
+
+      if (response?.driver_panel_messages?.need_help_button == '1') {
+        dispatch(setIsNeedHelpShow(true));
+      } else {
+        dispatch(setIsNeedHelpShow(fa));
+      }
+    } catch (error) {}
+  };
 
   const talkToCustomer = async () => {
     setLoader(true);
@@ -151,6 +167,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     setRefreshing(true);
     try {
       GetAllBookingInfo();
+      getHeadlineData();
     } catch (error) {
     } finally {
       setRefreshing(false);
@@ -820,6 +837,24 @@ const DutyReportUpdate = ({route, navigation}) => {
     return {lat, lng};
   }
 
+  const openOnlyMap = latLong => {
+    // console.log(latLong, 'latLonglatLonglatLong');
+    if (!latLong) {
+      return;
+    }
+    const [latitude, longitude] = latLong.split(',').map(coord => coord.trim());
+    const url = Platform.select({
+      ios: `maps://app?saddr=Current+Location&daddr=${latitude},${longitude}`,
+      android: `geo:${latitude},${longitude}?q=${latitude},${longitude}`,
+    });
+
+    if (url) {
+      Linking.openURL(url).catch(err =>
+        console.error('Error opening map:', err),
+      );
+    }
+  };
+
   const openMap = async latLong => {
     // console.log(latLong, 'Received latLong input');
 
@@ -1084,7 +1119,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                 <View style={{flex: 1}}>
                   {bookingInfo?.data?.pickup_address && (
                     <TouchableOpacity
-                      onPress={() => openMap(bookingInfo?.data?.c_latlong)}
+                      onPress={() => openOnlyMap(bookingInfo?.data?.c_latlong)}
                       style={styles.addressContainer}>
                       <Image
                         source={Address}

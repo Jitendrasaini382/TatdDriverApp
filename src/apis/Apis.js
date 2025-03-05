@@ -613,9 +613,6 @@ export const AGENT_ADD_CUSTOMER = body => {
 //
 
 export const CHECK_PREMIUM_DRIVER_ELIGIBLE = body => {
-  console.log(body, 'CHECK_PREMIUM_DRIVER_ELIGIBLE');
-
-  // return false;
   return _Fetch(
     'POST',
     'registration/premium-driver-eligible-api.php',
@@ -625,9 +622,6 @@ export const CHECK_PREMIUM_DRIVER_ELIGIBLE = body => {
 };
 
 export const PREMIUM_DRIVER_APPLY = body => {
-  console.log(body, 'PREMIUM_DRIVER_APPLY PREMIUM_DRIVER_APPLY');
-
-  // return false;
   return _Fetch(
     'POST',
     'registration/premium-driver-apply-api.php',
@@ -637,3 +631,30 @@ export const PREMIUM_DRIVER_APPLY = body => {
 };
 
 //
+
+export const PREMIUM_DRIVER_PAYMENT_CREATE_ORDER_ID = body => {
+  return _Fetch(
+    'POST',
+    'registration/premium-driver-create-orderid-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const VERIFY_PPREMIUM_PAYMENT_INFO = body => {
+  return _Fetch(
+    'POST',
+    'registration/premium-driver-payment-verify.php',
+    {...body},
+    {},
+  );
+};
+
+export const GET_ALL_PREMIUM_REGISTRATION_DATA = body => {
+  return _Fetch(
+    'POST',
+    'registration/premium-driver-registration-process-api.php',
+    {...body},
+    {},
+  );
+};

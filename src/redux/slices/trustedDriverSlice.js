@@ -13,6 +13,7 @@ const initialState = {
   splash: true,
   isRefresh: false,
   trainingVideoData: [],
+  isNeedHelpShow: false,
 };
 
 const trustedDriverSlice = createSlice({
@@ -66,6 +67,9 @@ const trustedDriverSlice = createSlice({
     setTrainingVideoData: (state, action) => {
       state.trainingVideoData = action.payload;
     },
+    setIsNeedHelpShow: (state, action) => {
+      state.isNeedHelpShow = action.payload;
+    },
   },
 });
 
@@ -83,6 +87,7 @@ export const {
   setSplash,
   setIsRefresh,
   setTrainingVideoData,
+  setIsNeedHelpShow,
 } = trustedDriverSlice.actions;
 
 export default trustedDriverSlice.reducer;

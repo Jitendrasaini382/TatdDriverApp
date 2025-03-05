@@ -2,14 +2,14 @@ import {useRoute} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
 import RazorpayCheckout from 'react-native-razorpay';
 import {useSelector} from 'react-redux';
-import {VERIFY_PAYMENT_INFO} from '../apis/Apis';
+import {VERIFY_PAYMENT_INFO, VERIFY_PPREMIUM_PAYMENT_INFO} from '../apis/Apis';
 
 const RazorPayPaymentScreen = ({navigation}) => {
   const route = useRoute();
-  const {data} = route?.params;
-
-  const [verifyData, setVerifyData] = useState({});
-
+  const pageType = route?.params?.pageType || '';
+  const description = route?.params?.description || '';
+  const amount = route?.params?.amount || '';
+  const orderId = route?.params?.orderId || '';
   const driverMobileNumber = useSelector(
     e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
   );
@@ -17,55 +17,90 @@ const RazorPayPaymentScreen = ({navigation}) => {
     e => e?.userAuth?.userProfile?.data?.driver_name,
   );
 
-  console.log(data?.amount, ' : amount');
-  console.log(data?.orderId, ' : orderId');
-  console.log(driverMobileNumber, 'driverMobileNumber');
-  console.log(driverName, 'driverName');
+  console.log(amount, ' : amount========');
+  console.log(orderId, ' : orderId=======');
+  console.log(pageType, ': pageType======');
+  console.log(description, ' : description======');
+  console.log(driverName, 'driverName====');
+  console.log(driverMobileNumber, 'driverMobileNumber=====');
+
+  const [verifyData, setVerifyData] = useState({});
 
   useEffect(() => {
-    console.log('previous data', data?.amount && data?.orderId);
-
-    if (data?.amount && data?.orderId && driverMobileNumber && driverName) {
+    if (
+      !amount &&
+      !orderId &&
+      !driverMobileNumber &&
+      !driverName &&
+      !pageType &&
+      !description
+    ) {
+      return false;
+    } else if (
+      amount &&
+      orderId &&
+      driverMobileNumber &&
+      driverName &&
+      pageType &&
+      description
+    ) {
       handlePayment();
     } else {
-      console.log('ClearMyDuePayment back to screen');
-
-      navigation.navigate('ClearMyDuePayment');
+      console.log(' back to screen');
+      navigation.goBack();
     }
-  }, [data]);
+  }, [amount, orderId, driverMobileNumber, driverName, pageType, description]);
 
   const verifyPayment = async id => {
     if (!id) {
-      navigation.navigate('ClearMyDuePayment');
+      navigation.goBack();
       return false;
     }
-    try {
-      //   console.log('verifyPayment function called with payment Id:', id);
-      const response = await VERIFY_PAYMENT_INFO(id);
-      //   console.log('Response received:', response);
 
-      if (response?.status_code == 200) {
-        navigation.navigate('ThankYouDriverDue', {
-          data: response?.payment_details?.message,
+    try {
+      let response;
+
+      if (pageType === 'chauffeur_uniform') {
+        response = await VERIFY_PPREMIUM_PAYMENT_INFO({
+          action: 'premium-driver-payment-verify',
+          razorpay_payment_id: id,
         });
+        console.log(response, 'response VERIFY_PPREMIUM_PAYMENT_INFO');
+
+        if (response?.status_code == 200 && response?.message == 'success') {
+          navigation.navigate('PremiumDriverRegistrationProcess');
+          return;
+        } else {
+          navigation.navigate('PremiumDriverRegistration');
+        }
+        setVerifyData(response);
+      } else {
+        response = await VERIFY_PAYMENT_INFO(id);
+        console.log(response, 'response VERIFY_PAYMENT_INFO');
+
+        if (response?.status_code == 200) {
+          navigation.navigate('ThankYouDriverDue', {
+            data: response?.payment_details?.message,
+          });
+          return;
+        }
+
+        setVerifyData(response);
       }
-      setVerifyData(response);
     } catch (error) {
-      //   console.error('Error in verifyPayment:', error);
-    } finally {
-      //   console.log('verifyPayment function execution completed.');
+      console.error('Error verifying payment:', error);
     }
   };
 
   const handlePayment = () => {
     var options = {
-      page_type: 'clear_my_due_test',
-      description: 'Clear My Due Test',
+      page_type: pageType,
+      description: description,
       image: 'https://www.tatd.in/img/logo/bluelogo.png',
       currency: 'INR',
       key: 'rzp_live_0wecjqTARWJWu3',
-      order_id: data?.orderId,
-      amount: data?.amount,
+      order_id: orderId,
+      amount: amount,
       name: 'Tat D',
       prefill: {
         email: '',

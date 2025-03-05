@@ -95,6 +95,7 @@ const CheckDriverOtp = ({navigation, route}) => {
   }, [otp]);
   const resendOtp = () => {
     setShowResendOtpText(true);
+    setOtp('');
     DRIVER_LOGIN(field)
       .then(e => {
         if (e.status_code == 200) {

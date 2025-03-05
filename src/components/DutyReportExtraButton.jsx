@@ -12,6 +12,13 @@ const DutyReportExtraButton = ({
 }) => {
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
+  const needHelpShow = useSelector(e => e?.trustedDriverSlice?.isNeedHelpShow);
+
+  console.log(
+    needHelpShow,
+    'needHelpShowneedHelpShowneedHelpShowneedHelpShow headerrrr',
+  );
+
   const navigation = useNavigation();
 
   const handlePress = useCallback(() => {
@@ -28,7 +35,7 @@ const DutyReportExtraButton = ({
   return (
     <View style={styles.mainView}>
       <View style={styles.leftView}>
-        {showNeedHelp && (
+        {needHelpShow && (
           <TouchableOpacity
             onPress={() =>
               navigation.navigate('TicketsDriver', {

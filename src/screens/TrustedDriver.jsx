@@ -65,6 +65,7 @@ import {
 import {
   setBookingModal,
   setExpressBookingModal,
+  setIsNeedHelpShow,
   setModalVisible,
   setMyBookingAgencyModal,
   setRatingModal,
@@ -116,6 +117,7 @@ const TrustedDriver = ({navigation}) => {
   const [confirmTenMinuteModal, setConfirmTenMinuteModal] = useState({});
   const [tenMinuteAcceptLoader, setTenMinuteAcceptLoader] = useState(false);
   const [confirmTenMinuteLoader, setConfirmTenMinuteLoader] = useState(null);
+  const [showNeedHelp, setShowNeedHelp] = useState(false);
 
   const [loaderPremium, setLoaderPremium] = useState(false);
 
@@ -385,31 +387,31 @@ const TrustedDriver = ({navigation}) => {
   });
 
   const toggleButton = useSelector(
-    state => state.trustedDriverSlice.toggleButton,
+    state => state?.trustedDriverSlice?.toggleButton,
   );
   const expressBookingModal = useSelector(
-    state => state.trustedDriverSlice.expressBookingModal,
+    state => state?.trustedDriverSlice?.expressBookingModal,
   );
   const mainToggleContent = useSelector(
-    state => state.trustedDriverSlice.mainToggleContent,
+    state => state?.trustedDriverSlice?.mainToggleContent,
   );
   const videosContent = useSelector(
-    state => state.trustedDriverSlice.videosContent,
+    state => state?.trustedDriverSlice?.videosContent,
   );
   const myBookingAgencyModal = useSelector(
-    state => state.trustedDriverSlice.myBookingAgencyModal,
+    state => state?.trustedDriverSlice?.myBookingAgencyModal,
   );
   const isModalVisible = useSelector(
-    state => state.trustedDriverSlice.isModalVisible,
+    state => state?.trustedDriverSlice?.isModalVisible,
   );
   const bookingModal = useSelector(
-    state => state.trustedDriverSlice.bookingModal,
+    state => state?.trustedDriverSlice?.bookingModal,
   );
   const ratingModal = useSelector(
-    state => state.trustedDriverSlice.ratingModal,
+    state => state?.trustedDriverSlice?.ratingModal,
   );
   const myBookingModal = useSelector(
-    state => state.trustedDriverSlice.myBookingModal,
+    state => state?.trustedDriverSlice?.myBookingModal,
   );
   const appVersion = DeviceInfo.getVersion();
 
@@ -482,57 +484,41 @@ const TrustedDriver = ({navigation}) => {
     if (!isDeviceInfo) fetchDeviceInfo();
   }, []);
 
-  const currentRoute = route?.name;
-
-  const [selected, setSelected] = useState(currentRoute);
-  const [showNeedHelp, setShowNeedHelp] = useState();
+  // const currentRoute = route?.name;
 
   const handlePressPremiumDriver = async () => {
-    setLoaderPremium(true);
+    if (isRfdOn) {
+      setLoaderPremium(true);
 
-    try {
-      // Fetch update popup data
-      const response = await CHECK_PREMIUM_DRIVER_ELIGIBLE({
-        action: 'premium-diver-eligible',
-        current_language: languageSwitch,
-      });
+      try {
+        // Fetch update popup data
+        const response = await CHECK_PREMIUM_DRIVER_ELIGIBLE({
+          action: 'premium-diver-eligible',
+          current_language: languageSwitch,
+        });
 
-      console.log(
-        response,
-        'responseresponseresponseresponseresponseresponse------',
-      );
-
-      if (response?.status_code == 200) {
-        if (response?.eligible == '0') {
-          Alert.alert('Success', response?.message);
-        } else if (
-          response?.eligible == '1' &&
-          response?.message == 'success'
-        ) {
-          navigation.navigate('PremiumDriver');
+        if (response?.status_code == 200) {
+          if (response?.eligible == '0') {
+            Alert.alert('Success', response?.message);
+          } else if (
+            response?.eligible == '1' &&
+            response?.message == 'success'
+          ) {
+            if (response?.registration_premium == '1') {
+              navigation.navigate('PremiumDriverRegistrationProcess');
+            } else {
+              navigation.navigate('PremiumDriver');
+            }
+          }
+        } else {
+          navigation.navigate('TrustedDriver');
         }
-      } else {
-        navigation.navigate('TrustedDriver');
+      } catch (error) {
+      } finally {
+        setLoaderPremium(false);
       }
-    } catch (error) {
-    } finally {
-      setLoaderPremium(false);
-    }
-  };
-
-  const handlePress = icon => {
-    setSelected(icon);
-    if (icon === 'Agent') {
-      // if (isRfdOn) {
-      navigation.navigate('AgentPanel');
-      // } else {
-      //   showPopover();
-      // }
-    } else if (icon === 'PremiumDriver') {
-      // openMyUrl('https://www.tatd.in/premium-driver.php?step=1');
-      // navigation.navigate('PremiumDriver');
-    } else if (icon === 'TrustedPartner' || 'TrustedDriver') {
-      navigation.navigate('TrustedDriver');
+    } else {
+      showPopover();
     }
   };
 
@@ -886,8 +872,10 @@ const TrustedDriver = ({navigation}) => {
       }
       if (response?.driver_panel_messages?.need_help_button == '1') {
         setShowNeedHelp(true);
+        dispatch(setIsNeedHelpShow(true));
       } else {
         setShowNeedHelp(false);
+        dispatch(setIsNeedHelpShow(fa));
       }
       setVideoCount(response?.driver_panel_messages?.training_video_unseen);
     } catch (error) {}
@@ -987,12 +975,6 @@ const TrustedDriver = ({navigation}) => {
     dispatch(setVideosContent(true));
     getTrainingVideo();
     setLoginMessage('');
-  };
-
-  const [selectedButton, setSelectedButton] = useState(null);
-
-  const handleButtonClick = buttonId => {
-    setSelectedButton(buttonId === selectedButton ? null : buttonId);
   };
 
   const viewRef = useRef(null); // Reference to the View
@@ -1542,11 +1524,6 @@ const TrustedDriver = ({navigation}) => {
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      // onPress={() => {
-                      //   openMyUrl(
-                      //     `https://www.tatd.in/clear-my-due-payment.php?mobile_number=${decodedToken?.driver_mobile_number}&action_from=trusted-driver&msg=from_trusted`,
-                      //   );
-                      // }}
                       onPress={() => navigation.navigate('ClearMyDuePayment')}
                       style={[
                         styles.bottamContent4,
@@ -1622,86 +1599,87 @@ const TrustedDriver = ({navigation}) => {
 
         {/* bottam Tab bar */}
 
-        <View style={{justifyContent: 'flex-end'}}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              alignItems: 'center',
-              paddingVertical: 20,
-              elevation: 20,
-              backgroundColor: '#fff',
-            }}>
-            {/* Agent Panel */}
-            <TouchableOpacity
-              onPress={() => handlePress('Agent')}
-              style={{alignItems: 'center', justifyContent: 'center'}}>
-              <Image
-                source={Agent_Icon}
+        {(showNotice && homeNoticeData) ||
+          (showNotification && homeNotificationData ? null : (
+            <View style={{justifyContent: 'flex-end'}}>
+              <View
                 style={{
-                  width: 40,
-                  height: 40,
-                  marginBottom: 5,
-                  tintColor: AppColors.black,
-                }}
-              />
-              <Text
-                style={{
-                  fontSize: 12,
-                  color: '#000',
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                  alignItems: 'center',
+                  paddingVertical: 20,
+                  elevation: 20,
+                  backgroundColor: '#fff',
                 }}>
-                AGENT PANEL
-              </Text>
-            </TouchableOpacity>
+                {/* Agent Panel */}
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('AgentPanel')}
+                  style={{alignItems: 'center', justifyContent: 'center'}}>
+                  <Image
+                    source={Agent_Icon}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      marginBottom: 5,
+                      tintColor: AppColors.black,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: '#000',
+                    }}>
+                    AGENT PANEL
+                  </Text>
+                </TouchableOpacity>
 
-            {/* Premium Driver */}
-            <TouchableOpacity
-              // onPress={() => handlePress('PremiumDriver')}
-              onPress={() => handlePressPremiumDriver()}
-              style={{alignItems: 'center', justifyContent: 'center'}}>
-              <Image
-                source={PremiumDriver}
-                style={{
-                  width: 40,
-                  height: 40,
-                  marginBottom: 5,
+                {/* Premium Driver */}
+                <TouchableOpacity
+                  onPress={() => handlePressPremiumDriver()}
+                  style={{alignItems: 'center', justifyContent: 'center'}}>
+                  <Image
+                    source={PremiumDriver}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      marginBottom: 5,
+                      tintColor: AppColors.black,
+                    }}
+                  />
 
-                  tintColor: AppColors.black,
-                }}
-              />
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: '#000',
+                    }}>
+                    PREMIUM DRIVER
+                  </Text>
+                </TouchableOpacity>
 
-              <Text
-                style={{
-                  fontSize: 12,
-                  color: '#000',
-                }}>
-                PREMIUM DRIVER
-              </Text>
-            </TouchableOpacity>
-
-            {/* Trusted Partner */}
-            <TouchableOpacity
-              onPress={() => handlePress('TrustedPartner')}
-              style={{alignItems: 'center', justifyContent: 'center'}}>
-              <Image
-                source={TrustedPartner}
-                style={{
-                  width: 40,
-                  height: 40,
-                  marginBottom: 5,
-                  tintColor: AppColors.black,
-                }}
-              />
-              <Text
-                style={{
-                  fontSize: 12,
-                  color: '#000',
-                }}>
-                TRUSTED PARTNER
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+                {/* Trusted Partner */}
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('TrustedDriver')}
+                  style={{alignItems: 'center', justifyContent: 'center'}}>
+                  <Image
+                    source={TrustedPartner}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      marginBottom: 5,
+                      tintColor: AppColors.black,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: '#000',
+                    }}>
+                    TRUSTED PARTNER
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
 
         {/* Modals */}
 

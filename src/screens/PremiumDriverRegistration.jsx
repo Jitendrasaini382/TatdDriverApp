@@ -15,6 +15,7 @@ import {PremiumDriverImage, Triangle_Icon} from '../assets/images';
 import {useState} from 'react';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {useRoute} from '@react-navigation/native';
+import {PREMIUM_DRIVER_PAYMENT_CREATE_ORDER_ID} from '../apis/Apis';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -32,6 +33,7 @@ const CustomTextInput = ({
   maxLength,
   iconName,
   error,
+  editable,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   return (
@@ -45,7 +47,10 @@ const CustomTextInput = ({
           placeholder={placeholder}
           keyboardType={keyboardType}
           maxLength={maxLength}
-          multiline={true}
+          textAlignVertical="top"
+          //   multiline={true}
+          numberOfLines={4}
+          editable={editable}
           placeholderTextColor={AppColors.black}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
@@ -71,10 +76,9 @@ const PremiumDriverRegistration = ({navigation}) => {
   const {data} = route?.params || {};
 
   if (!data) {
-    null;
+    return null;
   }
-
-  console.log(route, '-----------');
+  const amount = route?.params?.data?.premium_registration_amount || '';
 
   const [formData, setFormData] = useState({
     driverName: data?.driver_name,
@@ -86,6 +90,7 @@ const PremiumDriverRegistration = ({navigation}) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [loader, setLoader] = useState(false);
 
   // Handle input change
   const handleInputChange = (field, value) => {
@@ -104,24 +109,66 @@ const PremiumDriverRegistration = ({navigation}) => {
   // Validate the form
   const validateForm = () => {
     let newErrors = {};
-    Object.keys(formData).forEach(key => {
-      if (!formData[key]) {
-        newErrors[key] = 'This field is required';
-      }
-    });
+
+    if (!formData.address.trim()) {
+      newErrors.address = '📍 Address is required';
+    }
+    if (!formData.pincode.trim()) {
+      newErrors.pincode = '📌 Pincode is required';
+    }
+    if (!formData.zone.trim()) {
+      newErrors.zone = '🗺️ Zone is required';
+    }
+    if (!formData.city.trim()) {
+      newErrors.city = '🏙️ City is required';
+    }
 
     setErrors(newErrors);
+
+    // Return true if no errors
     return Object.keys(newErrors).length === 0;
   };
 
   // Handle form submission
-  const handleSubmit = () => {
-    console.log('Form Submitted:', formData);
-    navigation.navigate('PremiumDriverRegistrationProcess');
-    // if (validateForm()) {
-    //   console.log('Form Submitted:', formData);
-    //   alert('Form Submitted Successfully!');
-    // }
+  const handleSubmit = async () => {
+    if (!formData) {
+      console.error('❌ Error: formData is undefined!');
+      return;
+    }
+
+    if (!validateForm()) {
+      console.warn('⚠️ Form validation failed. Please fix errors.');
+      return;
+    }
+
+    setLoader(true);
+
+    try {
+      const response = await PREMIUM_DRIVER_PAYMENT_CREATE_ORDER_ID({
+        action: 'premium-driver-create-orderid',
+        address: formData.address,
+        pincode: formData.pincode,
+        zone: formData.zone,
+        city: formData.city,
+        amount: amount,
+      });
+
+      console.log(response, 'responseresponseresponseresponse');
+
+      if (response?.status_code == 200) {
+        if (response?.message == 'Success' && response?.razorpay_order_id) {
+          navigation.navigate('RazorPayPaymentScreen', {
+            pageType: response?.page_type,
+            description: response?.description,
+            amount: response?.amount,
+            orderId: response?.razorpay_order_id,
+          });
+        }
+      }
+    } catch (error) {
+    } finally {
+      setLoader(false);
+    }
   };
 
   return (
@@ -130,6 +177,7 @@ const PremiumDriverRegistration = ({navigation}) => {
         <Header backButton={true} />
         <View style={{flex: 1, paddingHorizontal: 10}}>
           <ScrollView
+            showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="always"
             contentContainerStyle={{paddingBottom: 14}}>
             <View style={styles.mainTopView}>
@@ -191,6 +239,7 @@ const PremiumDriverRegistration = ({navigation}) => {
                   onChangeText={e => handleInputChange('driverName', e)}
                   placeholder="Driver Number"
                   keyboardType="numeric"
+                  editable={false}
                   maxLength={10}
                   iconName={
                     <Icon name="phone" size={15} color={AppColors.greyColor} />
@@ -225,6 +274,7 @@ const PremiumDriverRegistration = ({navigation}) => {
                 iconName={
                   <Icon name="calendar" size={15} color={AppColors.greyColor} />
                 }
+                error={errors.pincode}
               />
             </View>
             <View style={{flexDirection: 'row', gap: 15, marginTop: 20}}>
@@ -242,6 +292,7 @@ const PremiumDriverRegistration = ({navigation}) => {
                       color={AppColors.greyColor}
                     />
                   }
+                  error={errors.city}
                 />
               </View>
               <View style={{flex: 1}}>
@@ -258,6 +309,7 @@ const PremiumDriverRegistration = ({navigation}) => {
                       color={AppColors.greyColor}
                     />
                   }
+                  error={errors.zone}
                 />
               </View>
             </View>
@@ -432,7 +484,6 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     borderColor: AppColors.greyColor,
     borderRadius: 0,
-    // paddingHorizontal: 10,
     height: 40,
   },
   iconView: {
@@ -445,6 +496,7 @@ const styles = StyleSheet.create({
     color: AppColors.black,
     borderColor: AppColors.borderColor,
     borderWidth: 1,
+    paddingRight: 5
   },
   inputFocused: {
     borderColor: 'skyblue',

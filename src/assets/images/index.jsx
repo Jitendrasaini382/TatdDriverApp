@@ -28,3 +28,5 @@ export const PremiumDriver = require('./premiumDriver.png');
 export const ThankuLogo = require('./thankuLogo.png');
 export const NavigationIcon = require('./navigation.png');
 export const PremiumDriverImage = require('./premiumDriverImage.png');
+export const PremiumDriverImage1 = require('./premium_driver_sample1.png');
+export const PremiumDriverImage2 = require('./premium_driver_sample2.png');

@@ -803,6 +803,10 @@ const TrustedDriver = ({navigation}) => {
         action: 'check_popup',
         current_language: languageSwitch,
       });
+      if (!response) {
+        console.log('Response is undefined or null');
+        return;
+      }
 
       setExpressPopupData(response?.popup_data);
       if (response.express_booking_popup_flag == 1) {
@@ -1715,12 +1719,11 @@ const TrustedDriver = ({navigation}) => {
           visible={myBookingAgencyModal}>
           <MyBookingAgencyModal />
         </Modal>
-
         <Modal
           animationType="slide"
           transparent={true}
           onRequestClose={() => dispatch(setExpressBookingModal(false))}
-          visible={popupData == 1 && expressBookingModal && expressPopupData}>
+          visible={expressBookingModal || popupData == 1}>
           <ExpressBookingModal data={expressPopupData} />
         </Modal>
 

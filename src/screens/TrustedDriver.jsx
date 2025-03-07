@@ -723,7 +723,8 @@ const TrustedDriver = ({navigation}) => {
             navigation.navigate('ClearMyDuePayment');
             break;
           case 'driver-training-module':
-            openMyUrl(response?.url);
+            // openMyUrl(response?.url);
+            navigation.navigate('DriverTrainingModulePhaseOne');
             break;
           case 'trusted-driver':
             navigation.navigate('TrustedDriver');
@@ -1504,7 +1505,6 @@ const TrustedDriver = ({navigation}) => {
                       // onPress={() => handleLoginPress()}
                       onPress={() => {
                         // if (isRfdOn) {
-                        navigation.navigate('AgentPanel');
                         // } else {
                         // showPopover();
                         // }

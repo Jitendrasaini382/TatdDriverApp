@@ -21,7 +21,6 @@ const PublicRoute = () => {
         showHideTransition="slide"
         hidden={false}
       />
-      <NavigationContainer>
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
@@ -33,7 +32,6 @@ const PublicRoute = () => {
           <Stack.Screen name="DriverLogin" component={DriverLogin} />
           <Stack.Screen name="CheckDriverOtp" component={CheckDriverOtp} />
         </Stack.Navigator>
-      </NavigationContainer>
     </>
   );
 };

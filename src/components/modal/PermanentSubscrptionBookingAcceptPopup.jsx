@@ -61,22 +61,42 @@ const PermanentSubscrptionBookingAcceptPopup = ({setOpenModal, trip}) => {
         current_language: languageSwitch,
       });
 
-      if (response?.status_code == '200') {
-        dispatch(setTriggerFunction(true));
-        dispatch(setRefreshKey());
+      if (response?.status_code == '200' && response?.status == "success") {
         Alert.alert('Success', response?.message, [
           {
             text: 'OK',
             onPress: () => {
               setOpenModal(false);
+              dispatch(setTriggerFunction(true));
+              dispatch(setRefreshKey());
             },
           },
         ]);
       } else {
-        // Alert.alert('Error', response?.message, [{text: 'OK'}]);
+        Alert.alert('Error', response?.message, [
+          {
+            text: 'OK',
+            onPress: () => {
+              setOpenModal(false);
+              dispatch(setTriggerFunction(true));
+              dispatch(setRefreshKey());
+            },
+          },
+        ]);
       }
     } catch (error) {
+      Alert.alert('Error', error?.message, [
+        {
+          text: 'OK',
+          onPress: () => {
+            setOpenModal(false);
+            dispatch(setTriggerFunction(true));
+            dispatch(setRefreshKey());
+          },
+        },
+      ]);
     } finally {
+      setOpenModal(false);
       setLoader(false);
     }
   };

@@ -19,6 +19,8 @@ import notifee, {
 import NetInfo from '@react-native-community/netinfo';
 import {AppColors} from './src/assets/Colors';
 import {persistStore} from 'redux-persist';
+import {NavigationContainer} from '@react-navigation/native';
+import {navigationRef} from './src/routes/private';
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -73,7 +75,7 @@ const App = () => {
   // Handle incoming messages
   const handleIncomingMessages = () => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log(remoteMessage,"Notification onmeesse App.js")
+      console.log(remoteMessage, 'Notification onmeesse App.js');
       const channelId = remoteMessage?.data?.channel_id;
       const path = remoteMessage?.data?.path;
 
@@ -129,7 +131,9 @@ const App = () => {
             </Text>
           </View>
         ) : (
-          <Route />
+          <NavigationContainer ref={navigationRef}>
+            <Route />
+          </NavigationContainer>
         )}
       </PersistGate>
     </Provider>

@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Pressable,
   Alert,
+  ScrollView,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {FINAL_ACCEPT_BOOKING} from '../../apis/Apis';
@@ -49,15 +50,21 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
         current_language: languageSwitch,
       });
 
-      dispatch(setTriggerFunction(true));
-      dispatch(setRefreshKey());
-
-
-      // return false;
-
       if (response?.status_code == '200') {
         if (response?.msg_type === 'error') {
-          Alert.alert('Error', response?.message, [{text: 'OK'}]);
+          // Alert.alert('Error', response?.message, [{text: 'OK'}]);
+          Alert.alert('Error', response?.message, [
+            {
+              text: 'OK',
+              onPress: () => {
+                setOpenModal(false), setLoader(true);
+                return false;
+              },
+            },
+          ]);
+          dispatch(setTriggerFunction(true));
+          dispatch(setRefreshKey());
+          return false;
         } else {
           navigation.navigate('DutyReportUpdate', {
             bookingNumber: booking_number,
@@ -66,16 +73,25 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
           });
         }
       } else {
-        Alert.alert('Error', response?.message, [{text: 'OK'}]);
+        Alert.alert('Error', response?.message, [
+          {
+            text: 'OK',
+            onPress: () => {
+              setOpenModal(false), setLoader(true);
+              return false;
+            },
+          },
+        ]);
       }
     } catch (error) {
+      setOpenModal(false);
     } finally {
-      setLoader(false);
+      setOpenModal(false);
     }
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerTextContainer}>
           <Text style={styles.headerText}>{driverConsent?.accept_heading}</Text>
@@ -155,7 +171,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
           )}
         </Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 

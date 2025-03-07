@@ -658,3 +658,21 @@ export const GET_ALL_PREMIUM_REGISTRATION_DATA = body => {
     {},
   );
 };
+
+export const GET_ALL_TRAINING_MODULE_DATA = body => {
+  return _Fetch(
+    'POST',
+    'registration/driver-training-module-view.php',
+    {...body},
+    {},
+  );
+};
+
+export const SUBMIT_ALL_TRAINING_MODULE_DATA = body => {
+  return _Fetch(
+    'POST',
+    'registration/driver-training-module-api.php',
+    {...body},
+    {},
+  );
+};

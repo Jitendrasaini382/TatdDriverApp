@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -14,12 +14,18 @@ import {
   APPLY_PERMANENT_BOOKING,
 } from '../../apis/Apis';
 import {useNavigation} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
-import {setTriggerFunction} from '../../redux/slices/globalSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  setRefreshKey,
+  setTriggerFunction,
+} from '../../redux/slices/globalSlice';
 
 const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
   const navigation = useNavigation();
+  const [loader, setLoader] = useState(false);
   const dispatch = useDispatch();
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+
   const {
     condition_1,
     condition_2,
@@ -32,6 +38,7 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
   const {cancel, apply_or_accept, P_ID} = data?.actions;
 
   const handleAccept = (id, name) => {
+    setLoader(true);
     if (name == 'Accept') {
       handleAcceptPermanentBooking(id);
     } else if (name == 'Apply') {
@@ -51,7 +58,12 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
         dispatch(setTriggerFunction(true));
         setOpenModal(false);
       }
-    } catch (error) {}
+    } catch (error) {
+      setOpenModal(false);
+    } finally {
+      setOpenModal(false);
+      setLoader(false);
+    }
   };
 
   const handleAcceptPermanentBooking = async id => {
@@ -60,7 +72,10 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
         action: 'permanent_instant_driver_assignment_to_customer',
         P_ID: id,
       });
-      if (response?.status_code == 200) {
+      if (
+        response?.status_code == 200 &&
+        response?.message == 'Booking is accepted'
+      ) {
         const bookingNumber = response?.booking_id;
         navigation.navigate('DutyReportUpdate', {
           bookingNumber: bookingNumber,
@@ -68,11 +83,43 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
           isType: 'Ondemand',
         });
         setOpenModal(false);
-        dispatch(setTriggerFunction(true));
+        dispatch(setRefreshKey());
+      } else {
+        Alert.alert(
+          'Error',
+          languageSwitch === 'english'
+            ? 'This booking already accepted by another driver.'
+            : 'यह बुकिंग पहले ही किसी अन्य ड्राइवर द्वारा स्वीकार की जा चुकी है।',
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                setOpenModal(false);
+                dispatch(setRefreshKey());
+                setLoader(false);
+              },
+            },
+          ],
+        );
       }
     } catch (error) {
       if (error == 'Booking is not in pending status') {
-        // Alert.alert('This booking already accepted by another driver.');
+        Alert.alert(
+          'Error',
+          languageSwitch === 'english'
+            ? 'This booking already accepted by another driver..'
+            : 'यह बुकिंग पहले ही किसी अन्य ड्राइवर द्वारा स्वीकार की जा चुकी है।',
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                setOpenModal(false);
+                dispatch(setTriggerFunction(true));
+                setLoader(false);
+              },
+            },
+          ],
+        );
       }
     }
   };
@@ -101,6 +148,7 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
             <Text style={styles.cancelButtonText}>{cancel}</Text>
           </Pressable>
           <Pressable
+            disabled={loader}
             onPress={() => {
               handleAccept(P_ID, apply_or_accept);
             }}

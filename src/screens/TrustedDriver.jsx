@@ -723,7 +723,6 @@ const TrustedDriver = ({navigation}) => {
             navigation.navigate('ClearMyDuePayment');
             break;
           case 'driver-training-module':
-            // openMyUrl(response?.url);
             navigation.navigate('DriverTrainingModulePhaseOne');
             break;
           case 'trusted-driver':
@@ -807,7 +806,7 @@ const TrustedDriver = ({navigation}) => {
         console.log('Response is undefined or null');
         return;
       }
-
+      console.log(response,"responseresponseresponse");
       setExpressPopupData(response?.popup_data);
       if (response.express_booking_popup_flag == 1) {
         dispatch(setExpressBookingModal(true));
@@ -1723,7 +1722,7 @@ const TrustedDriver = ({navigation}) => {
           animationType="slide"
           transparent={true}
           onRequestClose={() => dispatch(setExpressBookingModal(false))}
-          visible={expressBookingModal || popupData == 1}>
+          visible={expressBookingModal && popupData == 1}>
           <ExpressBookingModal data={expressPopupData} />
         </Modal>
 

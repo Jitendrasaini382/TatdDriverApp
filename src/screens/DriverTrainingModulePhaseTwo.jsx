@@ -8,6 +8,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Modal,
+  RefreshControl,
 } from 'react-native';
 import {Dimensions} from 'react-native';
 import {GET_ALL_TRAINING_MODULE_DATA} from '../apis/Apis';
@@ -24,6 +25,7 @@ const DriverTrainingModulePhaseTwo = ({navigation}) => {
   const [allTrainingDataEnglish, setAllTrainingDataEnglish] = useState([]);
   const [allTrainingDataHindi, setAllTrainingDataHindi] = useState([]);
   const [isVisible, setIsVisible] = useState(false); // For modal visibility
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
@@ -43,7 +45,9 @@ const DriverTrainingModulePhaseTwo = ({navigation}) => {
         setAllTrainingData(response?.data_hindi || []);
       }
     } catch (error) {
-      console.log('error======', error);
+      setRefreshing(false);
+    } finally {
+      setRefreshing(false);
     }
   };
 
@@ -88,21 +92,43 @@ const DriverTrainingModulePhaseTwo = ({navigation}) => {
       <Header backButton={true} />
       <View
         style={{
-          backgroundColor: '#16588e',
-          width: '100%',
+          backgroundColor: AppColors.mainColor,
+          width: '90%',
           paddingVertical: 30,
           borderRadius: 5,
-          // margin: 20,
+          margin: 10,
+          justifyContent: 'center',
+          alignContent: 'center',
+          alignSelf: 'center',
+          marginBottom: 0,
         }}>
         <Text
           style={{
-            color: 'white',
+            color: AppColors.white,
             marginHorizontal: 10,
             fontSize: 16,
             fontWeight: 'bold',
           }}>
           Partner Trainning
         </Text>
+      </View>
+      <View style={styles.languageToggle}>
+        <TouchableOpacity
+          onPress={() => handleLanguageChange('hindi')}
+          style={[
+            styles.languageButton,
+            language === 'hindi' && styles.selectedLanguage,
+          ]}>
+          <Text style={styles.languageText}>Hindi</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleLanguageChange('english')}
+          style={[
+            styles.languageButton,
+            language === 'english' && styles.selectedLanguage,
+          ]}>
+          <Text style={styles.languageText}>English</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.maincontainer}>
         {/** Steps */}
@@ -142,25 +168,18 @@ const DriverTrainingModulePhaseTwo = ({navigation}) => {
         </View>
       </View>
 
-      <View style={styles.languageToggle}>
-        <TouchableOpacity
-          onPress={() => handleLanguageChange('hindi')}
-          style={[
-            styles.languageButton,
-            language === 'hindi' && styles.selectedLanguage,
-          ]}>
-          <Text style={styles.languageText}>Hindi</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleLanguageChange('english')}
-          style={[
-            styles.languageButton,
-            language === 'english' && styles.selectedLanguage,
-          ]}>
-          <Text style={styles.languageText}>English</Text>
-        </TouchableOpacity>
-      </View>
-      <ScrollView style={{marginHorizontal: 20}}>
+      <ScrollView
+        style={{marginHorizontal: 20}}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              setRefreshing(true);
+              getAllTrainingModuleData();
+            }}
+          />
+        }>
         {allTrainingData?.length > 0 ? (
           allTrainingData.map((item, questionIndex) => (
             <View key={questionIndex} style={styles.questionContainer}>
@@ -220,7 +239,7 @@ const DriverTrainingModulePhaseTwo = ({navigation}) => {
               alignItems: 'center',
             }}
             onPress={handleSubmit}>
-            <Text style={{color: 'white', fontSize: 20}}>Submit</Text>
+            <Text style={{color: AppColors.white, fontSize: 20}}>Submit</Text>
           </TouchableOpacity>
         ) : null}
         <Modal visible={isVisible} transparent animationType="slide">
@@ -252,16 +271,15 @@ const styles = StyleSheet.create({
   languageToggle: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 20,
+    // marginBottom: 10,
     backgroundColor: '#d9d9d9',
     borderRadius: 5,
-    marginVertical: 10,
-    marginHorizontal: 20,
+    alignSelf: 'center',
+    width: '90%',
+    marginHorizontal: 10,
   },
   languageButton: {
     paddingVertical: 10,
-
-    // borderWidth: 1,
     borderColor: '#000',
     marginHorizontal: 5,
     borderRadius: 5,
@@ -303,6 +321,8 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 14,
+    flex: 1,
+    color: AppColors.black,
   },
   maincontainer: {
     alignItems: 'center',
@@ -389,7 +409,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#333',
+    color: AppColors.black,
   },
   message: {
     fontSize: 16,
@@ -404,7 +424,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   closeButtonText: {
-    color: 'white',
+    color: AppColors.white,
     fontSize: 16,
     fontWeight: 'bold',
   },

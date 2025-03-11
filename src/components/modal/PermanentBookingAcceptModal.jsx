@@ -101,6 +101,9 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
             },
           ],
         );
+        setOpenModal(false);
+        dispatch(setRefreshKey());
+        setLoader(false);
       }
     } catch (error) {
       if (error == 'Booking is not in pending status') {
@@ -121,6 +124,9 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
           ],
         );
       }
+      setOpenModal(false);
+      dispatch(setTriggerFunction(true));
+      setLoader(false);
     }
   };
 

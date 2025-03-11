@@ -15,19 +15,12 @@ import {
   Keyboard,
   PermissionsAndroid,
   RefreshControl,
-  Button,
   Platform,
+  Clipboard,
+  ToastAndroid,
 } from 'react-native';
 import YoutubePlayer from 'react-native-youtube-iframe';
-import Header from '../components/Header';
-import {
-  Address,
-  Agent_Icon,
-  CallingGif,
-  Mask,
-  NavigationIcon,
-  TrustedPartner,
-} from '../assets/images';
+import {Address, CallingGif, Mask, NavigationIcon} from '../assets/images';
 import {AppColors} from '../assets/Colors';
 import SwipeableButton from '../components/SwipeableButton';
 import RadioButton from '../components/CustomRadioButton';
@@ -40,7 +33,6 @@ import {
   CUSTOMER_NOT_PICKUP_PHONE,
   CUSTOMER_WANT_TO_CANCEL,
   DRIVE_END,
-  DRIVE_START,
   DRIVER_BOOKING_REACH,
   DRIVER_HEADLINE,
   DRIVER_ON_THE_WAY,
@@ -50,13 +42,12 @@ import {
   GET_BOOKING_INFO,
   GET_FIRST_POPUP_DATA,
   PACKAGE_DETAILS_DUTY_REPORT,
+  START_BOOKING,
   TALK_TO_CUSTOMER,
 } from '../apis/Apis';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppFont} from '../assets/FontsFamily';
 import Toast from 'react-native-toast-message';
-import axios from 'axios';
-import DeviceInfo from 'react-native-device-info';
 import {requestLocationPermission} from '../utils/permissions';
 import Geolocation from '@react-native-community/geolocation';
 import Animated, {
@@ -66,9 +57,6 @@ import Animated, {
   FadeIn,
 } from 'react-native-reanimated';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {API_BASE_URL} from '../constant/path';
-import {setUserAuthStates} from '../redux/slices/userAuthSlice';
-import {jwtDecode} from 'jwt-decode';
 import DutyReportHeader from '../components/DutyReportHeader';
 import {setIsNeedHelpShow} from '../redux/slices/trustedDriverSlice';
 
@@ -98,8 +86,6 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
 
-  const jwtToken = useSelector(e => e?.userAuth?.jwt);
-  const refreshToken = useSelector(e => e?.userAuth?.refreshToken);
   const dispatch = useDispatch();
 
   const getHeadlineData = async () => {
@@ -559,7 +545,7 @@ const DutyReportUpdate = ({route, navigation}) => {
           mediaType: 'photo',
           maxHeight: 500,
           maxWidth: 500,
-          quality: 0.4,
+          quality: 0.2,
           cameraType: 'front',
         },
         response => {
@@ -625,21 +611,9 @@ const DutyReportUpdate = ({route, navigation}) => {
     formData.append('start_kms', inputKmsValue);
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/duty-report/duty_report_booking_start.php`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        },
-      );
-
-      const res = response?.data;
-
-      if (res?.redirect == 'duty_report') {
-        if (res?.message_type == 'error') {
+      const response = await START_BOOKING(formData);
+      if (response?.redirect == 'duty_report') {
+        if (response?.message_type == 'error') {
           setCancelState('cancel');
           setModalVisibleinput(false);
         } else {
@@ -647,58 +621,30 @@ const DutyReportUpdate = ({route, navigation}) => {
           setModalVisibleinput(false);
         }
       } else if (
-        res?.start_booking_message &&
-        Object.keys(res.start_booking_message).length !== 0
+        response?.start_booking_message &&
+        Object.keys(response.start_booking_message).length !== 0
       ) {
         setModalVisibleinput(false);
         GetAllBookingInfo();
       } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: res?.otp_error_message || 'Something went wrong',
-        });
+        Alert.alert(
+          'Error',
+          response?.otp_error_message?.otp_error_message ||
+            'Wrong OTP Please Try Again Later',
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                setModalVisibleinput(false);
+              },
+            },
+          ],
+        );
+        setModalVisibleinput(false);
+        setInputValue('');
       }
     } catch (error) {
-      if (error.response) {
-        if (error.response.status == 401 || error.response.status == 400) {
-          if (
-            error.response?.data?.message == 'Token has expired' &&
-            !error.config._retry
-          ) {
-            error.config._retry = true;
-
-            if (refreshToken) {
-              try {
-                const appVersion = DeviceInfo.getVersion();
-                const res = await axios.post(
-                  `${API_BASE_URL}/login/refresh_token.php`,
-                  {refresh_token: refreshToken, app_version: appVersion},
-                );
-
-                if (res.data?.jwt) {
-                  dispatch(
-                    setUserAuthStates({key: 'jwt', value: res.data.jwt}),
-                  );
-                  dispatch(
-                    setUserAuthStates({
-                      key: 'userProfile',
-                      value: jwtDecode(res.data.jwt),
-                    }),
-                  );
-                  return driverReached(); // Retry API call with new token
-                }
-              } catch (refreshError) {
-                console.error('Error Refreshing Token:', refreshError);
-              }
-            }
-          }
-        }
-      } else if (error.request) {
-        // console.log('No Response from Server:', error.request);
-      } else {
-        // console.log('Error Setting Up Request:', error.message);
-      }
+      console.log('API request failed', error);
     } finally {
       setLoader(false);
     }
@@ -838,7 +784,6 @@ const DutyReportUpdate = ({route, navigation}) => {
   }
 
   const openOnlyMap = latLong => {
-    // console.log(latLong, 'latLonglatLonglatLong');
     if (!latLong) {
       return;
     }
@@ -1119,7 +1064,19 @@ const DutyReportUpdate = ({route, navigation}) => {
                 <View style={{flex: 1}}>
                   {bookingInfo?.data?.pickup_address && (
                     <TouchableOpacity
-                      onPress={() => openOnlyMap(bookingInfo?.data?.c_latlong)}
+                      onPress={() => {
+                        Clipboard.setString(bookingInfo?.data?.pickup_address);
+                        ToastAndroid.show(
+                          'Address copied!',
+                          ToastAndroid.SHORT,
+                        );
+                        openOnlyMap(bookingInfo?.data?.c_latlong); // Map open karne ka function
+                      }}
+                      // onLongPress={() => {
+                      //   Clipboard.setString(bookingInfo?.data?.pickup_address);
+                      //   ToastAndroid.show('Address copied!', ToastAndroid.SHORT);
+                      // }}
+                      //   onPress={() => openOnlyMap(bookingInfo?.data?.c_latlong)}
                       style={styles.addressContainer}>
                       <Image
                         source={Address}

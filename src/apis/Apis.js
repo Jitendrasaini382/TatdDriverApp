@@ -630,7 +630,16 @@ export const PREMIUM_DRIVER_APPLY = body => {
   );
 };
 
-//
+export const UPLOAD_PIC_PREMIUM_DRIVER = body => {
+  return _Fetch(
+    'POST',
+    'registration/premium-driver-photo-upload-api.php',
+    body,
+    {
+      'Content-Type': 'multipart/form-data',
+    },
+  );
+};
 
 export const PREMIUM_DRIVER_PAYMENT_CREATE_ORDER_ID = body => {
   return _Fetch(
@@ -675,4 +684,10 @@ export const SUBMIT_ALL_TRAINING_MODULE_DATA = body => {
     {...body},
     {},
   );
+};
+
+export const START_BOOKING = body => {
+  return _Fetch('POST', 'duty-report/duty_report_booking_start.php', body, {
+    'Content-Type': 'multipart/form-data',
+  });
 };

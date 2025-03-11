@@ -13,7 +13,10 @@ import {AppColors} from '../assets/Colors';
 import Header from '../components/Header';
 import {PremiumDriverImage1, PremiumDriverImage2} from '../assets/images';
 import {useCallback, useEffect, useState} from 'react';
-import {GET_ALL_PREMIUM_REGISTRATION_DATA} from '../apis/Apis';
+import {
+  GET_ALL_PREMIUM_REGISTRATION_DATA,
+  UPLOAD_PIC_PREMIUM_DRIVER,
+} from '../apis/Apis';
 import {launchImageLibrary} from 'react-native-image-picker';
 import axios from 'axios';
 import {API_BASE_URL} from '../constant/path';
@@ -78,9 +81,9 @@ const PremiumDriverRegistrationProcess = ({navigation}) => {
       setLoader(true);
 
       const options = {
-        mediaType: 'photo', // Only photos
-        quality: 1, // High quality
-        selectionLimit: 1, // Change to allow multiple images if needed
+        mediaType: 'photo',
+        quality: 0.4,
+        selectionLimit: 1,
       };
 
       launchImageLibrary(options, async response => {
@@ -112,19 +115,20 @@ const PremiumDriverRegistrationProcess = ({navigation}) => {
           });
 
           try {
-            const uploadResponse = await axios.post(
-              `${API_BASE_URL}/registration/premium-driver-photo-upload-api.php`,
-              formData,
-              {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                  Authorization: `Bearer ${jwtToken}`,
-                },
-              },
-            );
+            // const uploadResponse = await axios.post(
+            //   `${API_BASE_URL}/registration/premium-driver-photo-upload-api.php`,
+            //   formData,
+            //   {
+            //     headers: {
+            //       'Content-Type': 'multipart/form-data',
+            //       Authorization: `Bearer ${jwtToken}`,
+            //     },
+            //   },
+            // );
 
-            const res = uploadResponse?.data;
-            console.log('Upload successful:', res);
+            const res = await UPLOAD_PIC_PREMIUM_DRIVER(formData);
+
+            // const res = uploadResponse?.data;
             if (res?.status_code == 200) {
               Alert.alert('Success', res?.session_msg, [
                 {
@@ -134,64 +138,61 @@ const PremiumDriverRegistrationProcess = ({navigation}) => {
               ]);
             }
           } catch (error) {
-            if (error.response) {
-              console.log('Server Error:', error.response.data);
-
-              if (
-                error.response.status === 401 ||
-                error.response.status === 400
-              ) {
-                if (
-                  error.response?.data?.message === 'Token has expired' &&
-                  !error.config._retry
-                ) {
-                  error.config._retry = true;
-
-                  if (refreshToken) {
-                    try {
-                      const appVersion = DeviceInfo.getVersion();
-                      const refreshResponse = await axios.post(
-                        `${API_BASE_URL}/login/refresh_token.php`,
-                        {refresh_token: refreshToken, app_version: appVersion},
-                      );
-
-                      if (refreshResponse.data?.jwt) {
-                        dispatch(
-                          setUserAuthStates({
-                            key: 'jwt',
-                            value: refreshResponse.data.jwt,
-                          }),
-                        );
-                        dispatch(
-                          setUserAuthStates({
-                            key: 'userProfile',
-                            value: jwtDecode(refreshResponse.data.jwt),
-                          }),
-                        );
-                        return openGallery();
-                      }
-                    } catch (refreshError) {
-                      console.error('Error Refreshing Token:', refreshError);
-                      Alert.alert('Session Expired', 'Please log in again.');
-                    }
-                  }
-                }
-              } else {
-                Alert.alert('Upload Failed', 'Server error. Please try again.');
-              }
-            } else if (error.request) {
-              console.log('No response from server:', error.request);
-              Alert.alert(
-                'Network Error',
-                'No response from server. Check your connection.',
-              );
-            } else {
-              console.log('Error setting up request:', error.message);
-              Alert.alert(
-                'Upload Error',
-                'Something went wrong. Please try again.',
-              );
-            }
+            // if (error.response) {
+            //   console.log('Server Error:', error.response.data);
+            //   if (
+            //     error.response.status === 401 ||
+            //     error.response.status === 400
+            //   ) {
+            //     if (
+            //       error.response?.data?.message === 'Token has expired' &&
+            //       !error.config._retry
+            //     ) {
+            //       error.config._retry = true;
+            //       if (refreshToken) {
+            //         try {
+            //           const appVersion = DeviceInfo.getVersion();
+            //           const refreshResponse = await axios.post(
+            //             `${API_BASE_URL}/login/refresh_token.php`,
+            //             {refresh_token: refreshToken, app_version: appVersion},
+            //           );
+            //           if (refreshResponse.data?.jwt) {
+            //             dispatch(
+            //               setUserAuthStates({
+            //                 key: 'jwt',
+            //                 value: refreshResponse.data.jwt,
+            //               }),
+            //             );
+            //             dispatch(
+            //               setUserAuthStates({
+            //                 key: 'userProfile',
+            //                 value: jwtDecode(refreshResponse.data.jwt),
+            //               }),
+            //             );
+            //             return openGallery();
+            //           }
+            //         } catch (refreshError) {
+            //           console.error('Error Refreshing Token:', refreshError);
+            //           Alert.alert('Session Expired', 'Please log in again.');
+            //         }
+            //       }
+            //     }
+            //   } else {
+            //     Alert.alert('Upload Failed', 'Server error. Please try again.');
+            //   }
+            // } else if (error.request) {
+            //   console.log('No response from server:', error.request);
+            //   Alert.alert(
+            //     'Network Error',
+            //     'No response from server. Check your connection.',
+            //   );
+            // } else {
+            //   console.log('Error setting up request:', error.message);
+            //   Alert.alert(
+            //     'Upload Error',
+            //     'Something went wrong. Please try again.',
+            //   );
+            // }
           } finally {
             setLoader(false);
           }

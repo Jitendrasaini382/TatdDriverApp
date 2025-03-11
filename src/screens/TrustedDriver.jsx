@@ -806,7 +806,6 @@ const TrustedDriver = ({navigation}) => {
         console.log('Response is undefined or null');
         return;
       }
-      console.log(response,"responseresponseresponse");
       setExpressPopupData(response?.popup_data);
       if (response.express_booking_popup_flag == 1) {
         dispatch(setExpressBookingModal(true));
@@ -1505,13 +1504,7 @@ const TrustedDriver = ({navigation}) => {
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      // onPress={() => handleLoginPress()}
-                      onPress={() => {
-                        // if (isRfdOn) {
-                        // } else {
-                        // showPopover();
-                        // }
-                      }}
+                      onPress={() => navigation.navigate('AgentPanel')}
                       style={styles.bottamContent3}>
                       <Text style={styles.mainText}>
                         {languageSwitch == 'english'

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -18,9 +18,17 @@ import {
   Platform,
   Clipboard,
   ToastAndroid,
+  Pressable,
 } from 'react-native';
 import YoutubePlayer from 'react-native-youtube-iframe';
-import {Address, CallingGif, Mask, NavigationIcon} from '../assets/images';
+import {
+  Address,
+  CallingGif,
+  Headerlogo,
+  HelpImage,
+  Mask,
+  NavigationIcon,
+} from '../assets/images';
 import {AppColors} from '../assets/Colors';
 import SwipeableButton from '../components/SwipeableButton';
 import RadioButton from '../components/CustomRadioButton';
@@ -34,14 +42,15 @@ import {
   CUSTOMER_WANT_TO_CANCEL,
   DRIVE_END,
   DRIVER_BOOKING_REACH,
-  DRIVER_HEADLINE,
   DRIVER_ON_THE_WAY,
   DUTY_REPORT_BOOKING_ACCEPT,
   DUTY_REPORT_RESEND_OTP,
   DUTY_REPORT_TRIP_STATUS_POPUP_VIEW,
   GET_BOOKING_INFO,
+  GET_BOOKING_STATUS_ID,
   GET_FIRST_POPUP_DATA,
   PACKAGE_DETAILS_DUTY_REPORT,
+  PARTNER_ONBOOKING_CALL_SUPPORT,
   START_BOOKING,
   TALK_TO_CUSTOMER,
 } from '../apis/Apis';
@@ -57,8 +66,6 @@ import Animated, {
   FadeIn,
 } from 'react-native-reanimated';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import DutyReportHeader from '../components/DutyReportHeader';
-import {setIsNeedHelpShow} from '../redux/slices/trustedDriverSlice';
 
 const DutyReportUpdate = ({route, navigation}) => {
   const {bookingNumber, state} = route?.params;
@@ -85,22 +92,7 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [firstTimePopupData, setfirstTimePopupData] = useState({});
   const [refreshing, setRefreshing] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-
-  const dispatch = useDispatch();
-
-  const getHeadlineData = async () => {
-    try {
-      const response = await DRIVER_HEADLINE({
-        current_language: languageSwitch,
-      });
-
-      if (response?.driver_panel_messages?.need_help_button == '1') {
-        dispatch(setIsNeedHelpShow(true));
-      } else {
-        dispatch(setIsNeedHelpShow(fa));
-      }
-    } catch (error) {}
-  };
+  const [needHelpShow, setNeedHelpShow] = useState(false);
 
   const talkToCustomer = async () => {
     setLoader(true);
@@ -153,7 +145,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     setRefreshing(true);
     try {
       GetAllBookingInfo();
-      getHeadlineData();
+      handleNeedHelpButton();
     } catch (error) {
     } finally {
       setRefreshing(false);
@@ -239,6 +231,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     if (state !== 'cancel') {
       setMainLoader(true);
       GetAllBookingInfo();
+      handleNeedHelpButton();
     }
   }, []);
 
@@ -552,8 +545,10 @@ const DutyReportUpdate = ({route, navigation}) => {
           if (response.didCancel) {
           } else if (response.errorCode) {
             console.error('Camera Error:', response.errorMessage);
-          } else {
-            const file = response.assets[0];
+          } else if (response?.assets && response?.assets?.length > 0) {
+            // console.log(response?.assets,"response?.assetsresponse?.assets");
+            // console.log(response?.assets?.length,"--response?.assetsresponse?.assets");
+            const file = response?.assets[0];
             setSelectedFile(file);
           }
         },
@@ -759,6 +754,7 @@ const DutyReportUpdate = ({route, navigation}) => {
   useEffect(() => {
     if (isFirstTimeVisit && isType) {
       getFirstTimePopupFn(isType);
+      handleNeedHelpButton();
       setLoader(true);
     } else {
       setfirstTimePopup(false);
@@ -843,6 +839,70 @@ const DutyReportUpdate = ({route, navigation}) => {
       .catch(err => console.error('Error opening Google Maps', err));
   };
 
+  const handleLogoPress = () => {
+    navigation.navigate('TrustedDriver');
+  };
+
+  const handleNeedHelpButton = async () => {
+    try {
+      const response = await GET_BOOKING_STATUS_ID({
+        action: 'get-booking-status-id',
+        booking_number: bookingNumber,
+      });
+
+      if (response?.status_code == '200' && response?.message == 'success') {
+        if (response?.popup == '1') {
+          setNeedHelpShow(true);
+        } else {
+          setNeedHelpShow(false);
+        }
+      } else {
+        setNeedHelpShow(false);
+      }
+    } catch (error) {
+    } finally {
+    }
+  };
+
+  const viewRef = useRef(null); // Reference to the View
+  const [popoverVisible, setPopoverVisible] = useState(false);
+  const [popoverPosition, setPopoverPosition] = useState({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  });
+
+  const showPopover = () => {
+    if (viewRef.current) {
+      viewRef.current.measure((fx, fy, width, height, px, py) => {
+        console.log({x: px, y: py, width, height});
+        setPopoverPosition({x: px, y: py + height + 10, width, height}); // y + height se popover neeche show hoga
+        setPopoverVisible(true);
+      });
+    }
+  };
+
+  const handlecallPress = async () => {
+    try {
+      const response = await PARTNER_ONBOOKING_CALL_SUPPORT({
+        booking_number: bookingNumber,
+        current_language: languageSwitch,
+      });
+      if (
+        response?.status_code == 200 &&
+        response?.success_message?.success_message
+      ) {
+        setPopoverVisible(false);
+        Alert.alert('Success', response?.success_message?.success_message);
+      }
+    } catch (error) {
+      console.error('Error in PARTNER_ONBOOKING_CALL_SUPPORT:', error);
+    } finally {
+      console.log('PARTNER_ONBOOKING_CALL_SUPPORT execution completed');
+    }
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -850,7 +910,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         flexDirection: 'column',
         backgroundColor: AppColors.white,
       }}>
-      <DutyReportHeader
+      {/* <DutyReportHeader
         extraButton={true}
         showNeedHelp={true}
         showBack={true}
@@ -858,7 +918,84 @@ const DutyReportUpdate = ({route, navigation}) => {
         customeNavigation={{
           name: 'TrustedDriver',
         }}
-      />
+      /> */}
+      {/* header code start */}
+
+      <View
+        style={{
+          backgroundColor: AppColors.white,
+          flexDirection: 'row',
+          elevation: 5,
+          justifyContent: 'space-between',
+        }}>
+        <View
+          style={{
+            backgroundColor: AppColors.white,
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+          }}>
+          <Pressable
+            onPress={handleLogoPress}
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginLeft: 5,
+              marginTop: 10,
+            }}>
+            <Image
+              source={Headerlogo}
+              style={{resizeMode: 'contain', height: 70, width: 140}}
+            />
+          </Pressable>
+        </View>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+          }}>
+          {needHelpShow && (
+            <TouchableOpacity
+              ref={viewRef}
+              onPress={showPopover}
+              style={{
+                margin: 5,
+                borderWidth: 1,
+                borderRadius: 5,
+                backgroundColor: AppColors.mainColor,
+              }}>
+              <Text
+                style={{
+                  padding: 7,
+                  fontSize: 12,
+                  fontWeight: '500',
+                  color: AppColors.white,
+                }}>
+                {languageSwitch === 'english' ? 'Need Help?' : 'मदद चाहिए?'}
+              </Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{
+              margin: 5,
+              marginRight: 17,
+              borderWidth: 1,
+              borderRadius: 5,
+              paddingHorizontal: 5,
+              borderColor: 'rgb(204,204,204)',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Text style={{color: AppColors.black, margin: 5, opacity: 0.8}}>
+              Back
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* header code end */}
 
       <Toast visibilityTime={5000} topOffset={50} />
       {mainLoader ? (
@@ -2256,6 +2393,166 @@ const DutyReportUpdate = ({route, navigation}) => {
             </ScrollView>
           </View>
         </View>
+      </Modal>
+
+      {/* need help button Modal */}
+
+      {/* <Modal transparent animationType="fade" visible={popoverVisible}>
+        <TouchableOpacity
+          style={{flex: 1, backgroundColor: 'rgba(121, 129, 116, 0.48)'}}
+          activeOpacity={1}
+          onPress={() => setPopoverVisible(false)}>
+          <View
+            style={{
+              position: 'absolute',
+              top: popoverPosition.y, // Align with the target view's top
+              left: popoverPosition.x - 120, // Position to the left
+              width: 110,
+              backgroundColor: AppColors.white,
+              padding: 10,
+              borderRadius: 5,
+              elevation: 5,
+              shadowColor: '#000',
+              shadowOffset: {width: 0, height: 2},
+              shadowOpacity: 0.25,
+              shadowRadius: 4,
+            }}>
+            <View
+              style={{
+                position: 'absolute',
+                top: 5,
+                right: -10,
+                width: 0,
+                height: 0,
+                borderLeftWidth: 10,
+                borderRightWidth: 10,
+                borderBottomWidth: 10,
+                borderLeftColor: 'transparent',
+                borderRightColor: 'transparent',
+                borderBottomColor: AppColors.white, // Matches the popover background
+              }}
+            />
+            <Text style={{color: AppColors.black, fontSize: 15}}>
+              Turn It ON.
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </Modal> */}
+
+      <Modal transparent visible={popoverVisible} animationType="fade">
+        <TouchableOpacity
+          style={{flex: 1, backgroundColor: 'rgba(121, 129, 116, 0.48)'}}
+          activeOpacity={1}
+          onPress={() => setPopoverVisible(false)}>
+          <View
+            style={{
+              position: 'absolute',
+              top: popoverPosition.y,
+              // left: popoverPosition.x - 200, // Adjust left offset as per design
+              width: '70%',
+              // width: 160,
+              alignSelf: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#fff',
+              paddingVertical: 10,
+              borderRadius: 8,
+              elevation: 5,
+              shadowColor: '#000',
+              shadowOffset: {width: 0, height: 2},
+              shadowOpacity: 0.3,
+              shadowRadius: 4,
+            }}>
+            {/* Arrow Pointer */}
+            <View
+              style={{
+                position: 'absolute',
+                top: -10,
+                left: 180,
+                width: 0,
+                height: 0,
+                borderLeftWidth: 10,
+                borderRightWidth: 10,
+                borderBottomWidth: 10,
+                borderLeftColor: 'transparent',
+                borderRightColor: 'transparent',
+                borderBottomColor: '#fff',
+              }}
+            />
+
+            <TouchableOpacity
+              onPress={() => {
+                setPopoverVisible(false);
+                navigation.navigate('TicketsDriver', {bookingNumber});
+              }}
+              style={{
+                flexDirection: 'row', // Row layout
+                alignItems: 'center', // Center align items
+                paddingVertical: 8,
+                paddingHorizontal: 12,
+                borderBottomWidth: 1,
+                borderBottomColor: '#ddd',
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Text style={{fontSize: 16, color: '#333'}}>Create Ticket</Text>
+              </View>
+
+              <View
+                style={{
+                  width: 40,
+                  height: 40,
+                  backgroundColor: AppColors.white,
+                  borderRadius: 20,
+                  overflow: 'hidden',
+                  elevation: 5,
+                }}>
+                <Image
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  source={HelpImage}
+                  resizeMode="cover"
+                />
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                handlecallPress();
+              }}
+              style={{
+                flexDirection: 'row', // Row layout
+                alignItems: 'center', // Center align items
+                paddingVertical: 8,
+                paddingHorizontal: 12,
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Text style={{fontSize: 16, color: '#333'}}>Call Support</Text>
+              </View>
+
+              <View
+                style={{
+                  width: 40,
+                  height: 40,
+                  backgroundColor: AppColors.white,
+                  borderRadius: 20,
+                  overflow: 'hidden',
+                  elevation: 5,
+                }}>
+                <Image
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  source={CallingGif}
+                  resizeMode="cover"
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
       </Modal>
 
       {/* endmodalend */}

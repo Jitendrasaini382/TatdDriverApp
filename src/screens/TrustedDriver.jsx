@@ -65,7 +65,6 @@ import {
 import {
   setBookingModal,
   setExpressBookingModal,
-  setIsNeedHelpShow,
   setModalVisible,
   setMyBookingAgencyModal,
   setRatingModal,
@@ -875,10 +874,8 @@ const TrustedDriver = ({navigation}) => {
       }
       if (response?.driver_panel_messages?.need_help_button == '1') {
         setShowNeedHelp(true);
-        dispatch(setIsNeedHelpShow(true));
       } else {
         setShowNeedHelp(false);
-        dispatch(setIsNeedHelpShow(fa));
       }
       setVideoCount(response?.driver_panel_messages?.training_video_unseen);
     } catch (error) {}

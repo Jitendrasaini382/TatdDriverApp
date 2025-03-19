@@ -691,3 +691,21 @@ export const START_BOOKING = body => {
     'Content-Type': 'multipart/form-data',
   });
 };
+
+export const GET_BOOKING_STATUS_ID = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/get-booking-status-id-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const PARTNER_ONBOOKING_CALL_SUPPORT = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/partner-onbooking-call-support-api.php',
+    {...body},
+    {},
+  );
+};

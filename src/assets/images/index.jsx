@@ -30,3 +30,4 @@ export const NavigationIcon = require('./navigation.png');
 export const PremiumDriverImage = require('./premiumDriverImage.png');
 export const PremiumDriverImage1 = require('./premium_driver_sample1.png');
 export const PremiumDriverImage2 = require('./premium_driver_sample2.png');
+export const HelpImage = require('./helpImage.png');

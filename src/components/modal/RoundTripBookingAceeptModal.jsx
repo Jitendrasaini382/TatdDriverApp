@@ -51,7 +51,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
       });
 
       if (response?.status_code == '200') {
-        if (response?.msg_type === 'error') {
+        if (response?.msg_type == 'error') {
           // Alert.alert('Error', response?.message, [{text: 'OK'}]);
           Alert.alert('Error', response?.message, [
             {

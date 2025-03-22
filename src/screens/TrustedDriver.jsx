@@ -50,6 +50,7 @@ import {
   GET_FCM_TOKEN,
   LOGIN_BUTTON,
   ON_DEMAND_BOOKING,
+  PARTNER_ONBOOKING_CALL_SUPPORT,
   PERMANENT_SUBSCRIPTION_VIEW,
   SAVE_DEVICE_INFO,
   TEN_MINUTE_AVAILABLE_CLICK_POPUP,
@@ -67,6 +68,7 @@ import {
   setExpressBookingModal,
   setModalVisible,
   setMyBookingAgencyModal,
+  setMyBookingModal,
   setRatingModal,
   setVideosContent,
 } from '../redux/slices/trustedDriverSlice';
@@ -75,6 +77,9 @@ import {setUserAuthStates} from '../redux/slices/userAuthSlice';
 import {
   Agent_Icon,
   AppLogo,
+  CallingGif,
+  Headerlogo,
+  HelpImage,
   PremiumDriver,
   TrustedPartner,
 } from '../assets/images';
@@ -713,7 +718,7 @@ const TrustedDriver = ({navigation}) => {
         setLoginMessage(response?.message);
         setTimeout(() => {
           setLoginMessage('');
-        }, 50000);
+        }, 5000);
       }
 
       if (response?.redirect) {
@@ -726,6 +731,9 @@ const TrustedDriver = ({navigation}) => {
             break;
           case 'trusted-driver':
             navigation.navigate('TrustedDriver');
+            break;
+          case 'adhaar-verification':
+            navigation.navigate('AadharVerification');
             break;
           default:
             openMyUrl(response?.url);
@@ -994,6 +1002,45 @@ const TrustedDriver = ({navigation}) => {
       });
     }
   };
+
+  const viewRefNeedHelp = useRef(null); // Reference to the View
+  const [popoverVisibleNeedHelp, setPopoverVisibleNeedHelp] = useState(false);
+  const [popoverPositionNeedHelp, setPopoverPositionNeedHelp] = useState({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  });
+
+  const showPopoverNeedHelp = () => {
+    if (viewRefNeedHelp.current) {
+      viewRefNeedHelp.current.measure((fx, fy, width, height, px, py) => {
+        console.log({x: px, y: py, width, height});
+        setPopoverPositionNeedHelp({x: px, y: py + height + 10, width, height}); // y + height se popover neeche show hoga
+        setPopoverVisibleNeedHelp(true);
+      });
+    }
+  };
+
+  const handlecallPress = async () => {
+    try {
+      const response = await PARTNER_ONBOOKING_CALL_SUPPORT({
+        booking_number: 'noBookingNumber',
+        current_language: languageSwitch,
+      });
+      if (
+        response?.status_code == 200 &&
+        response?.success_message?.success_message
+      ) {
+        setPopoverVisibleNeedHelp(false);
+        Alert.alert('Success', response?.success_message?.success_message);
+      }
+    } catch (error) {
+      console.error('Error in PARTNER_ONBOOKING_CALL_SUPPORT:', error);
+    } finally {
+    }
+  };
+
   return (
     <View style={styles.safeArea}>
       <View
@@ -1210,7 +1257,91 @@ const TrustedDriver = ({navigation}) => {
             </View>
           ) : (
             <>
-              <Header extraButton={true} showNeedHelp={showNeedHelp} />
+              {/* <Header extraButton={true} showNeedHelp={showNeedHelp} /> */}
+
+              <View
+                style={{
+                  backgroundColor: AppColors.white,
+                  flexDirection: 'row',
+                  elevation: 5,
+                  justifyContent: 'space-between',
+                }}>
+                <View
+                  style={{
+                    backgroundColor: AppColors.white,
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
+                  }}>
+                  <Pressable
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginLeft: 5,
+                      marginTop: 10,
+                    }}>
+                    <Image
+                      source={Headerlogo}
+                      style={{resizeMode: 'contain', height: 70, width: 140}}
+                    />
+                  </Pressable>
+                </View>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                  }}>
+                  {showNeedHelp && (
+                    <TouchableOpacity
+                      ref={viewRefNeedHelp}
+                      onPress={showPopoverNeedHelp}
+                      style={{
+                        margin: 5,
+                        borderWidth: 1,
+                        borderRadius: 5,
+                        backgroundColor: AppColors.mainColor,
+                      }}>
+                      <Text
+                        style={{
+                          padding: 7,
+                          fontSize: 12,
+                          fontWeight: '500',
+                          color: AppColors.white,
+                        }}>
+                        {languageSwitch === 'english'
+                          ? 'Need Help?'
+                          : 'मदद चाहिए?'}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+
+                  <View
+                    style={{
+                      margin: 5,
+                      marginRight: 17,
+                      borderWidth: 1,
+                      borderRadius: 5,
+                      backgroundColor: AppColors.mainColor,
+                    }}>
+                    <TouchableOpacity
+                      onPress={() => dispatch(setMyBookingModal(true))}>
+                      <Text
+                        style={{
+                          padding: 7,
+                          fontSize: 12,
+                          fontWeight: '500',
+                          color: AppColors.white,
+                        }}>
+                        {languageSwitch === 'english'
+                          ? 'My Bookings'
+                          : 'मेरी बुकिंगें'}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+
               {myBookingModal && <MyBookingModal />}
 
               {showTenMinuteButton && (
@@ -1591,89 +1722,84 @@ const TrustedDriver = ({navigation}) => {
         </ScrollView>
 
         {/* bottam Tab bar */}
+        {showNotice && homeNoticeData ? null : showNotification &&
+          homeNotificationData ? null : (
+          <View style={{justifyContent: 'flex-end'}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                paddingVertical: 20,
+                elevation: 20,
+                backgroundColor: '#fff',
+              }}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('AgentPanel')}
+                style={{alignItems: 'center', justifyContent: 'center'}}>
+                <Image
+                  source={Agent_Icon}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    marginBottom: 5,
+                    tintColor: AppColors.black,
+                  }}
+                />
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: '#000',
+                  }}>
+                  AGENT PANEL
+                </Text>
+              </TouchableOpacity>
 
-        {(showNotice && homeNoticeData) ||
-          (showNotification && homeNotificationData ? null : (
-            <View style={{justifyContent: 'flex-end'}}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                  alignItems: 'center',
-                  paddingVertical: 20,
-                  elevation: 20,
-                  backgroundColor: '#fff',
-                }}>
-                {/* Agent Panel */}
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('AgentPanel')}
-                  style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Image
-                    source={Agent_Icon}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      marginBottom: 5,
-                      tintColor: AppColors.black,
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      color: '#000',
-                    }}>
-                    AGENT PANEL
-                  </Text>
-                </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handlePressPremiumDriver()}
+                style={{alignItems: 'center', justifyContent: 'center'}}>
+                <Image
+                  source={PremiumDriver}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    marginBottom: 5,
+                    tintColor: AppColors.black,
+                  }}
+                />
 
-                {/* Premium Driver */}
-                <TouchableOpacity
-                  onPress={() => handlePressPremiumDriver()}
-                  style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Image
-                    source={PremiumDriver}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      marginBottom: 5,
-                      tintColor: AppColors.black,
-                    }}
-                  />
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: '#000',
+                  }}>
+                  PREMIUM DRIVER
+                </Text>
+              </TouchableOpacity>
 
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      color: '#000',
-                    }}>
-                    PREMIUM DRIVER
-                  </Text>
-                </TouchableOpacity>
-
-                {/* Trusted Partner */}
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('TrustedDriver')}
-                  style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Image
-                    source={TrustedPartner}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      marginBottom: 5,
-                      tintColor: AppColors.black,
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      color: '#000',
-                    }}>
-                    TRUSTED PARTNER
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('TrustedDriver')}
+                style={{alignItems: 'center', justifyContent: 'center'}}>
+                <Image
+                  source={TrustedPartner}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    marginBottom: 5,
+                    tintColor: AppColors.black,
+                  }}
+                />
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: '#000',
+                  }}>
+                  TRUSTED PARTNER
+                </Text>
+              </TouchableOpacity>
             </View>
-          ))}
-
+          </View>
+        )}
         {/* Modals */}
 
         <Modal
@@ -2100,6 +2226,133 @@ const TrustedDriver = ({navigation}) => {
             </View>
           </TouchableOpacity>
         </Modal>
+
+        {/* need help popup start */}
+
+        <Modal
+          transparent
+          visible={popoverVisibleNeedHelp}
+          animationType="fade">
+          <TouchableOpacity
+            style={{flex: 1, backgroundColor: 'rgba(121, 129, 116, 0.48)'}}
+            activeOpacity={1}
+            onPress={() => setPopoverVisibleNeedHelp(false)}>
+            <View
+              style={{
+                position: 'absolute',
+                top: popoverPositionNeedHelp.y,
+                // left: popoverPosition.x - 200, // Adjust left offset as per design
+                width: '70%',
+                // width: 160,
+                alignSelf: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#fff',
+                paddingVertical: 10,
+                borderRadius: 8,
+                elevation: 5,
+                shadowColor: '#000',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.3,
+                shadowRadius: 4,
+              }}>
+              {/* Arrow Pointer */}
+              <View
+                style={{
+                  position: 'absolute',
+                  top: -10,
+                  left: 180,
+                  width: 0,
+                  height: 0,
+                  borderLeftWidth: 10,
+                  borderRightWidth: 10,
+                  borderBottomWidth: 10,
+                  borderLeftColor: 'transparent',
+                  borderRightColor: 'transparent',
+                  borderBottomColor: '#fff',
+                }}
+              />
+
+              <TouchableOpacity
+                onPress={() => {
+                  setPopoverVisibleNeedHelp(false);
+                  navigation.navigate('TicketsDriver');
+                }}
+                style={{
+                  flexDirection: 'row', // Row layout
+                  alignItems: 'center', // Center align items
+                  paddingVertical: 8,
+                  paddingHorizontal: 12,
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#ddd',
+                  justifyContent: 'space-between',
+                }}>
+                <View>
+                  <Text style={{fontSize: 16, color: '#333'}}>
+                    Create Ticket
+                  </Text>
+                </View>
+
+                <View
+                  style={{
+                    width: 40,
+                    height: 40,
+                    backgroundColor: AppColors.white,
+                    borderRadius: 20,
+                    overflow: 'hidden',
+                    elevation: 5,
+                  }}>
+                  <Image
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                    source={HelpImage}
+                    resizeMode="cover"
+                  />
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  handlecallPress();
+                }}
+                style={{
+                  flexDirection: 'row', // Row layout
+                  alignItems: 'center', // Center align items
+                  paddingVertical: 8,
+                  paddingHorizontal: 12,
+                  justifyContent: 'space-between',
+                }}>
+                <View>
+                  <Text style={{fontSize: 16, color: '#333'}}>
+                    Call Support
+                  </Text>
+                </View>
+
+                <View
+                  style={{
+                    width: 40,
+                    height: 40,
+                    backgroundColor: AppColors.white,
+                    borderRadius: 20,
+                    overflow: 'hidden',
+                    elevation: 5,
+                  }}>
+                  <Image
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                    source={CallingGif}
+                    resizeMode="cover"
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+
+        {/* need help popup end */}
       </SafeAreaView>
     </View>
   );

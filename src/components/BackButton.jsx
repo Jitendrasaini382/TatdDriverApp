@@ -7,10 +7,10 @@ const BackButton = ({customeNavigation = null}) => {
   const navigation = useNavigation();
 
   const handlePress = useCallback(() => {
-    if (customeNavigation && customeNavigation.name) {
+    if (customeNavigation && customeNavigation?.name) {
       navigation.navigate(
-        customeNavigation.name,
-        customeNavigation.params || {},
+        customeNavigation?.name,
+        customeNavigation?.params || {},
       );
     } else {
       navigation.goBack();

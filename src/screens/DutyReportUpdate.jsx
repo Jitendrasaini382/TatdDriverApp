@@ -623,7 +623,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         GetAllBookingInfo();
       } else {
         Alert.alert(
-          'Error',
+          'Try Again',
           response?.otp_error_message?.otp_error_message ||
             'Wrong OTP Please Try Again Later',
           [

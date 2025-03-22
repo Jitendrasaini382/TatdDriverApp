@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,20 +8,17 @@ import {
   ScrollView,
   Pressable,
   Image,
-  Keyboard,
   Alert,
-  Platform,
-  Linking,
+  ActivityIndicator,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
-import {DRIVER_LOGIN} from '../apis/Apis';
-import {useNavigation} from '@react-navigation/native';
+import {SEND_REQUEST_AADHAR_EXEMPTION, VERIFY_AADHAR_OTP} from '../apis/Apis';
 import {Triangle_Icon} from '../assets/images';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import DeviceInfo from 'react-native-device-info';
+import {useSelector} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -32,71 +29,83 @@ const verticalScale = size => (height / designHeight) * size;
 const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;
 
-const DriverLogin = () => {
-  const navigation = useNavigation();
-  const [mobile, setMobile] = useState(null);
-  const [error, setError] = useState(null);
-  const [isFocused, setIsFocused] = useState(false);
-  const [loader, setLoader] = useState(false);
-  const appVersion = DeviceInfo.getVersion();
-  const appType = Platform.OS;
-
-  const handleChange = text => {
-    setMobile(text);
-    if (text.length == 10) {
-      Keyboard.dismiss();
-    }
-  };
-
-  const sendOtp = async () => {
-    try {
-      if (!mobile) {
-        setError('Please Enter Mobile Number');
-        return;
-      } else if (mobile.length !== 10) {
-        setError('Please Enter 10 digit Mobile Number');
-        return;
-      }
-      setError(null);
-      Keyboard.dismiss();
-      setLoader(true);
-      const response = await DRIVER_LOGIN({
-        mobile: mobile,
-        user_type: 'Driver',
-        app_version: appVersion,
-        app_type: appType,
-      });
-      if (response?.status_code == '200' && response?.msg_type == 'error') {
-        setLoader(false);
-        Alert.alert(response?.message);
-      } else if (
-        response?.status_code == '200' &&
-        response?.message == 'OTP sent successfully'
-      ) {
-        setLoader(false);
-        navigation.navigate('CheckDriverOtp', {mobile: mobile});
-      } else if (
-        response?.status_code == '200' &&
-        response?.message == 'Not Found in Trusted and registration table'
-      ) {
-        setLoader(false);
-        Linking.openURL(response?.redirect);
-      }
-    } catch (err) {
-      setLoader(false);
-      setError(err);
-    } finally {
-      setLoader(false);
-    }
-  };
-
+const AadharVerifyOtp = ({navigation, route}) => {
+  const {data} = route?.params || {};
+  const aadharNumber = data?.aadhaar_number;
+  const clientId = data?.client_id;
+  const driverName = data?.driver_name;
   const insets = useSafeAreaInsets();
+  const [otp, setOtp] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [exemptionLoader, setExemptionLoader] = useState(false);
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+
+  console.log(data, 'datadatadata');
+
+  //   console.log(clientId, 'clientId');
+  //   console.log(driverName, 'driverName');
+  //   console.log(aadharNumber, 'aadharNumber');
+
+  const verifyAadharOtp = async () => {
+    if (!otp) {
+      setError('Please enter OTP.');
+      return;
+    }
+    if (otp.length !== 6) {
+      setError('Please enter a valid 6-digit OTP.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await VERIFY_AADHAR_OTP({
+        action: 'verify_aadhaar_otp_api',
+        otp: otp,
+        client_id: clientId,
+        aadhaar_number: aadharNumber,
+        current_language: languageSwitch,
+      });
+      if (
+        response?.status_code == 200 &&
+        response?.success_message == 'success'
+      ) {
+        navigation.navigate('TrustedDriver');
+        Alert.alert('Success', response?.message);
+      } else {
+        Alert.alert(response?.message);
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRequestButton = async () => {
+    setExemptionLoader(true);
+    try {
+      const response = await SEND_REQUEST_AADHAR_EXEMPTION({
+        action: 'save_aadhaar_exemption',
+      });
+      if (
+        response?.status_code == 200 &&
+        response?.success_message == 'success'
+      ) {
+        navigation.navigate('TrustedDriver');
+      }
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+    } finally {
+      setExemptionLoader(false);
+    }
+  };
+
   return (
     <View style={[styles.safeArea]}>
       <View
         style={{height: insets.top, backgroundColor: AppColors.mainColor}}
       />
-      <Header backButton={false} isAuthenticated={false} />
+      <Header backButton={true} />
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
         keyboardShouldPersistTaps="always">
@@ -106,9 +115,7 @@ const DriverLogin = () => {
               <View style={styles.mainTopView}>
                 <View style={{flexDirection: 'row'}}>
                   <View style={styles.mainTopContent}>
-                    <Text style={styles.trustedText}>
-                      Trusted & Trained Driver
-                    </Text>
+                    <Text style={styles.trustedText}>{driverName}</Text>
                   </View>
                   <View style={styles.iconContainer}>
                     <Image
@@ -118,63 +125,68 @@ const DriverLogin = () => {
                     />
                   </View>
                 </View>
-                <Text style={styles.mainHeading}>Driver Login</Text>
+                <Text style={styles.mainHeading}>Submit Aadhar OTP</Text>
               </View>
 
               <View style={styles.mainMiddleView}>
                 <View style={styles.iconView}>
                   <Icon
-                    name="phone"
+                    name="sign-in"
                     size={moderateScale(15)}
                     color={AppColors.greyColor}
                   />
                 </View>
 
-                <View
-                  style={[
-                    styles.inputView,
-                    isFocused || mobile ? styles.inputFocused : null,
-                    {
-                      borderColor: isFocused
-                        ? AppColors.mainColor
-                        : AppColors.greyColor,
-                    },
-                  ]}>
+                <View style={[styles.inputView]}>
                   <TextInput
-                    style={[
-                      styles.inputText,
-                      {fontWeight: isFocused ? 'bold' : 'normal'},
-                    ]}
-                    onChangeText={handleChange}
+                    style={[styles.inputText]}
                     keyboardType="numeric"
-                    value={mobile}
-                    maxLength={10}
-                    placeholder="Enter Driver Mobile Number"
+                    value={otp}
+                    onChangeText={setOtp}
+                    maxLength={6}
+                    placeholder="Enter 6 Digit Aadhar OTP"
                     placeholderTextColor="rgb(42, 42, 42)"
-                    onFocus={() => {
-                      setIsFocused(true);
-                    }}
-                    onPressIn={() => {
-                      setIsFocused(true);
-                    }}
-                    onBlur={() => setIsFocused(false)}
                   />
                 </View>
               </View>
-              <View style={{marginHorizontal: moderateScale(30)}}>
-                <Text style={{color: AppColors.red, fontSize: 12}}>
-                  {error}
-                </Text>
-              </View>
-
+              <Text
+                style={{
+                  color: 'red',
+                  marginHorizontal: moderateScale(30),
+                  marginTop: 5,
+                }}>
+                {error}
+              </Text>
               <Pressable
-                style={styles.btnView}
-                disabled={loader}
-                onPress={() => sendOtp()}>
-                <Text style={styles.btnText}>
-                  {loader ? 'Sending OTP' : 'Submit'}
-                </Text>
+                disabled={loading}
+                // style={styles.btnView}
+
+                style={[
+                  styles.btnView,
+                  loading ? {backgroundColor: AppColors.greyColor} : null,
+                ]}
+                onPress={() => verifyAadharOtp()}>
+                {loading ? (
+                  <View style={{flexDirection: 'row'}}>
+                    <ActivityIndicator size="small" color={AppColors.white} />
+                    <Text style={styles.btnText}> Verifying OTP... </Text>
+                  </View>
+                ) : (
+                  <Text style={styles.btnText}>Submit</Text>
+                )}
               </Pressable>
+
+              {data?.request_button == 1 ? (
+                <>
+                  <Text style={styles.descHindi}>{data?.aadhaar_sms}</Text>
+                  <Pressable
+                    disabled={exemptionLoader}
+                    style={styles.btnView}
+                    onPress={() => handleRequestButton()}>
+                    <Text style={styles.btnText}>Request Button</Text>
+                  </Pressable>
+                </>
+              ) : null}
             </View>
           </View>
         </View>
@@ -323,6 +335,21 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: AppFont.regularFont,
   },
+
+  descHindi: {
+    fontSize: 15,
+    color: AppColors.black,
+    // marginBottom: 10,
+    paddingHorizontal: 20,
+    alignSelf: 'flex-start',
+  },
+  descEnglish: {
+    fontSize: 15,
+    paddingHorizontal: 20,
+    color: AppColors.black,
+    marginBottom: 50,
+    alignSelf: 'flex-start',
+  },
 });
 
-export default DriverLogin;
+export default AadharVerifyOtp;

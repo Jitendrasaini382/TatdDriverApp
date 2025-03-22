@@ -709,3 +709,39 @@ export const PARTNER_ONBOOKING_CALL_SUPPORT = body => {
     {},
   );
 };
+
+export const VIEW_AADHAR_NUMBER = body => {
+  return _Fetch(
+    'POST',
+    'verification/view-aadhaar-number-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const SEND_AADHAR_OTP = body => {
+  return _Fetch(
+    'POST',
+    'verification/submit-aadhaar-otp-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const VERIFY_AADHAR_OTP = body => {
+  return _Fetch(
+    'POST',
+    'verification/verify-aadhaar-otp-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const SEND_REQUEST_AADHAR_EXEMPTION = body => {
+  return _Fetch(
+    'POST',
+    'verification/send-request-aadhaar-exemption-api.php',
+    {...body},
+    {},
+  );
+};

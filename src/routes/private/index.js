@@ -40,6 +40,8 @@ import PremiumDriverRegistrationProcess from '../../screens/PremiumDriverRegistr
 import DriverTrainingModulePhaseThree from '../../screens/DriverTrainingModulePhaseThree';
 import DriverTrainingModulePhaseTwo from '../../screens/DriverTrainingModulePhaseTwo';
 import DriverTrainingModulePhaseOne from '../../screens/DriverTrainingModulePhaseOne';
+import AadharVerification from '../../screens/AadharVerification';
+import AadharVerifyOtp from '../../screens/AadharVerifyOtp';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -153,6 +155,11 @@ const PrivateRoute = () => {
           name="DriverTrainingModulePhaseThree"
           component={DriverTrainingModulePhaseThree}
         />
+        <Stack.Screen
+          name="AadharVerification"
+          component={AadharVerification}
+        />
+        <Stack.Screen name="AadharVerifyOtp" component={AadharVerifyOtp} />
       </Stack.Navigator>
     </>
   );

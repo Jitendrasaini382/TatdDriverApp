@@ -735,6 +735,10 @@ const TrustedDriver = ({navigation}) => {
           case 'adhaar-verification':
             navigation.navigate('AadharVerification');
             break;
+          case 'documents-upload':
+            navigation.navigate('DriverDocumentsUploads');
+
+            break;
           default:
             openMyUrl(response?.url);
             break;
@@ -1423,7 +1427,7 @@ const TrustedDriver = ({navigation}) => {
                       <View style={styles.topLeft}>
                         <Text style={styles.topLeftText}>
                           {decodedToken &&
-                            decodedToken.DriverCommisonData.commission}
+                            decodedToken?.DriverCommisonData?.commission}
                           %
                         </Text>
                         <Text style={styles.bottamLeftText}>Commission</Text>
@@ -1435,7 +1439,8 @@ const TrustedDriver = ({navigation}) => {
                             <Text style={styles.rupeeIcon}>
                               <Icon name="rupee" size={responsiveSize(8)} />{' '}
                               {decodedToken &&
-                                decodedToken.DriverCommisonData.earning_30days}
+                                decodedToken?.DriverCommisonData
+                                  ?.earning_30days}
                             </Text>
                           </View>
                         </TouchableOpacity>
@@ -1469,7 +1474,7 @@ const TrustedDriver = ({navigation}) => {
                     <View style={styles.bottamView}>
                       <View style={styles.driverNameView}>
                         <Text style={styles.driverNameText}>
-                          {decodedToken && decodedToken.driver_name}
+                          {decodedToken && decodedToken?.driver_name}
                         </Text>
                       </View>
 
@@ -1492,7 +1497,7 @@ const TrustedDriver = ({navigation}) => {
                                 },
                               ]}>
                               {decodedToken &&
-                                decodedToken.TrustedDriverData.otr}{' '}
+                                decodedToken?.TrustedDriverData?.otr}
                               %
                             </Text>
                             <Text
@@ -1526,7 +1531,7 @@ const TrustedDriver = ({navigation}) => {
                                 },
                               ]}>
                               {decodedToken &&
-                                decodedToken.TrustedDriverData.rating}
+                                decodedToken?.TrustedDriverData?.rating}
                             </Text>
                             <Text
                               style={[
@@ -1560,7 +1565,7 @@ const TrustedDriver = ({navigation}) => {
                                 },
                               ]}>
                               {decodedToken &&
-                                decodedToken.TrustedDriverData.recent_dcr}{' '}
+                                decodedToken?.TrustedDriverData?.recent_dcr}
                               %
                             </Text>
                             <Text
@@ -1680,7 +1685,7 @@ const TrustedDriver = ({navigation}) => {
                           },
                         ]}>
                         <Icon name="rupee" size={responsiveSize(9)} />{' '}
-                        {decodedToken && decodedToken.DRIVER_CLEAR_MY_DUE}
+                        {decodedToken && decodedToken?.DRIVER_CLEAR_MY_DUE}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -1778,7 +1783,9 @@ const TrustedDriver = ({navigation}) => {
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={() => navigation.navigate('TrustedDriver')}
+                // onPress={() => navigation.navigate('TrustedDriver')}
+                onPress={() => navigation.navigate('CompleteVerification')}
+                // onPress={() => navigation.navigate('DriverDocumentsUploads')}
                 style={{alignItems: 'center', justifyContent: 'center'}}>
                 <Image
                   source={TrustedPartner}
@@ -2275,7 +2282,7 @@ const TrustedDriver = ({navigation}) => {
               <TouchableOpacity
                 onPress={() => {
                   setPopoverVisibleNeedHelp(false);
-                  navigation.navigate('TicketsDriver');
+                  navigation.navigate('TicketsDriver', {bookingNumber: ''});
                 }}
                 style={{
                   flexDirection: 'row', // Row layout

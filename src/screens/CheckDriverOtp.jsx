@@ -151,21 +151,21 @@ const CheckDriverOtp = ({navigation, route}) => {
         dispatch(
           setUserAuthStates({
             key: 'jwt',
-            value: response.jwt,
+            value: response?.jwt,
           }),
         );
 
         dispatch(
           setUserAuthStates({
             key: 'refreshToken',
-            value: response.refresh_token,
+            value: response?.refresh_token,
           }),
         );
 
         dispatch(
           setUserAuthStates({
             key: 'userProfile',
-            value: jwtDecode(response.jwt),
+            value: jwtDecode(response?.jwt),
           }),
         );
 

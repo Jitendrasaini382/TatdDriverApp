@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {AppColors} from '../../assets/Colors';
-import RoundTripBookingAceeptModal from '../modal/RoundTripBookingAceeptModal';
 import {FlatList} from 'react-native';
 import PermanentSubscrptionBookingAcceptPopup from '../modal/PermanentSubscrptionBookingAcceptPopup';
 const {width} = Dimensions.get('window');
@@ -17,7 +16,7 @@ const {width} = Dimensions.get('window');
 const TripCard = ({trip}) => {
   const [openModal, setOpenModal] = useState(false);
 
-  if (!trip || trip.length === 0) {
+  if (!trip || trip?.length === 0) {
     return null;
   }
 
@@ -72,7 +71,7 @@ const PermanentSubscriptionBookingView = ({
 }) => {
   if (
     !permanentSubscriptionBookingData ||
-    permanentSubscriptionBookingData.length === 0
+    permanentSubscriptionBookingData?.length === 0
   ) {
     return null;
   }

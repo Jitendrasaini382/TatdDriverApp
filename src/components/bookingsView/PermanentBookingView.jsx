@@ -7,6 +7,7 @@ import {
   View,
   FlatList,
   Modal,
+  Alert,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import PermanentBookingAcceptModal from '../modal/PermanentBookingAcceptModal';
@@ -15,6 +16,7 @@ import {AppFont} from '../../assets/FontsFamily';
 import {PERMANENT_BOOKING} from '../../apis/Apis';
 import {useDispatch, useSelector} from 'react-redux';
 import {setTriggerFunction} from '../../redux/slices/globalSlice';
+import {Clipboard} from 'react-native';
 
 const BookingCard = ({booking}) => {
   const [openModal, setOpenModal] = useState(false);
@@ -53,8 +55,13 @@ const BookingCard = ({booking}) => {
         P_ID: P_ID,
         current_language: languageSwitch,
       });
-      setPermanentBookingPopup(response.permanent_booking_popup_data);
+      setPermanentBookingPopup(response?.permanent_booking_popup_data);
     } catch (error) {}
+  };
+
+  const copyToClipboard = data => {
+    Clipboard.setString(data);
+    Alert.alert('Copied Successfully', `${data}`);
   };
 
   return (
@@ -72,7 +79,9 @@ const BookingCard = ({booking}) => {
             {working_days} Days | {working_hours} Hours
           </Text>
         </View>
-        <Text style={styles.location}>{locality}</Text>
+        <Text onPress={() => copyToClipboard(locality)} style={styles.location}>
+          {locality}
+        </Text>
         <View style={styles.eventContainer}>
           <Text style={styles.eventTypeText}>Interview</Text>
           <Text style={styles.eventText}>{trial_date}</Text>
@@ -129,10 +138,10 @@ const PermanentBookingView = () => {
 
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
   const triggerFunction = useSelector(
-    state => state.globalSlice.triggerFunction,
+    state => state?.globalSlice?.triggerFunction,
   );
 
-  const refreshKey = useSelector(state => state.globalSlice.refreshKey);
+  const refreshKey = useSelector(state => state?.globalSlice?.refreshKey);
 
   useEffect(() => {
     getPermanentBookings();
@@ -150,7 +159,7 @@ const PermanentBookingView = () => {
         current_language: languageSwitch,
       });
 
-      setPermanentBookings(response.permanent_driver_bookings_my_zone);
+      setPermanentBookings(response?.permanent_driver_bookings_my_zone);
     } catch (error) {}
   };
 
@@ -162,7 +171,7 @@ const PermanentBookingView = () => {
         current_language: languageSwitch,
       });
 
-      setPermanentBookingsOthers(response.permanent_driver_bookings_other_zone);
+      setPermanentBookingsOthers(response?.permanent_driver_bookings_other_zone);
     } catch (error) {}
   };
 

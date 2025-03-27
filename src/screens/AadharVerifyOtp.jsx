@@ -71,9 +71,9 @@ const AadharVerifyOtp = ({navigation, route}) => {
         response?.success_message == 'success'
       ) {
         navigation.navigate('TrustedDriver');
-        Alert.alert('Success', response?.message);
+        Alert.alert('', response?.message);
       } else {
-        Alert.alert(response?.message);
+        Alert.alert("",response?.message);
       }
     } catch (error) {
     } finally {

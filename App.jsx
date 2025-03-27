@@ -101,28 +101,28 @@ const App = () => {
   };
 
   // Monitor network connectivity
-  const monitorNetworkConnection = () => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      setIsConnected(state.isConnected);
-    });
+    // const monitorNetworkConnection = () => {
+    //   const unsubscribe = NetInfo.addEventListener(state => {
+    //     setIsConnected(state.isConnected);
+    //   });
 
-    return unsubscribe;
-  };
+    //   return unsubscribe;
+    // };
 
   useEffect(() => {
     const unsubscribeMessages = handleIncomingMessages();
     return () => unsubscribeMessages();
   }, []);
 
-  useEffect(() => {
-    const unsubscribeNetInfo = monitorNetworkConnection();
-    return () => unsubscribeNetInfo();
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribeNetInfo = monitorNetworkConnection();
+  //   return () => unsubscribeNetInfo();
+  // }, []);
 
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        {!isConnected ? (
+        {/* {!isConnected ? (
           <View style={styles.noInternetOverlay}>
             <ActivityIndicator size="large" color={AppColors.red} />
             <Text style={styles.noInternetText}>No Internet Connection</Text>
@@ -130,11 +130,11 @@ const App = () => {
               Please check your internet connection
             </Text>
           </View>
-        ) : (
+        ) : ( */}
           <NavigationContainer ref={navigationRef}>
             <Route />
           </NavigationContainer>
-        )}
+        {/* )} */}
       </PersistGate>
     </Provider>
   );

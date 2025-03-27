@@ -1,16 +1,30 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+  Pressable,
+  Alert,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {AppColors} from '../../assets/Colors';
 import RoundTripBookingAceeptModal from '../modal/RoundTripBookingAceeptModal';
 import {FlatList} from 'react-native';
+import { Clipboard } from 'react-native';
 
 const TripCard = ({trip}) => {
   const [openModal, setOpenModal] = useState(false);
 
-  if (!trip || trip.length === 0) {
+  if (!trip || trip?.length === 0) {
     return null;
   }
+
+  const copyToClipboard = data => {
+    Clipboard.setString(data);
+    Alert.alert('Copied Successfully', `${data}`);
+  };
 
   return (
     <View style={{flexDirection: 'column', marginBottom: 10}}>
@@ -85,7 +99,9 @@ const TripCard = ({trip}) => {
             <Text style={styles.title}>
               {trip?.way_type} - {trip?.product_type}
             </Text>
-            <View style={{flexDirection: 'row'}}>
+            <Pressable
+              onPress={() => copyToClipboard(trip?.pickup_address)}
+              style={{flexDirection: 'row'}}>
               <View
                 style={{
                   height: 10,
@@ -97,7 +113,7 @@ const TripCard = ({trip}) => {
                   left: 10,
                 }}></View>
               <Text style={styles.address}>{trip?.pickup_address}</Text>
-            </View>
+            </Pressable>
             {trip?.drop_address && (
               <View style={{flexDirection: 'row'}}>
                 <View

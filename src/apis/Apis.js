@@ -745,3 +745,27 @@ export const SEND_REQUEST_AADHAR_EXEMPTION = body => {
     {},
   );
 };
+
+export const DRIVER_DOCUMENT_UPLOADED_STATUS = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/document-upload-status-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const DRIVER_DOCUMENTS_UPLOAD = body => {
+  return _Fetch('POST', 'trusted-driver/document-upload-submit-api.php', body, {
+    'Content-Type': 'multipart/form-data',
+  });
+};
+
+export const GET_DRIVER_UPLOADED_DATA = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/document-status-rejected-api.php',
+    {...body},
+    {},
+  );
+};

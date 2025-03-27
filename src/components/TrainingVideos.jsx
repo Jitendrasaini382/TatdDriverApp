@@ -55,13 +55,13 @@ const TrainingVideo = () => {
         trainingVideoData.map((item, index) => (
           <AccordionItem
             key={index}
-            title={item.subject}
-            videoId={item.videoId}
-            id={item.id}
-            icon={item.icon}
-            eligibility={item.eligibility}
+            title={item?.subject}
+            videoId={item?.videoId}
+            id={item?.id}
+            icon={item?.icon}
+            eligibility={item?.eligibility}
             isOpen={openIndex === index}
-            onToggle={() => toggleItem(index, item.id)}
+            onToggle={() => toggleItem(index, item?.id)}
             index={index + 1}
           />
         ))}

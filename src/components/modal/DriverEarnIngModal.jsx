@@ -27,7 +27,7 @@ const DriverEarningModal = ({setIsModalVisible, bookingNumber}) => {
         action: 'view_earning_popup',
         booking_number: bookingNumber,
       });
-      setTripDetails(response.earning_details);
+      setTripDetails(response?.earning_details);
       setLoading(false);
     } catch (error) {
     } finally {
@@ -56,32 +56,32 @@ const DriverEarningModal = ({setIsModalVisible, bookingNumber}) => {
 
           {tripDetails && (
             <View style={styles.bottomContent}>
-              <DetailRow label="Trip Type:" value={tripDetails.trip_type} />
+              <DetailRow label="Trip Type:" value={tripDetails?.trip_type} />
               <DetailRow label="Booking Number:" value={bookingNumber} />
-              <DetailRow label="Package:" value={tripDetails.package} />
+              <DetailRow label="Package:" value={tripDetails?.package} />
               <DetailRow
-                label={`Package Price : ${tripDetails.payment_mode}`}
-                value={`Rs ${tripDetails.package_price}`}
+                label={`Package Price : ${tripDetails?.payment_mode}`}
+                value={`Rs ${tripDetails?.package_price}`}
               />
-              <DetailRow label="GST : 5%" value={`Rs ${tripDetails.gst}`} />
+              <DetailRow label="GST : 5%" value={`Rs ${tripDetails?.gst}`} />
               <DetailRow
                 label="Commission : 20%"
-                value={`Rs ${tripDetails.commission}`}
+                value={`Rs ${tripDetails?.commission}`}
               />
 
               <View style={styles.dashedLine} />
 
               <DetailRow
                 label="Net Earning:"
-                value={`Rs ${tripDetails.net_earning}`}
+                value={`Rs ${tripDetails?.net_earning}`}
               />
 
               <View style={styles.dashedLine} />
 
               <View style={styles.additionalInfoContainer}>
-                {tripDetails.additional_charges &&
-                  tripDetails.additional_charges.length > 0 &&
-                  tripDetails.additional_charges.map((charge, index) => (
+                {tripDetails?.additional_charges &&
+                  tripDetails?.additional_charges?.length > 0 &&
+                  tripDetails?.additional_charges.map((charge, index) => (
                     <InfoPoint
                       key={index}
                       text={charge}
@@ -89,7 +89,7 @@ const DriverEarningModal = ({setIsModalVisible, bookingNumber}) => {
                     />
                   ))}
                 <InfoPoint
-                  text={`Return to TAT D- Rs. ${tripDetails.return_to_tatd}`}
+                  text={`Return to TAT D- Rs. ${tripDetails?.return_to_tatd}`}
                 />
               </View>
 

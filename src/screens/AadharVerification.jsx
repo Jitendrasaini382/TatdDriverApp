@@ -80,11 +80,11 @@ const AadharVerification = ({navigation, route}) => {
       ) {
         navigation.navigate('AadharVerifyOtp', {data: response});
       } else {
-        Alert.alert('Success', response?.success_message);
+        Alert.alert('', response?.success_message);
       }
     } catch (error) {
       console.error('Error in sendOtp function:', error);
-      Alert.alert('Error', error?.message);
+      Alert.alert('', error?.message);
     } finally {
       setOtpLoader(false);
     }
@@ -111,9 +111,9 @@ const AadharVerification = ({navigation, route}) => {
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
-              onRefresh={() => {
+              onRefresh={async () => {
                 setRefreshing(true);
-                getAllAgentKycInfo();
+                await getAllAgentKycInfo();
               }}
             />
           }

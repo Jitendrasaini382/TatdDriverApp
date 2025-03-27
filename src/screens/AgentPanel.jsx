@@ -203,7 +203,7 @@ const AgentPanel = ({navigation}) => {
                     {allAgentInfo?.training_video_unseen}
                   </Text>
                   <View style={styles.absoulteView}>
-                    <Text style={[styles.bottamContent1Text, ,]}>Training</Text>
+                    <Text style={[styles.bottamContent1Text]}>Training</Text>
                     <Text style={[styles.bottamContent1Text]}>Videos</Text>
                   </View>
                 </TouchableOpacity>

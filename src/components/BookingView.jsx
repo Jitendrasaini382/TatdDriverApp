@@ -44,28 +44,28 @@ const BookingView = ({
       <View style={styles.notificationContainer}>
         {data?.driver_panel_messages?.booking_score_message && (
           <Text style={[styles.notificationText, {color: 'green'}]}>
-            {data.driver_panel_messages.booking_score_message}
+            {data?.driver_panel_messages?.booking_score_message}
           </Text>
         )}
         {data?.driver_panel_messages?.double_booking_eligibility && (
           <Text style={styles.notificationText}>
-            {data.driver_panel_messages.double_booking_eligibility}
+            {data?.driver_panel_messages?.double_booking_eligibility}
           </Text>
         )}
 
         {data?.driver_panel_messages?.incident_error_message && (
           <Text style={styles.notificationText}>
-            {data.driver_panel_messages.incident_error_message}
+            {data?.driver_panel_messages?.incident_error_message}
           </Text>
         )}
         {data?.driver_panel_messages?.outstanding_message && (
           <Text style={styles.notificationText}>
-            {data.driver_panel_messages.outstanding_message}
+            {data?.driver_panel_messages?.outstanding_message}
           </Text>
         )}
         {data?.driver_panel_messages?.outstation_eligibility_message && (
           <Text style={styles.notificationText}>
-            {data.driver_panel_messages.outstation_eligibility_message}
+            {data?.driver_panel_messages?.outstation_eligibility_message}
           </Text>
         )}
       </View>

@@ -63,10 +63,10 @@ const ViewAwarenessData = () => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.subjectText}>{awareness.subject}</Text>
+                <Text style={styles.subjectText}>{awareness?.subject}</Text>
               </View>
               <View style={styles.timestampContainer}>
-                <Text style={styles.timestampText}>{awareness.timestamp}</Text>
+                <Text style={styles.timestampText}>{awareness?.timestamp}</Text>
               </View>
             </TouchableOpacity>
           </View>

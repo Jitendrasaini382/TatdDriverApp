@@ -19,6 +19,7 @@ import {
 } from '../../redux/slices/globalSlice';
 
 const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
+  if (!trip) return null;
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [checked1, setChecked1] = useState(false);
@@ -53,7 +54,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
       if (response?.status_code == '200') {
         if (response?.msg_type == 'error') {
           // Alert.alert('Error', response?.message, [{text: 'OK'}]);
-          Alert.alert('Error', response?.message, [
+          Alert.alert('', response?.message, [
             {
               text: 'OK',
               onPress: () => {
@@ -73,7 +74,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
           });
         }
       } else {
-        Alert.alert('Error', response?.message, [
+        Alert.alert('', response?.message, [
           {
             text: 'OK',
             onPress: () => {

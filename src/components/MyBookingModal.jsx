@@ -50,7 +50,7 @@ const MyBookingModal = ({}) => {
   };
 
   const myBookingModal = useSelector(
-    state => state.trustedDriverSlice.myBookingModal,
+    state => state?.trustedDriverSlice?.myBookingModal,
   );
 
   const handleSubmit = booking => {
@@ -96,7 +96,7 @@ const MyBookingModal = ({}) => {
                         styles.tabText,
                         myBookingStyle && styles.activeTabText,
                       ]}>
-                      {myBookingData.mybooking_txt}
+                      {myBookingData?.mybooking_txt}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -111,8 +111,8 @@ const MyBookingModal = ({}) => {
                         styles.tabText,
                         !myBookingStyle && styles.activeTabText,
                       ]}>
-                      {myBookingData.due_txt}
-                      {myBookingData.total}
+                      {myBookingData?.due_txt}
+                      {myBookingData?.total}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -158,14 +158,14 @@ const MyBookingModal = ({}) => {
                               <View
                                 style={[
                                   styles.bookingCard,
-                                  {backgroundColor: item.bg},
+                                  {backgroundColor: item?.bg},
                                 ]}>
                                 <Text
                                   style={[
                                     styles.bookingText,
                                     {color: item.color},
                                   ]}>
-                                  {item.booking_id} - {item.booking_date}
+                                  {item?.booking_id} - {item?.booking_date}
                                 </Text>
                                 <Image
                                   resizeMode="center"
@@ -185,7 +185,7 @@ const MyBookingModal = ({}) => {
                         </View>
                       }
                       contentContainerStyle={
-                        myBookingData.bookings?.length === 0 && {
+                        myBookingData?.bookings?.length === 0 && {
                           flexGrow: 1,
                           justifyContent: 'center',
                         }
@@ -197,15 +197,15 @@ const MyBookingModal = ({}) => {
                 !loader && (
                   <>
                     <ScrollView style={styles.bookingContainer}>
-                      {myBookingData.clear_my_due_bookings &&
-                      myBookingData.clear_my_due_bookings.length > 0
-                        ? myBookingData.clear_my_due_bookings.map(
+                      {myBookingData?.clear_my_due_bookings &&
+                      myBookingData?.clear_my_due_bookings.length > 0
+                        ? myBookingData?.clear_my_due_bookings.map(
                             (booking, index) => (
                               <Pressable
                                 key={index}
                                 onPress={() =>
                                   navigation.navigate('DutyReportUpdate', {
-                                    bookingNumber: booking.booking_id,
+                                    bookingNumber: booking?.booking_id,
                                     state: '',
                                   })
                                 }>
@@ -220,7 +220,7 @@ const MyBookingModal = ({}) => {
                                       styles.activeBookingText,
                                       {fontWeight: '700'},
                                     ]}>
-                                    {booking.booking_id}
+                                    {booking?.booking_id}
                                   </Text>
                                   <Text
                                     style={[
@@ -228,7 +228,7 @@ const MyBookingModal = ({}) => {
                                       styles.activeBookingText,
                                       {fontWeight: '700'},
                                     ]}>
-                                    {'        '}+ {booking.amount}
+                                    {'        '}+ {booking?.amount}
                                   </Text>
                                   <Image
                                     resizeMode="center"
@@ -256,7 +256,7 @@ const MyBookingModal = ({}) => {
                               styles.bookingText,
                               styles.activeBookingText,
                             ]}>
-                            {myBookingData.clear_my_due_txt}
+                            {myBookingData?.clear_my_due_txt}
                           </Text>
                           <Image
                             resizeMode="center"

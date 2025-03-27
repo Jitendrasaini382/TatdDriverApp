@@ -21,25 +21,6 @@ import {useRoute} from '@react-navigation/native';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
-const data = [
-  {
-    type: 'Agent Commission',
-    amount: 880,
-    date: '23 Jun, 2024',
-    paidDate: '26 Jun, 2024',
-    agentName: 'Surendar Yadav',
-    invoiceValue: 8800,
-  },
-  {
-    type: 'Agent Commission',
-    amount: 110,
-    date: '03 Apr, 2024',
-    paidDate: '10 Apr, 2024',
-    agentName: 'Rahul Sharma',
-    invoiceValue: 1000,
-  },
-];
-
 const AgentWallet = ({navigation}) => {
   const route = useRoute();
   const isFromMyNetwork = route?.params?.from == 'myNetwork';

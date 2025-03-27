@@ -68,7 +68,7 @@ const DriverLogin = () => {
       });
       if (response?.status_code == '200' && response?.msg_type == 'error') {
         setLoader(false);
-        Alert.alert(response?.message);
+        Alert.alert("",response?.message);
       } else if (
         response?.status_code == '200' &&
         response?.message == 'OTP sent successfully'

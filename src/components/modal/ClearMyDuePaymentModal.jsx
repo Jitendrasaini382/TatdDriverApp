@@ -23,17 +23,6 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal, tripDetails}) => {
 
   // console.log(tripDetails, 'tripDetails >>>>>>>>>>>>>>>>>>>>>>>>>>');
 
-  const ggg = {
-    booking_type: 'Permanent',
-    line1: 'Salary - Rs ',
-    line2: 'Working Days - ',
-    line3: 'Working Hours - ',
-    line4: ' Overtime - 90 Rs Per Hour',
-    line5: 'Trial 1 hours - 234 Rs का है। ',
-    line6: 'ध्यान रहे - हमे कस्टमर की परेशानी कम करनी है उसे बढ़ाना नहीं।',
-    status_code: 200,
-  };
-
   return (
     <ScrollView>
       <View style={styles.modalContainer}>
@@ -215,7 +204,7 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal, tripDetails}) => {
           {tripDetails?.package_price && (
             <DetailRow
               label="Package Price : Cash"
-              value={`Rs ${tripDetails.package_price}`}
+              value={`Rs ${tripDetails?.package_price}`}
             />
           )}
           {tripDetails?.gst_price && (

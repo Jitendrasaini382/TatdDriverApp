@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Modal,
   Dimensions,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {AppColors} from '../../assets/Colors';
@@ -15,14 +16,20 @@ import {FlatList} from 'react-native';
 import {WEEKLY_BOOKING} from '../../apis/Apis';
 import {useDispatch, useSelector} from 'react-redux';
 import {setTriggerFunction} from '../../redux/slices/globalSlice';
+import {Clipboard} from 'react-native';
 const {width} = Dimensions.get('window');
 
 const BookingCard = ({booking, index, total}) => {
   const [openModal, setOpenModal] = useState(false);
 
-  if (!booking || booking.length === 0) {
+  if (!booking || booking?.length === 0) {
     return null;
   }
+
+  const copyToClipboard = data => {
+    Clipboard.setString(data);
+    Alert.alert('Copied Successfully', `${data}`);
+  };
 
   return (
     <View style={styles.card}>
@@ -38,7 +45,11 @@ const BookingCard = ({booking, index, total}) => {
           <Text style={styles.vehicleText}>{booking?.vehicle_type}</Text>
         </View>
       </View>
-      <Text style={styles.title}>{booking?.pickup_address}</Text>
+      <Text
+        onPress={() => copyToClipboard(booking?.pickup_address)}
+        style={styles.title}>
+        {booking?.pickup_address}
+      </Text>
 
       <View style={styles.dates}>
         <Text style={styles.dateText}>{booking?.date_wie.join(' | ')}</Text>

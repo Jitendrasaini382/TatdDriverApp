@@ -6,6 +6,7 @@ import CheckDriverOtp from '../../screens/CheckDriverOtp';
 import SplashScreen from '../../screens/SplashScreen';
 import {AppColors} from '../../assets/Colors';
 import {useSelector} from 'react-redux';
+import ErrorBoundry from '../../utils/ErrorBoundry';
 
 const Stack = createStackNavigator();
 
@@ -21,17 +22,22 @@ const PublicRoute = () => {
         showHideTransition="slide"
         hidden={false}
       />
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}>
-          {isSplash && (
-            <Stack.Screen name="SplashScreen" component={SplashScreen} />
-          )}
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
+        {isSplash && (
+          <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        )}
 
-          <Stack.Screen name="DriverLogin" component={DriverLogin} />
-          <Stack.Screen name="CheckDriverOtp" component={CheckDriverOtp} />
-        </Stack.Navigator>
+        <Stack.Screen name="DriverLogin">
+          {props => <ErrorBoundry Component={DriverLogin} {...props} />}
+        </Stack.Screen>
+
+        <Stack.Screen name="CheckDriverOtp">
+          {props => <ErrorBoundry Component={CheckDriverOtp} {...props} />}
+        </Stack.Screen>
+      </Stack.Navigator>
     </>
   );
 };

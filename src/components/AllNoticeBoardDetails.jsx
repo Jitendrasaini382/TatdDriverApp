@@ -100,11 +100,11 @@ const AllNoticeBoardComponent = () => {
 
             <View style={styles.textContainer}>
               <Text style={styles.subjectText} numberOfLines={1}>
-                {noticeBoard.subject}
+                {noticeBoard?.subject}
               </Text>
             </View>
             <View style={{alignSelf: 'flex-end'}}>
-              <Text style={styles.subjectText}>{noticeBoard.timestamp}</Text>
+              <Text style={styles.subjectText}>{noticeBoard?.timestamp}</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -199,7 +199,7 @@ export const NoticeBoardDetailScreen = ({route}) => {
                     fontWeight: 'bold',
                     textAlign: 'center',
                   }}>
-                  {notice.subject}
+                  {notice?.subject}
                 </Text>
               </View>
               <View
@@ -226,7 +226,7 @@ export const NoticeBoardDetailScreen = ({route}) => {
                       fontSize: 18,
                       marginBottom: 20,
                     }}>
-                    {notice.description}
+                    {notice?.description}
                   </Text>
 
                   {bottamButtonText?.back_btn == '1' ? (

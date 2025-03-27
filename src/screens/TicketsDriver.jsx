@@ -131,7 +131,7 @@ const TicketsDriver = ({navigation}) => {
   );
 
   const handleCreateTicket = async () => {
-    if (!field.remarks) {
+    if (!field?.remarks) {
       setError(
         languageSwitch == 'hindi'
           ? 'कृपया अपनी समस्या लिखें।'
@@ -140,7 +140,7 @@ const TicketsDriver = ({navigation}) => {
       return;
     }
 
-    if (field.remarks.length < 50) {
+    if (field?.remarks?.length < 50) {
       setError(
         languageSwitch == 'hindi'
           ? 'कृपया पूरी समस्या सही से बताएं।'
@@ -153,11 +153,11 @@ const TicketsDriver = ({navigation}) => {
 
     try {
       // If booking number exists, validate it
-      if (field.tbooking_id) {
+      if (field?.tbooking_id) {
         const checkResponse = await TICKETS_DRIVER(checkField);
 
         if (
-          checkResponse.status_code === 200 &&
+          checkResponse?.status_code == 200 &&
           checkResponse?.message === 'valid_booking_id'
         ) {
           await createTicket();
@@ -178,7 +178,7 @@ const TicketsDriver = ({navigation}) => {
     try {
       const createResponse = await TICKETS_DRIVER(field);
 
-      if (createResponse.status_code === 200) {
+      if (createResponse?.status_code == 200) {
         checkOpenTicket();
 
         setCreateTicketModal(false);
@@ -188,7 +188,7 @@ const TicketsDriver = ({navigation}) => {
         resetFields();
         setError('');
 
-        Alert.alert('Success', createResponse.message, [
+        Alert.alert('', createResponse.message, [
           {
             text: 'OK',
             onPress: () => {

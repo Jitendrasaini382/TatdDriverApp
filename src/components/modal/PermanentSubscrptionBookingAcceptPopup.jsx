@@ -62,7 +62,7 @@ const PermanentSubscrptionBookingAcceptPopup = ({setOpenModal, trip}) => {
       });
 
       if (response?.status_code == '200' && response?.status == "success") {
-        Alert.alert('Success', response?.message, [
+        Alert.alert('', response?.message, [
           {
             text: 'OK',
             onPress: () => {
@@ -73,7 +73,7 @@ const PermanentSubscrptionBookingAcceptPopup = ({setOpenModal, trip}) => {
           },
         ]);
       } else {
-        Alert.alert('Error', response?.message, [
+        Alert.alert('', response?.message, [
           {
             text: 'OK',
             onPress: () => {
@@ -85,7 +85,7 @@ const PermanentSubscrptionBookingAcceptPopup = ({setOpenModal, trip}) => {
         ]);
       }
     } catch (error) {
-      Alert.alert('Error', error?.message, [
+      Alert.alert('', error?.message, [
         {
           text: 'OK',
           onPress: () => {

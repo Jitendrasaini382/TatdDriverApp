@@ -124,7 +124,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       if (response?.msg_type == 'error') {
         // Alert.alert(response?.message);
         Alert.alert(
-          'Success',
+          '',
           response?.message || 'No message available', // Full message content with a fallback
           [{text: 'OK'}], // Action buttons
         );
@@ -164,7 +164,7 @@ const DutyReportUpdate = ({route, navigation}) => {
 
       GetAllBookingInfo();
       if (response?.msg_type == 'error') {
-        Alert.alert('Success', response?.message || 'No message available', [
+        Alert.alert('', response?.message || 'No message available', [
           {text: 'OK'},
         ]);
       }
@@ -700,7 +700,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         return false;
       } else {
         if (res?.message_type == 'error') {
-          Alert.alert(res?.errormessage?.error_message);
+          Alert.alert('', res?.errormessage?.error_message);
           setModalVisibleEnd(false);
         } else {
           setModalVisibleEnd(false);
@@ -894,7 +894,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         response?.success_message?.success_message
       ) {
         setPopoverVisible(false);
-        Alert.alert('Success', response?.success_message?.success_message);
+        Alert.alert('', response?.success_message?.success_message);
       }
     } catch (error) {
       console.error('Error in PARTNER_ONBOOKING_CALL_SUPPORT:', error);

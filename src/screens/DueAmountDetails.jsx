@@ -59,7 +59,7 @@ const DueAmountDetails = ({route, navigation}) => {
       });
 
       if (res?.status_code == '200') {
-        Alert.alert('Success', res?.message);
+        Alert.alert('', res?.message);
       }
 
       getInvoiceData(bookingNumber);

@@ -5,6 +5,8 @@ import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 
 const AgentLeadsModal = ({setAgentLeadsModal, data}) => {
+  if (!data) return null;
+
   return (
     <View
       style={{

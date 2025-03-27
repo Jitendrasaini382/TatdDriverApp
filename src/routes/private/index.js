@@ -21,7 +21,6 @@ import DueAmountDetails from '../../screens/DueAmountDetails';
 import RateUsAtSocialMedia from '../../screens/RateUsAtSocialMedia';
 import DueAmount from '../../screens/DueAmount';
 import RedirectPopUp from '../../screens/RedirectPopUp';
-// import {navigationRef} from '../../utils/navigationRef';
 import TenMinuteDriverApply from '../../screens/TenMinuteDriverApply';
 import AgentPanel from '../../screens/AgentPanel';
 import AgentKyc from '../../screens/AgentKyc';
@@ -42,6 +41,10 @@ import DriverTrainingModulePhaseTwo from '../../screens/DriverTrainingModulePhas
 import DriverTrainingModulePhaseOne from '../../screens/DriverTrainingModulePhaseOne';
 import AadharVerification from '../../screens/AadharVerification';
 import AadharVerifyOtp from '../../screens/AadharVerifyOtp';
+import CompleteVerification from '../../screens/CompleteVerification';
+import DriverDocumentsUploads from '../../screens/DriverDocumentsUploads';
+import AddNewVerifier from '../../screens/AddNewVerifier';
+import ErrorBoundry from '../../utils/ErrorBoundry';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -58,108 +61,163 @@ const PrivateRoute = () => {
       />
       <Stack.Navigator
         initialRouteName={SplashScreen}
-        screenOptions={{
-          headerShown: false,
-        }}>
+        screenOptions={{headerShown: false}}>
         {isSplash && (
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
         )}
-        <Stack.Screen name="TrustedDriver" component={TrustedDriver} />
-        <Stack.Screen
-          name="DriverNotifications"
-          component={DriverNotifications}
-        />
-        <Stack.Screen
-          name="NotificationDetail"
-          component={NotificationDetailScreen}
-          options={{
-            title: 'Notification',
-            headerBackTitle: 'Back',
-          }}
-        />
-        <Stack.Screen name="DriverNotice" component={DriverNotice} />
-        <Stack.Screen name="DueAmountDetails" component={DueAmountDetails} />
-        <Stack.Screen
-          name="NoticeBoardDetail"
-          component={NoticeBoardDetailScreen}
-          options={{
-            title: 'NoticeBoard',
-            headerBackTitle: 'Back',
-          }}
-        />
-        <Stack.Screen name="ClearMyDuePayment" component={ClearMyDuePayment} />
-        <Stack.Screen name="DriverEarning" component={DriverEarning} />
-        <Stack.Screen
-          name="MyBonusStatusHistory"
-          component={MyBonusStatusHistory}
-        />
-        <Stack.Screen name="TicketsDriver" component={TicketsDriver} />
-        <Stack.Screen name="DutyReportUpdate" component={DutyReportUpdate} />
-        <Stack.Screen name="AgentLogin" component={AgentLogin} />
-        <Stack.Screen name="DueAmount" component={DueAmount} />
-        <Stack.Screen
-          name="RateUsAtSocialMedia"
-          component={RateUsAtSocialMedia}
-        />
-        <Stack.Screen name="RateYourCustomer" component={RateYourCustomer} />
-        <Stack.Screen
-          name="RateYourCustomerFeedback"
-          component={RateYourCustomerFeedback}
-        />
-        <Stack.Screen name="RedirectPopUp" component={RedirectPopUp} />
-        <Stack.Screen
-          name="TenMinuteDriverApply"
-          component={TenMinuteDriverApply}
-        />
 
-        <Stack.Screen name="AgentPanel" component={AgentPanel} />
-        <Stack.Screen name="AgentKyc" component={AgentKyc} />
-        <Stack.Screen name="AgentWallet" component={AgentWallet} />
-        <Stack.Screen name="SelectYourState" component={SelectYourState} />
-        <Stack.Screen name="SelectYourCity" component={SelectYourCity} />
-        <Stack.Screen name="AgentTraining" component={AgentTraining} />
-        <Stack.Screen name="CheckAgentOtp" component={CheckAgentOtp} />
-        <Stack.Screen name="ThankYouDriverDue" component={ThankYouDriverDue} />
-
-        <Stack.Screen
-          name="RazorPayPaymentScreen"
-          component={RazorPayPaymentScreen}
-        />
-
-        <Stack.Screen
-          name="AgentCommisionAdded"
-          component={AgentCommisionAdded}
-        />
-        <Stack.Screen name="AgentLeads" component={AgentLeads} />
-        <Stack.Screen name="PremiumDriver" component={PremiumDriver} />
-
-        <Stack.Screen
-          name="PremiumDriverRegistration"
-          component={PremiumDriverRegistration}
-        />
-
-        <Stack.Screen
-          name="PremiumDriverRegistrationProcess"
-          component={PremiumDriverRegistrationProcess}
-        />
-
-        <Stack.Screen
-          name="DriverTrainingModulePhaseOne"
-          component={DriverTrainingModulePhaseOne}
-        />
-        <Stack.Screen
-          name="DriverTrainingModulePhaseTwo"
-          component={DriverTrainingModulePhaseTwo}
-        />
-        <Stack.Screen
-          name="DriverTrainingModulePhaseThree"
-          component={DriverTrainingModulePhaseThree}
-        />
-        <Stack.Screen
-          name="AadharVerification"
-          component={AadharVerification}
-        />
-        <Stack.Screen name="AadharVerifyOtp" component={AadharVerifyOtp} />
+        <Stack.Screen name="TrustedDriver">
+          {props => <ErrorBoundry Component={TrustedDriver} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="DriverNotifications">
+          {props => <ErrorBoundry Component={DriverNotifications} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="NotificationDetail">
+          {props => (
+            <ErrorBoundry Component={NotificationDetailScreen} {...props} />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="DriverNotice">
+          {props => <ErrorBoundry Component={DriverNotice} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="DueAmountDetails">
+          {props => <ErrorBoundry Component={DueAmountDetails} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="NoticeBoardDetail">
+          {props => (
+            <ErrorBoundry Component={NoticeBoardDetailScreen} {...props} />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="ClearMyDuePayment">
+          {props => <ErrorBoundry Component={ClearMyDuePayment} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="DriverEarning">
+          {props => <ErrorBoundry Component={DriverEarning} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="MyBonusStatusHistory">
+          {props => (
+            <ErrorBoundry Component={MyBonusStatusHistory} {...props} />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="TicketsDriver">
+          {props => <ErrorBoundry Component={TicketsDriver} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="DutyReportUpdate">
+          {props => <ErrorBoundry Component={DutyReportUpdate} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="AgentLogin">
+          {props => <ErrorBoundry Component={AgentLogin} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="DueAmount">
+          {props => <ErrorBoundry Component={DueAmount} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="RateUsAtSocialMedia">
+          {props => <ErrorBoundry Component={RateUsAtSocialMedia} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="RateYourCustomer">
+          {props => <ErrorBoundry Component={RateYourCustomer} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="RateYourCustomerFeedback">
+          {props => (
+            <ErrorBoundry Component={RateYourCustomerFeedback} {...props} />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="RedirectPopUp">
+          {props => <ErrorBoundry Component={RedirectPopUp} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="TenMinuteDriverApply">
+          {props => (
+            <ErrorBoundry Component={TenMinuteDriverApply} {...props} />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="AgentPanel">
+          {props => <ErrorBoundry Component={AgentPanel} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="AgentKyc">
+          {props => <ErrorBoundry Component={AgentKyc} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="AgentWallet">
+          {props => <ErrorBoundry Component={AgentWallet} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="SelectYourState">
+          {props => <ErrorBoundry Component={SelectYourState} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="SelectYourCity">
+          {props => <ErrorBoundry Component={SelectYourCity} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="AgentTraining">
+          {props => <ErrorBoundry Component={AgentTraining} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="CheckAgentOtp">
+          {props => <ErrorBoundry Component={CheckAgentOtp} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="ThankYouDriverDue">
+          {props => <ErrorBoundry Component={ThankYouDriverDue} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="RazorPayPaymentScreen">
+          {props => (
+            <ErrorBoundry Component={RazorPayPaymentScreen} {...props} />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="AgentCommisionAdded">
+          {props => <ErrorBoundry Component={AgentCommisionAdded} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="AgentLeads">
+          {props => <ErrorBoundry Component={AgentLeads} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="PremiumDriver">
+          {props => <ErrorBoundry Component={PremiumDriver} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="PremiumDriverRegistration">
+          {props => (
+            <ErrorBoundry Component={PremiumDriverRegistration} {...props} />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="PremiumDriverRegistrationProcess">
+          {props => (
+            <ErrorBoundry
+              Component={PremiumDriverRegistrationProcess}
+              {...props}
+            />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="DriverTrainingModulePhaseOne">
+          {props => (
+            <ErrorBoundry Component={DriverTrainingModulePhaseOne} {...props} />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="DriverTrainingModulePhaseTwo">
+          {props => (
+            <ErrorBoundry Component={DriverTrainingModulePhaseTwo} {...props} />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="DriverTrainingModulePhaseThree">
+          {props => (
+            <ErrorBoundry
+              Component={DriverTrainingModulePhaseThree}
+              {...props}
+            />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="AadharVerification">
+          {props => <ErrorBoundry Component={AadharVerification} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="AadharVerifyOtp">
+          {props => <ErrorBoundry Component={AadharVerifyOtp} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="DriverDocumentsUploads">
+          {props => (
+            <ErrorBoundry Component={DriverDocumentsUploads} {...props} />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="CompleteVerification">
+          {props => (
+            <ErrorBoundry Component={CompleteVerification} {...props} />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="AddNewVerifier">
+          {props => <ErrorBoundry Component={AddNewVerifier} {...props} />}
+        </Stack.Screen>
       </Stack.Navigator>
     </>
   );

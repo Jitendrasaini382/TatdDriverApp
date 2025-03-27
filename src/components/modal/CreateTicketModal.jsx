@@ -70,12 +70,12 @@ const CreateTicketModal = ({setCreateTicketModal}) => {
     TICKETS_DRIVER(checkField)
       .then(async e => {
 
-        if (e.status_code == 200) {
+        if (e?.status_code == 200) {
           try {
             const result = await TICKETS_DRIVER(field);
-            if (result.status_code == 200) {
+            if (result?.status_code == 200) {
               setCreateTicketModal(false);
-              Alert.alert('Success', result.message, [
+              Alert.alert('', result?.message, [
                 {
                   text: 'OK',
                   onPress: async () => {
@@ -93,8 +93,8 @@ const CreateTicketModal = ({setCreateTicketModal}) => {
               'An error occurred while creating the ticket.',
             );
           }
-        } else if (e.status_code == 400) {
-          Alert.alert(e.message);
+        } else if (e?.status_code == 400) {
+          Alert.alert("",e?.message);
         }
       })
       .catch(err => {
@@ -103,7 +103,7 @@ const CreateTicketModal = ({setCreateTicketModal}) => {
   };
 
   const handleCreateTicket = () => {
-    if (!field.remarks || !field.tbooking_id) {
+    if (!field?.remarks || !field?.tbooking_id) {
       Alert.alert('Please enter all required values');
       return;
     }
@@ -129,7 +129,7 @@ const CreateTicketModal = ({setCreateTicketModal}) => {
               placeholder="Share Your Booking Number"
               onChangeText={value => handleChange('tbooking_id', value)}
               placeholderTextColor="#6c757d"
-              value={field.tbooking_id}
+              value={field?.tbooking_id}
             />
 
             <Text style={ticketModalStyles.label}>Description:</Text>
@@ -139,7 +139,7 @@ const CreateTicketModal = ({setCreateTicketModal}) => {
               placeholder="Please provide detailed information about your issue. We will promptly address your inquiry."
               placeholderTextColor={AppColors.silverGrey}
               multiline
-              value={field.remarks}
+              value={field?.remarks}
               onChangeText={value => handleChange('remarks', value)}
               numberOfLines={4}
             />

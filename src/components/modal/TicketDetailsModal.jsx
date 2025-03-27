@@ -29,7 +29,7 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
   }, [ticketId]);
 
   useEffect(() => {
-    if (field.ticket_id) {
+    if (field?.ticket_id) {
       getSingleTicketData();
     }
   }, [field]);
@@ -38,13 +38,13 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
     setIsLoading(true);
     try {
       const response = await TICKETS_DRIVER(field);
-      if (response.status_code === 200) {
-        setTicketDetails(response.ticket_data);
-      } else if (response.status_code === 500) {
+      if (response?.status_code == 200) {
+        setTicketDetails(response?.ticket_data);
+      } else if (response?.status_code === 500) {
         Alert.alert('No Data Available');
       }
     } catch (err) {
-      Alert.alert('Error', 'Failed to fetch ticket data');
+      Alert.alert('', 'Failed to fetch ticket data');
     } finally {
       setIsLoading(false);
     }
@@ -81,16 +81,19 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
       <View style={styles.contentContainer}>
         <View style={styles.detailsContainer}>
           <View style={styles.detailsInnerContainer}>
-            {renderDetailItem('Ticket ID :', ticketDetails.id)}
-            {renderDetailItem('Created Date', ticketDetails.timestamp)}
-            {renderDetailItem('Booking Number :', ticketDetails.booking_id)}
-            {renderDetailItem('Status :', ticketDetails.ticket_status)}
+            {renderDetailItem('Ticket ID :', ticketDetails?.id)}
+            {renderDetailItem('Created Date', ticketDetails?.timestamp)}
+            {renderDetailItem('Booking Number :', ticketDetails?.booking_id)}
+            {renderDetailItem('Status :', ticketDetails?.ticket_status)}
             {renderDetailItem(
               'Description:',
-              ticketDetails.support_require_for,
+              ticketDetails?.support_require_for,
             )}
-            {renderDetailItem('Closure Remark:', ticketDetails.closure_remarks)}
-            {renderDetailItem('Closure Date', ticketDetails.closure_timestamp)}
+            {renderDetailItem(
+              'Closure Remark:',
+              ticketDetails?.closure_remarks,
+            )}
+            {renderDetailItem('Closure Date', ticketDetails?.closure_timestamp)}
           </View>
         </View>
       </View>

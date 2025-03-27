@@ -212,7 +212,7 @@ export const NotificationDetailScreen = ({route}) => {
                       fontSize: 18,
                       marginBottom: 20,
                     }}>
-                    {notification.message}
+                    {notification?.message}
                   </Text>
                   {bottamButtonText?.back_btn == '1' ? (
                     <TouchableOpacity

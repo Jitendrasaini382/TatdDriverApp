@@ -54,7 +54,7 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
       };
       const response = await APPLY_PERMANENT_BOOKING(payload);
       if (response?.status_code == 200) {
-        Alert.alert('Success', response?.message, [{text: 'OK'}]);
+        Alert.alert('', response?.message, [{text: 'OK'}]);
         dispatch(setTriggerFunction(true));
         setOpenModal(false);
       }
@@ -86,7 +86,7 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
         dispatch(setRefreshKey());
       } else {
         Alert.alert(
-          'Error',
+          '',
           languageSwitch === 'english'
             ? 'This booking already accepted by another driver.'
             : 'यह बुकिंग पहले ही किसी अन्य ड्राइवर द्वारा स्वीकार की जा चुकी है।',
@@ -108,7 +108,7 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
     } catch (error) {
       if (error == 'Booking is not in pending status') {
         Alert.alert(
-          'Error',
+          '',
           languageSwitch === 'english'
             ? 'This booking already accepted by another driver..'
             : 'यह बुकिंग पहले ही किसी अन्य ड्राइवर द्वारा स्वीकार की जा चुकी है।',

@@ -38,8 +38,8 @@ const ConfirmReferFriendModal = ({
     try {
       const response = await SAVE_REFER_PERMANENT(bookingData);
 
-      if (response?.status_code === 200) {
-        Alert.alert('Thanks', response?.message || 'Thanks', [
+      if (response?.status_code == 200) {
+        Alert.alert('', response?.message || '', [
           {
             text: 'OK',
             onPress: () => {

@@ -66,7 +66,7 @@ const AgentPanelModal = ({setAgentPanelModal, data}) => {
               }}>
               {/* Referral bonuses are paid every Wednesday provided your dues with
               the company exceed Rs 50. */}
-              {data?.alert_line1}
+              {data?.alert_line3}
             </Text>
             <TouchableOpacity
               onPress={() => setAgentPanelModal(false)}

@@ -8,8 +8,8 @@ import {
   Linking,
   SafeAreaView,
 } from 'react-native';
-import Header from '../components/Header';
 import {useSelector} from 'react-redux';
+import {AppColors} from '../assets/Colors';
 
 const LocalseAwarenessPartnerRegistration = ({navigation, route}) => {
   const {localseData} = route?.params || {};
@@ -23,7 +23,47 @@ const LocalseAwarenessPartnerRegistration = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#f0f0f0'}}>
-      <Header backButton={true} />
+      <View
+        style={{
+          backgroundColor: 'white',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingHorizontal: 15,
+          paddingVertical: 10,
+        }}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('TrustedDriver')}
+          style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: 'red',
+            }}>
+            LocalSe
+          </Text>
+        </TouchableOpacity>
+
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <TouchableOpacity
+            style={{
+              margin: 5,
+              marginRight: 17,
+              borderWidth: 1,
+              borderRadius: 5,
+              paddingHorizontal: 5,
+              borderColor: 'rgb(204,204,204)',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+            onPress={() => navigation.goBack()}>
+            <Text style={{color: AppColors.black, margin: 5, opacity: 0.8}}>
+              Back
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.card}>
           <Text style={styles.title}>
@@ -35,7 +75,7 @@ const LocalseAwarenessPartnerRegistration = ({navigation, route}) => {
           <Text style={styles.subtitle}>{localseData?.sub_heading}</Text>
 
           <Text style={styles.paragraph}>
-            <Text style={styles.bold}>{localseData?.heading_1}{" "}</Text>
+            <Text style={styles.bold}>{localseData?.heading_1} </Text>
             {localseData?.line_1}
           </Text>
 

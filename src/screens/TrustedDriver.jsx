@@ -1850,11 +1850,6 @@ const TrustedDriver = ({navigation}) => {
 
               <TouchableOpacity
                 onPress={() => navigation.navigate('TrustedDriver')}
-                // onPress={() =>
-                //   navigation.navigate('LocalseAwarenessPartnerRegistration')
-                // }
-                // onPress={() => navigation.navigate('CompleteVerification')}
-                // onPress={() => navigation.navigate('DriverDocumentsUploads')}
                 style={{alignItems: 'center', justifyContent: 'center'}}>
                 <Image
                   source={TrustedPartner}

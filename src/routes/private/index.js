@@ -45,6 +45,7 @@ import CompleteVerification from '../../screens/CompleteVerification';
 import DriverDocumentsUploads from '../../screens/DriverDocumentsUploads';
 import AddNewVerifier from '../../screens/AddNewVerifier';
 import ErrorBoundry from '../../utils/ErrorBoundry';
+import LocalseAwarenessPartnerRegistration from '../../screens/LocalseAwarenessPartnerRegistration';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -217,6 +218,15 @@ const PrivateRoute = () => {
         </Stack.Screen>
         <Stack.Screen name="AddNewVerifier">
           {props => <ErrorBoundry Component={AddNewVerifier} {...props} />}
+        </Stack.Screen>
+
+        <Stack.Screen name="LocalseAwarenessPartnerRegistration">
+          {props => (
+            <ErrorBoundry
+              Component={LocalseAwarenessPartnerRegistration}
+              {...props}
+            />
+          )}
         </Stack.Screen>
       </Stack.Navigator>
     </>

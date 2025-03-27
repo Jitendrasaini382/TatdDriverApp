@@ -21,6 +21,7 @@ import {
 } from 'react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ToggleSwitch from 'toggle-switch-react-native';
 import {AppColors} from '../assets/Colors';
 import Header from '../components/Header';
@@ -48,6 +49,8 @@ import {
   EXPRESS_BOOKING_POPUP,
   GET_ALL_AVAILABILITY,
   GET_FCM_TOKEN,
+  GET_LOCALSE_BUTTON_SHOWING,
+  LOCALSE_ON_CALL_SUPPORT,
   LOGIN_BUTTON,
   ON_DEMAND_BOOKING,
   PARTNER_ONBOOKING_CALL_SUPPORT,
@@ -124,6 +127,10 @@ const TrustedDriver = ({navigation}) => {
   const [showNeedHelp, setShowNeedHelp] = useState(false);
 
   const [loaderPremium, setLoaderPremium] = useState(false);
+  const [showLocalseButton, setShowLocalseButton] = useState(false);
+  const [callSupportModal, setCallSupportModal] = useState(false);
+  const [localseNewModal, setLocalseNewModal] = useState(false);
+  const [localseData, setLocalseData] = useState({});
 
   const [allTripType, setAllTripType] = useState([
     {
@@ -345,7 +352,7 @@ const TrustedDriver = ({navigation}) => {
             response?.application_success_message?.length !== 0
           ) {
             setIsSelected(false);
-            Alert.alert('Success', response?.application_success_message, [
+            Alert.alert('', response?.application_success_message, [
               {text: 'OK', onPress: () => getHeadlineData()},
             ]);
           } else {
@@ -422,6 +429,7 @@ const TrustedDriver = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       getHeadlineData();
+      getLocalseButton();
       getHomeNotification();
       getHomeNotice();
       // if (isRfdOn) {
@@ -440,6 +448,7 @@ const TrustedDriver = ({navigation}) => {
     const handleAppStateChange = nextAppState => {
       if (nextAppState === 'active') {
         getHeadlineData();
+        getLocalseButton();
         getHomeNotification();
         getHomeNotice();
         getUpdatePopup();
@@ -468,6 +477,7 @@ const TrustedDriver = ({navigation}) => {
         getPopup();
       }
       getHeadlineData();
+      getLocalseButton();
       // if (isRfdOn) {
       getAllOndemandBookings();
       getPermanentSubscriptionBooking();
@@ -503,7 +513,7 @@ const TrustedDriver = ({navigation}) => {
 
         if (response?.status_code == 200) {
           if (response?.eligible == '0') {
-            Alert.alert('Success', response?.message);
+            Alert.alert('', response?.message);
           } else if (
             response?.eligible == '1' &&
             response?.message == 'success'
@@ -623,6 +633,7 @@ const TrustedDriver = ({navigation}) => {
   const onRefreshfetchData = async () => {
     try {
       await getHeadlineData();
+      await getLocalseButton();
       await getHomeNotification();
       await getHomeNotice();
       await getAllTrustedData();
@@ -735,9 +746,11 @@ const TrustedDriver = ({navigation}) => {
           case 'adhaar-verification':
             navigation.navigate('AadharVerification');
             break;
-          case 'documents-upload':
+          case 'reference-verification':
+            navigation.navigate('CompleteVerification');
+            break;
+          case 'documents-verification':
             navigation.navigate('DriverDocumentsUploads');
-
             break;
           default:
             openMyUrl(response?.url);
@@ -825,6 +838,34 @@ const TrustedDriver = ({navigation}) => {
         dispatch(setExpressBookingModal(false));
       }
     } catch (error) {}
+  };
+
+  const getLocalseButton = async () => {
+    try {
+      const response = await GET_LOCALSE_BUTTON_SHOWING({
+        action: 'localse-awareness-partner-registration',
+        current_language: languageSwitch,
+      });
+      if (response?.status_code === 200) {
+        if (response?.showmodal == 1) {
+          setCallSupportModal(true);
+        } else if (response?.showmodal == 0) {
+          setCallSupportModal(false);
+        } else {
+          setCallSupportModal(false);
+        }
+        if (response?.buttonshow == 1) {
+          setShowLocalseButton(true);
+        } else if (response?.buttonshow == 0) {
+          setShowLocalseButton(false);
+        } else {
+          setShowLocalseButton(false);
+        }
+        setLocalseData(response);
+      }
+    } catch (error) {
+      // console.error('Error in getLocalseButton:', error);
+    }
   };
 
   const getHeadlineData = async () => {
@@ -921,6 +962,7 @@ const TrustedDriver = ({navigation}) => {
     try {
       await getUpdatePopup();
       await getHeadlineData();
+      await getLocalseButton();
     } catch (error) {
       // Handle error if needed
       setRefreshing(false);
@@ -1027,6 +1069,30 @@ const TrustedDriver = ({navigation}) => {
   };
 
   const handlecallPress = async () => {
+    if (callSupportModal) {
+      setPopoverVisibleNeedHelp(false);
+      setLocalseNewModal(true);
+    } else {
+      await submitTatdCallSupport();
+    }
+  };
+
+  const submitLocalseCallSupport = async () => {
+    setPopoverVisibleNeedHelp(false);
+    setLocalseNewModal(false);
+
+    try {
+      const response = await LOCALSE_ON_CALL_SUPPORT({
+        current_language: languageSwitch,
+      });
+
+      Alert.alert('', response?.success_message?.success_message);
+    } catch (error) {
+    } finally {
+    }
+  };
+
+  const submitTatdCallSupport = async () => {
     try {
       const response = await PARTNER_ONBOOKING_CALL_SUPPORT({
         booking_number: 'noBookingNumber',
@@ -1037,7 +1103,7 @@ const TrustedDriver = ({navigation}) => {
         response?.success_message?.success_message
       ) {
         setPopoverVisibleNeedHelp(false);
-        Alert.alert('Success', response?.success_message?.success_message);
+        Alert.alert('', response?.success_message?.success_message);
       }
     } catch (error) {
       console.error('Error in PARTNER_ONBOOKING_CALL_SUPPORT:', error);
@@ -1753,7 +1819,7 @@ const TrustedDriver = ({navigation}) => {
                 />
                 <Text
                   style={{
-                    fontSize: 12,
+                    fontSize: 10,
                     color: '#000',
                   }}>
                   AGENT PANEL
@@ -1775,7 +1841,7 @@ const TrustedDriver = ({navigation}) => {
 
                 <Text
                   style={{
-                    fontSize: 12,
+                    fontSize: 10,
                     color: '#000',
                   }}>
                   PREMIUM DRIVER
@@ -1783,8 +1849,11 @@ const TrustedDriver = ({navigation}) => {
               </TouchableOpacity>
 
               <TouchableOpacity
-                // onPress={() => navigation.navigate('TrustedDriver')}
-                onPress={() => navigation.navigate('CompleteVerification')}
+                onPress={() => navigation.navigate('TrustedDriver')}
+                // onPress={() =>
+                //   navigation.navigate('LocalseAwarenessPartnerRegistration')
+                // }
+                // onPress={() => navigation.navigate('CompleteVerification')}
                 // onPress={() => navigation.navigate('DriverDocumentsUploads')}
                 style={{alignItems: 'center', justifyContent: 'center'}}>
                 <Image
@@ -1798,12 +1867,49 @@ const TrustedDriver = ({navigation}) => {
                 />
                 <Text
                   style={{
-                    fontSize: 12,
+                    fontSize: 10,
                     color: '#000',
                   }}>
-                  TRUSTED PARTNER
+                  TRUSTED DRIVER
                 </Text>
               </TouchableOpacity>
+
+              {/* New Button Beside Trusted Partner */}
+              {showLocalseButton && (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('LocalseAwarenessPartnerRegistration', {
+                      localseData: localseData,
+                    })
+                  }
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'red',
+                    padding: 5,
+                    marginRight: -10,
+                    borderRadius: 10,
+                    borderTopEndRadius: 0,
+                    borderBottomEndRadius: 0,
+                    flexDirection: 'row',
+                    paddingVertical: 15,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      color: 'white',
+                      fontWeight: 'bold',
+                    }}>
+                    LocalSe
+                  </Text>
+                  <MaterialIcons
+                    name="north-east"
+                    size={18}
+                    color="white"
+                    //style={{margin:1}}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         )}
@@ -2340,6 +2446,132 @@ const TrustedDriver = ({navigation}) => {
                   style={{
                     width: 40,
                     height: 40,
+                    backgroundColor: AppColors.white,
+                    borderRadius: 20,
+                    overflow: 'hidden',
+                    elevation: 5,
+                  }}>
+                  <Image
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                    source={CallingGif}
+                    resizeMode="cover"
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+
+        <Modal transparent visible={localseNewModal} animationType="fade">
+          <TouchableOpacity
+            style={{flex: 1, backgroundColor: 'rgba(121, 129, 116, 0.48)'}}
+            activeOpacity={1}
+            onPress={() => {
+              setLocalseNewModal(false);
+              setPopoverVisibleNeedHelp(false);
+            }}>
+            <View
+              style={{
+                position: 'absolute',
+                top: popoverPositionNeedHelp.y,
+                // left: popoverPosition.x - 200, // Adjust left offset as per design
+                width: '45%',
+                alignSelf: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#fff',
+                paddingVertical: 10,
+                borderRadius: 8,
+                elevation: 5,
+                shadowColor: '#000',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.3,
+                shadowRadius: 4,
+              }}>
+              {/* Arrow Pointer */}
+              <View
+                style={{
+                  position: 'absolute',
+                  top: -10,
+                  left: 120,
+                  width: 0,
+                  height: 0,
+                  borderLeftWidth: 10,
+                  borderRightWidth: 10,
+                  borderBottomWidth: 10,
+                  borderLeftColor: 'transparent',
+                  borderRightColor: 'transparent',
+                  borderBottomColor: '#fff',
+                }}
+              />
+
+              <TouchableOpacity
+                onPress={() => {
+                  setPopoverVisibleNeedHelp(false);
+                  setLocalseNewModal(false);
+                  submitTatdCallSupport();
+                }}
+                style={{
+                  flexDirection: 'row', // Row layout
+                  alignItems: 'center', // Center align items
+                  paddingVertical: 8,
+                  backgroundColor: AppColors.mainColor,
+                  paddingHorizontal: 12,
+                  marginHorizontal: 1,
+
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#ddd',
+                  justifyContent: 'space-between',
+                }}>
+                <View>
+                  <Text style={{fontSize: 16, color: 'white'}}>tat d</Text>
+                </View>
+
+                <View
+                  style={{
+                    width: 30,
+                    height: 30,
+                    backgroundColor: AppColors.white,
+                    borderRadius: 20,
+                    overflow: 'hidden',
+                    elevation: 5,
+                  }}>
+                  <Image
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                    source={CallingGif}
+                    resizeMode="cover"
+                  />
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setPopoverVisibleNeedHelp(false);
+                  setLocalseNewModal(false);
+                  submitLocalseCallSupport();
+                }}
+                style={{
+                  flexDirection: 'row', // Row layout
+                  alignItems: 'center', // Center align items
+                  paddingVertical: 8,
+                  backgroundColor: AppColors.red,
+                  marginHorizontal: 1,
+                  paddingHorizontal: 12,
+                  justifyContent: 'space-between',
+                }}>
+                <View>
+                  <Text style={{fontSize: 16, color: 'white'}}>LocalSe</Text>
+                </View>
+
+                <View
+                  style={{
+                    width: 30,
+                    height: 30,
                     backgroundColor: AppColors.white,
                     borderRadius: 20,
                     overflow: 'hidden',

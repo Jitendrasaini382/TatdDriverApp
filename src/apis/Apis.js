@@ -749,14 +749,14 @@ export const SEND_REQUEST_AADHAR_EXEMPTION = body => {
 export const DRIVER_DOCUMENT_UPLOADED_STATUS = body => {
   return _Fetch(
     'POST',
-    'trusted-driver/document-upload-status-api.php',
+    'driver-onboarding/document-upload-status-api.php',
     {...body},
     {},
   );
 };
 
 export const DRIVER_DOCUMENTS_UPLOAD = body => {
-  return _Fetch('POST', 'trusted-driver/document-upload-submit-api.php', body, {
+  return _Fetch('POST', 'driver-onboarding/document-upload-submit-api.php', body, {
     'Content-Type': 'multipart/form-data',
   });
 };
@@ -764,7 +764,52 @@ export const DRIVER_DOCUMENTS_UPLOAD = body => {
 export const GET_DRIVER_UPLOADED_DATA = body => {
   return _Fetch(
     'POST',
-    'trusted-driver/document-status-rejected-api.php',
+    'driver-onboarding/document-status-rejected-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const DRIVER_REFRENCE_SEND_OTP = body => {
+  return _Fetch(
+    'POST',
+    'driver-onboarding/reference-verification-add-reference-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const DRIVER_REFRENCE_LIST = body => {
+  return _Fetch(
+    'POST',
+    'driver-onboarding/reference-verification-list-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const DRIVER_REFRENCE_VERIFIED_OTP = body => {
+  return _Fetch(
+    'POST',
+    'driver-onboarding/reference-verification-otp-verified-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const GET_LOCALSE_BUTTON_SHOWING = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/localse-awareness-partner-registration-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const LOCALSE_ON_CALL_SUPPORT = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/localse-partner-enquiry-support_api.php',
     {...body},
     {},
   );

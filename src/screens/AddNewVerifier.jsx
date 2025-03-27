@@ -1,4 +1,5 @@
 import {
+  Alert,
   Dimensions,
   Image,
   Modal,
@@ -17,6 +18,7 @@ import {Triangle_Icon} from '../assets/images';
 import {useState} from 'react';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {useSelector} from 'react-redux';
+import {DRIVER_REFRENCE_SEND_OTP} from '../apis/Apis';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -101,21 +103,7 @@ const AddNewVerifier = ({navigation}) => {
     setFormData({...formData, [key]: value});
   };
 
-  //   const handleSubmit = () => {
-  //     let tempErrors = {};
-  //     if (!formData.driverName) tempErrors.driverName = 'Enter driver name';
-  //     if (!formData.driverNumber) tempErrors.driverNumber = 'Enter number';
-  //     if (formData.driverNumber?.length !== 10)
-  //       tempErrors.driverNumber = 'Enter Valid number';
-  //     if (!formData.relation) tempErrors.relation = 'Please select relation';
-
-  //     setErrors(tempErrors);
-  //     if (Object.keys(tempErrors).length === 0) {
-  //       console.log('Form Submitted:', formData);
-  //     }
-  //   };
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let tempErrors = {};
 
     const trimmedName = formData.driverName.trim();
@@ -139,7 +127,37 @@ const AddNewVerifier = ({navigation}) => {
     setErrors(tempErrors);
     if (Object.keys(tempErrors).length === 0) {
       console.log('Form Submitted:', updatedFormData);
-      navigation.navigate('CompleteVerification');
+
+      setLoader(true);
+      try {
+        const response = await DRIVER_REFRENCE_SEND_OTP({
+          action: 'add_reference_verification',
+          verifier_name: updatedFormData?.driverName,
+          verifier_number: updatedFormData?.driverNumber,
+          relationship: updatedFormData?.relation,
+          current_language: languageSwitch,
+        });
+
+        console.log(response, 'responseresponse add new verifier');
+
+        if (
+          response?.status_code == 200 &&
+          response?.success_message == 'error'
+        ) {
+          Alert.alert('', response?.message);
+        } else if (
+          response?.status_code == 200 &&
+          response?.success_message == 'success'
+        ) {
+          navigation.navigate('CompleteVerification');
+        } else {
+          navigation.navigate('TrustedDriver');
+        }
+      } catch (error) {
+        // console.log(error, 'API Error');
+      } finally {
+        setLoader(false);
+      }
     }
   };
 
@@ -202,33 +220,6 @@ const AddNewVerifier = ({navigation}) => {
           </View>
 
           {/* Relation Dropdown */}
-          {/* <View style={{marginTop: 20}}>
-              <Text style={{marginBottom: 5, fontSize: 14, fontWeight: '600'}}>
-                Relation
-              </Text>
-              <TouchableOpacity
-                style={{
-                  borderWidth: 1,
-                  borderColor: AppColors.borderColor,
-                  borderRadius: 4,
-                  height: 45,
-                  justifyContent: 'center',
-                  paddingHorizontal: 10,
-                }}
-                onPress={() => setRelationModalVisible(true)}>
-                <Text
-                  style={{color: formData.relation ? AppColors.black : 'gray'}}>
-                  {formData.relation ? formData.relation : 'Select Relation'}
-                </Text>
-              </TouchableOpacity>
-              {errors.relation ? (
-                <Text style={{color: 'red', fontSize: 12, marginTop: 3}}>
-                  {errors.relation}
-                </Text>
-              ) : null}
-            </View> */}
-
-          {/* Relation Dropdown */}
           <View style={{marginTop: 20}}>
             <Text style={{marginBottom: 5, fontSize: 14, fontWeight: '600'}}>
               Relation
@@ -269,11 +260,15 @@ const AddNewVerifier = ({navigation}) => {
               justifyContent: 'center',
             }}>
             <TouchableOpacity
+              disabled={loader}
               onPress={handleSubmit}
               style={{
-                backgroundColor: AppColors.mainColor,
+                backgroundColor: loader
+                  ? AppColors.greyColor
+                  : AppColors.mainColor,
                 paddingHorizontal: 20,
                 paddingVertical: 10,
+                borderRadius: 10,
               }}>
               <Text
                 style={{
@@ -281,7 +276,11 @@ const AddNewVerifier = ({navigation}) => {
                   color: AppColors.white,
                   fontWeight: 'bold',
                 }}>
-                {languageSwitch == 'hindi' ? 'OTP भेजें?' : 'Send OTP?'}
+                {loader
+                  ? 'Sending OTP...'
+                  : languageSwitch == 'hindi'
+                  ? 'OTP भेजें?'
+                  : 'Send OTP?'}
               </Text>
             </TouchableOpacity>
           </View>

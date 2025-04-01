@@ -8,6 +8,7 @@ import {
   FlatList,
   Modal,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import PermanentBookingAcceptModal from '../modal/PermanentBookingAcceptModal';
@@ -21,6 +22,7 @@ import {Clipboard} from 'react-native';
 const BookingCard = ({booking}) => {
   const [openModal, setOpenModal] = useState(false);
   const [referFriendModal, setReferFriendModal] = useState(false);
+  const [loadingPopup, setLoadingPopup] = useState(false);
 
   if (!booking || booking.length === 0) {
     return null;
@@ -44,19 +46,38 @@ const BookingCard = ({booking}) => {
 
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
-  useEffect(() => {
-    getPermanentBookingPopup();
-  }, [languageSwitch]);
+  // useEffect(() => {
+  //   getPermanentBookingPopup();
+  // }, [languageSwitch]);
 
-  const getPermanentBookingPopup = async () => {
+  // const getPermanentBookingPopup = async () => {
+  //   try {
+  //     const response = await PERMANENT_BOOKING({
+  //       action: 'permanent_booking_poup',
+  //       P_ID: P_ID,
+  //       current_language: languageSwitch,
+  //     });
+  //     setPermanentBookingPopup(response?.permanent_booking_popup_data);
+  //   } catch (error) {}
+  // };
+
+  const getPermanentBookingPopup = async P_ID => {
+    console.log('runnnnnn', P_ID);
+
     try {
+      setLoadingPopup(true); // optional loader
       const response = await PERMANENT_BOOKING({
         action: 'permanent_booking_poup',
         P_ID: P_ID,
         current_language: languageSwitch,
       });
       setPermanentBookingPopup(response?.permanent_booking_popup_data);
-    } catch (error) {}
+      setOpenModal(true);
+    } catch (error) {
+      Alert.alert('Error', 'Failed to load booking details');
+    } finally {
+      setLoadingPopup(false);
+    }
   };
 
   const copyToClipboard = data => {
@@ -79,7 +100,9 @@ const BookingCard = ({booking}) => {
             {working_days} Days | {working_hours} Hours
           </Text>
         </View>
-        <Text onPress={() => copyToClipboard(locality)} style={styles.location}>
+        <Text
+        //  onPress={() => copyToClipboard(locality)} 
+         style={styles.location}>
           {locality}
         </Text>
         <View style={styles.eventContainer}>
@@ -98,10 +121,30 @@ const BookingCard = ({booking}) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              setOpenModal(true);
+              getPermanentBookingPopup(P_ID);
             }}
-            style={styles.acceptButton}>
-            <Text style={styles.acceptButtonText}>{apply_or_accept}</Text>
+            style={[
+              styles.acceptButton,
+              {
+                backgroundColor: loadingPopup
+                  ? AppColors.greyColor
+                  : AppColors.white,
+              },
+            ]}
+            disabled={loadingPopup}>
+              {loadingPopup ? (
+                <ActivityIndicator
+                  size="small"
+                  color={AppColors.mainColor}
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingHorizontal: 20,
+                  }}
+                />
+              ) : (
+                <Text style={styles.acceptButtonText}>{apply_or_accept}</Text>
+              )}
           </TouchableOpacity>
 
           <Modal
@@ -171,7 +214,9 @@ const PermanentBookingView = () => {
         current_language: languageSwitch,
       });
 
-      setPermanentBookingsOthers(response?.permanent_driver_bookings_other_zone);
+      setPermanentBookingsOthers(
+        response?.permanent_driver_bookings_other_zone,
+      );
     } catch (error) {}
   };
 

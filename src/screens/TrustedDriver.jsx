@@ -50,7 +50,6 @@ import {
   GET_ALL_AVAILABILITY,
   GET_FCM_TOKEN,
   GET_LOCALSE_BUTTON_SHOWING,
-  LOCALSE_ON_CALL_SUPPORT,
   LOGIN_BUTTON,
   ON_DEMAND_BOOKING,
   PARTNER_ONBOOKING_CALL_SUPPORT,
@@ -128,8 +127,8 @@ const TrustedDriver = ({navigation}) => {
 
   const [loaderPremium, setLoaderPremium] = useState(false);
   const [showLocalseButton, setShowLocalseButton] = useState(false);
-  const [callSupportModal, setCallSupportModal] = useState(false);
-  const [localseNewModal, setLocalseNewModal] = useState(false);
+  // const [callSupportModal, setCallSupportModal] = useState(false);
+  // const [localseNewModal, setLocalseNewModal] = useState(false);
   const [localseData, setLocalseData] = useState({});
 
   const [allTripType, setAllTripType] = useState([
@@ -845,15 +844,9 @@ const TrustedDriver = ({navigation}) => {
       const response = await GET_LOCALSE_BUTTON_SHOWING({
         action: 'localse-awareness-partner-registration',
         current_language: languageSwitch,
+        app_type: appType,
       });
-      if (response?.status_code === 200) {
-        if (response?.showmodal == 1) {
-          setCallSupportModal(true);
-        } else if (response?.showmodal == 0) {
-          setCallSupportModal(false);
-        } else {
-          setCallSupportModal(false);
-        }
+      if (response?.status_code == 200) {
         if (response?.buttonshow == 1) {
           setShowLocalseButton(true);
         } else if (response?.buttonshow == 0) {
@@ -864,7 +857,7 @@ const TrustedDriver = ({navigation}) => {
         setLocalseData(response);
       }
     } catch (error) {
-      // console.error('Error in getLocalseButton:', error);
+      // console.log('Error in getLocalseButton:', error);
     }
   };
 
@@ -978,6 +971,9 @@ const TrustedDriver = ({navigation}) => {
 
   const combinedText = [
     headLineData?.headlines_data?.message,
+    headLineData?.document_data?.message !== 'No action required.'
+      ? headLineData?.document_data?.message
+      : "",
     ...(headLineData?.headlines_data?.headlines || []),
   ]
     .filter(Boolean)
@@ -1065,30 +1061,6 @@ const TrustedDriver = ({navigation}) => {
         setPopoverPositionNeedHelp({x: px, y: py + height + 10, width, height}); // y + height se popover neeche show hoga
         setPopoverVisibleNeedHelp(true);
       });
-    }
-  };
-
-  const handlecallPress = async () => {
-    if (callSupportModal) {
-      setPopoverVisibleNeedHelp(false);
-      setLocalseNewModal(true);
-    } else {
-      await submitTatdCallSupport();
-    }
-  };
-
-  const submitLocalseCallSupport = async () => {
-    setPopoverVisibleNeedHelp(false);
-    setLocalseNewModal(false);
-
-    try {
-      const response = await LOCALSE_ON_CALL_SUPPORT({
-        current_language: languageSwitch,
-      });
-
-      Alert.alert('', response?.success_message?.success_message);
-    } catch (error) {
-    } finally {
     }
   };
 
@@ -2422,7 +2394,7 @@ const TrustedDriver = ({navigation}) => {
 
               <TouchableOpacity
                 onPress={() => {
-                  handlecallPress();
+                  submitTatdCallSupport();
                 }}
                 style={{
                   flexDirection: 'row', // Row layout
@@ -2441,132 +2413,6 @@ const TrustedDriver = ({navigation}) => {
                   style={{
                     width: 40,
                     height: 40,
-                    backgroundColor: AppColors.white,
-                    borderRadius: 20,
-                    overflow: 'hidden',
-                    elevation: 5,
-                  }}>
-                  <Image
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                    }}
-                    source={CallingGif}
-                    resizeMode="cover"
-                  />
-                </View>
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-        </Modal>
-
-        <Modal transparent visible={localseNewModal} animationType="fade">
-          <TouchableOpacity
-            style={{flex: 1, backgroundColor: 'rgba(121, 129, 116, 0.48)'}}
-            activeOpacity={1}
-            onPress={() => {
-              setLocalseNewModal(false);
-              setPopoverVisibleNeedHelp(false);
-            }}>
-            <View
-              style={{
-                position: 'absolute',
-                top: popoverPositionNeedHelp.y,
-                // left: popoverPosition.x - 200, // Adjust left offset as per design
-                width: '45%',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                backgroundColor: '#fff',
-                paddingVertical: 10,
-                borderRadius: 8,
-                elevation: 5,
-                shadowColor: '#000',
-                shadowOffset: {width: 0, height: 2},
-                shadowOpacity: 0.3,
-                shadowRadius: 4,
-              }}>
-              {/* Arrow Pointer */}
-              <View
-                style={{
-                  position: 'absolute',
-                  top: -10,
-                  left: 120,
-                  width: 0,
-                  height: 0,
-                  borderLeftWidth: 10,
-                  borderRightWidth: 10,
-                  borderBottomWidth: 10,
-                  borderLeftColor: 'transparent',
-                  borderRightColor: 'transparent',
-                  borderBottomColor: '#fff',
-                }}
-              />
-
-              <TouchableOpacity
-                onPress={() => {
-                  setPopoverVisibleNeedHelp(false);
-                  setLocalseNewModal(false);
-                  submitTatdCallSupport();
-                }}
-                style={{
-                  flexDirection: 'row', // Row layout
-                  alignItems: 'center', // Center align items
-                  paddingVertical: 8,
-                  backgroundColor: AppColors.mainColor,
-                  paddingHorizontal: 12,
-                  marginHorizontal: 1,
-
-                  borderBottomWidth: 1,
-                  borderBottomColor: '#ddd',
-                  justifyContent: 'space-between',
-                }}>
-                <View>
-                  <Text style={{fontSize: 16, color: 'white'}}>tat d</Text>
-                </View>
-
-                <View
-                  style={{
-                    width: 30,
-                    height: 30,
-                    backgroundColor: AppColors.white,
-                    borderRadius: 20,
-                    overflow: 'hidden',
-                    elevation: 5,
-                  }}>
-                  <Image
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                    }}
-                    source={CallingGif}
-                    resizeMode="cover"
-                  />
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => {
-                  setPopoverVisibleNeedHelp(false);
-                  setLocalseNewModal(false);
-                  submitLocalseCallSupport();
-                }}
-                style={{
-                  flexDirection: 'row', // Row layout
-                  alignItems: 'center', // Center align items
-                  paddingVertical: 8,
-                  backgroundColor: AppColors.red,
-                  marginHorizontal: 1,
-                  paddingHorizontal: 12,
-                  justifyContent: 'space-between',
-                }}>
-                <View>
-                  <Text style={{fontSize: 16, color: 'white'}}>LocalSe</Text>
-                </View>
-
-                <View
-                  style={{
-                    width: 30,
-                    height: 30,
                     backgroundColor: AppColors.white,
                     borderRadius: 20,
                     overflow: 'hidden',

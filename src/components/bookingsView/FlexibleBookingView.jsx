@@ -46,7 +46,7 @@ const BookingCard = ({booking, index, total}) => {
         </View>
       </View>
       <Text
-        onPress={() => copyToClipboard(booking?.pickup_address)}
+        // onPress={() => copyToClipboard(booking?.pickup_address)}
         style={styles.title}>
         {booking?.pickup_address}
       </Text>

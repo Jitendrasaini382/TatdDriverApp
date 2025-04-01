@@ -100,7 +100,7 @@ const TripCard = ({trip}) => {
               {trip?.way_type} - {trip?.product_type}
             </Text>
             <Pressable
-              onPress={() => copyToClipboard(trip?.pickup_address)}
+              // onPress={() => copyToClipboard(trip?.pickup_address)}
               style={{flexDirection: 'row'}}>
               <View
                 style={{

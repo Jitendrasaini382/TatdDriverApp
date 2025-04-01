@@ -15,10 +15,17 @@ const LocalseAwarenessPartnerRegistration = ({navigation, route}) => {
   const {localseData} = route?.params || {};
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
+  if (!localseData) {
+    return null;
+  }
+  // const handleRegister = () => {
+  //   Linking.openURL(
+  //     'https://play.google.com/store/apps/details?id=com.localsepartner',
+  //   );
+  // };
+
   const handleRegister = () => {
-    Linking.openURL(
-      'https://play.google.com/store/apps/details?id=com.localsepartner',
-    );
+    Linking.openURL(localseData?.applink);
   };
 
   return (

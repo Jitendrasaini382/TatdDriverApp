@@ -756,9 +756,14 @@ export const DRIVER_DOCUMENT_UPLOADED_STATUS = body => {
 };
 
 export const DRIVER_DOCUMENTS_UPLOAD = body => {
-  return _Fetch('POST', 'driver-onboarding/document-upload-submit-api.php', body, {
-    'Content-Type': 'multipart/form-data',
-  });
+  return _Fetch(
+    'POST',
+    'driver-onboarding/document-upload-submit-api.php',
+    body,
+    {
+      'Content-Type': 'multipart/form-data',
+    },
+  );
 };
 
 export const GET_DRIVER_UPLOADED_DATA = body => {
@@ -801,15 +806,6 @@ export const GET_LOCALSE_BUTTON_SHOWING = body => {
   return _Fetch(
     'POST',
     'trusted-driver/localse-awareness-partner-registration-api.php',
-    {...body},
-    {},
-  );
-};
-
-export const LOCALSE_ON_CALL_SUPPORT = body => {
-  return _Fetch(
-    'POST',
-    'trusted-driver/localse-partner-enquiry-support_api.php',
     {...body},
     {},
   );

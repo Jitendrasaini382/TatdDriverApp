@@ -138,3 +138,31 @@ export const checkBatteryOptimization = async () => {
     return true;
   }
 };
+
+export const changeStaticLanguage = (words, language) => {
+  return words[language];
+};
+
+export const changeDynamicLanguage = (object, key, language) => {
+  const languageMap = {
+    bn: 'bengali',
+    en: 'english',
+    hi: 'hindi',
+    ml: 'malayalam',
+    mr: 'marathi',
+    ta: 'tamil',
+    te: 'telugu',
+    ur: 'urdu',
+  };
+
+  if (language === 'en') {
+    return object?.[key];
+  } else {
+    const baseKey = key;
+    // console.log(baseKey,"fuhfehrhche")
+    const langSuffix = languageMap[language];
+    const dynamicKey = `${baseKey}_${langSuffix}`;
+    console.log(object?.[dynamicKey] || object?.[key]);
+    return object?.[dynamicKey] || object?.[key];
+  }
+};

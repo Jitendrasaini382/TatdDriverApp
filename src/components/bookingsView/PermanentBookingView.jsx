@@ -46,26 +46,9 @@ const BookingCard = ({booking}) => {
 
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
 
-  // useEffect(() => {
-  //   getPermanentBookingPopup();
-  // }, [languageSwitch]);
-
-  // const getPermanentBookingPopup = async () => {
-  //   try {
-  //     const response = await PERMANENT_BOOKING({
-  //       action: 'permanent_booking_poup',
-  //       P_ID: P_ID,
-  //       current_language: languageSwitch,
-  //     });
-  //     setPermanentBookingPopup(response?.permanent_booking_popup_data);
-  //   } catch (error) {}
-  // };
-
   const getPermanentBookingPopup = async P_ID => {
-    console.log('runnnnnn', P_ID);
-
     try {
-      setLoadingPopup(true); // optional loader
+      setLoadingPopup(true);
       const response = await PERMANENT_BOOKING({
         action: 'permanent_booking_poup',
         P_ID: P_ID,
@@ -101,8 +84,8 @@ const BookingCard = ({booking}) => {
           </Text>
         </View>
         <Text
-        //  onPress={() => copyToClipboard(locality)} 
-         style={styles.location}>
+          //  onPress={() => copyToClipboard(locality)}
+          style={styles.location}>
           {locality}
         </Text>
         <View style={styles.eventContainer}>
@@ -132,19 +115,19 @@ const BookingCard = ({booking}) => {
               },
             ]}
             disabled={loadingPopup}>
-              {loadingPopup ? (
-                <ActivityIndicator
-                  size="small"
-                  color={AppColors.mainColor}
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    paddingHorizontal: 20,
-                  }}
-                />
-              ) : (
-                <Text style={styles.acceptButtonText}>{apply_or_accept}</Text>
-              )}
+            {loadingPopup ? (
+              <ActivityIndicator
+                size="small"
+                color={AppColors.mainColor}
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  paddingHorizontal: 20,
+                }}
+              />
+            ) : (
+              <Text style={styles.acceptButtonText}>{apply_or_accept}</Text>
+            )}
           </TouchableOpacity>
 
           <Modal

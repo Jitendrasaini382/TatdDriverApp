@@ -94,6 +94,7 @@ import {
   setRefreshKey,
 } from '../redux/slices/globalSlice';
 import {check} from 'react-native-permissions';
+import axios from 'axios';
 const {width} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -127,9 +128,12 @@ const TrustedDriver = ({navigation}) => {
 
   const [loaderPremium, setLoaderPremium] = useState(false);
   const [showLocalseButton, setShowLocalseButton] = useState(false);
-  // const [callSupportModal, setCallSupportModal] = useState(false);
-  // const [localseNewModal, setLocalseNewModal] = useState(false);
+
   const [localseData, setLocalseData] = useState({});
+
+  const driverMobileNumber = useSelector(
+    e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
+  );
 
   const [allTripType, setAllTripType] = useState([
     {
@@ -973,7 +977,7 @@ const TrustedDriver = ({navigation}) => {
     headLineData?.headlines_data?.message,
     headLineData?.document_data?.message !== 'No action required.'
       ? headLineData?.document_data?.message
-      : "",
+      : '',
     ...(headLineData?.headlines_data?.headlines || []),
   ]
     .filter(Boolean)
@@ -1080,6 +1084,57 @@ const TrustedDriver = ({navigation}) => {
     } catch (error) {
       console.error('Error in PARTNER_ONBOOKING_CALL_SUPPORT:', error);
     } finally {
+    }
+  };
+
+  const [localseAgentData, setLocalseAgentData] = useState(null);
+  const [localseLoading, setLocalseLoading] = useState(false);
+
+  const getRegistredeLocalseStatus = async () => {
+    try {
+      setLocalseLoading(true);
+      console.log('➡️ Sending POST request to API endpoint...');
+      const response = await axios.post(
+        'http://15.206.117.178:5001/api/service_provider/get-localse-registered-status-api',
+        {
+          mobile: driverMobileNumber,
+        },
+      );
+
+      const responseData = response?.data;
+
+      if (!responseData) {
+        console.warn('⚠️ No data found in response!');
+        return;
+      }
+
+      if (responseData?.status_code == 200) {
+        if (
+          responseData?.isRegister == 1 &&
+          responseData?.message === 'successfully'
+        ) {
+          navigation.navigate('LocalseAwarenessAgentRegistration', {
+            localseData: localseData,
+            data: responseData,
+          });
+        } else {
+          navigation.navigate('LocalseAwarenessPartnerRegistration', {
+            localseData: localseData,
+          });
+        }
+      } else {
+        navigation.navigate('LocalseAwarenessPartnerRegistration', {
+          localseData: localseData,
+        });
+      }
+      setLocalseAgentData(responseData);
+    } catch (err) {
+      navigation.navigate('LocalseAwarenessPartnerRegistration', {
+        localseData: localseData,
+      });
+    } finally {
+      setLocalseLoading(false);
+      console.log('🔚 API call completed');
     }
   };
 
@@ -1844,11 +1899,8 @@ const TrustedDriver = ({navigation}) => {
               {/* New Button Beside Trusted Partner */}
               {showLocalseButton && (
                 <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('LocalseAwarenessPartnerRegistration', {
-                      localseData: localseData,
-                    })
-                  }
+                  disabled={localseLoading}
+                  onPress={() => getRegistredeLocalseStatus()}
                   style={{
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -1860,21 +1912,25 @@ const TrustedDriver = ({navigation}) => {
                     borderBottomEndRadius: 0,
                     flexDirection: 'row',
                     paddingVertical: 15,
+                    paddingRight: 10,
                   }}>
                   <Text
                     style={{
-                      fontSize: 15,
+                      fontSize: 16,
                       color: 'white',
                       fontWeight: 'bold',
                     }}>
                     LocalSe
                   </Text>
-                  <MaterialIcons
-                    name="north-east"
-                    size={18}
-                    color="white"
-                    //style={{margin:1}}
-                  />
+                  {localseLoading ? (
+                    <ActivityIndicator color={AppColors.white} size={18} />
+                  ) : (
+                    <MaterialIcons
+                      name="north-east"
+                      size={18}
+                      color={AppColors.white}
+                    />
+                  )}
                 </TouchableOpacity>
               )}
             </View>

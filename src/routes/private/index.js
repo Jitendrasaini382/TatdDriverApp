@@ -46,6 +46,7 @@ import DriverDocumentsUploads from '../../screens/DriverDocumentsUploads';
 import AddNewVerifier from '../../screens/AddNewVerifier';
 import ErrorBoundry from '../../utils/ErrorBoundry';
 import LocalseAwarenessPartnerRegistration from '../../screens/LocalseAwarenessPartnerRegistration';
+import LocalseAwarenessAgentRegistration from '../../screens/LocalseAwarenessAgentRegistration';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -228,6 +229,16 @@ const PrivateRoute = () => {
             />
           )}
         </Stack.Screen>
+
+        <Stack.Screen name="LocalseAwarenessAgentRegistration">
+          {props => (
+            <ErrorBoundry
+              Component={LocalseAwarenessAgentRegistration}
+              {...props}
+            />
+          )}
+        </Stack.Screen>
+
       </Stack.Navigator>
     </>
   );

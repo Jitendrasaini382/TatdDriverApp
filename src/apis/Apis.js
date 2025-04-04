@@ -810,3 +810,7 @@ export const GET_LOCALSE_BUTTON_SHOWING = body => {
     {},
   );
 };
+
+export const PARTNER_AGENT_ONBOOKING_CALL_SUPPORT = body => {
+  return _Fetch('POST', 'agent/agent-call-support-api.php', {...body}, {});
+};

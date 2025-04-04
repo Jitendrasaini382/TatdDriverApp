@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   Image,
   SafeAreaView,
@@ -12,20 +12,22 @@ import {
   Alert,
   ActivityIndicator,
   RefreshControl,
+  Pressable,
+  Modal,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Header from '../components/Header';
-import Modal from 'react-native-modal';
 import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
-import {ArrowFadeBlue} from '../assets/images';
+import {ArrowFadeBlue, CallingGif, Headerlogo} from '../assets/images';
 import {Linking} from 'react-native';
 
 import AgentPanelModal from '../components/modal/AgentPanelModal';
 import {
   GET_AGENT_NERTWORK_AND_LEADS,
   GET_ALL_AGENT_PANEL_INFO,
+  PARTNER_AGENT_ONBOOKING_CALL_SUPPORT,
 } from '../apis/Apis';
 import {useSelector} from 'react-redux';
 
@@ -42,6 +44,7 @@ const AgentPanel = ({navigation}) => {
   const [networkAndLeadsData, setnetworkAndLeadsData] = useState(null);
   const [leadsLoader, setleadsLoader] = useState(false);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  const showNeedHelp = useSelector(e => e?.trustedDriverSlice?.isNeedHelpShow);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
@@ -76,9 +79,126 @@ const AgentPanel = ({navigation}) => {
     }
   };
 
+  const handleLogoPress = () => {
+    navigation.navigate('TrustedDriver');
+  };
+
+  const viewRef = useRef(null); // Reference to the View
+  const [popoverVisible, setPopoverVisible] = useState(false);
+  const [popoverPosition, setPopoverPosition] = useState({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  });
+
+  const showPopover = () => {
+    if (viewRef.current) {
+      viewRef.current.measure((fx, fy, width, height, px, py) => {
+        console.log({x: px, y: py, width, height});
+        setPopoverPosition({x: px, y: py + height + 10, width, height}); // y + height se popover neeche show hoga
+        setPopoverVisible(true);
+      });
+    }
+  };
+
+  const handlecallPress = async () => {
+    try {
+      const response = await PARTNER_AGENT_ONBOOKING_CALL_SUPPORT({
+        action: 'agent_call_support',
+        current_language: languageSwitch,
+      });
+
+      if (
+        response?.status_code == 200 &&
+        response?.success_message?.success_message
+      ) {
+        setPopoverVisible(false);
+        Alert.alert('', response?.success_message?.success_message);
+      }
+    } catch (error) {
+      console.error('Error in PARTNER_ONBOOKING_CALL_SUPPORT:', error);
+    } finally {
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header backButton={true} />
+      {/* <Header backButton={true} /> */}
+
+      <View
+        style={{
+          backgroundColor: AppColors.white,
+          flexDirection: 'row',
+          elevation: 5,
+          justifyContent: 'space-between',
+        }}>
+        <View
+          style={{
+            backgroundColor: AppColors.white,
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+          }}>
+          <Pressable
+            onPress={handleLogoPress}
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginLeft: 5,
+              marginTop: 10,
+            }}>
+            <Image
+              source={Headerlogo}
+              style={{resizeMode: 'contain', height: 70, width: 140}}
+            />
+          </Pressable>
+        </View>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+          }}>
+          {showNeedHelp && (
+            <TouchableOpacity
+              ref={viewRef}
+              onPress={showPopover}
+              style={{
+                margin: 5,
+                borderWidth: 1,
+                borderRadius: 5,
+                backgroundColor: AppColors.mainColor,
+              }}>
+              <Text
+                style={{
+                  padding: 7,
+                  fontSize: 12,
+                  fontWeight: '500',
+                  color: AppColors.white,
+                }}>
+                {languageSwitch === 'english' ? 'Need Help?' : 'मदद चाहिए?'}
+              </Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{
+              margin: 5,
+              marginRight: 17,
+              borderWidth: 1,
+              borderRadius: 5,
+              paddingHorizontal: 5,
+              borderColor: 'rgb(204,204,204)',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Text style={{color: AppColors.black, margin: 5, opacity: 0.8}}>
+              Back
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
 
       {leadsLoader ? (
         <ActivityIndicator
@@ -254,11 +374,131 @@ const AgentPanel = ({navigation}) => {
         </ScrollView>
       )}
       <Modal
+        transparent
+        onRequestClose={() => setPopoverVisible(false)}
+        visible={popoverVisible}
+        animationType="fade">
+        <TouchableOpacity
+          style={{flex: 1, backgroundColor: 'rgba(121, 129, 116, 0.48)'}}
+          activeOpacity={1}
+          onPress={() => setPopoverVisible(false)}>
+          <View
+            style={{
+              position: 'absolute',
+              top: popoverPosition.y,
+              // left: popoverPosition.x - 200, // Adjust left offset as per design
+              width: '50%',
+              // width: 160,
+              alignSelf: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#fff',
+              // paddingVertical: 4,
+              borderRadius: 8,
+              elevation: 5,
+              shadowColor: '#000',
+              shadowOffset: {width: 0, height: 2},
+              shadowOpacity: 0.3,
+              shadowRadius: 4,
+            }}>
+            {/* Arrow Pointer */}
+            <View
+              style={{
+                position: 'absolute',
+                top: -10,
+                left: 150,
+                width: 0,
+                height: 0,
+                borderLeftWidth: 10,
+                borderRightWidth: 10,
+                borderBottomWidth: 10,
+                borderLeftColor: 'transparent',
+                borderRightColor: 'transparent',
+                borderBottomColor: '#fff',
+              }}
+            />
+
+            {/* <TouchableOpacity
+              onPress={() => {
+                setPopoverVisible(false);
+                navigation.navigate('TicketsDriver');
+              }}
+              style={{
+                flexDirection: 'row', // Row layout
+                alignItems: 'center', // Center align items
+                paddingVertical: 8,
+                paddingHorizontal: 12,
+                borderBottomWidth: 1,
+                borderBottomColor: '#ddd',
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Text style={{fontSize: 16, color: '#333'}}>Create Ticket</Text>
+              </View>
+
+              <View
+                style={{
+                  width: 40,
+                  height: 40,
+                  backgroundColor: AppColors.white,
+                  borderRadius: 20,
+                  overflow: 'hidden',
+                  elevation: 5,
+                }}>
+                <Image
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  source={HelpImage}
+                  resizeMode="cover"
+                />
+              </View>
+            </TouchableOpacity> */}
+
+            <TouchableOpacity
+              onPress={() => {
+                handlecallPress();
+              }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 8,
+                paddingHorizontal: 12,
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Text style={{fontSize: 16, color: '#333'}}>Call Support</Text>
+              </View>
+
+              <View
+                style={{
+                  width: 40,
+                  height: 40,
+                  backgroundColor: AppColors.white,
+                  borderRadius: 20,
+                  overflow: 'hidden',
+                  elevation: 5,
+                }}>
+                <Image
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  source={CallingGif}
+                  resizeMode="cover"
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+      <Modal
+        transparent
         backdropOpacity={0}
-        onBackdropPress={() => setAgentPanelModal(false)}
+        onRequestClose={() => setAgentPanelModal(false)}
         animationIn={'fadeInDown'}
         animationOut={'fadeOutUp'}
-        isVisible={agentPanelModal}>
+        visible={agentPanelModal}>
         <AgentPanelModal
           setAgentPanelModal={setAgentPanelModal}
           data={allAgentInfo}

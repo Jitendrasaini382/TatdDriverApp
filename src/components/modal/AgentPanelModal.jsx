@@ -6,7 +6,7 @@ import {AppFont} from '../../assets/FontsFamily';
 const AgentPanelModal = ({setAgentPanelModal, data}) => {
   if (!data) return null;
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, margin: 10}}>
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.titleContainer}>

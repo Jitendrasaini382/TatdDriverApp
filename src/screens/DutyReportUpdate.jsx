@@ -531,41 +531,43 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
 
   const handleCameraCapture = async () => {
-    const hasPermission = await requestCameraPermission();
-    if (hasPermission) {
-      launchCamera(
-        {
-          mediaType: 'photo',
-          maxHeight: 500,
-          maxWidth: 500,
-          quality: 0.2,
-          cameraType: 'front',
-        },
-        response => {
-          if (response.didCancel) {
-          } else if (response.errorCode) {
-            console.error('Camera Error:', response.errorMessage);
-          } else if (response?.assets && response?.assets?.length > 0) {
-            // console.log(response?.assets,"response?.assetsresponse?.assets");
-            // console.log(response?.assets?.length,"--response?.assetsresponse?.assets");
-            const file = response?.assets[0];
-            setSelectedFile(file);
-          }
-        },
-      );
-    } else {
-      Alert.alert(
-        'Permission Denied',
-        'Camera access is required to take photos. Please enable camera permissions in your device settings.',
-        [
-          {text: 'Cancel', style: 'cancel'},
+    try {
+      const hasPermission = await requestCameraPermission();
+      if (hasPermission) {
+        launchCamera(
           {
-            text: 'Open Settings',
-            onPress: () => Linking.openSettings(),
+            mediaType: 'photo',
+            maxHeight: 500,
+            maxWidth: 500,
+            quality: 0.2,
+            saveToPhotos: false,
           },
-        ],
-      );
-    }
+          response => {
+            if (response?.didCancel) {
+            } else if (response.errorCode) {
+              console.error('Camera Error:', response.errorMessage);
+            } else if (response?.assets && response?.assets?.length > 0) {
+              // console.log(response?.assets,"response?.assetsresponse?.assets");
+              // console.log(response?.assets?.length,"--response?.assetsresponse?.assets");
+              const file = response?.assets[0];
+              setSelectedFile(file || {});
+            }
+          },
+        );
+      } else {
+        Alert.alert(
+          'Permission Denied',
+          'Camera access is required to take photos. Please enable camera permissions in your device settings.',
+          [
+            {text: 'Cancel', style: 'cancel'},
+            {
+              text: 'Open Settings',
+              onPress: () => Linking.openSettings(),
+            },
+          ],
+        );
+      }
+    } catch (error) {}
   };
 
   const driverReached = async () => {

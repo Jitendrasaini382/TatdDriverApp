@@ -811,6 +811,15 @@ export const GET_LOCALSE_BUTTON_SHOWING = body => {
   );
 };
 
+export const LOCALSE_ON_CALL_SUPPORT = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/localse-partner-enquiry-support_api.php',
+    {...body},
+    {},
+  );
+};
+
 export const PARTNER_AGENT_ONBOOKING_CALL_SUPPORT = body => {
   return _Fetch('POST', 'agent/agent-call-support-api.php', {...body}, {});
 };

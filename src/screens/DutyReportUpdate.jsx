@@ -371,31 +371,20 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
 
   const getLocation = async () => {
-    // console.log('Running getLocation...');
-
     const hasPermission = await requestLocationPermission();
-    // console.log('Permission check result:', hasPermission);
-
     if (hasPermission) {
-      // console.log('Permission granted, fetching location...');
+      setReachLoader(true);
 
       return new Promise((resolve, reject) => {
-        // console.log('Inside Promise...');
-
         Geolocation.getCurrentPosition(
           position => {
-            // console.log('Location fetched successfully:', position);
-            resolve(position.coords); // Resolving the Promise with coordinates
+            resolve(position.coords);
           },
           error => {
-            // console.log('Location error:', error);
-
             if (error.code === 1) {
-              // console.log('Permission denied, requesting again...');
               requestLocationPermission();
+              setReachLoader(false);
             } else if (error.code === 2) {
-              // console.log('Location services are OFF, showing alert...');
-
               Alert.alert(
                 'Location Service Disabled',
                 'Please enable location services to proceed.',
@@ -409,21 +398,24 @@ const DutyReportUpdate = ({route, navigation}) => {
                     onPress: () => {
                       Linking.sendIntent(
                         'android.settings.LOCATION_SOURCE_SETTINGS',
-                      ); // Opens phone's location settings
+                      );
                     },
                   },
                 ],
               );
+              setReachLoader(false);
             } else {
-              // console.log('Unhandled location error:', error.message);
               reject(new Error('Error fetching location: ' + error.message));
+              setReachLoader(false);
             }
           },
+          {
+            maximumAge: 0,
+          },
         );
-        // console.log('Geolocation request initiated...');
       });
     } else {
-      // console.log('Permission denied, exiting getLocation...');
+      setReachLoader(false);
     }
   };
 
@@ -1934,20 +1926,33 @@ const DutyReportUpdate = ({route, navigation}) => {
                     marginHorizontal: '20%',
                     marginBottom: 100,
                   }}
-                  onPress={() => {
-                    driverBookingReach();
-                  }}>
-                  <Text
-                    style={{
-                      color: AppColors.white,
-                      fontWeight: '600',
-                      textAlign: 'center',
-                      fontSize: 17,
-                    }}>
-                    {reachLoader
-                      ? 'Please Wait ...'
-                      : popupsData?.popupdata?.reach_alert_btn}
-                  </Text>
+                  onPress={driverBookingReach}>
+                  {reachLoader ? (
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Text
+                        style={{
+                          color: AppColors.white,
+                          fontWeight: '600',
+                          fontSize: 17,
+                        }}>
+                        Please Wait ...
+                      </Text>
+                      <ActivityIndicator
+                        size="small"
+                        color={AppColors.white}
+                        style={{marginLeft: 8}}
+                      />
+                    </View>
+                  ) : (
+                    <Text
+                      style={{
+                        color: AppColors.white,
+                        fontWeight: '600',
+                        fontSize: 17,
+                      }}>
+                      {popupsData?.popupdata?.reach_alert_btn}
+                    </Text>
+                  )}
                 </TouchableOpacity>
               </View>
             </ScrollView>

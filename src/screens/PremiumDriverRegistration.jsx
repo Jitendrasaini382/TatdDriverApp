@@ -283,8 +283,8 @@ const PremiumDriverRegistration = ({navigation}) => {
                   value={formData.city}
                   onChangeText={e => handleInputChange('city', e)}
                   placeholder="City"
-                  keyboardType="numeric"
-                  maxLength={10}
+                  // keyboardType="numeric"
+                  // maxLength={10}
                   iconName={
                     <Icon
                       name="envelope"
@@ -300,8 +300,8 @@ const PremiumDriverRegistration = ({navigation}) => {
                   value={formData.zone}
                   onChangeText={e => handleInputChange('zone', e)}
                   placeholder="Zone"
-                  keyboardType="numeric"
-                  maxLength={10}
+                  // keyboardType="numeric"
+                  // maxLength={10}
                   iconName={
                     <Icon
                       name="envelope"

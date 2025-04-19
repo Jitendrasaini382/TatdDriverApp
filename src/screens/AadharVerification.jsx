@@ -155,7 +155,7 @@ const AadharVerification = ({navigation, route}) => {
                       editable={false}
                       keyboardType="numeric"
                       value={aadharNumber}
-                      maxLength={10}
+                      // maxLength={10}
                       placeholder="Enter Aadhar Number"
                       placeholderTextColor="rgb(42, 42, 42)"
                     />

@@ -37,6 +37,9 @@ import DeviceInfo from 'react-native-device-info';
 import {AppFont} from '../assets/FontsFamily';
 import ToggleButton from '../components/modal/ToggleButton';
 import Geolocation from '@react-native-community/geolocation';
+import RNScreenshotPrevent, {
+  addListener,
+} from 'react-native-screenshot-prevent';
 
 import {
   ALL_TEN_MINUTE_STATUS_UPDATE,
@@ -127,6 +130,7 @@ const TrustedDriver = ({navigation}) => {
   const [tenMinuteAcceptLoader, setTenMinuteAcceptLoader] = useState(false);
   const [confirmTenMinuteLoader, setConfirmTenMinuteLoader] = useState(null);
   const [showNeedHelp, setShowNeedHelp] = useState(false);
+  const [screenAccess, setScreenAccess] = useState(false);
 
   const [loaderPremium, setLoaderPremium] = useState(false);
   const [showLocalseButton, setShowLocalseButton] = useState(false);
@@ -892,6 +896,17 @@ const TrustedDriver = ({navigation}) => {
         );
       }
 
+      if (response?.driver_panel_messages?.driver_screen_access == '1') {
+        console.log(
+          response?.driver_panel_messages?.driver_screen_access,
+          'response?.driver_panel_messages?.driver_screen_access',
+        );
+
+        setScreenAccess(true);
+      } else {
+        setScreenAccess(false);
+      }
+
       if (
         response?.driver_panel_messages?.ten_minute_my_active_booking_flag == 1
       ) {
@@ -1173,6 +1188,29 @@ const TrustedDriver = ({navigation}) => {
       console.log('🔚 API call completed');
     }
   };
+
+  useEffect(() => {
+    if (!screenAccess) {
+      RNScreenshotPrevent.enabled(true);
+      if (!__DEV__) {
+        RNScreenshotPrevent.enableSecureView();
+      }
+      const subscription = addListener(() => {
+        Alert.alert(
+          'Security Warning',
+          'Screenshot is not allowed on this screen.',
+          [{text: 'OK'}],
+        );
+      });
+      return () => {
+        RNScreenshotPrevent.enabled(false);
+        if (!__DEV__) {
+          RNScreenshotPrevent.disableSecureView();
+        }
+        subscription.remove();
+      };
+    }
+  }, [screenAccess]);
 
   return (
     <View style={styles.safeArea}>

@@ -823,3 +823,13 @@ export const LOCALSE_ON_CALL_SUPPORT = body => {
 export const PARTNER_AGENT_ONBOOKING_CALL_SUPPORT = body => {
   return _Fetch('POST', 'agent/agent-call-support-api.php', {...body}, {});
 };
+
+export const SAVE_LIVE_DRIVER_LATLONG = body => {
+  // return false
+  return _Fetch(
+    'POST',
+    'login/capture_driver_live_latlong_location_api.php',
+    {...body},
+    {},
+  );
+};

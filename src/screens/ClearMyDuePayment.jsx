@@ -40,7 +40,6 @@ const ClearMyDuePayment = ({navigation}) => {
   const getClearMyDueData = async () => {
     try {
       const response = await CLEAR_MY_DUE_VIEW(languageSwitch);
-      console.log('Response received from CLEAR_MY_DUE_VIEW:', response);
       setAllData(response);
     } catch (error) {
       console.error('Error in getClearMyDueData:', error);

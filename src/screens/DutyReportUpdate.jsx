@@ -732,7 +732,8 @@ const DutyReportUpdate = ({route, navigation}) => {
 
       if (res?.redirect == 'duty_report') {
         if (res?.message_type == 'error') {
-          setCancelState('cancel');
+          // setCancelState('cancel');
+          GetAllBookingInfo();
           setModalVisibleEnd(false);
         } else {
           GetAllBookingInfo();
@@ -860,25 +861,32 @@ const DutyReportUpdate = ({route, navigation}) => {
     // console.log('Stopping execution here...');
     // return false;
 
-    const googleMapsAppURL = `google.navigation:q=${customerLocation.lat},${customerLocation.lng}&mode=d`;
+    const googleMapsAppURL = `google.navigation:q=${customerLocation?.lat},${customerLocation?.lng}&mode=d`;
     // console.log(googleMapsAppURL, 'Generated Google Maps App URL');
 
-    const googleMapsWebURL = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation.latitude},${currentLocation.longitude}&destination=${customerLocation.lat},${customerLocation.lng}&travelmode=driving`;
+    const googleMapsWebURL = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation?.latitude},${currentLocation?.longitude}&destination=${customerLocation?.lat},${customerLocation?.lng}&travelmode=driving`;
     // console.log(googleMapsWebURL, 'Generated Google Maps Web URL');
-
-    // Try opening Google Maps App
-    Linking.canOpenURL('google.navigation:q=0,0')
-      .then(supported => {
-        // console.log(supported, 'Can open Google Maps App');
-        if (supported) {
-          // console.log('Opening Google Maps App...');
-          Linking.openURL(googleMapsAppURL);
-        } else {
-          // console.log('Opening Google Maps Web...');
-          Linking.openURL(googleMapsWebURL);
-        }
-      })
-      .catch(err => console.error('Error opening Google Maps', err));
+    if (bookingInfo?.condition?.live_tracking == 1) {
+      navigation.navigate('MyMap', {
+        googleMapsWebURL,
+        timing: bookingInfo?.condition?.api_timing,
+        bookingNumber,
+      });
+      return false;
+    } else {
+      Linking.canOpenURL('google.navigation:q=0,0')
+        .then(supported => {
+          // console.log(supported, 'Can open Google Maps App');
+          if (supported) {
+            // console.log('Opening Google Maps App...');
+            Linking.openURL(googleMapsAppURL);
+          } else {
+            // console.log('Opening Google Maps Web...');
+            Linking.openURL(googleMapsWebURL);
+          }
+        })
+        .catch(err => console.error('Error opening Google Maps', err));
+    }
   };
 
   const handleLogoPress = () => {

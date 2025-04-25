@@ -59,11 +59,29 @@ const LocalseAwarenessAgentRegistration = ({navigation, route}) => {
           style={styles.logoRow}>
           <Text style={styles.logoText}>LocalSe</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => setIsDropdownVisible(true)}>
-          <Icon name="language" size={25} color={AppColors.black} />
-        </TouchableOpacity>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => setIsDropdownVisible(true)}>
+            <Icon name="language" size={25} color={AppColors.black} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{
+              margin: 5,
+              // marginRight: 17,
+              borderWidth: 1,
+              borderRadius: 5,
+              paddingHorizontal: 5,
+              borderColor: 'rgb(204,204,204)',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Text style={{color: AppColors.black, margin: 5, opacity: 0.8}}>
+              Back
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>

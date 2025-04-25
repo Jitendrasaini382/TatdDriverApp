@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Dimensions,
   FlatList,
   SafeAreaView,
   StyleSheet,
@@ -12,6 +13,8 @@ import {AppColors} from '../assets/Colors';
 import {MY_BONUS_HISTORY} from '../apis/Apis';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {RefreshControl} from 'react-native';
+import LottieView from 'lottie-react-native';
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const MyBonusStatusHistory = () => {
   const insets = useSafeAreaInsets();
@@ -67,23 +70,35 @@ const MyBonusStatusHistory = () => {
         <View style={styles.content}>
           <View style={styles.container}>
             <Text style={styles.title}>My Bonus</Text>
-            <View style={styles.tableContainer}>
-              <View style={styles.headerRow}>
-                <Text style={[styles.headerCell, styles.createDateCell]}>
-                  Create Date
-                </Text>
-                <Text style={[styles.headerCell, styles.nameCell]}>Name</Text>
-                <Text style={[styles.headerCell, styles.bonusTypeCell]}>
-                  Bonus Type
-                </Text>
-                <Text style={[styles.headerCell, styles.paymentStatusCell]}>
-                  Payment Status
-                </Text>
-                <Text style={[styles.headerCell, styles.amountCell]}>
-                  Amount
-                </Text>
+            {bonusData?.length !== 0 ? (
+              <View style={styles.tableContainer}>
+                <View style={styles.headerRow}>
+                  <Text style={[styles.headerCell, styles.createDateCell]}>
+                    Create Date
+                  </Text>
+                  <Text style={[styles.headerCell, styles.nameCell]}>Name</Text>
+                  <Text style={[styles.headerCell, styles.bonusTypeCell]}>
+                    Bonus Type
+                  </Text>
+                  <Text style={[styles.headerCell, styles.paymentStatusCell]}>
+                    Payment Status
+                  </Text>
+                  <Text style={[styles.headerCell, styles.amountCell]}>
+                    Amount
+                  </Text>
+                </View>
               </View>
-            </View>
+            ) : (
+              <View style={styles.noDataCard}>
+                <LottieView
+                  source={require('../assets/images/emptyScreen.json')}
+                  style={{width: 100, height: 100}}
+                  autoPlay
+                  loop
+                />
+                <Text style={styles.noDataText}>No Data Found</Text>
+              </View>
+            )}
           </View>
         </View>
         <View
@@ -227,6 +242,41 @@ const styles = StyleSheet.create({
   },
   amountCell: {
     flex: 0.8,
+  },
+
+  noDataCard: {
+    // width: '85%',
+    margin: 10,
+    padding: 30,
+    backgroundColor: 'white',
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    marginTop: 30,
+  },
+  noDataText: {
+    fontSize: SCREEN_WIDTH * 0.042,
+    fontWeight: 'bold',
+    color: '#555',
+    marginTop: 10,
+    marginBottom: 16,
+  },
+  exploreButton: {
+    backgroundColor: '#4a6ea9',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    marginTop: 10,
+  },
+  exploreText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: SCREEN_WIDTH * 0.04,
   },
 });
 

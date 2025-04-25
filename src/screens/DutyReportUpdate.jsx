@@ -244,6 +244,15 @@ const DutyReportUpdate = ({route, navigation}) => {
         booking_id: bookingNumber,
         current_language: languageSwitch,
       });
+      const freeStorage = await DeviceInfo.getFreeDiskStorage();
+      const isGreaterThan500MB = freeStorage > 2 * 1024 * 1024 * 1024;
+      if (isGreaterThan500MB) {
+        console.log(' Storage is more than 500 MB');
+        setShowImageField(true);
+      } else {
+        setShowImageField(false);
+        console.log(' Storage is less than 500 MB');
+      }
 
       if (response?.status_code == '200' && response?.message_type == 'error') {
         setCancelState('cancel');
@@ -579,7 +588,7 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
 
   const driverReached = async () => {
-    if (!selectedFile) {
+    if (showImageField && !selectedFile) {
       Alert.alert(
         languageSwitch == 'english'
           ? 'Please click the Photo for upload'
@@ -587,12 +596,19 @@ const DutyReportUpdate = ({route, navigation}) => {
       );
       return;
     }
-    if (!inputValue) {
-      Alert.alert(
-        languageSwitch == 'english'
-          ? 'Please Enter First OTP'
-          : 'कृपया पहले ओटीपी दर्ज करें।',
-      );
+    if (!inputValue || !/^\d+$/.test(inputValue) || inputValue.length !== 4) {
+      const otpMessage = !inputValue
+        ? languageSwitch === 'english'
+          ? 'Please enter first OTP.'
+          : 'कृपया पहले ओटीपी दर्ज करें।'
+        : !/^\d+$/.test(inputValue)
+        ? languageSwitch === 'english'
+          ? 'OTP must contain only numbers.'
+          : 'ओटीपी में केवल अंक होने चाहिए।'
+        : languageSwitch === 'english'
+        ? 'OTP must be exactly 4 digits.'
+        : 'ओटीपी ठीक 4 अंकों का होना चाहिए।';
+      Alert.alert(otpMessage);
       return;
     }
 
@@ -607,11 +623,19 @@ const DutyReportUpdate = ({route, navigation}) => {
       'trip_status',
       bookingInfo?.condition?.next_booking_status_id,
     );
-    formData.append('start_image', {
-      uri: selectedFile.uri,
-      type: selectedFile.type || 'image/jpeg',
-      name: selectedFile.fileName || 'photo.jpg',
-    });
+
+    if (selectedFile) {
+      formData.append('start_image', {
+        uri: selectedFile.uri,
+        type: selectedFile.type || 'image/jpeg',
+        name: selectedFile.fileName || 'photo.jpg',
+      });
+    }
+    // formData.append('start_image', {
+    //   uri: selectedFile.uri,
+    //   type: selectedFile.type || 'image/jpeg',
+    //   name: selectedFile.fileName || 'photo.jpg',
+    // });
     formData.append('otp', inputValue);
     formData.append('start_kms', inputKmsValue);
 
@@ -2110,36 +2134,38 @@ const DutyReportUpdate = ({route, navigation}) => {
                     )}
                   </Text>
                 </TouchableOpacity> */}
-                <TouchableOpacity
-                  onPress={handleCameraCapture}
-                  onPressIn={handlePressIn}
-                  onPressOut={handlePressOut}
-                  activeOpacity={0.8}
-                  style={{
-                    alignSelf: 'center',
-                    marginTop: 20,
-                  }}>
-                  <Animated.View style={[styles.button, animatedStyle]}>
-                    {selectedFile ? (
-                      <Animated.Image
-                        source={{uri: selectedFile?.uri}}
-                        style={styles.image}
-                        entering={FadeIn.duration(500)} // Smooth fade-in animation
-                      />
-                    ) : (
-                      <MaterialCommunityIcons
-                        name="camera"
-                        size={40}
-                        color="#16588e"
-                      />
-                      // <Image source={TrustedPartner} style={styles.placeholderImage} />
-                    )}
+                {showImageField && (
+                  <TouchableOpacity
+                    onPress={handleCameraCapture}
+                    onPressIn={handlePressIn}
+                    onPressOut={handlePressOut}
+                    activeOpacity={0.8}
+                    style={{
+                      alignSelf: 'center',
+                      marginTop: 20,
+                    }}>
+                    <Animated.View style={[styles.button, animatedStyle]}>
+                      {selectedFile ? (
+                        <Animated.Image
+                          source={{uri: selectedFile?.uri}}
+                          style={styles.image}
+                          entering={FadeIn.duration(500)} // Smooth fade-in animation
+                        />
+                      ) : (
+                        <MaterialCommunityIcons
+                          name="camera"
+                          size={40}
+                          color="#16588e"
+                        />
+                        // <Image source={TrustedPartner} style={styles.placeholderImage} />
+                      )}
 
-                    <Text style={styles.text}>
-                      {selectedFile ? 'Edit' : 'Upload Image'}
-                    </Text>
-                  </Animated.View>
-                </TouchableOpacity>
+                      <Text style={styles.text}>
+                        {selectedFile ? 'Edit' : 'Upload Image'}
+                      </Text>
+                    </Animated.View>
+                  </TouchableOpacity>
+                )}
 
                 <View style={{padding: 20}}>
                   <TextInput

@@ -897,11 +897,6 @@ const TrustedDriver = ({navigation}) => {
       }
 
       if (response?.driver_panel_messages?.driver_screen_access == '1') {
-        console.log(
-          response?.driver_panel_messages?.driver_screen_access,
-          'response?.driver_panel_messages?.driver_screen_access',
-        );
-
         setScreenAccess(true);
       } else {
         setScreenAccess(false);

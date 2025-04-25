@@ -215,7 +215,8 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal, tripDetails}) => {
           )}
           {tripDetails?.commision_amount && (
             <DetailRow
-              label="Commission : 20%"
+              // label="Commission : 20%"
+              label={`Commission : ${tripDetails?.commission}%`}
               value={`Rs ${tripDetails?.commision_amount}`}
             />
           )}

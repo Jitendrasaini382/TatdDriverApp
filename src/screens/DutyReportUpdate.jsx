@@ -66,6 +66,7 @@ import Animated, {
   FadeIn,
 } from 'react-native-reanimated';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import DeviceInfo from 'react-native-device-info';
 
 const DutyReportUpdate = ({route, navigation}) => {
   const {bookingNumber, state} = route?.params;
@@ -93,6 +94,7 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [needHelpShow, setNeedHelpShow] = useState(false);
+  const [showImageField, setShowImageField] = useState(true);
 
   const talkToCustomer = async () => {
     setLoader(true);
@@ -467,19 +469,33 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [acceptBookingPopup, setacceptBookingPopup] = useState(false);
 
   const showStartAlert = () => {
-    if (!inputValue) {
-      Alert.alert(
-        languageSwitch == 'english'
-          ? 'Please Enter Fisrt OTP'
-          : 'कृपया पहले ओटीपी दर्ज करें।',
-      );
+    if (!inputValue || !/^\d+$/.test(inputValue) || inputValue.length !== 4) {
+      const otpMessage = !inputValue
+        ? languageSwitch === 'english'
+          ? 'Please enter first OTP.'
+          : 'कृपया पहले ओटीपी दर्ज करें।'
+        : !/^\d+$/.test(inputValue)
+        ? languageSwitch === 'english'
+          ? 'OTP must contain only numbers.'
+          : 'ओटीपी में केवल अंक होने चाहिए।'
+        : languageSwitch === 'english'
+        ? 'OTP must be exactly 4 digits.'
+        : 'ओटीपी ठीक 4 अंकों का होना चाहिए।';
+
+      Alert.alert(otpMessage);
       return;
-    } else if (!inputKmsValue) {
-      Alert.alert(
-        languageSwitch == 'english'
-          ? 'Please Enter First Start KMS'
-          : 'कृपया प्रारंभ KMS दर्ज करें।',
-      );
+    }
+
+    if (!inputKmsValue || !/^\d+$/.test(inputKmsValue)) {
+      const kmsMessage = !inputKmsValue
+        ? languageSwitch === 'english'
+          ? 'Please enter starting KMS.'
+          : 'कृपया प्रारंभ KMS दर्ज करें।'
+        : languageSwitch === 'english'
+        ? 'KMS must contain only numbers.'
+        : 'KMS में केवल अंक होने चाहिए।';
+
+      Alert.alert(kmsMessage);
       return;
     } else {
       Alert.alert(
@@ -640,8 +656,16 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
 
   const showEndAlert = startReading => {
-    if (!inputEndKmsValue) {
-      Alert.alert('Please Enter First End KMS');
+    if (!inputEndKmsValue || !/^\d+$/.test(inputEndKmsValue)) {
+      const kmsMessage = !inputEndKmsValue
+        ? languageSwitch === 'english'
+          ? 'Please Enter First End KMS.'
+          : 'कृपया अंतिम KMS दर्ज करें।'
+        : languageSwitch === 'english'
+        ? 'KMS must contain only numbers.'
+        : 'KMS में केवल अंक होने चाहिए।';
+
+      Alert.alert(kmsMessage);
       return;
     } else {
       const message = `Start Meter Reading: ${startReading}\nEnd Meter Reading: ${inputEndKmsValue}\nTotal Running KMS: ${
@@ -2346,6 +2370,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                     }
                     placeholderTextColor="#aaa"
                     value={inputEndKmsValue}
+                    keyboardType="number-pad"
                     onChangeText={text => setInputEndKmsValue(text)}
                   />
                 ) : (

@@ -3,7 +3,7 @@ import {
   StyleSheet,
   Text,
   Dimensions,
-  SafeAreaView,
+  // SafeAreaView,
   View,
   TouchableOpacity,
   Image,
@@ -18,6 +18,8 @@ import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
 import {GET_AGENT_NETWORK_CLICK_DETAILS, GET_AGENT_WALLET} from '../apis/Apis';
 import {useRoute} from '@react-navigation/native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import LottieView from 'lottie-react-native';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
@@ -110,65 +112,82 @@ const AgentWallet = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <Header backButton={true} />
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => {
-              setRefreshing(true);
-              getAgentWallet();
-            }}
-          />
-        }>
-        <View style={styles.topContent}>
-          <Text style={styles.mainHeadingText}>
-            My Lifetime Earning ₹{agentWalletData?.my_earning}
-          </Text>
-          <View style={styles.underlineView}></View>
-        </View>
-        <View style={styles.middleContainer}>
-          <View style={styles.middleContent}>
-            <Image
-              source={Wallet_Icon}
-              resizeMethod="resize"
-              resizeMode="contain"
-              style={styles.walletIcon}
+      {Object.entries(agentWalletData).length !== 0 ? (
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                setRefreshing(true);
+                getAgentWallet();
+              }}
             />
-            <Text style={styles.balanceHeadingText}>tat d balance</Text>
+          }>
+          <View style={styles.topContent}>
+            <Text style={styles.mainHeadingText}>
+              My Lifetime Earning ₹{agentWalletData?.my_earning}
+            </Text>
+            <View style={styles.underlineView}></View>
           </View>
-          <Text style={styles.totalBalance}>
-            ₹{agentWalletData?.my_balance_earning}
-          </Text>
-        </View>
-        {isFromMyNetwork && (
-          <Text
-            style={{
-              fontSize: 14,
-              color: 'black',
-              fontWeight: '500',
-              marginHorizontal: 10,
-              marginVertical: 5,
-            }}>
-            {agentWalletData?.heading}
-          </Text>
-        )}
+          <View style={styles.middleContainer}>
+            <View style={styles.middleContent}>
+              <Image
+                source={Wallet_Icon}
+                resizeMethod="resize"
+                resizeMode="contain"
+                style={styles.walletIcon}
+              />
+              <Text style={styles.balanceHeadingText}>tat d balance</Text>
+            </View>
+            <Text style={styles.totalBalance}>
+              ₹{agentWalletData?.my_balance_earning}
+            </Text>
+          </View>
+          {isFromMyNetwork && (
+            <Text
+              style={{
+                fontSize: 14,
+                color: 'black',
+                fontWeight: '500',
+                marginHorizontal: 10,
+                marginVertical: 5,
+              }}>
+              {agentWalletData?.heading}
+            </Text>
+          )}
 
-        {loader ? (
-          <ActivityIndicator
-            size={'large'}
-            color={AppColors.mainColor}
-            style={{flex: 1, alignContent: 'center'}}
+          {loader ? (
+            <ActivityIndicator
+              size={'large'}
+              color={AppColors.mainColor}
+              style={{flex: 1, alignContent: 'center'}}
+            />
+          ) : (
+            agentWalletData?.response?.map((item, index) => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('AgentCommisionAdded', item)}
+                key={index.toString()}>
+                {renderTripItem({item})}
+              </TouchableOpacity>
+            ))
+          )}
+        </ScrollView>
+      ) : (
+        <View style={styles.noDataCard}>
+          <LottieView
+            source={require('../assets/images/emptyScreen.json')}
+            style={{width: 100, height: 100}}
+            autoPlay
+            loop
           />
-        ) : (
-          agentWalletData?.response?.map((item, index) => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate('AgentCommisionAdded', item)}
-              key={index.toString()}>
-              {renderTripItem({item})}
-            </TouchableOpacity>
-          ))
-        )}
-      </ScrollView>
+          <Text style={styles.noDataText}>No Data Found</Text>
+          {/* <TouchableOpacity
+            style={styles.exploreButton}
+            onPress={() => navigation.navigate('Search')}>
+            <Text style={styles.exploreText}>Explore Services</Text>
+          </TouchableOpacity> */}
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -259,6 +278,41 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
+  },
+  noDataCard: {
+    // width: '85%',
+    margin: 20,
+    padding: 30,
+    backgroundColor: 'white',
+    borderRadius: 16,
+
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    marginTop: 40,
+  },
+  noDataText: {
+    fontSize: SCREEN_WIDTH * 0.042,
+    fontWeight: 'bold',
+    color: '#555',
+    marginTop: 10,
+    marginBottom: 16,
+  },
+  exploreButton: {
+    backgroundColor: '#4a6ea9',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    marginTop: 10,
+  },
+  exploreText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: SCREEN_WIDTH * 0.04,
   },
 });
 

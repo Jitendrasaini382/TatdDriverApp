@@ -65,7 +65,8 @@ const DriverEarningModal = ({setIsModalVisible, bookingNumber}) => {
               />
               <DetailRow label="GST : 5%" value={`Rs ${tripDetails?.gst}`} />
               <DetailRow
-                label="Commission : 20%"
+                // label="Commission : 20%"
+                label={`Commission : ${tripDetails?.commission_percent}%`}
                 value={`Rs ${tripDetails?.commission}`}
               />
 

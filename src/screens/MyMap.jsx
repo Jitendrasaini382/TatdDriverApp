@@ -1,11 +1,13 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import WebView from 'react-native-webview';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Geolocation from '@react-native-community/geolocation';
 import {SAVE_LIVE_DRIVER_LATLONG} from '../apis/Apis';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
+const screenHeight = Dimensions.get('window').height;
+
 
 const MyMap = ({navigation, route}) => {
   const {googleMapsWebURL, timing, bookingNumber} = route?.params;
@@ -13,6 +15,9 @@ const MyMap = ({navigation, route}) => {
   const webViewRef = useRef(null);
 
   const clickedOnceRef = useRef(false); // 👉 added this line
+
+  console.log(screenHeight,"screenHeightscreenHeightscreenHeight");
+  
 
   useEffect(() => {
     let isMounted = true;
@@ -90,7 +95,7 @@ const MyMap = ({navigation, route}) => {
         style={{
           position: 'absolute',
           zIndex: 3,
-          height: '13.87%',
+          height: '13.8%',
           width: '100%',
           backgroundColor: 'white',
         }}>

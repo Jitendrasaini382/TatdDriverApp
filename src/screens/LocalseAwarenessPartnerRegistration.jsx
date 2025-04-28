@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {AppColors} from '../assets/Colors';
+import YoutubePlayer from 'react-native-youtube-iframe';
 
 const LocalseAwarenessPartnerRegistration = ({navigation, route}) => {
   const {localseData} = route?.params || {};
@@ -80,7 +81,12 @@ const LocalseAwarenessPartnerRegistration = ({navigation, route}) => {
             {localseData?.heading}
           </Text>
           <Text style={styles.subtitle}>{localseData?.sub_heading}</Text>
-
+          <View style={{marginVertical: 20}}>
+            <YoutubePlayer
+              height={200}
+              videoId={localseData?.video_url || 'rEdN-eiUmzU'}
+            />
+          </View>
           <Text style={styles.paragraph}>
             <Text style={styles.bold}>{localseData?.heading_1} </Text>
             {localseData?.line_1}

@@ -95,6 +95,7 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [needHelpShow, setNeedHelpShow] = useState(false);
   const [showImageField, setShowImageField] = useState(true);
+  const [loaderMap, setLoaderMap] = useState(false);
 
   const talkToCustomer = async () => {
     setLoader(true);
@@ -840,52 +841,45 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
 
   const openMap = async latLong => {
-    // console.log(latLong, 'Received latLong input');
+    try {
+      setLoaderMap(true);
 
-    if (
-      !latLong ||
-      typeof latLong !== 'string' ||
-      !latLong.includes(',') ||
-      latLong.split(',').length !== 2 ||
-      latLong.split(',').some(coord => isNaN(parseFloat(coord.trim())))
-    ) {
-      return null;
-    }
+      if (
+        !latLong ||
+        typeof latLong !== 'string' ||
+        !latLong.includes(',') ||
+        latLong.split(',').length !== 2 ||
+        latLong.split(',').some(coord => isNaN(parseFloat(coord.trim())))
+      ) {
+        setLoaderMap(false);
+        return null;
+      }
 
-    const currentLocation = await getLocation();
-    // console.log(currentLocation, 'Fetched current location');
+      const currentLocation = await getLocation();
+      const customerLocation = createLatLng(latLong);
 
-    const customerLocation = createLatLng(latLong);
-    // console.log(customerLocation, 'Processed customer location');
+      const googleMapsAppURL = `google.navigation:q=${customerLocation?.lat},${customerLocation?.lng}&mode=d`;
+      const googleMapsWebURL = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation?.latitude},${currentLocation?.longitude}&destination=${customerLocation?.lat},${customerLocation?.lng}&travelmode=driving`;
 
-    // console.log('Stopping execution here...');
-    // return false;
+      if (bookingInfo?.condition?.live_tracking == 1) {
+        navigation.navigate('MyMap', {
+          googleMapsWebURL,
+          timing: bookingInfo?.condition?.api_timing,
+          bookingNumber,
+        });
+      } else {
+        const supported = await Linking.canOpenURL('google.navigation:q=0,0');
 
-    const googleMapsAppURL = `google.navigation:q=${customerLocation?.lat},${customerLocation?.lng}&mode=d`;
-    // console.log(googleMapsAppURL, 'Generated Google Maps App URL');
-
-    const googleMapsWebURL = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation?.latitude},${currentLocation?.longitude}&destination=${customerLocation?.lat},${customerLocation?.lng}&travelmode=driving`;
-    // console.log(googleMapsWebURL, 'Generated Google Maps Web URL');
-    if (bookingInfo?.condition?.live_tracking == 1) {
-      navigation.navigate('MyMap', {
-        googleMapsWebURL,
-        timing: bookingInfo?.condition?.api_timing,
-        bookingNumber,
-      });
-      return false;
-    } else {
-      Linking.canOpenURL('google.navigation:q=0,0')
-        .then(supported => {
-          // console.log(supported, 'Can open Google Maps App');
-          if (supported) {
-            // console.log('Opening Google Maps App...');
-            Linking.openURL(googleMapsAppURL);
-          } else {
-            // console.log('Opening Google Maps Web...');
-            Linking.openURL(googleMapsWebURL);
-          }
-        })
-        .catch(err => console.error('Error opening Google Maps', err));
+        if (supported) {
+          await Linking.openURL(googleMapsAppURL);
+        } else {
+          await Linking.openURL(googleMapsWebURL);
+        }
+      }
+    } catch (error) {
+      console.error('Error opening Google Maps', error);
+    } finally {
+      setLoaderMap(false);
     }
   };
 
@@ -1302,16 +1296,22 @@ const DutyReportUpdate = ({route, navigation}) => {
                         width: 35,
                         height: 35,
                       }}
+                      activeOpacity={0.7}
+                      disabled={loaderMap}
                       onPress={() => openMap(bookingInfo?.data?.c_latlong)}>
-                      <Image
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          transform: [{rotate: '30deg'}],
-                        }}
-                        source={NavigationIcon}
-                        resizeMode="cover"
-                      />
+                      {loaderMap ? (
+                        <ActivityIndicator color={AppColors.mainColor} />
+                      ) : (
+                        <Image
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            transform: [{rotate: '30deg'}],
+                          }}
+                          source={NavigationIcon}
+                          resizeMode="cover"
+                        />
+                      )}
                     </TouchableOpacity>
                   </View>
                 )}

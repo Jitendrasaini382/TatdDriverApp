@@ -42,26 +42,88 @@ const BookingView = ({
       )}
 
       <View style={styles.notificationContainer}>
-        {data?.driver_panel_messages?.booking_score_message && (
-          <Text style={[styles.notificationText, {color: 'green'}]}>
-            {data?.driver_panel_messages?.booking_score_message}
-          </Text>
+        {data?.driver_panel_messages?.booking_score_message_heading && (
+          <>
+            <View style={styles.notificationRow}>
+              <Icon
+                name="check-circle"
+                size={22}
+                color={AppColors.mainColor}
+                style={styles.icon}
+              />
+              <Text style={styles.notificationTitle}>
+                {data?.driver_panel_messages?.booking_score_message_heading}
+              </Text>
+            </View>
+            {data?.driver_panel_messages?.booking_score_message && (
+              <>
+                <Text style={styles.notificationText}>
+                  {data?.driver_panel_messages?.booking_score_message}
+                </Text>
+                <View style={styles.divider} />
+              </>
+            )}
+          </>
         )}
-        {data?.driver_panel_messages?.double_booking_eligibility && (
-          <Text style={styles.notificationText}>
-            {data?.driver_panel_messages?.double_booking_eligibility}
-          </Text>
+
+        {data?.driver_panel_messages?.double_booking_eligibility_heading && (
+          <>
+            <View style={styles.notificationRow}>
+              <Icon
+                name="map-marker"
+                size={22}
+                color="#e53935"
+                style={styles.icon}
+              />
+              <Text style={styles.notificationTitle}>
+                {
+                  data?.driver_panel_messages
+                    ?.double_booking_eligibility_heading
+                }
+              </Text>
+            </View>
+            {data?.driver_panel_messages?.double_booking_eligibility && (
+              <>
+                <Text style={styles.notificationText}>
+                  {data?.driver_panel_messages?.double_booking_eligibility}
+                </Text>
+                <View style={styles.divider} />
+              </>
+            )}
+          </>
         )}
 
         {data?.driver_panel_messages?.incident_error_message && (
-          <Text style={styles.notificationText}>
-            {data?.driver_panel_messages?.incident_error_message}
-          </Text>
+          <>
+            <Text style={styles.notificationText}>
+              {data?.driver_panel_messages?.incident_error_message}
+            </Text>
+            <View style={styles.divider} />
+          </>
         )}
+
         {data?.driver_panel_messages?.outstanding_message && (
-          <Text style={styles.notificationText}>
-            {data?.driver_panel_messages?.outstanding_message}
-          </Text>
+          <>
+            <Text style={styles.notificationText}>
+              {data?.driver_panel_messages?.outstanding_message}
+            </Text>
+            <View style={styles.divider} />
+          </>
+        )}
+
+        {data?.driver_panel_messages
+          ?.outstation_eligibility_message_heading && (
+          <>
+            <View style={styles.notificationRow}>
+              <Icon name="road" size={22} color="#37474f" style={styles.icon} />
+              <Text style={styles.notificationTitle}>
+                {
+                  data?.driver_panel_messages
+                    ?.outstation_eligibility_message_heading
+                }
+              </Text>
+            </View>
+          </>
         )}
         {data?.driver_panel_messages?.outstation_eligibility_message && (
           <Text style={styles.notificationText}>
@@ -116,18 +178,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: width * 0.038,
   },
-  notificationContainer: {
-    marginBottom: 20,
-    borderRadius: 5,
-    paddingHorizontal: 15,
-  },
-  notificationText: {
-    color: AppColors.black,
-    fontFamily: AppFont.regularFont,
-    fontSize: width * 0.04,
-
-    marginVertical: 5,
-  },
   bookingContainer: {
     marginTop: 20,
     backgroundColor: AppColors.mainColor,
@@ -181,6 +231,43 @@ const styles = StyleSheet.create({
     color: AppColors.white,
     fontSize: 15,
     marginRight: 10,
+  },
+
+  notificationContainer: {
+    margin: 10,
+    borderRadius: 8,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    backgroundColor: '#fff',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  notificationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  notificationTitle: {
+    color: '#0f2129',
+    marginHorizontal: 15,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  notificationText: {
+    color: AppColors.black,
+    fontFamily: AppFont.regularFont,
+    fontSize: width * 0.04,
+    marginVertical: 5,
+  },
+  divider: {
+    height: 1,
+    width: '100%',
+    backgroundColor: AppColors.gray,
+    marginVertical: 8,
   },
 });
 

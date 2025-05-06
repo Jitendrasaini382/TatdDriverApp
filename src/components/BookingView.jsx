@@ -7,7 +7,7 @@ import {
   Dimensions,
   Pressable,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AppColors} from '../assets/Colors';
 import {LeftArrow} from '../assets/images';
 import {AppFont} from '../assets/FontsFamily';
@@ -16,6 +16,7 @@ import PermanentBookingView from './bookingsView/PermanentBookingView';
 import FlexibleBookingView from './bookingsView/FlexibleBookingView';
 import {useNavigation} from '@react-navigation/native';
 import PermanentSubscriptionBookingView from './bookingsView/PermanentSubscriptionBookingView';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const {width} = Dimensions.get('window');
 
@@ -26,6 +27,7 @@ const BookingView = ({
   permanentSubscriptionBookingData,
 }) => {
   const navigation = useNavigation();
+  console.log(data, 'n');
 
   return (
     <View style={styles.container}>
@@ -41,97 +43,264 @@ const BookingView = ({
         </View>
       )}
 
-      <View style={styles.notificationContainer}>
-        {data?.driver_panel_messages?.booking_score_message_heading && (
-          <>
-            <View style={styles.notificationRow}>
-              <Icon
-                name="check-circle"
-                size={22}
-                color={AppColors.mainColor}
-                style={styles.icon}
-              />
-              <Text style={styles.notificationTitle}>
-                {data?.driver_panel_messages?.booking_score_message_heading}
-              </Text>
-            </View>
+      {(data?.driver_panel_messages?.booking_score_message ||
+        data?.driver_panel_messages?.double_booking_eligibility ||
+        data?.driver_panel_messages?.outstation_eligibility_message ||
+        data?.driver_panel_messages?.incident_error_message ||
+        data?.driver_panel_messages?.outstanding_message) && (
+        <View
+          style={{
+            margin: 5,
+            borderRadius: 20,
+            backgroundColor: '#ffffff',
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 8},
+            shadowOpacity: 0.1,
+            shadowRadius: 10,
+            elevation: 5,
+            marginBottom: 10,
+          }}>
+          <View style={{padding: 10}}>
+            {/* 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 */}
             {data?.driver_panel_messages?.booking_score_message && (
               <>
-                <Text style={styles.notificationText}>
-                  {data?.driver_panel_messages?.booking_score_message}
-                </Text>
-                <View style={styles.divider} />
+                <View
+                  style={{
+                    backgroundColor: '#e8f5e9',
+                    paddingVertical: 4,
+                    paddingHorizontal: 20,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    borderTopLeftRadius: 10,
+                    borderTopRightRadius: 10,
+                  }}>
+                  <Icon name="check-circle" size={18} color="#2e7d32" />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '600',
+                      color: '#2e7d32',
+                      marginLeft: 8,
+                    }}>
+                    {data?.driver_panel_messages?.booking_score_message_heading}
+                  </Text>
+                </View>
+
+                <View style={{padding: 5}}>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: AppColors.black,
+                    }}>
+                    {data?.driver_panel_messages?.booking_score_message}
+                  </Text>
+                </View>
               </>
             )}
-          </>
-        )}
 
-        {data?.driver_panel_messages?.double_booking_eligibility_heading && (
-          <>
-            <View style={styles.notificationRow}>
-              <Icon
-                name="map-marker"
-                size={22}
-                color="#e53935"
-                style={styles.icon}
-              />
-              <Text style={styles.notificationTitle}>
-                {
-                  data?.driver_panel_messages
-                    ?.double_booking_eligibility_heading
-                }
-              </Text>
-            </View>
+            {/* 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 */}
             {data?.driver_panel_messages?.double_booking_eligibility && (
               <>
-                <Text style={styles.notificationText}>
-                  {data?.driver_panel_messages?.double_booking_eligibility}
-                </Text>
-                <View style={styles.divider} />
+                <View
+                  style={{
+                    height: 1,
+                    width: '100%',
+                    backgroundColor: AppColors.gray,
+                    marginVertical: 8,
+                  }}
+                />
+                <View
+                  style={{
+                    backgroundColor: '#e8f5e9',
+                    paddingVertical: 4,
+                    paddingHorizontal: 20,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    borderTopLeftRadius: 10,
+                    borderTopRightRadius: 10,
+                  }}>
+                  <FontAwesome5
+                    name="calendar-check"
+                    size={16}
+                    color="#2e7d32"
+                  />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '600',
+                      color: '#2e7d32',
+
+                      marginLeft: 8,
+                    }}>
+                    {
+                      data?.driver_panel_messages
+                        ?.double_booking_eligibility_heading
+                    }
+                  </Text>
+                </View>
+
+                <View style={{padding: 5}}>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: AppColors.black,
+                    }}>
+                    {data?.driver_panel_messages?.double_booking_eligibility}
+                  </Text>
+                </View>
               </>
             )}
-          </>
-        )}
 
-        {data?.driver_panel_messages?.incident_error_message && (
-          <>
-            <Text style={styles.notificationText}>
-              {data?.driver_panel_messages?.incident_error_message}
-            </Text>
-            <View style={styles.divider} />
-          </>
-        )}
+            {/* 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 */}
+            {data?.driver_panel_messages?.outstation_eligibility_message && (
+              <>
+                <View
+                  style={{
+                    height: 1,
+                    width: '100%',
+                    backgroundColor: AppColors.gray,
+                    marginVertical: 8,
+                  }}
+                />
+                <View
+                  style={{
+                    backgroundColor: '#e8f5e9',
+                    paddingVertical: 4,
+                    paddingHorizontal: 20,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    borderTopLeftRadius: 10,
+                    borderTopRightRadius: 10,
+                  }}>
+                  <FontAwesome5 name="road" size={16} color="#2e7d32" />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '600',
+                      color: '#2e7d32',
+                      marginLeft: 8,
+                    }}>
+                    {
+                      data?.driver_panel_messages
+                        ?.outstation_eligibility_message_heading
+                    }
+                  </Text>
+                </View>
 
-        {data?.driver_panel_messages?.outstanding_message && (
-          <>
-            <Text style={styles.notificationText}>
-              {data?.driver_panel_messages?.outstanding_message}
-            </Text>
-            <View style={styles.divider} />
-          </>
-        )}
+                <View style={{padding: 5}}>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: AppColors.black,
+                    }}>
+                    {
+                      data?.driver_panel_messages
+                        ?.outstation_eligibility_message
+                    }
+                  </Text>
+                </View>
+              </>
+            )}
 
-        {data?.driver_panel_messages
-          ?.outstation_eligibility_message_heading && (
-          <>
-            <View style={styles.notificationRow}>
-              <Icon name="road" size={22} color="#37474f" style={styles.icon} />
-              <Text style={styles.notificationTitle}>
-                {
-                  data?.driver_panel_messages
-                    ?.outstation_eligibility_message_heading
-                }
-              </Text>
-            </View>
-          </>
-        )}
-        {data?.driver_panel_messages?.outstation_eligibility_message && (
-          <Text style={styles.notificationText}>
-            {data?.driver_panel_messages?.outstation_eligibility_message}
-          </Text>
-        )}
-      </View>
+            {/* 4444444444444444444444444444444444444444444 */}
+            {data?.driver_panel_messages?.incident_error_message && (
+              <>
+                <View
+                  style={{
+                    height: 1,
+                    width: '100%',
+                    backgroundColor: AppColors.gray,
+                    marginVertical: 8,
+                  }}
+                />
+                <View
+                  style={{
+                    backgroundColor: '#e8f5e9',
+                    paddingVertical: 4,
+                    paddingHorizontal: 20,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    borderTopLeftRadius: 10,
+                    borderTopRightRadius: 10,
+                  }}>
+                  <Icon name="alert-circle" size={18} color="#e65100" />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '600',
+                      color: '#c62828',
+                      marginLeft: 8,
+                    }}>
+                    {
+                      data?.driver_panel_messages
+                        ?.incident_error_message_heading
+                    }
+                  </Text>
+                </View>
 
+                <View style={{padding: 5}}>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: AppColors.black,
+                    }}>
+                    {data?.driver_panel_messages?.incident_error_message}
+                  </Text>
+                </View>
+              </>
+            )}
+
+            {/* 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5  */}
+            {data?.driver_panel_messages?.outstanding_message && (
+              <>
+                <View
+                  style={{
+                    height: 1,
+                    width: '100%',
+                    backgroundColor: AppColors.gray,
+                    marginVertical: 8,
+                  }}
+                />
+                <View
+                  style={{
+                    backgroundColor: '#e8f5e9',
+                    paddingVertical: 4,
+                    paddingHorizontal: 20,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    borderTopLeftRadius: 10,
+                    borderTopRightRadius: 10,
+                  }}>
+                  <FontAwesome5
+                    name="money-check-alt"
+                    size={16}
+                    color="#2e7d32"
+                  />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '600',
+                      color: '#2e7d32',
+                      marginLeft: 8,
+                    }}>
+                    {data?.driver_panel_messages?.outstanding_message_heading}
+                  </Text>
+                </View>
+
+                <View style={{padding: 5}}>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: AppColors.black,
+                    }}>
+                    {data?.driver_panel_messages?.outstanding_message}
+                  </Text>
+                </View>
+              </>
+            )}
+          </View>
+        </View>
+      )}
       <RoundTripBookingView allBookingData={allBookingData} />
       <FlexibleBookingView />
       <PermanentSubscriptionBookingView

@@ -248,14 +248,14 @@ const DutyReportUpdate = ({route, navigation}) => {
       const freeStorage = await DeviceInfo.getFreeDiskStorage();
       const isGreaterThan500MB = freeStorage > 2 * 1024 * 1024 * 1024;
       if (isGreaterThan500MB) {
-        console.log(' Storage is more than 500 MB');
+        // console.log(' Storage is more than 500 MB');
         setShowImageField(true);
       } else {
         setShowImageField(false);
-        console.log(' Storage is less than 500 MB');
+        // console.log(' Storage is less than 500 MB');
       }
 
-      if (response?.status_code == '200' && response?.message_type == 'error') {
+      if (response?.status_code == '200' && response?.message_type == 'error' && response?.cancel_message_show) {
         setCancelState('cancel');
       } else {
         setbookingInfo(response?.duty_report_booking_info);
@@ -1047,11 +1047,11 @@ const DutyReportUpdate = ({route, navigation}) => {
           <ActivityIndicator size={'small'} color={AppColors.mainColor} />
         </View>
       ) : cancelState === 'cancel' ? (
-        <View
-          style={{
-            marginTop: 30,
-            padding: 10,
-          }}>
+        <ScrollView
+          style={{marginTop: 30, padding: 10}}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
           <View
             style={{
               borderColor: 'rgb(128,128,128)',
@@ -1059,7 +1059,6 @@ const DutyReportUpdate = ({route, navigation}) => {
               borderWidth: 1,
               borderStyle: 'solid',
               borderRadius: 8,
-              lineHeight: 20,
               shadowColor: 'rgb(128,128,128)',
               shadowOffset: {width: 5, height: 4},
               shadowOpacity: 5,
@@ -1082,7 +1081,7 @@ const DutyReportUpdate = ({route, navigation}) => {
               </Text>
             </View>
           </View>
-        </View>
+        </ScrollView>
       ) : bookingInfo?.condition?.eligibility_view_invoice == 1 ? (
         <View
           style={{

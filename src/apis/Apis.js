@@ -833,3 +833,12 @@ export const SAVE_LIVE_DRIVER_LATLONG = body => {
     {},
   );
 };
+
+export const SAVE_CRASH_ERROR = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/crash-reporting-api.php',
+    {...body},
+    {},
+  );
+};

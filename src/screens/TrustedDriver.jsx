@@ -40,6 +40,7 @@ import Geolocation from '@react-native-community/geolocation';
 import RNScreenshotPrevent, {
   addListener,
 } from 'react-native-screenshot-prevent';
+import TimerIcon from 'react-native-vector-icons/Ionicons';
 
 import {
   ALL_TEN_MINUTE_STATUS_UPDATE,
@@ -131,12 +132,14 @@ const TrustedDriver = ({navigation}) => {
   const [confirmTenMinuteLoader, setConfirmTenMinuteLoader] = useState(null);
   const [showNeedHelp, setShowNeedHelp] = useState(false);
   const [screenAccess, setScreenAccess] = useState(false);
-
   const [loaderPremium, setLoaderPremium] = useState(false);
   const [showLocalseButton, setShowLocalseButton] = useState(false);
   const [callSupportModal, setCallSupportModal] = useState(false);
   const [localseNewModal, setLocalseNewModal] = useState(false);
   const [localseData, setLocalseData] = useState({});
+  const timerRef = useRef(null);
+  const [seconds, setSeconds] = useState(0);
+  const [running, setRunning] = useState(false);
 
   const driverMobileNumber = useSelector(
     e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
@@ -896,6 +899,12 @@ const TrustedDriver = ({navigation}) => {
         );
       }
 
+      if (response?.driver_panel_messages?.notification_time) {
+        setSeconds(response?.driver_panel_messages?.notification_time);
+      } else {
+        setSeconds(response?.driver_panel_messages?.notification_time);
+      }
+
       if (response?.driver_panel_messages?.driver_screen_access == '1') {
         setScreenAccess(true);
       } else {
@@ -959,9 +968,46 @@ const TrustedDriver = ({navigation}) => {
         action: 'view_headline_update',
         current_language: languageSwitch,
       });
-
       setHomeNotificationData(response);
-    } catch (error) {}
+      // setSeconds(60);
+      setRunning(true);
+      startTimer();
+    } catch (error) {
+      console.log('Error fetching notification:', error);
+    }
+  };
+
+  const startTimer = () => {
+    if (timerRef.current) clearInterval(timerRef.current); // Clear any existing timer
+    timerRef.current = setInterval(() => {
+      setSeconds(prev => {
+        if (prev <= 1) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+          setRunning(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  const stopTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+      setRunning(false);
+    }
+  };
+
+  useEffect(() => {
+    return () => stopTimer();
+  }, []);
+
+  const formatTime = seconds => {
+    const min = Math.floor(seconds / 60);
+    const sec = seconds % 60;
+    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
   };
 
   const getHomeNotice = async () => {
@@ -972,6 +1018,9 @@ const TrustedDriver = ({navigation}) => {
       });
 
       setHomeNoticeData(response);
+      // setSeconds(60);
+      setRunning(true);
+      startTimer();
     } catch (error) {}
   };
 
@@ -1185,24 +1234,40 @@ const TrustedDriver = ({navigation}) => {
   };
 
   useEffect(() => {
+    let subscription;
     if (!screenAccess) {
-      RNScreenshotPrevent.enabled(true);
-      if (!__DEV__) {
-        RNScreenshotPrevent.enableSecureView();
-      }
-      const subscription = addListener(() => {
-        Alert.alert(
-          'Security Warning',
-          'Screenshot is not allowed on this screen.',
-          [{text: 'OK'}],
-        );
-      });
-      return () => {
-        RNScreenshotPrevent.enabled(false);
-        if (!__DEV__) {
-          RNScreenshotPrevent.disableSecureView();
+      try {
+        RNScreenshotPrevent.enabled(true);
+        if (!__DEV__ && Platform.OS === 'android') {
+          RNScreenshotPrevent.enableSecureView();
         }
-        subscription.remove();
+        subscription = addListener(() => {
+          Alert.alert(
+            'Security Warning',
+            'Screenshot is not allowed on this screen.',
+            [{text: 'OK'}],
+          );
+        });
+      } catch (error) {
+        // console.error('Screenshot prevention setup failed:', error);
+      }
+
+      return () => {
+        try {
+          RNScreenshotPrevent.enabled(false);
+          if (!__DEV__ && Platform.OS === 'android') {
+            RNScreenshotPrevent.disableSecureView();
+          }
+
+          if (subscription) {
+            subscription.remove();
+          }
+        } catch (error) {
+          // console.error(
+          //   'Error during cleanup of screenshot prevention:',
+          //   error,
+          // );
+        }
       };
     }
   }, [screenAccess]);
@@ -1227,14 +1292,14 @@ const TrustedDriver = ({navigation}) => {
             <View
               style={{
                 flex: 1,
-                backgroundColor: '#f4f4f4',
+                backgroundColor: AppColors.white,
                 padding: 16,
                 justifyContent: 'center',
                 alignContent: 'center',
               }}>
               <View
                 style={{
-                  backgroundColor: '#0056b3',
+                  backgroundColor: AppColors.mainColor,
                   padding: 16,
                   borderRadius: 8,
                 }}>
@@ -1262,7 +1327,7 @@ const TrustedDriver = ({navigation}) => {
                     padding: 16,
                     borderRadius: 8,
                     marginTop: 16,
-                    borderLeftColor: '#0056b3',
+                    borderLeftColor: AppColors.mainColor,
                     borderLeftWidth: 5,
                     margin: 20,
                   }}>
@@ -1277,12 +1342,17 @@ const TrustedDriver = ({navigation}) => {
 
                   {homeNotificationData?.back_btn == '1' ? (
                     <TouchableOpacity
+                      disabled={seconds != 0}
                       onPress={() => [
                         setShowNotification(false),
                         getHeadlineData(),
                       ]}
                       style={{
-                        backgroundColor: '#0056b3',
+                        backgroundColor:
+                          seconds != 0
+                            ? AppColors.greyColor
+                            : AppColors.mainColor,
+                        opacity: seconds !== 0 ? 0.8 : 1,
                         paddingVertical: 12,
                         borderRadius: 8,
                         alignItems: 'center',
@@ -1300,27 +1370,52 @@ const TrustedDriver = ({navigation}) => {
                     </TouchableOpacity>
                   ) : (
                     <TouchableOpacity
+                      disabled={seconds != 0}
                       onPress={() =>
                         clickStoreHomeNotification(
                           homeNotificationData?.headline?.id,
                         )
                       }
                       style={{
-                        backgroundColor: '#0056b3',
+                        backgroundColor:
+                          seconds != 0
+                            ? AppColors.greyColor
+                            : AppColors.mainColor,
+                        opacity: seconds !== 0 ? 0.8 : 1,
                         paddingVertical: 12,
                         borderRadius: 8,
                         alignItems: 'center',
                         marginTop: 50,
                         marginBottom: 5,
                       }}>
-                      <Text
-                        style={{
-                          color: '#ffffff',
-                          fontSize: 18,
-                          fontWeight: 'bold',
-                        }}>
-                        {homeNotificationData?.btn_text}
-                      </Text>
+                      {seconds == 0 ? (
+                        <Text
+                          style={{
+                            color: AppColors.white,
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                          }}>
+                          {homeNotificationData?.btn_text}
+                        </Text>
+                      ) : (
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <TimerIcon
+                            name={'timer-outline'}
+                            size={25}
+                            color={AppColors.black}
+                            style={{marginRight: 8}}
+                          />
+                          <Text
+                            style={{
+                              color: 'black',
+                              fontSize: 18,
+                              fontWeight: 'bold',
+                            }}>
+                            {formatTime(seconds)}
+                          </Text>
+                        </View>
+                      )}
                     </TouchableOpacity>
                   )}
                 </View>
@@ -1330,14 +1425,15 @@ const TrustedDriver = ({navigation}) => {
             <View
               style={{
                 flex: 1,
-                backgroundColor: '#f4f4f4',
-                padding: 16,
+                backgroundColor: AppColors.white,
+                // padding: 16,
               }}>
               <View
                 style={{
-                  backgroundColor: '#0056b3',
+                  backgroundColor: AppColors.mainColor,
                   padding: 16,
                   borderRadius: 8,
+                  margin: 16,
                 }}>
                 <Text
                   style={{
@@ -1349,13 +1445,20 @@ const TrustedDriver = ({navigation}) => {
                   {homeNoticeData?.awareness?.subject}
                 </Text>
               </View>
+
+              <ToggleButton
+                button1Label="Hindi"
+                button2Label="English"
+                onToggle={label => dispatch(setCurrentView(label))}
+              />
               <View
                 style={{
                   backgroundColor: 'white',
                   marginVertical: 20,
-                  width: '100%',
+                  width: '95%',
                   borderRadius: 10,
                   elevation: 5,
+                  alignSelf: 'center',
                 }}>
                 <View
                   style={{
@@ -1363,7 +1466,7 @@ const TrustedDriver = ({navigation}) => {
                     padding: 16,
                     borderRadius: 8,
                     marginTop: 16,
-                    borderLeftColor: '#0056b3',
+                    borderLeftColor: AppColors.mainColor,
                     borderLeftWidth: 5,
                     margin: 20,
                   }}>
@@ -1377,45 +1480,95 @@ const TrustedDriver = ({navigation}) => {
                   </Text>
                   {homeNoticeData?.back_btn == '1' ? (
                     <TouchableOpacity
+                      disabled={seconds != 0}
                       onPress={() => [setShowNotice(false), getHeadlineData()]}
                       style={{
-                        backgroundColor: '#0056b3',
+                        backgroundColor:
+                          seconds != 0
+                            ? AppColors.greyColor
+                            : AppColors.mainColor,
+                        opacity: seconds !== 0 ? 0.6 : 1,
                         paddingVertical: 12,
                         borderRadius: 8,
                         alignItems: 'center',
                         marginTop: 50,
                         marginBottom: 5,
                       }}>
-                      <Text
-                        style={{
-                          color: '#ffffff',
-                          fontSize: 18,
-                          fontWeight: 'bold',
-                        }}>
-                        {homeNoticeData?.btn_text}
-                      </Text>
+                      {seconds == 0 ? (
+                        <Text
+                          style={{
+                            color: AppColors.white,
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                          }}>
+                          {homeNoticeData?.btn_text}
+                        </Text>
+                      ) : (
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <TimerIcon
+                            name={'timer-outline'}
+                            size={25}
+                            color={AppColors.black}
+                            style={{marginRight: 8}}
+                          />
+                          <Text
+                            style={{
+                              color: 'black',
+                              fontSize: 18,
+                              fontWeight: 'bold',
+                            }}>
+                            {formatTime(seconds)}
+                          </Text>
+                        </View>
+                      )}
                     </TouchableOpacity>
                   ) : (
                     <TouchableOpacity
+                      disabled={seconds != 0}
                       onPress={() =>
                         clickStoreHomeNotice(homeNoticeData?.awareness?.id)
                       }
                       style={{
-                        backgroundColor: '#0056b3',
+                        backgroundColor:
+                          seconds != 0
+                            ? AppColors.greyColor
+                            : AppColors.mainColor,
+                        opacity: seconds !== 0 ? 0.6 : 1,
                         paddingVertical: 12,
                         borderRadius: 8,
                         alignItems: 'center',
                         marginTop: 50,
                         marginBottom: 5,
                       }}>
-                      <Text
-                        style={{
-                          color: '#ffffff',
-                          fontSize: 18,
-                          fontWeight: 'bold',
-                        }}>
-                        {homeNoticeData?.btn_text}
-                      </Text>
+                      {seconds == 0 ? (
+                        <Text
+                          style={{
+                            color: AppColors.white,
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                          }}>
+                          {homeNoticeData?.btn_text}
+                        </Text>
+                      ) : (
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <TimerIcon
+                            name={'timer-outline'}
+                            size={25}
+                            color={AppColors.black}
+                            style={{marginRight: 8}}
+                          />
+                          <Text
+                            style={{
+                              color: 'black',
+                              fontSize: 18,
+                              fontWeight: 'bold',
+                            }}>
+                            {formatTime(seconds)}
+                          </Text>
+                        </View>
+                      )}
                     </TouchableOpacity>
                   )}
                 </View>

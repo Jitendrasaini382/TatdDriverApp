@@ -27,7 +27,6 @@ const BookingView = ({
   permanentSubscriptionBookingData,
 }) => {
   const navigation = useNavigation();
-  console.log(data, 'n');
 
   return (
     <View style={styles.container}>

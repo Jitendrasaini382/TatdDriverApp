@@ -14,6 +14,7 @@ import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
 import {GET_AGENT_SELECT_CITY} from '../apis/Apis';
 import {useSelector} from 'react-redux';
+import {ScrollView} from 'react-native';
 
 const SelectYourCity = ({route, navigation}) => {
   const {state} = route.params;
@@ -52,32 +53,36 @@ const SelectYourCity = ({route, navigation}) => {
           style={{flex: 1, alignContent: 'center'}}
         />
       ) : (
-        <View style={styles.container}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>Select Your City</Text>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.container}>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>Select Your City</Text>
+            </View>
+            <View style={[styles.buttonContainer, {marginTop: 10}]}>
+              {cities?.map((city, index) => (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('AgentLeads', {
+                      data: data,
+                      city: city,
+                      zone: state,
+                    });
+                  }}
+                  key={index}
+                  style={styles.button}>
+                  <Text style={styles.buttonText}>{city}</Text>
+                  <Image
+                    style={styles.arrowImage}
+                    resizeMode="center"
+                    source={RightArrow_White}
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
-          <View style={[styles.buttonContainer, {marginTop: 10}]}>
-            {cities.map((city, index) => (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('AgentLeads', {
-                    data: data,
-                    city: city,
-                    zone: state,
-                  });
-                }}
-                key={index}
-                style={styles.button}>
-                <Text style={styles.buttonText}>{city}</Text>
-                <Image
-                  style={styles.arrowImage}
-                  resizeMode="center"
-                  source={RightArrow_White}
-                />
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
+        </ScrollView>
       )}
     </SafeAreaView>
   );
@@ -89,12 +94,12 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
   },
   container: {
-    padding: 25,
+    padding: 20,
     borderWidth: 1,
     borderColor: AppColors.mainColor,
     borderRadius: 15,
-    margin: 25,
     marginTop: 50,
+    marginBottom: 10,
   },
   title: {
     fontSize: 20,
@@ -106,6 +111,17 @@ const styles = StyleSheet.create({
     borderBottomColor: AppColors.mainColor,
     borderBottomWidth: 1,
   },
+  scrollContainer: {
+    padding: 20,
+  },
+
+  titleContainer: {
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    marginTop: 10,
+  },
+
   button: {
     backgroundColor: '#005a8c',
     padding: 15,

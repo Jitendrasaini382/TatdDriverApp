@@ -7,6 +7,7 @@ import {
   Image,
   SafeAreaView,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import {RightArrow_White} from '../assets/images';
 import Header from '../components/Header';
@@ -15,54 +16,69 @@ import {AppFont} from '../assets/FontsFamily';
 import {GET_AGENT_SELECT_STATE} from '../apis/Apis';
 
 const SelectYourState = ({navigation}) => {
-  const [states, setstates] = useState([]);
-  const [loader, setloader] = useState(false);
-  const getstates = async () => {
+  const [states, setStates] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const getStates = async () => {
     try {
       const res = await GET_AGENT_SELECT_STATE();
-      setstates(res?.cities);
+      setStates(res?.cities || []);
       console.log(res);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log('Error fetching states:', error);
     } finally {
-      setloader(false);
+      setLoading(false);
     }
   };
+
   useEffect(() => {
-    setloader(true);
-    getstates();
+    setLoading(true);
+    getStates();
   }, []);
 
   return (
     <SafeAreaView style={styles.mainContainer}>
       <Header backButton={true} />
-      {loader ? (
-        <ActivityIndicator
-          size={'large'}
-          color={AppColors.mainColor}
-          style={{flex: 1, alignContent: 'center'}}
-        />
-      ) : (
-        <View style={styles.container}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>Select Your State</Text>
-          </View>
-          <View style={[styles.buttonContainer, {marginTop: 10}]}>
-            {states?.map((state, index) => (
-              <TouchableOpacity
-                onPress={() => navigation.navigate('SelectYourCity', {state})}
-                key={index}
-                style={styles.button}>
-                <Text style={styles.buttonText}>{state}</Text>
-                <Image
-                  style={styles.arrowImage}
-                  resizeMode="center"
-                  source={RightArrow_White}
-                />
-              </TouchableOpacity>
-            ))}
-          </View>
+
+      {loading ? (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color={AppColors.mainColor} />
         </View>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContainer}>
+          <View
+            style={{
+              borderWidth: 1,
+              padding: 20,
+              borderRadius: 15,
+              marginBottom: 10,
+              borderColor: AppColors.mainColor,
+            }}>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>Select Your State</Text>
+            </View>
+
+            <View style={styles.buttonContainer}>
+              {states?.map((state, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.button}
+                  onPress={() =>
+                    navigation.navigate('SelectYourCity', {state})
+                  }>
+                  <Text style={styles.buttonText}>{state}</Text>
+                  <Image
+                    source={RightArrow_White}
+                    style={styles.arrowImage}
+                    resizeMode="center"
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </ScrollView>
       )}
     </SafeAreaView>
   );
@@ -73,23 +89,27 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: AppColors.white,
   },
-  container: {
-    padding: 25,
-    borderWidth: 1,
-    borderColor: AppColors.mainColor,
-    borderRadius: 15,
-    margin: 25,
-    marginTop: 50,
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scrollContainer: {
+    padding: 15,
+  },
+  titleContainer: {
+    marginBottom: 15,
   },
   title: {
     fontSize: 20,
-    paddingBottom: 5,
     color: AppColors.mainColor,
-    // fontFamily: AppFont.regularFont,
     fontWeight: 'bold',
-    // textDecorationLine:"underline",
-    borderBottomColor: AppColors.mainColor,
     borderBottomWidth: 1,
+    borderBottomColor: AppColors.mainColor,
+    paddingBottom: 5,
+  },
+  buttonContainer: {
+    marginTop: 10,
   },
   button: {
     backgroundColor: '#005a8c',
@@ -100,15 +120,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-
   buttonText: {
     color: '#fff',
     fontSize: 18,
     fontFamily: AppFont.regularFont,
-    borderBottomWidth: 0.5,
-    borderBottomColor: AppColors.white,
   },
-  arrowImage: {width: 18, height: 18},
+  arrowImage: {
+    width: 18,
+    height: 18,
+  },
 });
 
 export default SelectYourState;

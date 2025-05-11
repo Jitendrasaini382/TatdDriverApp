@@ -902,7 +902,7 @@ const TrustedDriver = ({navigation}) => {
       if (response?.driver_panel_messages?.notification_time) {
         setSeconds(response?.driver_panel_messages?.notification_time);
       } else {
-        setSeconds(response?.driver_panel_messages?.notification_time);
+        setSeconds(10);
       }
 
       if (response?.driver_panel_messages?.driver_screen_access == '1') {

@@ -18,6 +18,14 @@ const DetailRow = ({label, value}) => (
   </View>
 );
 
+const BulletPoint = ({text}) =>
+  typeof text === 'string' ? (
+    <View style={styles.bulletPointRow}>
+      <View style={styles.bullet} />
+      <Text style={styles.bulletText}>{text}</Text>
+    </View>
+  ) : null;
+
 const ClearMyDuePaymentModal = ({setMyDuePaymentModal, tripDetails}) => {
   if (!tripDetails) return null;
 
@@ -36,116 +44,35 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal, tripDetails}) => {
         </View>
 
         <View style={styles.contentContainer}>
-          {tripDetails?.line1 && (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginBottom: 10,
-              }}>
-              <Text
-                style={{
-                  color: AppColors.black,
-                  marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
-                }}>
-                {tripDetails?.line1}
-              </Text>
-              {/* <Text
+          {[
+            tripDetails?.line1,
+            tripDetails?.line2,
+            tripDetails?.line3,
+            tripDetails?.line4,
+          ].map(
+            (line, index) =>
+              typeof line === 'string' && (
+                <View
+                  key={`line-${index}`}
                   style={{
-                    color: AppColors.black,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
                     marginBottom: 10,
-                    fontFamily: AppFont.regularFont,
-                    fontSize: 13,
                   }}>
-                  Rs. {tripDetails?.Salary}
-                </Text> */}
-            </View>
-          )}
-          {tripDetails?.line2 && (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginBottom: 10,
-              }}>
-              <Text
-                style={{
-                  color: AppColors.black,
-                  marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
-                }}>
-                {tripDetails?.line2}
-              </Text>
-              {/* <Text
-                  style={{
-                    color: AppColors.black,
-                    marginBottom: 10,
-                    fontFamily: AppFont.regularFont,
-                    fontSize: 13,
-                  }}>
-                  {tripDetails?.Working_Days}
-                </Text> */}
-            </View>
-          )}
-          {tripDetails?.line3 && (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginBottom: 10,
-              }}>
-              <Text
-                style={{
-                  color: AppColors.black,
-                  marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
-                }}>
-                {tripDetails?.line3}
-              </Text>
-              {/* <Text
-                  style={{
-                    color: AppColors.black,
-                    marginBottom: 10,
-                    fontFamily: AppFont.regularFont,
-                    fontSize: 13,
-                  }}>
-                  {tripDetails?.Working_Hours}
-                </Text> */}
-            </View>
-          )}
-          {tripDetails?.line4 && (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginBottom: 10,
-              }}>
-              <Text
-                style={{
-                  color: AppColors.black,
-                  marginBottom: 10,
-                  fontFamily: AppFont.regularFont,
-                  fontSize: 13,
-                }}>
-                {tripDetails?.line4}
-              </Text>
-              {/* <Text
-                  style={{
-                    color: AppColors.black,
-                    marginBottom: 10,
-                    fontFamily: AppFont.regularFont,
-                    fontSize: 13,
-                  }}>
-                  {tripDetails?.Overtime}
-                </Text> */}
-            </View>
+                  <Text
+                    style={{
+                      color: AppColors.black,
+                      marginBottom: 10,
+                      fontFamily: AppFont.regularFont,
+                      fontSize: 13,
+                    }}>
+                    {line}
+                  </Text>
+                </View>
+              ),
           )}
 
-          {tripDetails?.line5 && (
+          {typeof tripDetails?.line5 === 'string' && (
             <View style={styles.container}>
               <View style={styles.textContainer}>
                 <Text
@@ -159,17 +86,11 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal, tripDetails}) => {
             </View>
           )}
 
-          {/* <View
-            style={{
-              marginTop: 10,
-              marginBottom: 20,
-            }}> */}
-          {tripDetails?.line6 && (
+          {typeof tripDetails?.line6 === 'string' && (
             <View
               style={{
                 flexDirection: 'row',
-                alignItems: 'flex-start', // Ensures alignment
-                // marginVertical: 2, // Consistent spacing
+                alignItems: 'flex-start',
                 marginTop: 2,
               }}>
               <View
@@ -178,7 +99,7 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal, tripDetails}) => {
                   height: 4,
                   borderRadius: 2,
                   backgroundColor: AppColors.black,
-                  marginTop: 6, // Align dot with text
+                  marginTop: 6,
                 }}
               />
               <Text
@@ -193,35 +114,29 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal, tripDetails}) => {
               </Text>
             </View>
           )}
-          {/* </View> */}
 
-          {tripDetails?.booking_type && (
+          {typeof tripDetails?.booking_type === 'string' && (
             <DetailRow label="Trip Type:" value={tripDetails?.booking_type} />
           )}
-          {tripDetails?.package && (
+          {typeof tripDetails?.package === 'string' && (
             <DetailRow label="Package:" value={tripDetails?.package} />
           )}
-          {tripDetails?.package_price && (
+          {typeof tripDetails?.package_price === 'string' && (
             <DetailRow
               label="Package Price : Cash"
               value={`Rs ${tripDetails?.package_price}`}
             />
           )}
-          {tripDetails?.gst_price && (
-            <DetailRow
-              label="GST : 5%"
-              value={`Rs ${tripDetails?.gst_price}`}
-            />
+          {typeof tripDetails?.gst_price === 'string' && (
+            <DetailRow label="GST : 5%" value={`Rs ${tripDetails?.gst_price}`} />
           )}
-          {tripDetails?.commision_amount && (
+          {typeof tripDetails?.commision_amount === 'number' && (
             <DetailRow
-              // label="Commission : 20%"
               label={`Commission : ${tripDetails?.commission}%`}
               value={`Rs ${tripDetails?.commision_amount}`}
             />
           )}
-
-          {tripDetails?.net_earning && (
+          {typeof tripDetails?.net_earning === 'string' && (
             <>
               <View style={styles.divider} />
               <DetailRow
@@ -233,15 +148,9 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal, tripDetails}) => {
           )}
 
           <View style={styles.bulletPointContainer}>
-            {tripDetails?.overtime_charges_line && (
-              <BulletPoint text={tripDetails?.overtime_charges_line} />
-            )}
-            {tripDetails?.night_charges_line && (
-              <BulletPoint text={tripDetails?.night_charges_line} />
-            )}
-            {tripDetails?.return_to_tatd && (
-              <BulletPoint text={tripDetails?.return_to_tatd} />
-            )}
+            <BulletPoint text={tripDetails?.overtime_charges_line} />
+            <BulletPoint text={tripDetails?.night_charges_line} />
+            <BulletPoint text={tripDetails?.return_to_tatd} />
           </View>
         </View>
 
@@ -254,13 +163,6 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal, tripDetails}) => {
     </ScrollView>
   );
 };
-
-const BulletPoint = ({text}) => (
-  <View style={styles.bulletPointRow}>
-    <View style={styles.bullet} />
-    <Text style={styles.bulletText}>{text}</Text>
-  </View>
-);
 
 const styles = StyleSheet.create({
   modalContainer: {

@@ -67,7 +67,7 @@ class CrashErrorWrapper extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('❌ CrashErrorWrapper caught an error:', error, errorInfo);
+    // console.log('❌ CrashErrorWrapper caught an error:', error, errorInfo);
     const routeName = this.props.route?.name ?? 'UnknownRoute';
     this.logErrorToServer(error, errorInfo, routeName);
   }
@@ -84,9 +84,9 @@ class CrashErrorWrapper extends React.Component {
 
     try {
       const res = await SAVE_CRASH_ERROR(logPayload);
-      console.log('📤 Error log sent:', res);
+      // console.log('📤 Error log sent:', res);
     } catch (logError) {
-      console.warn('⚠️ Failed to send error log:', logError.message);
+      // console.warn('⚠️ Failed to send error log:', logError.message);
     }
   }
 

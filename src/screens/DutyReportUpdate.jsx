@@ -385,7 +385,7 @@ const DutyReportUpdate = ({route, navigation}) => {
   const getLocation = async () => {
     const hasPermission = await requestLocationPermission();
     if (hasPermission) {
-      setReachLoader(true);
+      // setReachLoader(true);
 
       return new Promise((resolve, reject) => {
         Geolocation.getCurrentPosition(

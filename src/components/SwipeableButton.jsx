@@ -1,30 +1,49 @@
-import React, {useRef} from 'react';
-import {View, Text, StyleSheet, Animated, Alert} from 'react-native';
+import React, {useRef, useEffect} from 'react';
+import {View, Text, StyleSheet, Animated} from 'react-native';
 import {PanGestureHandler, State} from 'react-native-gesture-handler';
 import {AppColors} from '../assets/Colors';
 import RightArrowIcon from 'react-native-vector-icons/AntDesign';
 
 const SwipeableButton = ({onSwipe, data}) => {
   const translateX = useRef(new Animated.Value(0)).current;
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   const onGestureEvent = Animated.event(
     [{nativeEvent: {translationX: translateX}}],
-    {useNativeDriver: true},
+    {
+      useNativeDriver: true,
+    },
   );
 
   const onHandlerStateChange = event => {
     if (event.nativeEvent.oldState === State.ACTIVE) {
-      const {translationX} = event.nativeEvent;
-      if (translationX > 100) {
-        onSwipe();
+      const {translationX: gestureX} = event.nativeEvent;
+
+      if (gestureX > 100 && typeof onSwipe === 'function') {
+        onSwipe(); // Trigger swipe callback
       }
-      // Reset position to starting point
-      Animated.spring(translateX, {
-        toValue: 0,
-        useNativeDriver: true,
-      }).start();
+
+      // Safely reset to starting position
+      if (isMounted.current && translateX) {
+        try {
+          Animated.spring(translateX, {
+            toValue: 0,
+            useNativeDriver: true,
+          }).start();
+        } catch (error) {
+          console.log('Animation error:', error);
+        }
+      }
     }
   };
+
+  if (!data) return null; 
 
   return (
     <View style={styles.container}>
@@ -67,10 +86,6 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.mainColor,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  arrow: {
-    color: AppColors.white,
-    fontSize: 30,
   },
   textContainer: {
     flex: 1,

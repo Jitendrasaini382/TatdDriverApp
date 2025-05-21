@@ -50,7 +50,7 @@ axiosClient.interceptors.response.use(
 
         try {
           const res = await axios.post(
-            'https://www.tatd.in/app-api/driver/login/refresh_token.php',
+            `${API_BASE_URL}login/refresh_token.php`,
             {refresh_token: refreshToken, app_version: appVersion},
           );
 
@@ -182,7 +182,9 @@ const _Fetch = (method, path, body, headers = {}) => {
       headers: finalHeaders, // Pass merged headers
     })
       .then(response => {
-        // console.log(`Response data: ${path}`, response.data);
+        // if (path == 'trusted-driver/crash-reporting-api.php') {
+        //   console.log(`Response data: ${path}`, response.data);
+        // }
         if (response.data.status_code == 200) {
           resolve(response.data);
         } else {

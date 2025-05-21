@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import DeviceInfo from 'react-native-device-info';
@@ -80,6 +81,7 @@ class CrashErrorWrapper extends React.Component {
       component_stack: errorInfo?.componentStack || 'No componentStack',
       component: route,
       version: appVersion,
+      devicedata: Platform.OS,
     };
 
     try {

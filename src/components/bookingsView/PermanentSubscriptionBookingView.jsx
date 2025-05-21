@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -59,7 +59,7 @@ const TripCard = ({trip}) => {
         visible={openModal}>
         <PermanentSubscrptionBookingAcceptPopup
           setOpenModal={setOpenModal}
-          trip={trip}
+          PS_ID={trip?.PS_ID}
         />
       </Modal>
     </View>
@@ -88,7 +88,7 @@ const PermanentSubscriptionBookingView = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    marginBottom: 10,
+    marginVertical: 10,
     alignItems: 'center',
   },
   card: {
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 12,
     marginBottom: 10,
-    width: width * 0.9,
+    width: width * 0.95,
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
   },

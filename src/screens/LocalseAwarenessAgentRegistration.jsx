@@ -31,7 +31,7 @@ const LocalseAwarenessAgentRegistration = ({navigation, route}) => {
   const handleRegister = () => {
     Linking.openURL(
       localseData?.applink ||
-        'https://play.google.com/store/apps/details?id=com.localsepartner',
+        'https://play.google.com/store/apps/details?id=com.localse',
     );
   };
 

@@ -114,12 +114,13 @@ implementation project(':react-native-otp-verify')
 
   // For animated GIF support
   implementation 'com.facebook.fresco:animated-gif:3.2.0'
+  implementation project(':react-native-screenguard')
 
   // For WebP support, including animated WebP
   implementation 'com.facebook.fresco:animated-webp:3.2.0'
   implementation 'com.facebook.fresco:webpsupport:3.2.0'
    implementation project(':react-native-sound')
-   implementation 'com.razorpay:checkout:1.6.26'
+   implementation 'com.razorpay:checkout:1.6.33'
 
 
   // For WebP support, without animations

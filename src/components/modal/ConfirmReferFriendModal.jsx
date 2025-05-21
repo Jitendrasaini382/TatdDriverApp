@@ -49,24 +49,23 @@ const ConfirmReferFriendModal = ({
         ]);
       }
       setSaveReferPermanent(response);
-    } catch (error) {
-    }
+    } catch (error) {}
   };
+  if (!data) return null;
 
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={styles.card}>
         <Text style={styles.header}>{data?.title}</Text>
         <View style={styles.listContainer}>
-          <Text style={styles.listItem}>1. {data?.points[0]}</Text>
-          <Text style={styles.listItem}>2. {data?.points[1]}</Text>
-          <Text style={styles.listItem}>3. {data?.points[2]}</Text>
-          <Text style={styles.listItem}>4. {data?.points[3]}</Text>
-          <Text style={styles.listItem}>5. {data?.points[4]}</Text>
-          <Text style={styles.listItem}>6. {data?.points[5]}</Text>
-          <Text style={[styles.listItem, styles.warning]}>
-            7. {data?.points[6]}
-          </Text>
+          {Array.isArray(data?.points) &&
+            data.points.map((point, index) => (
+              <Text
+                key={index}
+                style={[styles.listItem, index === 6 ? styles.warning : null]}>
+                {index + 1}. {point}
+              </Text>
+            ))}
         </View>
         <View style={styles.buttonContainer}>
           <Pressable onPress={closeModalButton} style={styles.cancelButton}>

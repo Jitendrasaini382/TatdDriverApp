@@ -19,14 +19,12 @@ const LocalseAwarenessPartnerRegistration = ({navigation, route}) => {
   if (!localseData) {
     return null;
   }
-  // const handleRegister = () => {
-  //   Linking.openURL(
-  //     'https://play.google.com/store/apps/details?id=com.localsepartner',
-  //   );
-  // };
 
   const handleRegister = () => {
-    Linking.openURL(localseData?.applink);
+    Linking.openURL(
+      localseData?.applink ||
+        'https://play.google.com/store/apps/details?id=com.localse',
+    );
   };
 
   return (
@@ -81,12 +79,16 @@ const LocalseAwarenessPartnerRegistration = ({navigation, route}) => {
             {localseData?.heading}
           </Text>
           <Text style={styles.subtitle}>{localseData?.sub_heading}</Text>
-          <View style={{marginVertical: 20}}>
-            <YoutubePlayer
-              height={200}
-              videoId={localseData?.video_url || 'rEdN-eiUmzU'}
-            />
-          </View>
+          {localseData?.videoData && localseData?.videoData?.length > 0 && (
+            <View style={{marginVertical: 1}}>
+              {localseData?.videoData?.map((videoId, index) => (
+                <View key={index} style={{marginVertical: 5}}>
+                  <YoutubePlayer height={200} videoId={videoId} />
+                </View>
+              ))}
+            </View>
+          )}
+
           <Text style={styles.paragraph}>
             <Text style={styles.bold}>{localseData?.heading_1} </Text>
             {localseData?.line_1}
@@ -152,6 +154,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     marginBottom: 20,
+    color: AppColors.silverGrey,
   },
   paragraph: {
     fontSize: 16,

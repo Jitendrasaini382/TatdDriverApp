@@ -20,7 +20,7 @@ import {
   setTriggerFunction,
 } from '../../redux/slices/globalSlice';
 
-const PermanentSubscrptionBookingAcceptPopup = ({setOpenModal, trip}) => {
+const PermanentSubscrptionBookingAcceptPopup = ({setOpenModal, PS_ID}) => {
   const navigation = useNavigation();
   const [selectedLanguage, setSelectedLanguage] = useState('Hindi');
 
@@ -30,8 +30,6 @@ const PermanentSubscrptionBookingAcceptPopup = ({setOpenModal, trip}) => {
   const [popUpData, setPopUpData] = useState({});
   const [loader, setLoader] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const {PS_ID} = trip;
 
   useEffect(() => {
     getPopupData(PS_ID);
@@ -61,7 +59,7 @@ const PermanentSubscrptionBookingAcceptPopup = ({setOpenModal, trip}) => {
         current_language: languageSwitch,
       });
 
-      if (response?.status_code == '200' && response?.status == "success") {
+      if (response?.status_code == '200' && response?.status == 'success') {
         Alert.alert('', response?.message, [
           {
             text: 'OK',
@@ -102,70 +100,78 @@ const PermanentSubscrptionBookingAcceptPopup = ({setOpenModal, trip}) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View
-        style={{
-          backgroundColor: AppColors.white,
-          borderWidth: 2,
-          borderColor: AppColors.mainColor,
-          elevation: 2,
-          minHeight: 200,
-        }}>
-        <View style={styles.header}>
-          <View
-            style={{
-              flexDirection: 'row',
-              backgroundColor: '#F1EFF4',
-              borderRadius: 10,
-              padding: 5,
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginVertical: 10,
-            }}>
-            <TouchableOpacity
-              onPress={() => setSelectedLanguage('Hindi')}
-              style={{
-                flex: 1,
-                backgroundColor:
-                  selectedLanguage === 'Hindi' ? '#FFFFFF' : 'transparent',
-                paddingVertical: 15,
-                borderRadius: 10,
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                  color: AppColors.black,
-                }}>
-                Hindi
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => setSelectedLanguage('English')}
-              style={{
-                flex: 1,
-                backgroundColor:
-                  selectedLanguage === 'English' ? '#FFFFFF' : 'transparent',
-                paddingVertical: 15,
-                borderRadius: 10,
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                  color: AppColors.black,
-                }}>
-                English
-              </Text>
-            </TouchableOpacity>
-          </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      {loading ? (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <ActivityIndicator size={'large'} color={AppColors.mainColor} />
         </View>
-        {loading ? (
-          <ActivityIndicator size={'small'} color={AppColors.mainColor} />
-        ) : (
+      ) : (
+        <View
+          style={{
+            backgroundColor: AppColors.white,
+            borderWidth: 2,
+            borderColor: AppColors.mainColor,
+            elevation: 2,
+            minHeight: 200,
+          }}>
+          <View style={styles.header}>
+            <View
+              style={{
+                flexDirection: 'row',
+                backgroundColor: '#F1EFF4',
+                borderRadius: 10,
+                padding: 5,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginVertical: 10,
+              }}>
+              <TouchableOpacity
+                onPress={() => setSelectedLanguage('Hindi')}
+                style={{
+                  flex: 1,
+                  backgroundColor:
+                    selectedLanguage === 'Hindi' ? '#FFFFFF' : 'transparent',
+                  paddingVertical: 15,
+                  borderRadius: 10,
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    color: AppColors.black,
+                  }}>
+                  Hindi
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => setSelectedLanguage('English')}
+                style={{
+                  flex: 1,
+                  backgroundColor:
+                    selectedLanguage === 'English' ? '#FFFFFF' : 'transparent',
+                  paddingVertical: 15,
+                  borderRadius: 10,
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    color: AppColors.black,
+                  }}>
+                  English
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
           <View style={styles.contentContainer}>
             <Text style={{color: AppColors.black}}>
               {selectedLanguage === 'English'
@@ -173,35 +179,35 @@ const PermanentSubscrptionBookingAcceptPopup = ({setOpenModal, trip}) => {
                 : popUpData?.content_hindi}
             </Text>
           </View>
-        )}
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            onPress={() => setOpenModal(false)}
-            style={styles.cancelButton}>
-            <Text style={styles.cancelButtonText}>Cancel</Text>
-          </TouchableOpacity>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              onPress={() => setOpenModal(false)}
+              style={styles.cancelButton}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => acceptBooking()}
-            disabled={loader}
-            style={styles.acceptButton}>
-            {loader ? (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <ActivityIndicator size="small" color="#FFFFFF" />
-                <Text style={styles.acceptButtonText}>Please Wait...</Text>
-              </View>
-            ) : (
-              <Text style={styles.acceptButtonText}>Accept</Text>
-            )}
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => acceptBooking()}
+              disabled={loader}
+              style={styles.acceptButton}>
+              {loader ? (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <ActivityIndicator size="small" color="#FFFFFF" />
+                  <Text style={styles.acceptButtonText}>Please Wait...</Text>
+                </View>
+              ) : (
+                <Text style={styles.acceptButtonText}>Accept</Text>
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      )}
     </ScrollView>
   );
 };
@@ -210,6 +216,7 @@ const styles = StyleSheet.create({
   container: {
     // backgroundColor: AppColors.white,
     margin: 5,
+    flexGrow: 1,
   },
   header: {
     // backgroundColor: '#F7F7F7',

@@ -35,6 +35,7 @@ import RadioButton from '../components/CustomRadioButton';
 import PackageDetailsDutyReportUpdate from '../components/modal/PackageDetailsDutyReportUpdate';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {launchCamera} from 'react-native-image-picker';
+import IntentLauncher from '@yz1311/react-native-intent-launcher';
 
 import {
   CHECK_IS_BOOKING_IS_UPCOMMING,
@@ -255,7 +256,11 @@ const DutyReportUpdate = ({route, navigation}) => {
         // console.log(' Storage is less than 500 MB');
       }
 
-      if (response?.status_code == '200' && response?.message_type == 'error' && response?.cancel_message_show) {
+      if (
+        response?.status_code == '200' &&
+        response?.message_type == 'error' &&
+        response?.cancel_message_show
+      ) {
         setCancelState('cancel');
       } else {
         setbookingInfo(response?.duty_report_booking_info);
@@ -407,10 +412,15 @@ const DutyReportUpdate = ({route, navigation}) => {
                   },
                   {
                     text: 'Open Setting',
+                    // onPress: () => {
+                    //   Linking.sendIntent(
+                    //     'android.settings.LOCATION_SOURCE_SETTINGS',
+                    //   );
+                    // },
                     onPress: () => {
-                      Linking.sendIntent(
-                        'android.settings.LOCATION_SOURCE_SETTINGS',
-                      );
+                      IntentLauncher.startActivity({
+                        action: 'android.settings.LOCATION_SOURCE_SETTINGS',
+                      });
                     },
                   },
                 ],
@@ -1365,10 +1375,12 @@ const DutyReportUpdate = ({route, navigation}) => {
                 )}
               </View>
 
-              <SwipeableButton
-                onSwipe={handleSwipe}
-                data={bookingInfo?.condition}
-              />
+              {bookingInfo && (
+                <SwipeableButton
+                  onSwipe={handleSwipe}
+                  data={bookingInfo?.condition}
+                />
+              )}
 
               {bookingInfo?.data?.youtube_video && (
                 <View style={{marginTop: 20}}>

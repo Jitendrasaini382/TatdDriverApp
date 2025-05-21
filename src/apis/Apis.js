@@ -288,23 +288,23 @@ export const DRIVER_BOOKING_INVOICE = body => {
   );
 };
 
-export const TRIP_STATUS_POPUP = body => {
-  return _Fetch(
-    'POST',
-    'duty-report/duty_report_trip_status_popup_view.php',
-    {...body},
-    {},
-  );
-};
+// export const TRIP_STATUS_POPUP = body => {
+//   return _Fetch(
+//     'POST',
+//     'duty-report/duty_report_trip_status_popup_view.php',
+//     {...body},
+//     {},
+//   );
+// };
 
-export const CHECK_UPCOMING_BOOKING = body => {
-  return _Fetch(
-    'POST',
-    'duty-report/check-booking-is-upcoming.php',
-    {...body},
-    {},
-  );
-};
+// export const CHECK_UPCOMING_BOOKING = body => {
+//   return _Fetch(
+//     'POST',
+//     'duty-report/check-booking-is-upcoming.php',
+//     {...body},
+//     {},
+//   );
+// };
 
 export const RATE_US_SOCIAL_MEDIA_VIEW_DATA = body => {
   return _Fetch(
@@ -382,14 +382,14 @@ export const CHECK_IS_BOOKING_IS_UPCOMMING = body => {
   );
 };
 
-export const DRIVE_START = body => {
-  return _Fetch(
-    'POST',
-    'duty-report/duty_report_booking_start.php',
-    {...body},
-    {},
-  );
-};
+// export const DRIVE_START = body => {
+//   return _Fetch(
+//     'POST',
+//     'duty-report/duty_report_booking_start.php',
+//     {...body},
+//     {},
+//   );
+// };
 
 export const GET_FIRST_POPUP_DATA = body => {
   return _Fetch(
@@ -835,6 +835,7 @@ export const SAVE_LIVE_DRIVER_LATLONG = body => {
 };
 
 export const SAVE_CRASH_ERROR = body => {
+  // return false;
   return _Fetch(
     'POST',
     'trusted-driver/crash-reporting-api.php',

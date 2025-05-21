@@ -120,7 +120,12 @@ const ReferFriendModal = ({setReferFriendModal, id}) => {
               keyboardType="number-pad"
               maxLength={10}
             />
-            <TouchableOpacity style={styles.referButton} onPress={referFriend}>
+            <TouchableOpacity
+              style={styles.referButton}
+              onPress={() => {
+                Keyboard.dismiss();
+                referFriend();
+              }}>
               <Text style={styles.referButtonText}>
                 {permanentReferPopup?.button_text}
               </Text>

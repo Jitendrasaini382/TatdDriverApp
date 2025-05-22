@@ -17,6 +17,9 @@ import {
   setRefreshKey,
   setTriggerFunction,
 } from '../../redux/slices/globalSlice';
+import {requestLocationPermission} from '../../utils/permissions';
+import Geolocation from '@react-native-community/geolocation';
+import IntentLauncher from '@yz1311/react-native-intent-launcher';
 
 const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   if (!trip) return null;
@@ -36,58 +39,113 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
     driver_assignment_in_10_minutes_incentive,
   } = trip;
 
-  const acceptBooking = async () => {
-    setLoader(true);
-    try {
-      const response = await FINAL_ACCEPT_BOOKING({
-        action: 'accept_booking',
-        booking_id: booking_number,
-        incentive: incentive,
-        incentive_eligibility_fullfillment: incentive_eligibility_fullfillment,
-        incentive_eligible_amount_fullfillment:
-          incentive_eligible_amount_fullfillment,
-        driver_assignment_in_10_minutes_incentive:
-          driver_assignment_in_10_minutes_incentive,
-        current_language: languageSwitch,
+  const getLocation = async () => {
+    const hasPermission = await requestLocationPermission();
+    if (hasPermission) {
+      return new Promise((resolve, reject) => {
+        Geolocation.getCurrentPosition(
+          position => {
+            resolve(position.coords);
+          },
+          error => {
+            if (error.code === 1) {
+              requestLocationPermission();
+            } else if (error.code === 2) {
+              Alert.alert(
+                'Location Service Disabled',
+                'Please enable location services to proceed.',
+                [
+                  {
+                    text: 'Cancel',
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'Open Setting',
+                    onPress: () => {
+                      IntentLauncher.startActivity({
+                        action: 'android.settings.LOCATION_SOURCE_SETTINGS',
+                      });
+                    },
+                  },
+                ],
+              );
+            } else {
+              reject(new Error('Error fetching location: ' + error.message));
+            }
+          },
+          {
+            maximumAge: 0,
+          },
+        );
       });
+    } else {
+    }
+  };
 
-      if (response?.status_code == '200') {
-        if (response?.msg_type == 'error') {
-          // Alert.alert('Error', response?.message, [{text: 'OK'}]);
+  const acceptBooking = async () => {
+    const location = await getLocation();
+
+    if (location) {
+      setLoader(true);
+
+      try {
+        const response = await FINAL_ACCEPT_BOOKING({
+          action: 'accept_booking',
+          booking_id: booking_number,
+          incentive: incentive,
+          incentive_eligibility_fullfillment:
+            incentive_eligibility_fullfillment,
+          incentive_eligible_amount_fullfillment:
+            incentive_eligible_amount_fullfillment,
+          driver_assignment_in_10_minutes_incentive:
+            driver_assignment_in_10_minutes_incentive,
+          current_language: languageSwitch,
+          latitude: location?.latitude || '',
+          longitude: location?.longitude || '',
+        });
+
+        if (response?.status_code == '200') {
+          if (response?.msg_type == 'error') {
+            Alert.alert('', response?.message, [
+              {
+                text: 'OK',
+                onPress: () => {
+                  setOpenModal(false);
+                  setLoader(true);
+                },
+              },
+            ]);
+            dispatch(setTriggerFunction(true));
+            dispatch(setRefreshKey());
+          } else {
+            navigation.navigate('DutyReportUpdate', {
+              bookingNumber: booking_number,
+              isFirstTime: true,
+              isType: 'Ondemand',
+            });
+          }
+        } else {
           Alert.alert('', response?.message, [
             {
               text: 'OK',
               onPress: () => {
-                setOpenModal(false), setLoader(true);
-                return false;
+                setOpenModal(false);
+                setLoader(true);
               },
             },
           ]);
-          dispatch(setTriggerFunction(true));
-          dispatch(setRefreshKey());
-          return false;
-        } else {
-          navigation.navigate('DutyReportUpdate', {
-            bookingNumber: booking_number,
-            isFirstTime: true,
-            isType: 'Ondemand',
-          });
         }
-      } else {
-        Alert.alert('', response?.message, [
-          {
-            text: 'OK',
-            onPress: () => {
-              setOpenModal(false), setLoader(true);
-              return false;
-            },
-          },
-        ]);
+      } catch (error) {
+        console.error('Booking acceptance failed:', error);
+        setOpenModal(false);
+      } finally {
+        setLoader(false);
       }
-    } catch (error) {
-      setOpenModal(false);
-    } finally {
-      setOpenModal(false);
+    } else {
+      Alert.alert(
+        'Location Error',
+        'Unable to retrieve location. Please try again.',
+      );
     }
   };
 

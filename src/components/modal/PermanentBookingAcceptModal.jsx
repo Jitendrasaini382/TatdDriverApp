@@ -6,6 +6,7 @@ import {
   ScrollView,
   Alert,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
@@ -19,6 +20,9 @@ import {
   setRefreshKey,
   setTriggerFunction,
 } from '../../redux/slices/globalSlice';
+import {requestLocationPermission} from '../../utils/permissions';
+import Geolocation from '@react-native-community/geolocation';
+import IntentLauncher from '@yz1311/react-native-intent-launcher';
 
 const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
   const navigation = useNavigation();
@@ -66,69 +70,121 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
     }
   };
 
-  const handleAcceptPermanentBooking = async id => {
-    try {
-      const response = await ACCEPT_PERMANENT_BOOKING({
-        action: 'permanent_instant_driver_assignment_to_customer',
-        P_ID: id,
+  const getLocation = async () => {
+    const hasPermission = await requestLocationPermission();
+    if (hasPermission) {
+      return new Promise((resolve, reject) => {
+        Geolocation.getCurrentPosition(
+          position => {
+            resolve(position.coords);
+          },
+          error => {
+            if (error.code === 1) {
+              requestLocationPermission();
+            } else if (error.code === 2) {
+              Alert.alert(
+                'Location Service Disabled',
+                'Please enable location services to proceed.',
+                [
+                  {
+                    text: 'Cancel',
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'Open Setting',
+                    onPress: () => {
+                      IntentLauncher.startActivity({
+                        action: 'android.settings.LOCATION_SOURCE_SETTINGS',
+                      });
+                    },
+                  },
+                ],
+              );
+            } else {
+              reject(new Error('Error fetching location: ' + error.message));
+            }
+          },
+          {
+            maximumAge: 0,
+          },
+        );
       });
-      if (
-        response?.status_code == 200 &&
-        response?.message == 'Booking is accepted'
-      ) {
-        const bookingNumber = response?.booking_id;
-        navigation.navigate('DutyReportUpdate', {
-          bookingNumber: bookingNumber,
-          isFirstTime: true,
-          isType: 'Ondemand',
+    } else {
+    }
+  };
+
+  const handleAcceptPermanentBooking = async id => {
+    const location = await getLocation();
+    if (location) {
+      setLoader(true);
+      try {
+        const response = await ACCEPT_PERMANENT_BOOKING({
+          action: 'permanent_instant_driver_assignment_to_customer',
+          P_ID: id,
+          latitude: location?.latitude || '',
+          longitude: location?.longitude || '',
         });
-        setOpenModal(false);
-        dispatch(setRefreshKey());
-      } else {
-        Alert.alert(
-          '',
-          languageSwitch === 'english'
-            ? 'This booking already accepted by another driver.'
-            : 'यह बुकिंग पहले ही किसी अन्य ड्राइवर द्वारा स्वीकार की जा चुकी है।',
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                setOpenModal(false);
-                dispatch(setRefreshKey());
-                setLoader(false);
+        if (
+          response?.status_code == 200 &&
+          response?.message == 'Booking is accepted'
+        ) {
+          const bookingNumber = response?.booking_id;
+          navigation.navigate('DutyReportUpdate', {
+            bookingNumber: bookingNumber,
+            isFirstTime: true,
+            isType: 'Ondemand',
+          });
+          setOpenModal(false);
+          dispatch(setRefreshKey());
+        } else {
+          Alert.alert(
+            '',
+            languageSwitch === 'english'
+              ? 'This booking already accepted by another driver.'
+              : 'यह बुकिंग पहले ही किसी अन्य ड्राइवर द्वारा स्वीकार की जा चुकी है।',
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  setOpenModal(false);
+                  dispatch(setRefreshKey());
+                  setLoader(false);
+                },
               },
-            },
-          ],
-        );
-        setOpenModal(false);
-        dispatch(setRefreshKey());
-        // setLoader(false);
-      }
-    } catch (error) {
-      if (error == 'Booking is not in pending status') {
-        Alert.alert(
-          '',
-          languageSwitch === 'english'
-            ? 'This booking already accepted by another driver..'
-            : 'यह बुकिंग पहले ही किसी अन्य ड्राइवर द्वारा स्वीकार की जा चुकी है।',
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                setOpenModal(false);
-                dispatch(setTriggerFunction(true));
-                setLoader(false);
+            ],
+          );
+          setOpenModal(false);
+          dispatch(setRefreshKey());
+        }
+      } catch (error) {
+        if (error == 'Booking is not in pending status') {
+          Alert.alert(
+            '',
+            languageSwitch === 'english'
+              ? 'This booking already accepted by another driver..'
+              : 'यह बुकिंग पहले ही किसी अन्य ड्राइवर द्वारा स्वीकार की जा चुकी है।',
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  setOpenModal(false);
+                  dispatch(setTriggerFunction(true));
+                  setLoader(false);
+                },
               },
-            },
-          ],
-        );
+            ],
+          );
+        }
+        setOpenModal(false);
+        dispatch(setTriggerFunction(true));
+      } finally {
+        setLoader(false);
       }
-      setOpenModal(false);
-      dispatch(setTriggerFunction(true));
-      // setLoader(false);
-    } finally{
-      setLoader(false);
+    } else {
+      Alert.alert(
+        'Location Error',
+        'Unable to retrieve location. Please try again.',
+      );
     }
   };
 
@@ -160,8 +216,18 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
             onPress={() => {
               handleAccept(P_ID, apply_or_accept);
             }}
-            style={styles.applyButton}>
-            <Text style={styles.applyButtonText}>{apply_or_accept}</Text>
+            style={[
+              styles.applyButton,
+              {
+                backgroundColor: loader
+                  ? AppColors.greyColor
+                  : AppColors.mainColor,
+              },
+            ]}>
+            <Text style={styles.applyButtonText}>
+              {apply_or_accept}
+              {loader ? <ActivityIndicator size={'small'} /> : null}
+            </Text>
           </Pressable>
         </View>
       </View>
@@ -220,12 +286,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   applyButton: {
-    backgroundColor: AppColors.mainColor,
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,
     width: '35%',
     alignItems: 'center',
+    flexDirection: 'row',
   },
   cancelButtonText: {
     color: AppColors.black,

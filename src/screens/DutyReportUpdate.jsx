@@ -87,6 +87,7 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [loader, setLoader] = useState(false);
   const [reachLoader, setReachLoader] = useState(false);
+  const [locationLoader, setLocationLoader] = useState(false);
   const [loaderResendOtp, setLoaderResendOtp] = useState(false);
   const [endModalLoader, setEndModalLoader] = useState(false);
   const [mainLoader, setMainLoader] = useState(false);
@@ -304,8 +305,9 @@ const DutyReportUpdate = ({route, navigation}) => {
 
       if (response?.redirect == 'duty_report') {
         if (response?.message_type == 'error') {
-          setCancelState('cancel');
+          // setCancelState('cancel');
           setacceptBookingPopup(false);
+          GetAllBookingInfo();
         } else {
           GetAllBookingInfo();
           setacceptBookingPopup(false);
@@ -391,6 +393,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     const hasPermission = await requestLocationPermission();
     if (hasPermission) {
       // setReachLoader(true);
+      setLocationLoader(true);
 
       return new Promise((resolve, reject) => {
         Geolocation.getCurrentPosition(
@@ -401,6 +404,7 @@ const DutyReportUpdate = ({route, navigation}) => {
             if (error.code === 1) {
               requestLocationPermission();
               setReachLoader(false);
+              setLocationLoader(false);
             } else if (error.code === 2) {
               Alert.alert(
                 'Location Service Disabled',
@@ -425,10 +429,12 @@ const DutyReportUpdate = ({route, navigation}) => {
                   },
                 ],
               );
+              setLocationLoader(false);
               setReachLoader(false);
             } else {
               reject(new Error('Error fetching location: ' + error.message));
               setReachLoader(false);
+              setLocationLoader(false);
             }
           },
           {
@@ -446,6 +452,7 @@ const DutyReportUpdate = ({route, navigation}) => {
 
     if (location) {
       setReachLoader(true);
+      setLocationLoader(false);
 
       try {
         const requestData = {
@@ -467,8 +474,9 @@ const DutyReportUpdate = ({route, navigation}) => {
         } else {
           if (res?.redirect == 'duty_report') {
             if (res?.message_type == 'error') {
-              setCancelState('cancel');
+              // setCancelState('cancel');
               setModalVisibleRich(false);
+              GetAllBookingInfo();
             } else {
               GetAllBookingInfo();
               setModalVisibleRich(false);
@@ -481,6 +489,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       } catch (err) {
       } finally {
         setReachLoader(false);
+        setLocationLoader(false);
       }
     } else {
     }
@@ -654,8 +663,9 @@ const DutyReportUpdate = ({route, navigation}) => {
       const response = await START_BOOKING(formData);
       if (response?.redirect == 'duty_report') {
         if (response?.message_type == 'error') {
-          setCancelState('cancel');
+          // setCancelState('cancel');
           setModalVisibleinput(false);
+          GetAllBookingInfo();
         } else {
           GetAllBookingInfo();
           setModalVisibleinput(false);
@@ -744,8 +754,8 @@ const DutyReportUpdate = ({route, navigation}) => {
       if (res?.redirect == 'duty_report') {
         if (res?.message_type == 'error') {
           // setCancelState('cancel');
-          GetAllBookingInfo();
           setModalVisibleEnd(false);
+          GetAllBookingInfo();
         } else {
           GetAllBookingInfo();
           setModalVisibleEnd(false);
@@ -2010,6 +2020,15 @@ const DutyReportUpdate = ({route, navigation}) => {
                         style={{marginLeft: 8}}
                       />
                     </View>
+                  ) : locationLoader ? (
+                    <Text
+                      style={{
+                        color: AppColors.white,
+                        fontWeight: '600',
+                        fontSize: 17,
+                      }}>
+                      {`${popupsData?.popupdata?.reach_alert_btn} ....`}
+                    </Text>
                   ) : (
                     <Text
                       style={{

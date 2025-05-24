@@ -1,0 +1,63 @@
+import {StatusBar} from 'react-native';
+import {createStackNavigator} from '@react-navigation/stack';
+import React, {createRef} from 'react';
+import SplashScreen from '../../screens/SplashScreen';
+import {AppColors} from '../../assets/Colors';
+import {useSelector} from 'react-redux';
+import ErrorBoundry from '../../utils/ErrorBoundry';
+import DriverInterface from '../../screens/applyForDriverJob/DriverInterface';
+import ApplyForDriverJob from '../../screens/applyForDriverJob/ApplyForDriverJobs';
+import SelectYourCityPartnerInterface from '../../screens/applyForDriverJob/SelectYourCityPartnerInterface';
+import SelectYourStatePartnerInterface from '../../screens/applyForDriverJob/SelectYourStatePartnerInterface';
+
+const Stack = createStackNavigator();
+export const navigationRef = createRef();
+const ApplyDriverJobRoute = () => {
+  const isSplash = useSelector(e => e?.trustedDriverSlice?.splash);
+  return (
+    <>
+      <StatusBar
+        animated={true}
+        backgroundColor={AppColors.mainColor}
+        barStyle="dark-content"
+        showHideTransition="slide"
+        hidden={false}
+      />
+      <Stack.Navigator
+        initialRouteName={SplashScreen}
+        screenOptions={{headerShown: false}}>
+        {isSplash && (
+          <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        )}
+
+        {/* <Stack.Screen name="DriverInterface">
+          {props => <ErrorBoundry Component={DriverInterface} {...props} />}
+        </Stack.Screen> */}
+
+        <Stack.Screen name="ApplyForDriverJobs">
+          {props => <ErrorBoundry Component={ApplyForDriverJob} {...props} />}
+        </Stack.Screen>
+
+        <Stack.Screen name="SelectYourCityPartnerInterface">
+          {props => (
+            <ErrorBoundry
+              Component={SelectYourCityPartnerInterface}
+              {...props}
+            />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="SelectYourStatePartnerInterface">
+          {props => (
+            <ErrorBoundry
+              Component={SelectYourStatePartnerInterface}
+              {...props}
+            />
+          )}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </>
+  );
+};
+
+export default ApplyDriverJobRoute;

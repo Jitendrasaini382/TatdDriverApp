@@ -147,11 +147,28 @@ const CheckDriverOtp = ({navigation, route}) => {
         app_type: appType,
       });
 
+      // console.log(response,"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+      // return false
+
+      dispatch(
+        setUserAuthStates({
+          key: 'isRegistered',
+          value: !!response?.isRegistered,
+        }),
+      );
+
       if (response?.jwt && response?.refresh_token) {
         dispatch(
           setUserAuthStates({
             key: 'jwt',
             value: response?.jwt,
+          }),
+        );
+
+        dispatch(
+          setUserAuthStates({
+            key: 'driverMobileNumber',
+            value: mobile,
           }),
         );
 

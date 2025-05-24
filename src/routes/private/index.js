@@ -48,6 +48,10 @@ import ErrorBoundry from '../../utils/ErrorBoundry';
 import LocalseAwarenessPartnerRegistration from '../../screens/LocalseAwarenessPartnerRegistration';
 import LocalseAwarenessAgentRegistration from '../../screens/LocalseAwarenessAgentRegistration';
 import MyMap from '../../screens/MyMap';
+import DriverInterface from '../../screens/applyForDriverJob/DriverInterface';
+import ApplyForDriverJob from '../../screens/applyForDriverJob/ApplyForDriverJobs';
+import SelectYourCityPartnerInterface from '../../screens/applyForDriverJob/SelectYourCityPartnerInterface';
+import SelectYourStatePartnerInterface from '../../screens/applyForDriverJob/SelectYourStatePartnerInterface';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -72,6 +76,7 @@ const PrivateRoute = () => {
         <Stack.Screen name="TrustedDriver">
           {props => <ErrorBoundry Component={TrustedDriver} {...props} />}
         </Stack.Screen>
+
         <Stack.Screen name="DriverNotifications">
           {props => <ErrorBoundry Component={DriverNotifications} {...props} />}
         </Stack.Screen>
@@ -242,6 +247,32 @@ const PrivateRoute = () => {
 
         <Stack.Screen name="MyMap">
           {props => <ErrorBoundry Component={MyMap} {...props} />}
+        </Stack.Screen>
+
+        <Stack.Screen name="DriverInterface">
+          {props => <ErrorBoundry Component={DriverInterface} {...props} />}
+        </Stack.Screen>
+
+        <Stack.Screen name="ApplyForDriverJobs">
+          {props => <ErrorBoundry Component={ApplyForDriverJob} {...props} />}
+        </Stack.Screen>
+
+        <Stack.Screen name="SelectYourCityPartnerInterface">
+          {props => (
+            <ErrorBoundry
+              Component={SelectYourCityPartnerInterface}
+              {...props}
+            />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="SelectYourStatePartnerInterface">
+          {props => (
+            <ErrorBoundry
+              Component={SelectYourStatePartnerInterface}
+              {...props}
+            />
+          )}
         </Stack.Screen>
       </Stack.Navigator>
     </>

@@ -7,6 +7,8 @@ const initialState = {
   userProfile: null,
   isFcmSent: false,
   isDeviceInfo: false,
+  isRegistered: false,
+  driverMobileNumber: null,
 };
 
 const userAuth = createSlice({

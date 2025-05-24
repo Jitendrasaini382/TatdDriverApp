@@ -213,9 +213,12 @@ export const SAVE_REFER_PERMANENT = body => {
 };
 
 export const ACCEPT_PERMANENT_BOOKING = body => {
+  console.log(body, 'bodybodybodybodybodybodybodybodybody');
+
+  // return false
   return _Fetch(
     'POST',
-    'trusted-driver/permanent-booking-accept.php',
+    'trusted-driver/permanent-booking-accept-1.php',
     {...body},
     {},
   );
@@ -835,7 +838,7 @@ export const SAVE_LIVE_DRIVER_LATLONG = body => {
 };
 
 export const SAVE_CRASH_ERROR = body => {
-  // return false;
+  return false;
   return _Fetch(
     'POST',
     'trusted-driver/crash-reporting-api.php',
@@ -843,3 +846,28 @@ export const SAVE_CRASH_ERROR = body => {
     {},
   );
 };
+
+// apply for Driver Jocb
+
+export const GET_CITY_ZONE_BY_PINCODE = body => {
+  return _Fetch(
+    'POST',
+    'driver-job/get-pincode-state-city-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const APPLY_FOR_DRIVER_JOBS = body => {
+  return _Fetch(
+    'POST',
+    'driver-job/insert-apply-for-driver-jobs-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const GET_ALL_DATA_APPLY_FOR_DRIVER_JOBS = body => {
+  return _Fetch('GET', 'driver-job/driver-interface-text-video-content.php', {...body}, {});
+};
+

@@ -5,7 +5,7 @@ function generateSessionToken() {
 }
 
 export const DRIVER_LOGIN = body => {
-  return _Fetch('POST', 'login/driver-login.php', body, {});
+  return _Fetch('POST', 'login/driver-login1.php', body, {});
 };
 
 export const VERIFY_OTP_LOGIN = body => {
@@ -868,6 +868,31 @@ export const APPLY_FOR_DRIVER_JOBS = body => {
 };
 
 export const GET_ALL_DATA_APPLY_FOR_DRIVER_JOBS = body => {
-  return _Fetch('GET', 'driver-job/driver-interface-text-video-content.php', {...body}, {});
+  return _Fetch(
+    'GET',
+    'driver-job/driver-interface-text-video-content.php',
+    {...body},
+    {},
+  );
 };
 
+export const CREATE_ORDER_ID_APPLY_FOR_DRIVER_JOBS = body => {
+  console.log(body,"order");
+  
+  return _Fetch(
+    'POST',
+    'driver-job/create-order-id-for-driver-job-api.php',
+    {...body},
+    {},
+  );
+};
+
+
+export const VERIFY_APPLY_FOR_DRIVER_JOB_PAYMENT_INFO = body => {
+  return _Fetch(
+    'POST',
+    'driver-job/premium-driver-payment-verify.php',
+    {...body},
+    {},
+  );
+};

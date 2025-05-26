@@ -28,6 +28,7 @@ import IntentLauncher from '@yz1311/react-native-intent-launcher';
 import axios from 'axios';
 import {
   APPLY_FOR_DRIVER_JOBS,
+  CREATE_ORDER_ID_APPLY_FOR_DRIVER_JOBS,
   GET_ALL_DATA_APPLY_FOR_DRIVER_JOBS,
   GET_CITY_ZONE_BY_PINCODE,
   GET_FCM_TOKEN,
@@ -179,62 +180,60 @@ const ApplyForDriverJob = ({navigation}) => {
   const [driverName, setDriverName] = useState('');
   const [driverNumber, setDriverNumber] = useState('');
   const [zone, setZone] = useState('');
+  const [serviceableArea, setServiceableArea] = useState(false);
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
-
   const [selectedLanguage, setSelectedLanguage] = useState('Hindi');
   const [visible, setVisible] = useState(false);
   const [popupData, setPopupData] = useState({});
   const [updateModal, setUpdateModal] = useState(false);
   const [upadatePopupData, setUpdatePopupData] = useState({});
   const [allData, setAllData] = useState({});
+  const [orderIdData, setOrderIdData] = useState();
   const [errors, setErrors] = useState({});
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch();
   const isFcmSent = useSelector(e => e?.userAuth?.isFcmSent);
   const isDeviceInfo = useSelector(e => e?.userAuth?.isDeviceInfo);
-
-  const validateForm = async () => {
-    if (!pincode) {
-      await getLocation(); // Make sure getLocation is defined
-      return false;
-    } else {
-      const newErrors = {};
-      if (!driverName.trim()) newErrors.driverName = 'Name required';
-      if (!address.trim()) newErrors.address = 'Address required';
-      setErrors(newErrors);
-      return Object.keys(newErrors).length === 0;
-    }
-  };
+  const driverMobileNumber = useSelector(e => e?.userAuth?.driverMobileNumber);
 
   const handleRegisterPress = async () => {
-    const isValid = await validateForm();
-    if (!isValid) {
-      return false;
-    } else {
-      // const handleSubmit = async () => {
-      try {
-        const res = await APPLY_FOR_DRIVER_JOBS({
-          action: 'apply_for_driver_job',
-          name: driverName,
-          city: city,
-          zone: zone,
-          pincode: pincode,
-          current_address: address,
-        });
-        console.log(res, 'APPLY_FOR_DRIVER_JOBS   response ');
-        setPopupData(res);
-        setVisible(true);
-      } catch (error) {
-        console.error('Save FCM error:', error);
-      }
+    if (!pincode) {
+      await getLocation(); // Try to get location and pincode first
+      // Alert.alert('', 'Fetching location. Please try again in a few seconds.');
+      return;
     }
-    // }
+
+    if (!serviceableArea) {
+      Alert.alert('', 'Service not available in your area.');
+      return;
+    }
+
+    const newErrors = {};
+    if (!driverName.trim()) newErrors.driverName = 'Name required';
+    if (!address.trim()) newErrors.address = 'Address required';
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) return;
+
+    try {
+      const res = await APPLY_FOR_DRIVER_JOBS({
+        action: 'apply_for_driver_job',
+        name: driverName,
+        city: city,
+        zone: zone,
+        pincode: pincode,
+        current_address: address,
+      });
+      console.log(res, 'APPLY_FOR_DRIVER_JOBS response');
+      setPopupData(res);
+      setVisible(true);
+    } catch (error) {
+      console.error('Driver Job Apply Error:', error);
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    }
   };
-
-  console.log(errors, '-=-=-=-=-=-=');
-
-  //
 
   const getAddressFromCoords = async (latitude, longitude) => {
     // return false
@@ -301,21 +300,23 @@ const ApplyForDriverJob = ({navigation}) => {
       const res = await GET_CITY_ZONE_BY_PINCODE({pincode});
       if (res?.status_code == 200) {
         if (res?.serviceable_area == 0) {
-          Alert.alert('Non Sevicable area');
-          return false;
+          setServiceableArea(false);
+          setZone('');
+          setCity('');
+          Alert.alert('', 'Service not available in your area.');
+          return;
         } else {
-          console.log(
-            res?.driver_mobile_number,
-            'res?.driver_mobile_numberres?.driver_mobile_number',
-          );
-
+          setServiceableArea(true);
           setZone(res?.serviceable_zone);
           setCity(res?.serviceable_city);
           setDriverNumber(res?.driver_mobile_number);
         }
+      } else {
+        setServiceableArea(false);
       }
     } catch (err) {
       console.error('Zone API error:', err);
+      setServiceableArea(false);
     }
   };
 
@@ -451,127 +452,56 @@ const ApplyForDriverJob = ({navigation}) => {
     if (!isDeviceInfo) fetchDeviceInfo();
   }, []);
 
-  const hindiContent = `कंपनी की शुरुआत Nov 2019 से हुई थी। कंपनी का उद्देश्य है भरोसेमंद ड्राइवर्स द्वारा कस्टमर्स को बेहतर services प्रदान करना और ड्राइवर्स को ज्यादा से ज्यादा रोज़गार प्रदान करना।
-  
-  यहाँ आपको पार्ट टाइम काम मिलेगा। छोटी बड़ी कई प्रकार की बुकिंग्स पैनल पर आती हैं, आप अपनी इच्छा और सुविधा के अनुसार बुकिंग्स उठा सकते हैं। कंपनी भी उन्हीं ड्राइवर्स को काम पाने के ज्यादा से ज्यादा मौके देती है, जिन ड्राइवर्स की शिकायत नहीं आती है।
-  
-  आपको यह सुनिश्चित करना होता है, कि बुकिंग उठाने के बाद आप कस्टमर के पास समय पर पहुंचे और कस्टमर को किसी प्रकार की परेशानी का सामना न करना पड़े।
-  
-  1. बुकिंग उठाने के बाद उस बुकिंग पर न जाने पर ड्राइवर का अकाउंट 5 से 21 दिन तक के लिए Inactive हो जाता है और इस बीच ड्राइवर को किसी भी प्रकार का काम कंपनी नहीं दे पाती।
-  2. बुकिंग पूरी होने पर कस्टमर से फीडबैक लिया जाता है, फीडबैक खराब मिलने पर ड्राइवर की ID कुछ दिनों के लिए या फिर हमेशा के लिए बंद कर दी जाती है।
-  3. यदि बुकिंग उठाने के बाद आपकी ज्यादातर बुकिंग्स कैंसल होती है, तो आपको 15 मिनट देरी से बुकिंग दिखाई देगी।
-  
-  हम तीन तरह की services कस्टमर को देते हैं।
-  
-  ➊ पहली - लोकल बुकिंग्स
-  ➋ दूसरी - आउटस्टेशन बुकिंग्स
-  ➌ तीसरी - मंथली बुकिंग्स
-  
-  लोकल बुकिंग्स में कस्टमर 1 घंटे से 12 घंटे तक की Round trip बुकिंग करते हैं या फिर 1 से 60 KM की OneWay बुकिंग करते हैं।
-  आउटस्टेशन बुकिंग्स में कस्टमर लम्बी दूरी की बुकिंग्स Round Trip या One Way बुकिंग्स करते हैं।
-  मंथली बुकिंग्स में कस्टमर ड्राइवर को तनख्वाह पर रखते हैं।
-  
-  लोकल बुकिंग्स और आउटस्टेशन बुकिंग्स पर कंपनी का कमीशन 20% से 10% होता है। कमीशन GST हटा कर बचे हुए बिल पर लगता है। ओवरटाइम 2 Rs है और रात में गाड़ी चलाने पर 200 Rs नाईट चार्ज दिया जाता है।`;
+  // const handlePayment = ()=>{
+  //   Alert.alert(
+  //     '',
+  //     `Navigate to Razor Payment Page with This Payment ${popupData?.price}`,
+  //   );
 
-  const englishContent = `Company was started in Nov 2019. Our aim is to provide better services to customers through trusted drivers and to create maximum job opportunities for drivers.
-  
-  You will get part-time work here. Many types of bookings come on the panel; you can pick up bookings according to your convenience. We prefer drivers who don’t receive customer complaints.
-  
-  It is important that once you accept a booking, you reach the customer on time and ensure no trouble to them.
-  
-  1. If you accept a booking and don't go, your account may be inactive for 5–21 days.
-  2. After completing a booking, we take feedback. Bad feedback can lead to temporary or permanent account deactivation.
-  3. If you cancel too many bookings, you’ll see a delay of 15 mins in new bookings.
-  
-  We offer three types of services:
-  
-  ➊ Local bookings
-  ➋ Outstation bookings
-  ➌ Monthly bookings
-  
-  Local bookings range from 1 to 12 hours or 1–60 KM One Way.
-  Outstation bookings include long-distance Round Trips or One Way.
-  Monthly bookings are fixed salary based.
-  
-  Commission ranges from 10% to 20% after GST. Overtime is ₹2/min and night driving charges are ₹200.`;
+  // }
 
-  const renderHindiContent = () => (
-    <>
-      <Text style={{fontSize: 16, fontWeight: '600', marginVertical: 8}}>
-        आपकी एप्लिकेशन ID : <Text style={{color: 'green'}}>234000</Text>
-      </Text>
-      <Text style={styles.text}>
-        हमारा यह मानना है की ड्राइविंग का काम चुनौतियों से भरा है, सर्विस देते
-        समय ड्राइवर्स को कई तरीकों की असामान्य चुनौतियों का सामना करना पड़ता है।
-        {'\n\n'}
-        हमारा यह भी मानना है की कस्टमर्स, ड्राइवर्स को तभी बुक करते हैं, जब
-        उन्हें ड्राइवर की बेहद ज़रूरत होती है। यह सुनिश्चित करना हमारा फ़र्ज़
-        है, की हम समय से कस्टमर के पास पहुँचें और भरोसे पर खरा उतरें।{'\n\n'}
-        ध्यान रहे की हमारा काम कस्टमर की परेशानी को काम करने का है, उसे बढ़ाने
-        का नहीं।
-      </Text>
-      <Text style={{color: '#d00', fontWeight: 'bold', marginTop: 10}}>
-        रजिस्ट्रेशन पूरी होने के बाद काम पाने के लिए, आपको ट्रेनिंग प्रक्रिया से
-        गुजरना होगा और 3 काम पूरे करने होंगे:
-      </Text>
-      <Text style={styles.text}>
-        1- अपने 3 जानकारों के नंबर पैनल पर डालकर उनसे OTP लेने और अपनी रेफरेंस
-        वेरिफिकेशन पूरी करनी होगी।
-        {'\n'}👉 इसे पूरा करने में लगभग 2 से 5 मिनट का समय लगेगा।{'\n\n'}
-        2- आपको अपनी पासपोर्ट साइज फोटो, आधार की फोटो, पासबुक की फोटो, और
-        लाइसेंस की फोटो जल्द से जल्द Upload करनी होगी।
-        {'\n'}👉 इसे पूरा करने में लगभग 5 से 10 मिनट का समय लगेगा।{'\n\n'}
-        3- ट्रेनिंग वीडियो देखकर APP का उपयोग कैसे करना है, यह सीखना होगा।
-        {'\n'}👉 इसमें लगभग 10 से 15 मिनट का समय लगेगा।
-      </Text>
-      <Text style={{color: 'red', fontWeight: 'bold', marginVertical: 10}}>
-        यदि आपकी उम्र 24 साल से ऊपर है, तो ही आप रजिस्ट्रेशन कर पाएंगे, अन्यथा
-        नहीं!
-      </Text>
-    </>
-  );
+  const handlePayment = async amount => {
+    console.log('handlePayment called with amount:', amount);
 
-  const renderEnglishContent = () => (
-    <>
-      <Text
-        style={{
-          fontSize: 16,
-          fontWeight: '600',
-          marginVertical: 8,
-          color: AppColors.black,
-        }}>
-        Your Application ID:{' '}
-        <Text style={{color: 'green'}}>{popupData?.application_id}</Text>
-      </Text>
-      <Text style={styles.text}>{popupData?.popup_data}</Text>
+    try {
+      console.log(
+        'Sending request to CREATE_ORDER_ID_APPLY_FOR_DRIVER_JOBS...',
+      );
+      const response = await CREATE_ORDER_ID_APPLY_FOR_DRIVER_JOBS({
+        action: 'apply-for-driver-job',
+        payment_amount: amount,
+      });
 
-      {/* <Text style={styles.text}>
-        We believe driving is a challenging job. Drivers often face unexpected
-        difficulties during service.{'\n\n'}
-        We also believe that customers book drivers when they urgently need
-        them. It's our duty to ensure that we reach the customer on time and
-        meet their expectations.{'\n\n'}
-        Remember, our job is to solve the customer's problem, not to add to it.
-      </Text>
-      <Text style={{color: '#d00', fontWeight: 'bold', marginTop: 10}}>
-        After registration, to start getting jobs, you need to complete training
-        and do these 3 tasks:
-      </Text>
-      <Text style={styles.text}>
-        1- Submit 3 references, get OTPs, and complete verification.
-        {'\n'}👉 This takes 2 to 5 minutes.{'\n\n'}
-        2- Upload a passport-size photo, Aadhaar front/back, license, and bank
-        documents.
-        {'\n'}👉 This takes 5 to 10 minutes.{'\n\n'}
-        3- Watch training videos to learn how to use the app.
-        {'\n'}👉 Takes 10 to 15 minutes.
-      </Text>
-      <Text style={{color: 'red', fontWeight: 'bold', marginVertical: 10}}>
-        You must be above 24 years of age to register. Otherwise, registration
-        is not allowed!
-      </Text> */}
-    </>
-  );
+      console.log(
+        'Response received from CREATE_ORDER_ID_APPLY_FOR_DRIVER_JOBS:',
+        response,
+      );
+      const res = {
+        status_code: 200,
+        message: 'Razor Order ID is created.',
+        razor_order_id_data: {
+          orderId: 'order_QZSDMqftpRjDxf',
+          amount: 75000,
+          currency: 'INR',
+          receipt: 'rcptid_6834062e50c8d',
+          page_type: 'apply_for_driver_jobs',
+          description: 'Apply For Driver',
+          driver_name: 'Test',
+          mobile_number: '7886868686',
+        },
+      };
+
+      if(res?.status_code == 200 ){
+        if(res?.razor_order_id_data?.orderId){
+          navigation.navigate("")
+        }
+      }
+
+      setOrderIdData(res);
+    } catch (error) {
+      console.error('Error occurred in handlePayment:', error);
+    }
+  };
 
   return (
     <>
@@ -670,7 +600,6 @@ const ApplyForDriverJob = ({navigation}) => {
                     }
                   }}
                   placeholder="Driver Name"
-                  // keyboardType= ''
                   iconName={
                     <Icon name="user" size={15} color={AppColors.greyColor} />
                   }
@@ -679,8 +608,7 @@ const ApplyForDriverJob = ({navigation}) => {
               </View>
               <View style={{flex: 1}}>
                 <CustomTextInput
-                  value={driverNumber}
-                  // onChangeText={e => handleInputChange( e)}
+                  value={driverMobileNumber || driverNumber}
                   placeholder="Driver Number"
                   keyboardType="numeric"
                   editable={false}
@@ -725,10 +653,13 @@ const ApplyForDriverJob = ({navigation}) => {
                   alignItems: 'center',
                 }}>
                 <TouchableOpacity
-                  onPress={() => handleRegisterPress()} // Uncomment this when ready
+                  onPress={() => handleRegisterPress()}
                   activeOpacity={0.8}
                   style={{
-                    backgroundColor: AppColors.mainColor,
+                    // backgroundColor: AppColors.mainColor,
+                    backgroundColor: serviceableArea
+                      ? AppColors.mainColor
+                      : 'gray',
                     paddingHorizontal: 40,
                     paddingVertical: 14,
                     borderRadius: 25,
@@ -918,10 +849,7 @@ const ApplyForDriverJob = ({navigation}) => {
 
                     <TouchableOpacity
                       onPress={() => {
-                        Alert.alert(
-                          '',
-                          `Navigate to Razor Payment Page with This Payment ${popupData?.price}`,
-                        );
+                        handlePayment(popupData?.price);
                       }}
                       style={{
                         marginTop: 20,

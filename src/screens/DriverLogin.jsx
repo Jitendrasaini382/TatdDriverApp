@@ -71,9 +71,9 @@ const DriverLogin = () => {
     }
   };
 
-  // useEffect(() => {
-  //   getAllData();
-  // }, []);
+  useEffect(() => {
+    getAllData();
+  }, []);
 
   const sendOtp = async () => {
     try {
@@ -200,77 +200,84 @@ const DriverLogin = () => {
               </Pressable>
             </View>
 
-            <View style={styles.languageContainer}>
-              {['Hindi', 'English'].map(lang => (
-                <TouchableOpacity
-                  key={lang}
-                  style={[
-                    styles.languageButton,
-                    selectedLanguage === lang && styles.selectedLanguage,
-                  ]}
-                  onPress={() => setSelectedLanguage(lang)}>
-                  <Text
-                    style={
-                      selectedLanguage === lang
-                        ? styles.selectedText
-                        : styles.languageText
-                    }>
-                    {lang}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            {/* <FlatList
-              horizontal
-              data={
-                selectedLanguage === 'English'
-                  ? allData?.english_video
-                  : allData?.hindi_video
-              }
-              keyExtractor={(item, index) => item + index}
-              renderItem={({item}) => (
-                <View style={styles.videoWrapper}>
-                  <YoutubePlayer
-                    height={200}
-                    videoId={item}
-                    webViewProps={{
-                      renderToHardwareTextureAndroid: true,
-                    }}
-                  />
+            {/*  */}
+            {allData?.english_video && allData?.hindi_video && (
+              <>
+                <View style={styles.languageContainer}>
+                  {['Hindi', 'English'].map(lang => (
+                    <TouchableOpacity
+                      key={lang}
+                      style={[
+                        styles.languageButton,
+                        selectedLanguage === lang && styles.selectedLanguage,
+                      ]}
+                      onPress={() => setSelectedLanguage(lang)}>
+                      <Text
+                        style={
+                          selectedLanguage === lang
+                            ? styles.selectedText
+                            : styles.languageText
+                        }>
+                        {lang}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
                 </View>
-              )}
-              // showsHorizontalScrollIndicator={true}
-              contentContainerStyle={styles.horizontalList}
-              pagingEnabled
-              onViewableItemsChanged={onViewRef.current}
-              viewabilityConfig={viewConfigRef.current}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                marginTop: 10,
-              }}>
-              {(selectedLanguage === 'English'
-                ? allData?.english_video
-                : allData?.hindi_video
-              ).map((_, index) => (
-                <View
-                  key={index}
-                  style={{
-                    height: 10,
-                    width: 10,
-                    borderRadius: 5,
-                    backgroundColor:
-                      activeVideoIndex === index
-                        ? AppColors.mainColor
-                        : AppColors.greyColor,
-                    marginHorizontal: 5,
-                  }}
+
+                <FlatList
+                  horizontal
+                  data={
+                    selectedLanguage === 'English'
+                      ? allData?.english_video
+                      : allData?.hindi_video
+                  }
+                  keyExtractor={(item, index) => item + index}
+                  renderItem={({item}) => (
+                    <View style={styles.videoWrapper}>
+                      <YoutubePlayer
+                        height={200}
+                        videoId={item}
+                        webViewProps={{
+                          renderToHardwareTextureAndroid: true,
+                        }}
+                      />
+                    </View>
+                  )}
+                  // showsHorizontalScrollIndicator={true}
+                  contentContainerStyle={styles.horizontalList}
+                  pagingEnabled
+                  onViewableItemsChanged={onViewRef.current}
+                  viewabilityConfig={viewConfigRef.current}
                 />
-              ))} */}
-            {/* </View> */}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    marginTop: 10,
+                  }}>
+                  {(selectedLanguage === 'English'
+                    ? allData?.english_video
+                    : allData?.hindi_video
+                  ).map((_, index) => (
+                    <View
+                      key={index}
+                      style={{
+                        height: 10,
+                        width: 10,
+                        borderRadius: 5,
+                        backgroundColor:
+                          activeVideoIndex === index
+                            ? AppColors.mainColor
+                            : AppColors.greyColor,
+                        marginHorizontal: 5,
+                      }}
+                    />
+                  ))}
+                </View>
+              </>
+            )}
+
+            {/*  */}
           </View>
         </View>
       </ScrollView>

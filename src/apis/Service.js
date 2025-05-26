@@ -183,7 +183,7 @@ const _Fetch = (method, path, body, headers = {}) => {
     })
       .then(response => {
         // if (path == 'trusted-driver/crash-reporting-api.php') {
-        //   console.log(`Response data: ${path}`, response.data);
+          console.log(`Response data: ${path}`, response.data);
         // }
         if (response.data.status_code == 200) {
           resolve(response.data);

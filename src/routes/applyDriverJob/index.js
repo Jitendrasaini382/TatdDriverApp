@@ -7,8 +7,7 @@ import {useSelector} from 'react-redux';
 import ErrorBoundry from '../../utils/ErrorBoundry';
 import DriverInterface from '../../screens/applyForDriverJob/DriverInterface';
 import ApplyForDriverJob from '../../screens/applyForDriverJob/ApplyForDriverJobs';
-import SelectYourCityPartnerInterface from '../../screens/applyForDriverJob/SelectYourCityPartnerInterface';
-import SelectYourStatePartnerInterface from '../../screens/applyForDriverJob/SelectYourStatePartnerInterface';
+import RazorPayPaymentScreenDriverJob from '../../screens/applyForDriverJob/RazorPayPaymentScreenDriverJob';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -38,19 +37,10 @@ const ApplyDriverJobRoute = () => {
           {props => <ErrorBoundry Component={ApplyForDriverJob} {...props} />}
         </Stack.Screen>
 
-        <Stack.Screen name="SelectYourCityPartnerInterface">
+        <Stack.Screen name="RazorPayPaymentScreenDriverJob">
           {props => (
             <ErrorBoundry
-              Component={SelectYourCityPartnerInterface}
-              {...props}
-            />
-          )}
-        </Stack.Screen>
-
-        <Stack.Screen name="SelectYourStatePartnerInterface">
-          {props => (
-            <ErrorBoundry
-              Component={SelectYourStatePartnerInterface}
+              Component={RazorPayPaymentScreenDriverJob}
               {...props}
             />
           )}

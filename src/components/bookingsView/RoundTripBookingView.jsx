@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {AppColors} from '../../assets/Colors';
 import RoundTripBookingAceeptModal from '../modal/RoundTripBookingAceeptModal';
 import {FlatList} from 'react-native';
-import { Clipboard } from 'react-native';
+import {Clipboard} from 'react-native';
 
 const TripCard = ({trip}) => {
   const [openModal, setOpenModal] = useState(false);
@@ -78,7 +78,16 @@ const TripCard = ({trip}) => {
         ) : null}
       </View>
 
-      <View style={styles.card}>
+      <View
+        style={[
+          styles.card,
+          {
+            backgroundColor:
+              trip?.chauffeur_service > 0
+                ? AppColors.purple
+                : AppColors.mainColor,
+          },
+        ]}>
         <View style={styles.header}>
           <Text style={styles.time}>
             {trip?.Btime} <Text style={{fontSize: 16}}>{trip?.BDate}</Text>{' '}
@@ -247,7 +256,6 @@ const RoundTripBookingView = ({allBookingData}) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: AppColors.mainColor,
     borderRadius: 10,
     padding: 12,
     marginBottom: 10,

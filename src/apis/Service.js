@@ -1,9 +1,11 @@
 import axios from 'axios';
 import {API_BASE_URL} from '../constant/path';
 import store from '../redux/store';
-import {setUserAuthStates} from '../redux/slices/userAuthSlice';
+import {
+  resetUserAuthState,
+  setUserAuthStates,
+} from '../redux/slices/userAuthSlice';
 import DeviceInfo from 'react-native-device-info';
-import {setLoginStatus} from '../redux/slices/globalSlice';
 import {jwtDecode} from 'jwt-decode';
 
 // Axios axiosClient configure
@@ -44,124 +46,83 @@ axiosClient.interceptors.response.use(
       originalRequest._retry = true;
 
       const refreshToken = store.getState().userAuth.refreshToken;
+      const isRegistered = store.getState().userAuth.isRegistered;
 
       if (refreshToken) {
         const appVersion = DeviceInfo.getVersion();
 
-        try {
-          const res = await axios.post(
-            `${API_BASE_URL}login/refresh_token.php`,
-            {refresh_token: refreshToken, app_version: appVersion},
-          );
-
-          if (res.data?.jwt) {
-            store.dispatch(
-              setUserAuthStates({
-                key: 'jwt',
-                value: res.data.jwt,
-              }),
+        if (isRegistered) {
+          try {
+            const res = await axios.post(
+              `${API_BASE_URL}login/refresh_token.php`,
+              {refresh_token: refreshToken, app_version: appVersion},
             );
 
-            store.dispatch(
-              setUserAuthStates({
-                key: 'userProfile',
-                value: jwtDecode(res.data.jwt),
-              }),
-            );
+            if (res.data?.jwt) {
+              store.dispatch(
+                setUserAuthStates({
+                  key: 'jwt',
+                  value: res.data.jwt,
+                }),
+              );
 
-            // add new jwt in header
-            axiosClient.defaults.headers.common[
-              'Authorization'
-            ] = `Bearer ${res.data.jwt}`;
-            originalRequest.headers['Authorization'] = `Bearer ${res.data.jwt}`;
-            return axiosClient(originalRequest);
-          } else {
-            store.dispatch(
-              setUserAuthStates({
-                key: 'jwt',
-                value: null,
-              }),
-            );
-            store.dispatch(
-              setUserAuthStates({
-                key: 'login',
-                value: false,
-              }),
-            );
-            store.dispatch(
-              setLoginStatus({
-                key: 'loginStatus',
-                value: false,
-              }),
-            );
-            store.dispatch(
-              setUserAuthStates({
-                key: 'isFcmSent',
-                value: false,
-              }),
-            );
-            store.dispatch(
-              setUserAuthStates({
-                key: 'isDeviceInfo',
-                value: false,
-              }),
-            );
+              store.dispatch(
+                setUserAuthStates({
+                  key: 'userProfile',
+                  value: jwtDecode(res.data.jwt),
+                }),
+              );
+
+              // add new jwt in header
+              axiosClient.defaults.headers.common[
+                'Authorization'
+              ] = `Bearer ${res.data.jwt}`;
+              originalRequest.headers[
+                'Authorization'
+              ] = `Bearer ${res.data.jwt}`;
+              return axiosClient(originalRequest);
+            } else {
+              store.dispatch(resetUserAuthState());
+            }
+          } catch (refreshError) {
+            store.dispatch(resetUserAuthState());
+            return Promise.reject(refreshError);
           }
-        } catch (refreshError) {
-          store.dispatch(
-            setUserAuthStates({
-              key: 'jwt',
-              value: null,
-            }),
-          );
-          store.dispatch(
-            setUserAuthStates({
-              key: 'login',
-              value: false,
-            }),
-          );
-          store.dispatch(
-            setUserAuthStates({
-              key: 'isFcmSent',
-              value: false,
-            }),
-          );
-          store.dispatch(
-            setUserAuthStates({
-              key: 'isDeviceInfo',
-              value: false,
-            }),
-          );
-          return Promise.reject(refreshError);
+        } else {
+          try {
+            const res = await axios.post(
+              `${API_BASE_URL}driver-job/refresh_token.php`,
+              {refresh_token: refreshToken, app_version: appVersion},
+            );
+
+            if (res?.data?.jwt) {
+              store.dispatch(
+                setUserAuthStates({
+                  key: 'jwt',
+                  value: res.data.jwt,
+                }),
+              );
+
+              // add new jwt in header
+              axiosClient.defaults.headers.common[
+                'Authorization'
+              ] = `Bearer ${res.data.jwt}`;
+              originalRequest.headers[
+                'Authorization'
+              ] = `Bearer ${res.data.jwt}`;
+              return axiosClient(originalRequest);
+            } else {
+              store.dispatch(resetUserAuthState());
+            }
+          } catch (refreshError) {
+            store.dispatch(resetUserAuthState());
+            return Promise.reject(refreshError);
+          }
         }
       } else {
-        store.dispatch(
-          setUserAuthStates({
-            key: 'jwt',
-            value: null,
-          }),
-        );
-        store.dispatch(
-          setUserAuthStates({
-            key: 'login',
-            value: false,
-          }),
-        );
-        store.dispatch(
-          setUserAuthStates({
-            key: 'isFcmSent',
-            value: false,
-          }),
-        );
-        store.dispatch(
-          setUserAuthStates({
-            key: 'isDeviceInfo',
-            value: false,
-          }),
-        );
+        store.dispatch(resetUserAuthState());
       }
     }
-
     return Promise.reject(error);
   },
 );
@@ -174,6 +135,7 @@ const _Fetch = (method, path, body, headers = {}) => {
       ...headers, // Custom headers override default headers if any conflict
     };
 
+    // return false
     axiosClient({
       method,
       url: path,
@@ -182,8 +144,8 @@ const _Fetch = (method, path, body, headers = {}) => {
       headers: finalHeaders, // Pass merged headers
     })
       .then(response => {
-        // if (path == 'trusted-driver/crash-reporting-api.php') {
-          console.log(`Response data: ${path}`, response.data);
+        // if (path !== 'driver-job/driver-interface-text-video-content.php') {
+        // console.log(`Response data: ${path}`, response.data);
         // }
         if (response.data.status_code == 200) {
           resolve(response.data);

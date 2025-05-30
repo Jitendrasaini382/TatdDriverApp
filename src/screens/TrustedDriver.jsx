@@ -799,6 +799,7 @@ const TrustedDriver = ({navigation}) => {
   };
 
   const getPermanentSubscriptionBooking = async () => {
+    return false
     try {
       const response = await PERMANENT_SUBSCRIPTION_VIEW();
       setPermanentSubscriptionBookingData(response?.data);

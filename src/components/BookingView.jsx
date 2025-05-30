@@ -302,9 +302,9 @@ const BookingView = ({
       )}
       <RoundTripBookingView allBookingData={allBookingData} />
       <FlexibleBookingView />
-      <PermanentSubscriptionBookingView
+      {/* <PermanentSubscriptionBookingView
         permanentSubscriptionBookingData={permanentSubscriptionBookingData}
-      />
+      /> */}
       <PermanentBookingView />
     </View>
   );

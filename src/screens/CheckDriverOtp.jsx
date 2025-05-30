@@ -14,7 +14,11 @@ import {
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import Toast from 'react-native-toast-message';
-import {DRIVER_LOGIN, VERIFY_OTP_LOGIN} from '../apis/Apis';
+import {
+  DRIVER_LOGIN,
+  VERIFY_OTP_LOGIN,
+  VERIFY_OTP_LOGIN_APPLY_FOR_DRIVER_JOBS,
+} from '../apis/Apis';
 import {jwtDecode} from 'jwt-decode';
 import {AppFont} from '../assets/FontsFamily';
 import {useDispatch} from 'react-redux';
@@ -63,7 +67,7 @@ const CheckDriverOtp = ({navigation, route}) => {
   const appVersion = DeviceInfo.getVersion();
   const appType = Platform.OS;
 
-  const {mobile} = route.params;
+  const {mobile, isRegistered} = route?.params;
   const [otp, setOtp] = useState('');
   const [error, setError] = useState(null);
   const [field, setField] = useState({
@@ -74,6 +78,9 @@ const CheckDriverOtp = ({navigation, route}) => {
   });
   const [showResendOtpText, setShowResendOtpText] = useState(false);
   const [loader, setLoader] = useState(false);
+
+  console.log(isRegistered,"isRegisteredisRegistered");
+  
 
   const ref = useBlurOnFulfill({value: otp, cellCount: CELL_COUNT});
   const [inputProps, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -140,70 +147,113 @@ const CheckDriverOtp = ({navigation, route}) => {
       setLoader(true);
       Keyboard.dismiss();
 
-      const response = await VERIFY_OTP_LOGIN({
-        mobile: mobile,
-        otp: otp,
-        app_version: appVersion,
-        app_type: appType,
-      });
-
-      // console.log(response,"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-      // return false
-
-      dispatch(
-        setUserAuthStates({
-          key: 'isRegistered',
-          value: !!response?.isRegistered,
-        }),
-      );
-
-      if (response?.jwt && response?.refresh_token) {
-        dispatch(
-          setUserAuthStates({
-            key: 'jwt',
-            value: response?.jwt,
-          }),
-        );
-
-        dispatch(
-          setUserAuthStates({
-            key: 'driverMobileNumber',
-            value: mobile,
-          }),
-        );
-
-        dispatch(
-          setUserAuthStates({
-            key: 'refreshToken',
-            value: response?.refresh_token,
-          }),
-        );
-
-        dispatch(
-          setUserAuthStates({
-            key: 'userProfile',
-            value: jwtDecode(response?.jwt),
-          }),
-        );
-
-        dispatch(
-          setUserAuthStates({
-            key: 'login',
-            value: true,
-          }),
-        );
-        Toast.show({
-          type: 'success',
-          text1: 'Success',
-          text2: 'OTP verified successfully!',
+      if (isRegistered == '1') {
+        const response = await VERIFY_OTP_LOGIN({
+          mobile: mobile,
+          otp: otp,
+          app_version: appVersion,
+          app_type: appType,
         });
+        if (response?.jwt && response?.refresh_token) {
+          dispatch(
+            setUserAuthStates({
+              key: 'jwt',
+              value: response?.jwt,
+            }),
+          );
+
+          dispatch(
+            setUserAuthStates({
+              key: 'refreshToken',
+              value: response?.refresh_token,
+            }),
+          );
+          dispatch(
+            setUserAuthStates({
+              key: 'isRegistered',
+              value: true,
+            }),
+          );
+
+          dispatch(
+            setUserAuthStates({
+              key: 'userProfile',
+              value: jwtDecode(response?.jwt),
+            }),
+          );
+
+          dispatch(
+            setUserAuthStates({
+              key: 'login',
+              value: true,
+            }),
+          );
+          Toast.show({
+            type: 'success',
+            text1: 'Success',
+            text2: 'OTP verified successfully!',
+          });
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: 'Error',
+            text2: response?.message || 'Invalid OTP. Please try again.',
+          });
+          return;
+        }
       } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: response?.message || 'Invalid OTP. Please try again.',
+        const response = await VERIFY_OTP_LOGIN_APPLY_FOR_DRIVER_JOBS({
+          mobile: mobile,
+          otp: otp,
+          app_version: appVersion,
+          app_type: appType,
         });
-        return;
+
+        if (response?.jwt && response?.refresh_token) {
+          dispatch(
+            setUserAuthStates({
+              key: 'jwt',
+              value: response?.jwt,
+            }),
+          );
+          dispatch(
+            setUserAuthStates({
+              key: 'isRegistered',
+              value: false,
+            }),
+          );
+          dispatch(
+            setUserAuthStates({
+              key: 'refreshToken',
+              value: response?.refresh_token,
+            }),
+          );
+          dispatch(
+            setUserAuthStates({
+              key: 'driverNumber',
+              value: mobile,
+            }),
+          );
+
+          dispatch(
+            setUserAuthStates({
+              key: 'login',
+              value: true,
+            }),
+          );
+          Toast.show({
+            type: 'success',
+            text1: 'Success',
+            text2: 'OTP verified successfully!',
+          });
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: 'Error',
+            text2: response?.message || 'Invalid OTP. Please try again.',
+          });
+          return;
+        }
       }
     } catch (err) {
       Toast.show({

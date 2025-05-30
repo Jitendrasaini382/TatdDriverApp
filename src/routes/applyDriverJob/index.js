@@ -5,9 +5,9 @@ import SplashScreen from '../../screens/SplashScreen';
 import {AppColors} from '../../assets/Colors';
 import {useSelector} from 'react-redux';
 import ErrorBoundry from '../../utils/ErrorBoundry';
-import DriverInterface from '../../screens/applyForDriverJob/DriverInterface';
 import ApplyForDriverJob from '../../screens/applyForDriverJob/ApplyForDriverJobs';
 import RazorPayPaymentScreenDriverJob from '../../screens/applyForDriverJob/RazorPayPaymentScreenDriverJob';
+import RegistrationSuccess from '../../screens/applyForDriverJob/RegistrationSuccess';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -29,10 +29,6 @@ const ApplyDriverJobRoute = () => {
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
         )}
 
-        {/* <Stack.Screen name="DriverInterface">
-          {props => <ErrorBoundry Component={DriverInterface} {...props} />}
-        </Stack.Screen> */}
-
         <Stack.Screen name="ApplyForDriverJobs">
           {props => <ErrorBoundry Component={ApplyForDriverJob} {...props} />}
         </Stack.Screen>
@@ -44,6 +40,10 @@ const ApplyDriverJobRoute = () => {
               {...props}
             />
           )}
+        </Stack.Screen>
+
+        <Stack.Screen name="RegistrationSuccess">
+          {props => <ErrorBoundry Component={RegistrationSuccess} {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
     </>

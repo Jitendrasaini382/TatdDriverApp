@@ -8,7 +8,7 @@ const initialState = {
   isFcmSent: false,
   isDeviceInfo: false,
   isRegistered: false,
-  driverMobileNumber: null,
+  driverNumber: null,
 };
 
 const userAuth = createSlice({
@@ -20,9 +20,10 @@ const userAuth = createSlice({
       const {key, value} = action.payload;
       state[key] = value;
     },
+    resetUserAuthState: () => initialState,
   },
 });
 
-export const {setUserAuthStates} = userAuth.actions;
+export const {setUserAuthStates, resetUserAuthState} = userAuth.actions;
 
 export default userAuth.reducer;

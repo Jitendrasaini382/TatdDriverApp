@@ -1,17 +1,22 @@
 import {useRoute} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
 import RazorpayCheckout from 'react-native-razorpay';
-import {useSelector} from 'react-redux';
-import { VERIFY_PPREMIUM_PAYMENT_INFO } from '../../apis/Apis';
+import {useDispatch, useSelector} from 'react-redux';
+import {VERIFY_PAYMENT_INFO_APPLY_FOR_DRIVER_JOB} from '../../apis/Apis';
+import {resetUserAuthState} from '../../redux/slices/userAuthSlice';
 
 const RazorPayPaymentScreenDriverJob = ({navigation}) => {
   const route = useRoute();
-  const pageType = route?.params?.pageType || '';
-  const description = route?.params?.description || '';
-  const amount = route?.params?.amount || '';
-  const orderId = route?.params?.orderId || '';
-  const driverMobileNumber = route?.params?.driverNumber;
-  const driverName = route?.params?.driverName;
+
+  console.log(route, '-=-=-=-=-=routeee razorpay');
+
+  const description = route?.params?.response?.description || '';
+  const pageType = route?.params?.response?.page_type || '';
+  const amount = route?.params?.response?.amount || '';
+  const orderId = route?.params?.response?.orderId || '';
+  const driverMobileNumber = route?.params?.response?.mobile_number;
+  const driverName = route?.params?.response?.driver_name;
+  const dispatch = useDispatch();
 
   console.log(amount, ' : amount========');
   console.log(orderId, ' : orderId=======');
@@ -54,35 +59,34 @@ const RazorPayPaymentScreenDriverJob = ({navigation}) => {
     }
 
     try {
-      let response;
+      const response = await VERIFY_PAYMENT_INFO_APPLY_FOR_DRIVER_JOB({
+        action: 'apply_for_driver_jobs',
+        razorpay_payment_id: id,
+        order_id: orderId,
+        amount,
+      });
+      console.log(
+        response,
+        'response VERIFY_PAYMENT_INFO_APPLY_FOR_DRIVER_JOB',
+      );
 
-      if (pageType === 'chauffeur_uniform') {
-        response = await VERIFY_PPREMIUM_PAYMENT_INFO({
-          action: 'premium-driver-payment-verify',
-          razorpay_payment_id: id,
+      if (response?.status_code == 200 && response?.message == 'success') {
+        // navigation.navigate('RegistrationSuccess', {response: response});
+        navigation.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'RegistrationSuccess',
+              params: {response: response},
+            },
+          ],
         });
-        console.log(response, 'response VERIFY_PPREMIUM_PAYMENT_INFO');
 
-        if (response?.status_code == 200 && response?.message == 'success') {
-          navigation.navigate('PremiumDriverRegistrationProcess');
-          return;
-        } else {
-          navigation.navigate('PremiumDriverRegistration');
-        }
-        setVerifyData(response);
+        return;
       } else {
-        response = await VERIFY_PAYMENT_INFO(id);
-        console.log(response, 'response VERIFY_PAYMENT_INFO');
-
-        if (response?.status_code == 200) {
-          navigation.navigate('ThankYouDriverDue', {
-            data: response?.payment_details?.message,
-          });
-          return;
-        }
-
-        setVerifyData(response);
+        navigation.navigate('ApplyForDriverJobs');
       }
+      setVerifyData(response);
     } catch (error) {
       console.error('Error verifying payment:', error);
     }

@@ -13,4 +13,5 @@ export const AppColors = {
   yellow: 'yellow',
   toggleGrey: 'grey',
   toggleYellow: '#FFD700',
+  purple: '#663C7E',
 };

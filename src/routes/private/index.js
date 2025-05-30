@@ -48,8 +48,6 @@ import ErrorBoundry from '../../utils/ErrorBoundry';
 import LocalseAwarenessPartnerRegistration from '../../screens/LocalseAwarenessPartnerRegistration';
 import LocalseAwarenessAgentRegistration from '../../screens/LocalseAwarenessAgentRegistration';
 import MyMap from '../../screens/MyMap';
-import DriverInterface from '../../screens/applyForDriverJob/DriverInterface';
-import ApplyForDriverJob from '../../screens/applyForDriverJob/ApplyForDriverJobs';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -245,14 +243,6 @@ const PrivateRoute = () => {
 
         <Stack.Screen name="MyMap">
           {props => <ErrorBoundry Component={MyMap} {...props} />}
-        </Stack.Screen>
-
-        <Stack.Screen name="DriverInterface">
-          {props => <ErrorBoundry Component={DriverInterface} {...props} />}
-        </Stack.Screen>
-
-        <Stack.Screen name="ApplyForDriverJobs">
-          {props => <ErrorBoundry Component={ApplyForDriverJob} {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
     </>

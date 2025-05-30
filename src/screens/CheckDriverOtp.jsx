@@ -188,6 +188,12 @@ const CheckDriverOtp = ({navigation, route}) => {
               value: true,
             }),
           );
+          dispatch(
+            setUserAuthStates({
+              key: 'driverNumber',
+              value: mobile,
+            }),
+          );
           Toast.show({
             type: 'success',
             text1: 'Success',

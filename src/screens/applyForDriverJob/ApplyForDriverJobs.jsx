@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Alert,
   Button,
   Dimensions,
@@ -19,15 +20,9 @@ import {AppLogo, Triangle_Icon} from '../../assets/images';
 import {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Header from '../../components/Header';
-import {
-  requestLocationPermission,
-  requestNotificationPermission,
-} from '../../utils/permissions';
-import Geolocation from '@react-native-community/geolocation';
+import {requestNotificationPermission} from '../../utils/permissions';
 import messaging from '@react-native-firebase/messaging';
 
-import IntentLauncher from '@yz1311/react-native-intent-launcher';
-import axios from 'axios';
 import {
   APPLY_FOR_DRIVER_JOBS,
   CREATE_ORDER_ID_APPLY_FOR_DRIVER_JOBS,
@@ -45,7 +40,6 @@ import {
   setUserAuthStates,
 } from '../../redux/slices/userAuthSlice';
 import {Platform} from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -197,39 +191,31 @@ const ApplyForDriverJob = ({navigation}) => {
   const [updateModal, setUpdateModal] = useState(false);
   const [upadatePopupData, setUpdatePopupData] = useState({});
   const [allData, setAllData] = useState({});
-  const [orderIdData, setOrderIdData] = useState();
   const [errors, setErrors] = useState({});
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch();
   const isFcmSent = useSelector(e => e?.userAuth?.isFcmSent);
   const isDeviceInfo = useSelector(e => e?.userAuth?.isDeviceInfo);
   const driverMobileNumber = useSelector(e => e?.userAuth?.driverNumber);
-  const map_key = 'AIzaSyAaYD9dofRG4HJ_KhOETyfFjFJs4Ni8uf4';
   const number = useSelector(
     e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
   );
 
   const handleRegisterPress = async () => {
-    if (!pincode) {
-      await getLocation(); // Try to get location and pincode first
-      // Alert.alert('', 'Fetching location. Please try again in a few seconds.');
-      return;
-    }
-
-    if (!serviceableArea) {
-      Alert.alert('', 'Service not available in your area.');
-      return;
-    }
-
     const newErrors = {};
+
     if (!driverName.trim()) {
       newErrors.driverName = 'Driver Name required';
     }
-
     if (!address.trim()) {
       newErrors.address = 'Current Address required';
     } else if (address.trim().length < 20) {
       newErrors.address = 'Full Current Address Required';
+    }
+    if (!pincode.trim()) {
+      newErrors.pincode = 'Please Pincode required';
+    } else if (pincode.trim().length < 6) {
+      newErrors.pincode = 'Please Enter Correct Pincode';
     }
 
     setErrors(newErrors);
@@ -258,104 +244,6 @@ const ApplyForDriverJob = ({navigation}) => {
     }
   };
 
-  useEffect(() => {
-    sendOtp();
-  });
-
-  const sendOtp = async () => {
-    try {
-      const response = await DRIVER_LOGIN({
-        mobile: driverMobileNumber || number,
-        user_type: 'Driver',
-        app_version: DeviceInfo.getVersion(),
-        app_type: Platform.OS,
-      });
-      if (response?.status_code == '200' && response?.msg_type == 'error') {
-        dispatch(resetUserAuthState());
-      } else if (
-        response?.status_code == '200' &&
-        response?.message == 'OTP sent successfully'
-      ) {
-        dispatch(
-          setUserAuthStates({
-            key: 'isRegistered',
-            value: response?.isRegistered === '1',
-          }),
-        );
-      }
-    } catch (err) {
-      dispatch(resetUserAuthState());
-    } finally {
-    }
-  };
-
-  const getAddressFromCoords = async (latitude, longitude, retry = true) => {
-    try {
-      const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${map_key}`,
-      );
-
-      if (response?.data?.results?.length > 0) {
-        const address = response.data.results[0].formatted_address;
-        const components = response.data.results[0].address_components;
-
-        const pincodeObj = components.find(c =>
-          c.types.includes('postal_code'),
-        );
-        const cityObj = components.find(c => c.types.includes('locality'));
-
-        const pincode = pincodeObj ? pincodeObj.long_name : '';
-        const city = cityObj ? cityObj.long_name : '';
-
-        if (!pincode && retry) {
-          // Retry only once
-          console.warn('Pincode not found. Retrying once...');
-          return await getAddressFromCoords(latitude, longitude, false);
-        }
-
-        if (pincode) {
-          await getCityZoneByPincode(pincode);
-          setPincode(pincode);
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching address:', error.message);
-    }
-  };
-
-  const getLocation = async () => {
-    const hasPermission = await requestLocationPermission();
-    if (!hasPermission) return;
-
-    Geolocation.getCurrentPosition(
-      position => {
-        const {latitude, longitude} = position.coords;
-        getAddressFromCoords(latitude, longitude);
-      },
-      error => {
-        console.error('Location error:', error);
-        if (error.code === 2) {
-          Alert.alert(
-            'Location Service Disabled',
-            'Enable location services to proceed.',
-            [
-              {text: 'Cancel', style: 'cancel'},
-              {
-                text: 'Open Settings',
-                onPress: () => {
-                  IntentLauncher.startActivity({
-                    action: 'android.settings.LOCATION_SOURCE_SETTINGS',
-                  });
-                },
-              },
-            ],
-          );
-        }
-      },
-      {maximumAge: 0},
-    );
-  };
-
   const getCityZoneByPincode = async pincode => {
     try {
       const res = await GET_CITY_ZONE_BY_PINCODE({pincode});
@@ -376,7 +264,6 @@ const ApplyForDriverJob = ({navigation}) => {
         setServiceableArea(false);
       }
     } catch (err) {
-      console.error('Zone API error:', err);
       setServiceableArea(false);
     }
   };
@@ -496,9 +383,6 @@ const ApplyForDriverJob = ({navigation}) => {
   const onRefresh = async () => {
     setRefreshing(true);
     try {
-      if (!pincode) {
-        await getLocation();
-      }
       getFcmToken();
       await getUpdatePopup();
     } catch (error) {
@@ -509,16 +393,51 @@ const ApplyForDriverJob = ({navigation}) => {
   };
 
   useEffect(() => {
-    if (!pincode) {
-      getLocation();
-    }
+    sendOtp();
     getAllData();
     getUpdatePopup();
-    // if (!isFcmSent)
     getFcmToken();
-    // if (!isDeviceInfo)
     fetchDeviceInfo();
   }, []);
+
+  const sendOtp = async () => {
+    try {
+      const response = await DRIVER_LOGIN({
+        mobile: driverMobileNumber || number,
+        user_type: 'Driver',
+        app_version: DeviceInfo.getVersion(),
+        app_type: Platform.OS,
+      });
+
+      if (response?.status_code == '200' && response?.msg_type == 'error') {
+        dispatch(resetUserAuthState());
+      } else if (
+        response?.status_code == '200' &&
+        response?.message == 'OTP sent successfully'
+      ) {
+        dispatch(
+          setUserAuthStates({
+            key: 'isRegistered',
+            value: response?.isRegistered === '1',
+          }),
+        );
+      }
+    } catch (err) {
+      dispatch(resetUserAuthState());
+    } finally {
+    }
+  };
+
+  const handlePincode = pin => {
+    setPincode(pin);
+    if (pin.length === 6) {
+      getCityZoneByPincode(pin);
+    } else {
+      setCity('');
+      setZone('');
+      setServiceableArea(false);
+    }
+  };
 
   const handlePayment = async amount => {
     console.log('handlePayment called with amount:', amount);
@@ -530,13 +449,12 @@ const ApplyForDriverJob = ({navigation}) => {
         payment_amount: amount,
       });
 
-      console.log(res, '-=-=-=-=-=-=-');
-
       if (res?.status_code == 200) {
         if (res?.razor_order_id_data?.orderId) {
           navigation.navigate('RazorPayPaymentScreenDriverJob', {
             response: res?.razor_order_id_data,
           });
+          setVisible(false);
         }
       }
     } catch (error) {
@@ -648,19 +566,6 @@ const ApplyForDriverJob = ({navigation}) => {
                   error={errors.driverName}
                 />
               </View>
-              <View style={{flex: 1}}>
-                <CustomTextInput
-                  value={driverMobileNumber || driverNumber}
-                  placeholder="Driver Number"
-                  keyboardType="numeric"
-                  editable={false}
-                  maxLength={10}
-                  iconName={
-                    <Icon name="phone" size={15} color={AppColors.greyColor} />
-                  }
-                  error={errors.driverNumber}
-                />
-              </View>
             </View>
             <View style={{marginTop: 20}}>
               <CustomAddressInput
@@ -683,6 +588,71 @@ const ApplyForDriverJob = ({navigation}) => {
               />
             </View>
 
+            <View style={{flexDirection: 'row', gap: 15, marginTop: 20}}>
+              <View style={{flex: 1}}>
+                <CustomTextInput
+                  value={driverMobileNumber || driverNumber}
+                  placeholder="Driver Number"
+                  keyboardType="numeric"
+                  editable={false}
+                  maxLength={10}
+                  iconName={
+                    <Icon name="phone" size={15} color={AppColors.greyColor} />
+                  }
+                  error={errors.driverNumber}
+                />
+              </View>
+              <View style={{flex: 1}}>
+                <CustomTextInput
+                  value={pincode}
+                  placeholder="Pincode"
+                  keyboardType="numeric"
+                  onChangeText={e => handlePincode(e)}
+                  maxLength={6}
+                  iconName={
+                    <Icon
+                      name="map-marker"
+                      size={15}
+                      color={AppColors.greyColor}
+                    />
+                  }
+                  error={errors.pincode}
+                />
+              </View>
+            </View>
+
+            {serviceableArea && (
+              <View style={{flexDirection: 'row', gap: 15, marginTop: 20}}>
+                <View style={{flex: 1}}>
+                  <CustomTextInput
+                    value={city}
+                    placeholder="City"
+                    editable={false}
+                    maxLength={10}
+                    iconName={
+                      <Icon
+                        name="building"
+                        size={15}
+                        color={AppColors.greyColor}
+                      />
+                    }
+                    error={errors.city}
+                  />
+                </View>
+                <View style={{flex: 1}}>
+                  <CustomTextInput
+                    value={zone}
+                    placeholder="Zone"
+                    editable={false}
+                    maxLength={10}
+                    iconName={
+                      <Icon name="home" size={15} color={AppColors.greyColor} />
+                    }
+                    error={errors.zone}
+                  />
+                </View>
+              </View>
+            )}
             <View
               style={{
                 marginVertical: 20,
@@ -708,6 +678,7 @@ const ApplyForDriverJob = ({navigation}) => {
                     shadowOpacity: 0.2,
                     shadowRadius: 4,
                     elevation: 5,
+                    flexDirection: 'row',
                   }}>
                   <Text
                     style={{
@@ -716,8 +687,15 @@ const ApplyForDriverJob = ({navigation}) => {
                       fontWeight: '600',
                       textAlign: 'center',
                     }}>
-                    Register Now
+                    Apply Now
                   </Text>
+                  {loader ? (
+                    <ActivityIndicator
+                      size={'small'}
+                      color={AppColors.white}
+                      style={{marginLeft: 5}}
+                    />
+                  ) : null}
                 </TouchableOpacity>
               </View>
             </View>
@@ -763,6 +741,29 @@ const ApplyForDriverJob = ({navigation}) => {
                       ✕
                     </Text>
                   </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handlePayment(popupData?.price)}
+                    style={{
+                      position: 'absolute',
+                      // top: 130, // tweak this to match where the button originally appears
+                      left: 20,
+                      right: 20,
+                      zIndex: 9,
+                      bottom: 30,
+                      backgroundColor: AppColors.mainColor,
+                      paddingVertical: 12,
+                      borderRadius: 6,
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        color: AppColors.white,
+                        fontWeight: '600',
+                        fontSize: 16,
+                      }}>
+                      {popupData?.price_tag}
+                    </Text>
+                  </TouchableOpacity>
 
                   <ScrollView
                     contentContainerStyle={{paddingBottom: 24}}
@@ -779,105 +780,11 @@ const ApplyForDriverJob = ({navigation}) => {
                         {''} {popupData?.application_id}
                       </Text>
                     </Text>
-                    <Text style={styles.text}>{popupData?.popup_data}</Text>
-
-                    <TouchableOpacity
-                      onPress={() => {
-                        handlePayment(popupData?.price);
-                      }}
-                      style={{
-                        marginTop: 20,
-                        backgroundColor: AppColors.mainColor,
-                        paddingVertical: 12,
-                        borderRadius: 6,
-                        alignItems: 'center',
-                      }}>
-                      <Text
-                        style={{
-                          color: AppColors.white,
-                          fontWeight: '600',
-                          fontSize: 16,
-                        }}>
-                        {popupData?.price_tag}
-                      </Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={{
-                        marginTop: 20,
-                        //  backgroundColor: AppColors.mainColor,
-                        backgroundColor: AppColors.greyColor,
-                        paddingVertical: 12,
-                        borderRadius: 6,
-                        alignItems: 'center',
-                      }}
-                      onPress={() => setVisible(false)}>
-                      <Text
-                        style={{
-                          color: AppColors.white,
-                          fontWeight: '600',
-                          fontSize: 16,
-                        }}>
-                        Close
-                      </Text>
-                    </TouchableOpacity>
-
-                    {/* <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-evenly',
-                        marginTop: 20,
-                      }}>
-                      <TouchableOpacity
-                        accessible={true}
-                        accessibilityLabel="Proceed to Razor payment"
-                        onPress={() => {
-                          // Replace this with real navigation logic
-                          Alert.alert(
-                            'Payment',
-                            `Navigate to Razor Payment Page with payment amount ₹${popupData?.price}`,
-                          );
-                        }}
-                        style={{
-                          flex: 1,
-                          marginHorizontal: 5,
-                          backgroundColor: AppColors.mainColor,
-                          paddingVertical: 14,
-                          borderRadius: 8,
-                          alignItems: 'center',
-                        }}>
-                        <Text
-                          style={{
-                            color: AppColors.white,
-                            fontWeight: '600',
-                            fontSize: 16,
-                          }}>
-                          {popupData?.price_tag || 'Pay Now'}
-                        </Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity
-                        accessible={true}
-                        accessibilityLabel="Close the popup"
-                        onPress={() => setVisible(false)}
-                        style={{
-                          flex: 1,
-                          marginHorizontal: 5,
-                          backgroundColor: AppColors.mainColor,
-                          paddingVertical: 14,
-                          borderRadius: 8,
-                          alignItems: 'center',
-                        }}>
-                        <Text
-                          style={{
-                            color: AppColors.white,
-                            fontWeight: '600',
-                            fontSize: 16,
-                          }}>
-                          Close
-                        </Text>
-                      </TouchableOpacity>
-                    </View> */}
+                    <Text style={[styles.text, {marginBottom: 50}]}>
+                      {selectedLanguage == 'Hindi'
+                        ? popupData?.popup_data
+                        : popupData?.popup_data_english}
+                    </Text>
                   </ScrollView>
                 </View>
               </View>
@@ -1000,34 +907,6 @@ const ApplyForDriverJob = ({navigation}) => {
   );
 };
 const styles = StyleSheet.create({
-  toggleContainer: {
-    flexDirection: 'row',
-    backgroundColor: '#ccc',
-    borderRadius: 10,
-    overflow: 'hidden',
-    width: '96%',
-    alignSelf: 'center',
-    marginHorizontal: 20,
-  },
-  button: {
-    paddingVertical: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '48%',
-  },
-  selectedButton: {
-    backgroundColor: 'white',
-    margin: 7,
-    borderRadius: 5,
-  },
-  text: {
-    fontSize: 16,
-    color: '#000',
-  },
-  selectedText: {
-    color: 'black',
-    fontWeight: 'bold',
-  },
   cardContainer: {
     backgroundColor: AppColors.white,
     borderWidth: 1,
@@ -1054,7 +933,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderRadius: 5,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#f0f0f0',
   },
 
   scrollableText: {
@@ -1099,7 +978,7 @@ const styles = StyleSheet.create({
 
   toggleContainer: {
     flexDirection: 'row',
-    backgroundColor: '#ccc',
+    backgroundColor: '#f0f0f0',
     borderRadius: 10,
     overflow: 'hidden',
     width: '100%',

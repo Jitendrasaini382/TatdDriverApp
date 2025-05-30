@@ -20,7 +20,15 @@ const userAuth = createSlice({
       const {key, value} = action.payload;
       state[key] = value;
     },
-    resetUserAuthState: () => initialState,
+    resetUserAuthState: state => {
+      state.jwt = null;
+      state.refreshToken = null;
+      state.login = false;
+      state.userProfile = null;
+      state.isFcmSent = false;
+      state.isDeviceInfo = false;
+      state.isRegistered = false;
+    },
   },
 });
 

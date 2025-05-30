@@ -25,7 +25,7 @@ import {Triangle_Icon} from '../assets/images';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import DeviceInfo from 'react-native-device-info';
 import YoutubePlayer from 'react-native-youtube-iframe';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
 
 const {width, height} = Dimensions.get('window');
@@ -39,7 +39,8 @@ const moderateScale = (size, factor = 0.5) =>
 
 const DriverLogin = () => {
   const navigation = useNavigation();
-  const [mobile, setMobile] = useState(null);
+  const driverMobileNumber = useSelector(e => e?.userAuth?.driverNumber);
+  const [mobile, setMobile] = useState(driverMobileNumber || null);
   const [error, setError] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const [loader, setLoader] = useState(false);

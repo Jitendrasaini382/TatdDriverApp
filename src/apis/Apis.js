@@ -5,7 +5,7 @@ function generateSessionToken() {
 }
 
 export const DRIVER_LOGIN = body => {
-  return _Fetch('POST', 'login/driver-login1.php', body, {});
+  return _Fetch('POST', 'login/driver-login.php', body, {});
 };
 
 export const VERIFY_OTP_LOGIN = body => {
@@ -213,12 +213,9 @@ export const SAVE_REFER_PERMANENT = body => {
 };
 
 export const ACCEPT_PERMANENT_BOOKING = body => {
-  console.log(body, 'bodybodybodybodybodybodybodybodybody');
-
-  // return false
   return _Fetch(
     'POST',
-    'trusted-driver/permanent-booking-accept-1.php',
+    'trusted-driver/permanent-booking-accept.php',
     {...body},
     {},
   );
@@ -591,7 +588,6 @@ export const GET_AGENT_SELECT_STATE = () => {
 };
 
 export const GET_AGENT_SELECT_CITY = body => {
-  console.log(body, 'GET_AGENT_SELECT_CITY');
   return _Fetch('POST', 'agent/agent-select-your-zone-api.php', {...body}, {});
 };
 
@@ -609,7 +605,6 @@ export const AGENT_REFERAL_URL = body => {
 };
 
 export const AGENT_ADD_CUSTOMER = body => {
-  console.log(body, 'AGENT_ADD_CUSTOMER');
   return _Fetch('POST', 'agent/agent-add-customer-api.php', {...body}, {});
 };
 
@@ -838,7 +833,7 @@ export const SAVE_LIVE_DRIVER_LATLONG = body => {
 };
 
 export const SAVE_CRASH_ERROR = body => {
-  return false;
+  // return false;
   return _Fetch(
     'POST',
     'trusted-driver/crash-reporting-api.php',
@@ -847,7 +842,11 @@ export const SAVE_CRASH_ERROR = body => {
   );
 };
 
-// apply for Driver Jocb
+// // apply for Driver Job
+
+export const VERIFY_OTP_LOGIN_APPLY_FOR_DRIVER_JOBS = body => {
+  return _Fetch('POST', 'driver-job/verify-otp-login.php', {...body}, {});
+};
 
 export const GET_CITY_ZONE_BY_PINCODE = body => {
   return _Fetch(
@@ -877,8 +876,6 @@ export const GET_ALL_DATA_APPLY_FOR_DRIVER_JOBS = body => {
 };
 
 export const CREATE_ORDER_ID_APPLY_FOR_DRIVER_JOBS = body => {
-  console.log(body,"order");
-  
   return _Fetch(
     'POST',
     'driver-job/create-order-id-for-driver-job-api.php',
@@ -887,12 +884,23 @@ export const CREATE_ORDER_ID_APPLY_FOR_DRIVER_JOBS = body => {
   );
 };
 
-
-export const VERIFY_APPLY_FOR_DRIVER_JOB_PAYMENT_INFO = body => {
+export const VERIFY_PAYMENT_INFO_APPLY_FOR_DRIVER_JOB = body => {
   return _Fetch(
     'POST',
-    'driver-job/premium-driver-payment-verify.php',
+    'driver-job/driver-registration-payment-verify-api.php',
     {...body},
     {},
   );
+};
+
+export const UPDATE_POPUP_APPLY_FOR_DRIVER_JOBS = body => {
+  return _Fetch('POST', 'driver-job/get-app-version-info.php', {...body}, {});
+};
+
+export const SAVE_DEVICE_INFO_APPLY_FOR_DRIVER_JOBS = body => {
+  return _Fetch('POST', 'driver-job/save-user-device-info.php', {...body}, {});
+};
+
+export const GET_FCM_TOKEN_APPLY_FOR_DRIVER_JOBS = body => {
+  return _Fetch('POST', 'driver-job/save-fcm-token-api.php', {...body}, {});
 };

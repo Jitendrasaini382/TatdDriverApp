@@ -31,6 +31,7 @@ import axios from 'axios';
 import {
   APPLY_FOR_DRIVER_JOBS,
   CREATE_ORDER_ID_APPLY_FOR_DRIVER_JOBS,
+  DRIVER_LOGIN,
   GET_ALL_DATA_APPLY_FOR_DRIVER_JOBS,
   GET_CITY_ZONE_BY_PINCODE,
   GET_FCM_TOKEN_APPLY_FOR_DRIVER_JOBS,
@@ -44,6 +45,7 @@ import {
   setUserAuthStates,
 } from '../../redux/slices/userAuthSlice';
 import {Platform} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -203,6 +205,9 @@ const ApplyForDriverJob = ({navigation}) => {
   const isDeviceInfo = useSelector(e => e?.userAuth?.isDeviceInfo);
   const driverMobileNumber = useSelector(e => e?.userAuth?.driverNumber);
   const map_key = 'AIzaSyAaYD9dofRG4HJ_KhOETyfFjFJs4Ni8uf4';
+  const number = useSelector(
+    e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
+  );
 
   const handleRegisterPress = async () => {
     if (!pincode) {
@@ -253,32 +258,36 @@ const ApplyForDriverJob = ({navigation}) => {
     }
   };
 
-  // const getAddressFromCoords = async (latitude, longitude) => {
-  //   // return false
-  //   try {
-  //     const response = await axios.get(
-  //       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${map_key}`,
-  //     );
+  useEffect(() => {
+    sendOtp();
+  });
 
-  //     if (response?.data?.results?.length > 0) {
-  //       const address = response.data.results[0].formatted_address;
-  //       const components = response.data.results[0].address_components;
-
-  //       const pincodeObj = components.find(c =>
-  //         c.types.includes('postal_code'),
-  //       );
-  //       const cityObj = components.find(c => c.types.includes('locality'));
-
-  //       const pincode = pincodeObj ? pincodeObj.long_name : '';
-  //       const city = cityObj ? cityObj.long_name : '';
-
-  //       await getCityZoneByPincode(pincode);
-  //       setPincode(pincode);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching address:', error.message);
-  //   }
-  // };
+  const sendOtp = async () => {
+    try {
+      const response = await DRIVER_LOGIN({
+        mobile: driverMobileNumber || number,
+        user_type: 'Driver',
+        app_version: DeviceInfo.getVersion(),
+        app_type: Platform.OS,
+      });
+      if (response?.status_code == '200' && response?.msg_type == 'error') {
+        dispatch(resetUserAuthState());
+      } else if (
+        response?.status_code == '200' &&
+        response?.message == 'OTP sent successfully'
+      ) {
+        dispatch(
+          setUserAuthStates({
+            key: 'isRegistered',
+            value: response?.isRegistered === '1',
+          }),
+        );
+      }
+    } catch (err) {
+      dispatch(resetUserAuthState());
+    } finally {
+    }
+  };
 
   const getAddressFromCoords = async (latitude, longitude, retry = true) => {
     try {
@@ -511,7 +520,6 @@ const ApplyForDriverJob = ({navigation}) => {
     fetchDeviceInfo();
   }, []);
 
- 
   const handlePayment = async amount => {
     console.log('handlePayment called with amount:', amount);
     if (!amount) return false;

@@ -11,7 +11,9 @@ import {
   Alert,
   ScrollView,
   Clipboard,
+  Platform,
 } from 'react-native';
+import Share from 'react-native-share';
 
 import Modal from 'react-native-modal';
 
@@ -27,7 +29,11 @@ import {AppFont} from '../assets/FontsFamily';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {useRoute} from '@react-navigation/native';
-import {AGENT_ADD_CUSTOMER, AGENT_REFERAL_URL} from '../apis/Apis';
+import {
+  AGENT_ADD_CUSTOMER,
+  AGENT_REFERAL_ICON_CLICK,
+  AGENT_REFERAL_URL,
+} from '../apis/Apis';
 import {useSelector} from 'react-redux';
 import {Keyboard} from 'react-native';
 
@@ -42,89 +48,106 @@ const AgentLeads = ({navigation}) => {
     agentReferal();
   }, []);
 
-  const [referralData, setreferralData] = useState(null);
+  const [referralData, setreferralData] = useState({});
+
   const agentReferal = async () => {
     try {
-      const res = await AGENT_REFERAL_URL();
-      console.log(res);
+      const res = await AGENT_REFERAL_URL({
+        user_type : Platform.OS
+      });
+
       setreferralData(res);
     } catch (err) {
       console.log(err);
     }
   };
 
+  const clickRefreralIcon = async (icon, url) => {
+    try {
+      const res = await AGENT_REFERAL_ICON_CLICK({
+        sent_mode: icon,
+        referral_url: url,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  //
+
   const copyToClipboard = () => {
     Clipboard.setString(referralData?.referralurl);
+    clickRefreralIcon('Copy', referralData?.referralurl);
     Alert.alert('Copied Successfully', `${referralData?.referralurl}`);
   };
 
-  const openWhatsApp = () => {
-    const message = `${referralData?.shareMessage} ${referralData?.referralurl}`;
-    const url = `whatsapp://send?text=${encodeURIComponent(message)}`;
+  const openWhatsApp = async () => {
+    const shareOptions = {
+      title: 'Share via WhatsApp',
+      message: referralData?.shareMessage,
+      url: referralData?.referralurl,
+      social: Share.Social.WHATSAPP,
+    };
 
-    Linking.openURL(url)
-      .then(() => {})
-      .catch(() => {
-        Alert.alert('WhatsApp is not installed on your device');
-      });
+    try {
+      const res = await Share.shareSingle(shareOptions);
+      clickRefreralIcon('WhatsApp', shareOptions?.url);
+      console.log('WhatsApp Share Success:', res);
+    } catch (err) {
+      console.log('WhatsApp Share Error:', err);
+    }
   };
 
-  const openFacebookMessenger = () => {
-    // if (!shareMessage || !referralUrl) {
-    //   alert("Invalid referral data");
-    //   return;
-    // }
+  const openFacebookMessenger = async () => {
+    const shareOptions = {
+      title: 'Share via Facebook',
+      message: referralData?.shareMessage,
+      url: referralData?.referralurl,
+      social: Share.Social.FACEBOOK,
+    };
 
-    const encodedMessage = encodeURIComponent(
-      `${referralData?.shareMessage} - ${referralData?.referralurl}`,
-    );
-
-    // Messenger App Link
-    const messengerUrl = `fb-messenger://share?link=${encodeURIComponent(
-      referralData?.referralurl,
-    )}`;
-
-    // Web Fallback (if Messenger app is not installed)
-    const fallbackUrl = `https://www.facebook.com/dialog/send?app_id=YOUR_APP_ID&link=${encodeURIComponent(
-      referralData?.referralUrl,
-    )}&redirect_uri=${encodeURIComponent(referralData?.referralurl)}`;
-
-    Linking.openURL(messengerUrl)
-      .then(() => {})
-      .catch(() => {
-        Linking.openURL(fallbackUrl)
-          .then(() => {})
-          .catch(() => {
-            Alert.alert('Could not open Messenger');
-          });
-      });
+    try {
+      const res = await Share.shareSingle(shareOptions);
+      clickRefreralIcon('Facebook', shareOptions?.url);
+      console.log('Facebook Share Success:', res);
+    } catch (err) {
+      console.log('Facebook Share Error:', err);
+    }
   };
 
-  const openTwitter = () => {
-    const twitterUrl = `twitter://post?message=${referralData?.shareMessage}-${referralData?.referralurl}`; // You can customize the message by changing the text after 'message='
-    const fallbackUrl = `https://twitter.com/intent/tweet?text=${referralData?.shareMessage}-${referralData?.referralurl}`; // URL to open Twitter in a browser
+  const openTwitter = async () => {
+    const shareOptions = {
+      title: 'Share via Twitter',
+      message: referralData?.shareMessage,
+      url: referralData?.referralurl,
+      social: Share.Social.TWITTER,
+    };
 
-    Linking.openURL(twitterUrl)
-      .then(() => {})
-      .catch(() => {
-        Linking.openURL(fallbackUrl)
-          .then(() => {})
-          .catch(() => {});
-      });
+    try {
+      const res = await Share.shareSingle(shareOptions);
+      clickRefreralIcon('Twitter', shareOptions?.url);
+      console.log('Twitter Share Success:', res);
+    } catch (err) {
+      console.log('Twitter Share Error:', err);
+    }
   };
 
-  const openLinkedIn = () => {
-    const linkedInUrl = `linkedin://shareArticle?mini=true&url=${referralData?.shareMessage}-${referralData?.referralUrl}`;
-    const fallbackUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${referralData?.shareMessage}- ${referralData?.referralUrl}`; // URL to open LinkedIn in a browser
+  const openLinkedIn = async () => {
+    const shareOptions = {
+      title: 'Share via Twitter',
+      message: referralData?.shareMessage,
+      url: referralData?.referralurl,
+      social: Share.Social.LINKEDIN,
+    };
 
-    Linking.openURL(linkedInUrl)
-      .then(() => {})
-      .catch(() => {
-        Linking.openURL(fallbackUrl)
-          .then(() => {})
-          .catch(() => {});
-      });
+    try {
+      const res = await Share.shareSingle(shareOptions);
+      clickRefreralIcon('LinkedIn', shareOptions?.url);
+      console.log('Twitter Share Success:', res);
+    } catch (err) {
+      console.log('Twitter Share Error:', err);
+    }
   };
+
   const [err, seterr] = useState('');
   const addCustomer = async () => {
     try {
@@ -147,16 +170,14 @@ const AgentLeads = ({navigation}) => {
         current_language: languageSwitch,
         zone: route?.params?.zone || '',
       });
-      if(res?.status_code == 200){
-
-
+      if (res?.status_code == 200) {
         Alert.alert('', res?.message);
       }
       setMobile('');
     } catch (err) {
       setMobile('');
       // seterr('Failed to add customer. Please try again..');
-      navigation.navigate("AgentPanel")
+      navigation.navigate('AgentPanel');
     } finally {
       // setLoading(false); // Stop loading
     }
@@ -288,7 +309,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginRight: 10,
-    color:AppColors.black
+    color: AppColors.black,
   },
   middleView: {
     marginVertical: 50,

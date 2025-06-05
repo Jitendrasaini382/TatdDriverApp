@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Route from './src/routes/Routes';
-import {LogBox, Text, TextInput} from 'react-native';
+import {Alert, LogBox, Text, TextInput} from 'react-native';
 import {Provider} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import store from './src/redux/store';
@@ -12,6 +12,8 @@ import notifee, {
 import {persistStore} from 'redux-persist';
 import {NavigationContainer} from '@react-navigation/native';
 import {navigationRef} from './src/routes/private';
+import {PlayInstallReferrer} from 'react-native-play-install-referrer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -93,6 +95,38 @@ const App = () => {
   useEffect(() => {
     const unsubscribeMessages = handleIncomingMessages();
     return () => unsubscribeMessages();
+  }, []);
+
+  useEffect(() => {
+    const getReferrer = async () => {
+      try {
+        PlayInstallReferrer.getInstallReferrerInfo(
+          (installReferrerInfo, error) => {
+            if (!error && installReferrerInfo?.installReferrer) {
+              const referrer = installReferrerInfo.installReferrer;
+              // console.log('Referral code:', referrer);
+              // Alert.alert(
+              //   'Referral Code',
+              //   `Referral code received: ${referrer}`,
+              // );
+
+              AsyncStorage.setItem('referralCode', referrer);
+            } else {
+              // console.log(
+              //   'Error:',
+              //   error?.message || 'No referrer info found.',
+              // );
+              // Alert.alert('Error', 'Failed to get referral code');
+            }
+          },
+        );
+      } catch (e) {
+        console.log('Unexpected error:', e.message);
+        // Alert.alert('Error', 'Unexpected error while fetching referral');
+      }
+    };
+
+    getReferrer();
   }, []);
 
   return (

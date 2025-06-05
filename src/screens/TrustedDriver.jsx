@@ -712,12 +712,22 @@ const TrustedDriver = ({navigation}) => {
   const handleToggleButton = async () => {
     const newRfdValue = isRfdOn ? '0' : '1';
 
-    // Create updated login button payload
-    const updatedLoginButton = {
+    let updatedLoginButton = {
       ...loginButton,
       rfd: newRfdValue,
       current_language: languageSwitch,
     };
+
+    if (newRfdValue == '1') {
+      const hasPermission = await requestLocationPermission();
+      if (!hasPermission) return;
+
+      const location = await getLocation();
+      if (location?.latitude && location?.longitude) {
+        updatedLoginButton.latitude = location.latitude;
+        updatedLoginButton.longitude = location.longitude;
+      }
+    }
 
     try {
       const response = await LOGIN_BUTTON(updatedLoginButton);
@@ -799,7 +809,7 @@ const TrustedDriver = ({navigation}) => {
   };
 
   const getPermanentSubscriptionBooking = async () => {
-    return false
+    return false;
     try {
       const response = await PERMANENT_SUBSCRIPTION_VIEW();
       setPermanentSubscriptionBookingData(response?.data);

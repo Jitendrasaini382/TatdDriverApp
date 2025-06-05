@@ -253,7 +253,6 @@ const PremiumDriverRegistration = ({navigation}) => {
                 value={formData.address}
                 onChangeText={e => handleInputChange('address', e)}
                 placeholder="Delivery Address"
-                keyboardType="numeric"
                 iconName={
                   <Icon
                     name="map-marker"

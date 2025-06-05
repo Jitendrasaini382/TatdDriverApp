@@ -213,6 +213,8 @@ const DriverLogin = () => {
                   padding: 10,
                   marginVertical: 24,
                   elevation: 4,
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}>
                 <View style={styles.languageContainer}>
                   {['Hindi', 'English'].map(lang => (

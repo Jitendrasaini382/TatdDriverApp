@@ -601,7 +601,11 @@ export const GET_AGENT_NETWORK_CLICK_DETAILS = body => {
 };
 
 export const AGENT_REFERAL_URL = body => {
-  return _Fetch('GET', 'agent/agent-referral-url-api.php', {...body}, {});
+  return _Fetch('POST', 'agent/agent-referral-url-api.php', {...body}, {});
+};
+
+export const AGENT_REFERAL_ICON_CLICK = body => {
+  return _Fetch('POST', 'agent/referral-sent-clicks-api.php', {...body}, {});
 };
 
 export const AGENT_ADD_CUSTOMER = body => {

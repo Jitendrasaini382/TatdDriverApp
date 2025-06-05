@@ -80,8 +80,8 @@ android {
         applicationId "com.tatd.driver"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 43
-        versionName "2.59"
+        versionCode 46
+        versionName "2.62"
     }
     signingConfigs {
         debug {
@@ -121,6 +121,7 @@ implementation project(':react-native-otp-verify')
   implementation 'com.facebook.fresco:webpsupport:3.2.0'
    implementation project(':react-native-sound')
    implementation 'com.razorpay:checkout:1.6.33'
+   implementation ('com.android.installreferrer:installreferrer:2.2')
 
 
   // For WebP support, without animations

@@ -26,7 +26,6 @@ import messaging from '@react-native-firebase/messaging';
 import {
   APPLY_FOR_DRIVER_JOBS,
   CREATE_ORDER_ID_APPLY_FOR_DRIVER_JOBS,
-  DRIVER_LOGIN,
   GET_ALL_DATA_APPLY_FOR_DRIVER_JOBS,
   GET_CITY_ZONE_BY_PINCODE,
   GET_FCM_TOKEN_APPLY_FOR_DRIVER_JOBS,
@@ -35,11 +34,8 @@ import {
 } from '../../apis/Apis';
 import DeviceInfo from 'react-native-device-info';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  resetUserAuthState,
-  setUserAuthStates,
-} from '../../redux/slices/userAuthSlice';
 import {Platform} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -124,8 +120,8 @@ const CustomAddressInput = ({
               flexDirection: 'row',
               padding: moderateScale(10),
               alignSelf: 'center',
-              justifyContent: 'center', // vertical center
-              alignItems: 'center', // horizontal center
+              justifyContent: 'center',
+              alignItems: 'center',
             }}>
             {iconName}
           </View>
@@ -163,7 +159,7 @@ const CustomAddressInput = ({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           onContentSizeChange={event => {
-            setInputHeight(event.nativeEvent.contentSize.height); // +10 for padding
+            setInputHeight(event.nativeEvent.contentSize.height);
           }}
         />
       </View>
@@ -193,13 +189,8 @@ const ApplyForDriverJob = ({navigation}) => {
   const [allData, setAllData] = useState({});
   const [errors, setErrors] = useState({});
   const [refreshing, setRefreshing] = useState(false);
-  const dispatch = useDispatch();
-  const isFcmSent = useSelector(e => e?.userAuth?.isFcmSent);
-  const isDeviceInfo = useSelector(e => e?.userAuth?.isDeviceInfo);
   const driverMobileNumber = useSelector(e => e?.userAuth?.driverNumber);
-  const number = useSelector(
-    e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
-  );
+  const [referralCode, setReferralCode] = useState('');
 
   const handleRegisterPress = async () => {
     const newErrors = {};
@@ -232,13 +223,12 @@ const ApplyForDriverJob = ({navigation}) => {
         zone: zone,
         pincode: pincode,
         current_address: address,
+        agent_number: referralCode,
       });
-      console.log(res, 'APPLY_FOR_DRIVER_JOBS response');
       setPopupData(res);
       setVisible(true);
     } catch (error) {
       console.error('Driver Job Apply Error:', error);
-      // Alert.alert('Error', 'Something went wrong. Please try again.');
     } finally {
       setLoader(false);
     }
@@ -287,7 +277,6 @@ const ApplyForDriverJob = ({navigation}) => {
         action: 'save_fcm',
       });
       if (res?.status_code == 200) {
-        dispatch(setUserAuthStates({key: 'isFcmSent', value: true}));
       }
     } catch (error) {
       console.error('Save FCM error:', error);
@@ -320,7 +309,6 @@ const ApplyForDriverJob = ({navigation}) => {
   const sendDeviceInfo = async deviceInfo => {
     try {
       await SAVE_DEVICE_INFO_APPLY_FOR_DRIVER_JOBS(deviceInfo);
-      dispatch(setUserAuthStates({key: 'isDeviceInfo', value: true}));
     } catch (error) {
       console.error('Send device info error:', error);
     }
@@ -338,16 +326,10 @@ const ApplyForDriverJob = ({navigation}) => {
         user_type: 'Driver',
       });
 
-      console.log('Raw response:', response);
 
       if (response?.app_details) {
         const {version, force_update, app_url} = response.app_details;
         const currentVersion = DeviceInfo.getVersion();
-
-        console.log(`Current version: ${currentVersion}`);
-        console.log(`Required version: ${version}`);
-        console.log(`Force update: ${force_update}`);
-        console.log(`App URL: ${app_url}`);
 
         if (parseFloat(currentVersion) < parseFloat(version)) {
           console.log('Update available. Showing update modal...');
@@ -393,40 +375,23 @@ const ApplyForDriverJob = ({navigation}) => {
   };
 
   useEffect(() => {
-    sendOtp();
     getAllData();
     getUpdatePopup();
     getFcmToken();
     fetchDeviceInfo();
-  }, []);
-
-  const sendOtp = async () => {
-    try {
-      const response = await DRIVER_LOGIN({
-        mobile: driverMobileNumber || number,
-        user_type: 'Driver',
-        app_version: DeviceInfo.getVersion(),
-        app_type: Platform.OS,
-      });
-
-      if (response?.status_code == '200' && response?.msg_type == 'error') {
-        dispatch(resetUserAuthState());
-      } else if (
-        response?.status_code == '200' &&
-        response?.message == 'OTP sent successfully'
+    const fetchData = async () => {
+      const referralCode = await AsyncStorage.getItem('referralCode');
+      if (
+        referralCode &&
+        referralCode !== 'utm_source=google-play&utm_medium=organic'
       ) {
-        dispatch(
-          setUserAuthStates({
-            key: 'isRegistered',
-            value: response?.isRegistered === '1',
-          }),
-        );
+        setReferralCode(referralCode);
+      } else {
+        setReferralCode('');
       }
-    } catch (err) {
-      dispatch(resetUserAuthState());
-    } finally {
-    }
-  };
+    };
+    fetchData();
+  }, []);
 
   const handlePincode = pin => {
     setPincode(pin);

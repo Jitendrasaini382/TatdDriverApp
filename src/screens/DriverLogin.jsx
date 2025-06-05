@@ -375,7 +375,7 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(18),
     color: AppColors.white,
     fontWeight: '600',
-    fontFamily: AppFont.regularFont,
+    // fontFamily: AppFont.regularFont,
   },
   languageContainer: {
     flexDirection: 'row',
@@ -399,12 +399,12 @@ const styles = StyleSheet.create({
   },
   languageText: {
     fontSize: 16,
-    color: AppColors.textDark,
+    color: AppColors.black,
   },
   selectedText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: AppColors.textLight,
+    color: AppColors.black,
   },
   videoWrapper: {
     width: 300,

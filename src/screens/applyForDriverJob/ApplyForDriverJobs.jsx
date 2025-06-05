@@ -213,6 +213,21 @@ const ApplyForDriverJob = ({navigation}) => {
 
     if (Object.keys(newErrors).length > 0) return;
 
+    if (!serviceableArea) {
+      Alert.alert('', 'Service not available in your area.');
+      return;
+    }
+
+    if (!city) {
+      Alert.alert('', 'Service not available in your area.');
+      return;
+    }
+
+    if (!zone) {
+      Alert.alert('', 'Service not available in your area.');
+      return;
+    }
+
     setLoader(true);
 
     try {
@@ -325,7 +340,6 @@ const ApplyForDriverJob = ({navigation}) => {
         app_type: Platform.OS,
         user_type: 'Driver',
       });
-
 
       if (response?.app_details) {
         const {version, force_update, app_url} = response.app_details;

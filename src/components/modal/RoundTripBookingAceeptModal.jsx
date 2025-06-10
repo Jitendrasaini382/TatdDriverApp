@@ -83,6 +83,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   };
 
   const acceptBooking = async () => {
+    setLoader(true);
     const location = await getLocation();
 
     if (location) {
@@ -217,7 +218,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
           styles.acceptButton,
           {
             backgroundColor:
-              checked1 && checked2 ? AppColors.mainColor : '#CCCCCC',
+              checked1 && checked2 || loader ? AppColors.mainColor : '#CCCCCC',
           },
         ]}>
         <Text style={styles.acceptButtonText}>

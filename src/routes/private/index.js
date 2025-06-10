@@ -48,6 +48,7 @@ import ErrorBoundry from '../../utils/ErrorBoundry';
 import LocalseAwarenessPartnerRegistration from '../../screens/LocalseAwarenessPartnerRegistration';
 import LocalseAwarenessAgentRegistration from '../../screens/LocalseAwarenessAgentRegistration';
 import MyMap from '../../screens/MyMap';
+import ClearMyDuePaymentOvertime from '../../screens/ClearMyDuePaymentOvertime';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -95,6 +96,13 @@ const PrivateRoute = () => {
         <Stack.Screen name="ClearMyDuePayment">
           {props => <ErrorBoundry Component={ClearMyDuePayment} {...props} />}
         </Stack.Screen>
+
+        <Stack.Screen name="ClearMyDuePaymentOvertime">
+          {props => (
+            <ErrorBoundry Component={ClearMyDuePaymentOvertime} {...props} />
+          )}
+        </Stack.Screen>
+
         <Stack.Screen name="DriverEarning">
           {props => <ErrorBoundry Component={DriverEarning} {...props} />}
         </Stack.Screen>

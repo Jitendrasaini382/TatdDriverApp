@@ -14,6 +14,7 @@ import {
   Linking,
   TouchableOpacity,
   FlatList,
+  RefreshControl,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -48,6 +49,8 @@ const DriverLogin = () => {
   const appVersion = DeviceInfo.getVersion();
   const appType = Platform.OS;
   const dispatch = useDispatch();
+  const [refreshing, setRefreshing] = useState(false);
+
 
   const handleChange = text => {
     setMobile(text);
@@ -63,6 +66,9 @@ const DriverLogin = () => {
       setAllData(response);
     } catch (error) {
       console.error('Send device info error:', error);
+      setRefreshing(false)
+    } finally{
+      setRefreshing(false)
     }
   };
 
@@ -129,6 +135,15 @@ const DriverLogin = () => {
       />
       <Header backButton={false} isAuthenticated={false} />
       <ScrollView
+       refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={async () => {
+            setRefreshing(true);
+            await getAllData();
+          }}
+        />
+      }
         contentContainerStyle={styles.scrollViewContent}
         keyboardShouldPersistTaps="always">
         <View style={styles.mainContainer}>
@@ -403,7 +418,7 @@ const styles = StyleSheet.create({
   },
   selectedText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     color: AppColors.black,
   },
   videoWrapper: {

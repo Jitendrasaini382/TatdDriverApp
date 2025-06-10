@@ -546,6 +546,41 @@ export const VERIFY_PAYMENT_INFO = body => {
     {},
   );
 };
+export const CMD_OVERTIME_COMMISSION_VIEW = body => {
+  return _Fetch(
+    'POST',
+    'clear-my-due/clear-my-due-overtime-view-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const CMD_OVERTIME_COMMISSION_PACKAGE_DETAIL = (id, lang) => {
+  return _Fetch(
+    'GET',
+    `clear-my-due/get-overtime-package-information-api.php
+?action=view_package&booking_number=${id}&current_language=${lang}`,
+    {},
+    {},
+  );
+};
+export const CMD_OVERTIME_COMMISSION_CREATE_ORDER_ID = body => {
+  return _Fetch(
+    'POST',
+    'clear-my-due/overtime-ceate-order-id-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const VERIFY_CMD_OVERTIME_PAYMENT_INFO = body => {
+  return _Fetch(
+    'GET',
+    `clear-my-due/clear-my-due-overtime-verify-api.php?action=clear_my_due_overtime&razorpay_payment_id=${body}`,
+    {...body},
+    {},
+  );
+};
 
 export const GET_ALL_AGENT_PANEL_INFO = body => {
   return _Fetch('GET', `agent/agent-panel-info-api.php`, {...body}, {});

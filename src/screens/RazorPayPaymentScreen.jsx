@@ -2,7 +2,11 @@ import {useRoute} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
 import RazorpayCheckout from 'react-native-razorpay';
 import {useSelector} from 'react-redux';
-import {VERIFY_PAYMENT_INFO, VERIFY_PPREMIUM_PAYMENT_INFO} from '../apis/Apis';
+import {
+  VERIFY_CMD_OVERTIME_PAYMENT_INFO,
+  VERIFY_PAYMENT_INFO,
+  VERIFY_PPREMIUM_PAYMENT_INFO,
+} from '../apis/Apis';
 
 const RazorPayPaymentScreen = ({navigation}) => {
   const route = useRoute();
@@ -72,6 +76,17 @@ const RazorPayPaymentScreen = ({navigation}) => {
           return;
         } else {
           navigation.navigate('PremiumDriverRegistration');
+        }
+        setVerifyData(response);
+      } else if (pageType === 'clear_my_due_overtime') {
+        response = await VERIFY_CMD_OVERTIME_PAYMENT_INFO(id);
+        if (response?.status_code == 200) {
+          navigation.navigate('ThankYouDriverDue', {
+            data: response?.payment_details?.message,
+          });
+          return;
+        } else {
+          navigation.navigate('ClearMyDuePaymentOvertime');
         }
         setVerifyData(response);
       } else {

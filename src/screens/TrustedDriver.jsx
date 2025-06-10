@@ -137,6 +137,7 @@ const TrustedDriver = ({navigation}) => {
   const [localseData, setLocalseData] = useState({});
   const noticeTimerRef = useRef(null);
   const [secondsNotice, setSecondsNotice] = useState(0);
+  const [loaderRfd, setLoaderRfd] = useState(false);
 
   const driverMobileNumber = useSelector(
     e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
@@ -225,6 +226,9 @@ const TrustedDriver = ({navigation}) => {
                 [
                   {
                     text: 'Cancel',
+                    onPress: () => {
+                      setLoaderRfd(false);
+                    },
                     style: 'cancel',
                   },
                   {
@@ -233,6 +237,7 @@ const TrustedDriver = ({navigation}) => {
                       Linking.sendIntent(
                         'android.settings.LOCATION_SOURCE_SETTINGS',
                       ); // Opens phone's location settings
+                      setLoaderRfd(false);
                     },
                   },
                 ],
@@ -710,26 +715,30 @@ const TrustedDriver = ({navigation}) => {
   });
 
   const handleToggleButton = async () => {
-    const newRfdValue = isRfdOn ? '0' : '1';
-
-    let updatedLoginButton = {
-      ...loginButton,
-      rfd: newRfdValue,
-      current_language: languageSwitch,
-    };
-
-    if (newRfdValue == '1') {
-      const hasPermission = await requestLocationPermission();
-      if (!hasPermission) return;
-
-      const location = await getLocation();
-      if (location?.latitude && location?.longitude) {
-        updatedLoginButton.latitude = location.latitude;
-        updatedLoginButton.longitude = location.longitude;
-      }
-    }
-
+    setLoaderRfd(true);
     try {
+      const newRfdValue = isRfdOn ? '0' : '1';
+
+      let updatedLoginButton = {
+        ...loginButton,
+        rfd: newRfdValue,
+        current_language: languageSwitch,
+      };
+
+      if (newRfdValue == '1') {
+        const hasPermission = await requestLocationPermission();
+        if (!hasPermission) {
+          Toast.show({type: 'error', text1: 'Location permission is required'});
+          return;
+        }
+
+        const location = await getLocation();
+        if (location?.latitude && location?.longitude) {
+          updatedLoginButton.latitude = location?.latitude;
+          updatedLoginButton.longitude = location?.longitude;
+        }
+      }
+
       const response = await LOGIN_BUTTON(updatedLoginButton);
 
       if (response?.rfd == '1') {
@@ -747,13 +756,14 @@ const TrustedDriver = ({navigation}) => {
         });
       } else {
         setLoginMessage(response?.message);
-        setTimeout(() => {
-          setLoginMessage('');
-        }, 5000);
+        setTimeout(() => setLoginMessage(''), 5000);
       }
 
       if (response?.redirect) {
-        switch (response?.redirect) {
+        switch (response.redirect) {
+          case 'clear-my-due-payment-overtime':
+            navigation.navigate('ClearMyDuePaymentOvertime');
+            break;
           case 'clear-my-due-payment':
             navigation.navigate('ClearMyDuePayment');
             break;
@@ -778,9 +788,9 @@ const TrustedDriver = ({navigation}) => {
         }
       }
     } catch (error) {
-      if (error.response) {
-      }
+      setLoaderRfd(false);
     } finally {
+      setLoaderRfd(false);
     }
   };
 
@@ -1185,7 +1195,7 @@ const TrustedDriver = ({navigation}) => {
       setLocalseLoading(true);
       console.log('➡️ Sending POST request to API endpoint...');
       const response = await axios.post(
-        'http://15.206.117.178:5001/api/service_provider/get-localse-registered-status-api',
+        'http://api.localse.in:5001/api/service_provider/get-localse-registered-status-api',
         {
           mobile: driverMobileNumber,
         },
@@ -1244,6 +1254,24 @@ const TrustedDriver = ({navigation}) => {
       <SafeAreaView style={{flex: 1}}>
         {/* <Header extraButton={true} showNeedHelp={showNeedHelp} />
         {myBookingModal && <MyBookingModal />} */}
+
+        {loaderRfd && (
+          <View
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 9999,
+              elevation: 9999,
+            }}>
+            <ActivityIndicator color={AppColors.mainColor} size="large" />
+          </View>
+        )}
 
         <ScrollView
           refreshControl={

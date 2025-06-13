@@ -31,3 +31,4 @@ export const PremiumDriverImage = require('./premiumDriverImage.png');
 export const PremiumDriverImage1 = require('./premium_driver_sample1.png');
 export const PremiumDriverImage2 = require('./premium_driver_sample2.png');
 export const HelpImage = require('./helpImage.png');
+export const OntheWayIcon = require('./onthe_way_icon.png')

@@ -9,6 +9,7 @@ import {
   View,
   Dimensions,
   Pressable,
+  Keyboard,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -72,6 +73,7 @@ const CheckAgentOtp = ({navigation, route}) => {
         console.log('otp:', otp, 'validate', validate);
         setError('Please enter valid otp.');
       } else {
+        Keyboard.dismiss()
         updateDetails();
       }
     } catch (err) {
@@ -86,7 +88,7 @@ const CheckAgentOtp = ({navigation, route}) => {
         ...data,
       });
       if (res.status_code == '200') {
-        navigation.navigate('AgentKyc', {res});
+        navigation.navigate('TrustedDriver', {res});
       }
     } catch (err) {
       console.log(err);
@@ -101,7 +103,9 @@ const CheckAgentOtp = ({navigation, route}) => {
           params: {},
         }}
       />
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView
+      keyboardShouldPersistTaps="always"
+      contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.contentContainer}>
           <View style={styles.card}>
             <View style={styles.cardHeader}>

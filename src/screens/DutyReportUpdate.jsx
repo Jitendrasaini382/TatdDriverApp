@@ -28,6 +28,7 @@ import {
   HelpImage,
   Mask,
   NavigationIcon,
+  OntheWayIcon,
 } from '../assets/images';
 import {AppColors} from '../assets/Colors';
 import SwipeableButton from '../components/SwipeableButton';
@@ -1671,7 +1672,7 @@ const DutyReportUpdate = ({route, navigation}) => {
 
       {/* onthewaypopupstart */}
 
-      <Modal
+      {/* <Modal
         transparent={true}
         animationType="slide"
         visible={modalVisibleOntheway}
@@ -1798,8 +1799,129 @@ const DutyReportUpdate = ({route, navigation}) => {
             )}
           </View>
         </View>
-      </Modal>
+      </Modal> */}
 
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={modalVisibleOntheway}
+        onRequestClose={closeModal}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            padding: 24,
+          }}>
+          <View
+            style={{
+              borderRadius: 20,
+              width: '100%',
+              backgroundColor: AppColors.white,
+              padding: 28,
+              borderWidth: 2,
+              borderColor: AppColors.mainColor,
+              elevation: 20,
+              shadowColor: '#000',
+              shadowOffset: {width: 0, height: 6},
+              shadowOpacity: 0.15,
+              shadowRadius: 18,
+              position: 'relative',
+            }}>
+            {loader ? (
+              <ActivityIndicator size="large" color={AppColors.mainColor} />
+            ) : (
+              <>
+                <TouchableOpacity
+                  onPress={closeModal}
+                  style={{
+                    // position: 'absolute',
+                    // top: 12,
+                    // right: 12,
+                    // width: 36,
+                    // height: 36,
+                    alignSelf:"flex-end",
+                    marginBottom:20
+                  }}>
+                  <Icon name="close" size={20} color={'#999'} />
+                </TouchableOpacity>
+
+                <Text
+                  style={{
+                    color: AppColors.mainColor,
+                    fontSize: 22,
+                    fontWeight: '900',
+                    marginBottom: 18,
+                    textTransform: 'uppercase',
+                    textAlign: 'center',
+                  }}>
+                  {popupsData?.popupdata?.ontheway_alert}
+                </Text>
+
+                <Image
+                  source={OntheWayIcon}
+                  style={{
+                    width: 64,
+                    height: 64,
+                    marginBottom: 20,
+                    alignSelf: 'center',
+                  }}
+                  resizeMode="contain"
+                />
+
+                <Text
+                  style={{
+                    color: AppColors.mainColor,
+                    fontSize: 16,
+                    fontWeight: '800',
+                    marginBottom: 8,
+                    textAlign: 'center',
+                  }}>
+                  {popupsData?.popupdata?.ontheway_alert_h3}
+                </Text>
+
+                <Text
+                  style={{
+                    color: AppColors.black,
+                    fontSize: 16,
+                    fontWeight: '700',
+                    marginBottom: 24,
+                    textAlign: 'center',
+                  }}>
+                  {popupsData?.popupdata?.ontheway_alert_p}
+                </Text>
+
+                <TouchableOpacity
+                  disabled={loaderOntheWay}
+                  onPress={isBookingUpcomming}
+                  style={{
+                    backgroundColor: AppColors.mainColor,
+                    paddingVertical: 12,
+                    paddingHorizontal: 28,
+                    borderRadius: 40,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    opacity: loaderOntheWay ? 0.6 : 1,
+                  }}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 14,
+                      fontWeight: '800',
+                    }}>
+                    {loaderOntheWay
+                      ? 'Please Wait...'
+                      : popupsData?.popupdata?.ontheway_alert_btn ||
+                        'On The Way'}
+                  </Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
       {/* onthewaypopupend */}
 
       {/* Is booking Err Modal */}

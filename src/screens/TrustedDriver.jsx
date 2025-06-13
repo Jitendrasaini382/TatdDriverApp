@@ -761,6 +761,9 @@ const TrustedDriver = ({navigation}) => {
 
       if (response?.redirect) {
         switch (response.redirect) {
+          case 'agent-kyc':
+            navigation.navigate('AgentKyc');
+            break;
           case 'clear-my-due-payment-overtime':
             navigation.navigate('ClearMyDuePaymentOvertime');
             break;

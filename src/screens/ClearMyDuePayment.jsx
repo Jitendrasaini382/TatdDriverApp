@@ -73,7 +73,7 @@ const ClearMyDuePayment = ({navigation}) => {
         action: 'clear_my_due',
         payment_amount: amount,
       });
-      if (response?.status_code == 200 && response?.razor_order_id_data) {
+      if (response?.status_code == 200 && response?.razor_order_id_data?.orderId) {
         navigation.navigate('RazorPayPaymentScreen', {
           pageType: 'clear_my_due_test',
           description: 'Clear My Due Test',

@@ -18,6 +18,7 @@ import {
   Pressable,
   ActivityIndicator,
   PermissionsAndroid,
+  FlatList,
 } from 'react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -39,6 +40,7 @@ import ToggleButton from '../components/modal/ToggleButton';
 import Geolocation from '@react-native-community/geolocation';
 import TimerIcon from 'react-native-vector-icons/Ionicons';
 import ScreenGuardModule from 'react-native-screenguard';
+import YoutubePlayer from 'react-native-youtube-iframe';
 
 import {
   ALL_TEN_MINUTE_STATUS_UPDATE,
@@ -52,6 +54,7 @@ import {
   GET_ALL_AVAILABILITY,
   GET_FCM_TOKEN,
   GET_LOCALSE_BUTTON_SHOWING,
+  GET_TRUSTED_DRIVER_AWARENESS_VIDEOS,
   LOCALSE_ON_CALL_SUPPORT,
   LOGIN_BUTTON,
   ON_DEMAND_BOOKING,
@@ -138,6 +141,7 @@ const TrustedDriver = ({navigation}) => {
   const noticeTimerRef = useRef(null);
   const [secondsNotice, setSecondsNotice] = useState(0);
   const [loaderRfd, setLoaderRfd] = useState(false);
+  const [awarenessVideo, setAwarenessVideo] = useState([]);
 
   const driverMobileNumber = useSelector(
     e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
@@ -498,7 +502,7 @@ const TrustedDriver = ({navigation}) => {
       getPermanentSubscriptionBooking();
       // }
       getAllTrustedData();
-
+      getAwarenessVideo();
       getHomeNotification();
       getHomeNotice();
     }
@@ -1041,6 +1045,7 @@ const TrustedDriver = ({navigation}) => {
     try {
       await getUpdatePopup();
       await getHeadlineData();
+      await getAwarenessVideo();
       await getLocalseButton();
     } catch (error) {
       // Handle error if needed
@@ -1104,6 +1109,15 @@ const TrustedDriver = ({navigation}) => {
         dispatch(setVideosContent(true));
       }
       // dispatch(setTrainingVideoData(response?.response?.training_data));
+    } catch (error) {}
+  };
+
+  const getAwarenessVideo = async () => {
+    try {
+      const response = await GET_TRUSTED_DRIVER_AWARENESS_VIDEOS(
+        languageSwitch,
+      );
+      setAwarenessVideo(response?.awareness_video);
     } catch (error) {}
   };
 
@@ -1251,6 +1265,16 @@ const TrustedDriver = ({navigation}) => {
       ScreenGuardModule.unregister();
     }
   }, [screenAccess]);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const onViewRef = useRef(({viewableItems}) => {
+    if (viewableItems.length > 0) {
+      setActiveIndex(viewableItems[0].index);
+    }
+  });
+
+  const viewConfigRef = useRef({viewAreaCoveragePercentThreshold: 50});
 
   return (
     <View style={styles.safeArea}>
@@ -1991,6 +2015,75 @@ const TrustedDriver = ({navigation}) => {
                   }}>
                   {loginMessage}
                 </Text>
+
+                {awarenessVideo && awarenessVideo?.length > 0 && (
+                  <View>
+                    {/* Video FlatList */}
+                    <FlatList
+                      data={awarenessVideo}
+                      keyExtractor={(item, index) => item + index}
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      contentContainerStyle={{paddingHorizontal: 10}}
+                      onViewableItemsChanged={onViewRef.current}
+                      viewabilityConfig={viewConfigRef.current}
+                      renderItem={({item}) => (
+                        <View
+                          style={{
+                            width: width * 0.8,
+                            height: 160,
+                            marginRight: 15,
+                            borderRadius: 12,
+                            overflow: 'hidden',
+                            backgroundColor: '#f8f8f8',
+                            elevation: 3,
+                            shadowColor: '#000',
+                            shadowOffset: {width: 0, height: 2},
+                            shadowOpacity: 0.2,
+                            shadowRadius: 4,
+                            marginBottom: 10,
+                          }}>
+                          <YoutubePlayer
+                            height={170}
+                            width={width * 0.8}
+                            videoId={item}
+                          />
+                        </View>
+                      )}
+                    />
+
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginTop: 10,
+                      }}>
+                      <FlatList
+                        data={awarenessVideo}
+                        keyExtractor={(_, index) => index.toString()}
+                        horizontal
+                        scrollEnabled={false}
+                        contentContainerStyle={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          marginTop: 10,
+                        }}
+                        renderItem={({index}) => (
+                          <View
+                            style={{
+                              width: 8,
+                              height: 8,
+                              borderRadius: 4,
+                              marginHorizontal: 4,
+                              backgroundColor:
+                                index === activeIndex ? '#000' : '#ccc',
+                            }}
+                          />
+                        )}
+                      />
+                    </View>
+                  </View>
+                )}
 
                 {/* Main Toggle Content */}
                 <>

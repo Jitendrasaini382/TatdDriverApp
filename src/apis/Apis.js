@@ -943,3 +943,20 @@ export const SAVE_DEVICE_INFO_APPLY_FOR_DRIVER_JOBS = body => {
 export const GET_FCM_TOKEN_APPLY_FOR_DRIVER_JOBS = body => {
   return _Fetch('POST', 'driver-job/save-fcm-token-api.php', {...body}, {});
 };
+
+export const GET_ALL_CHATS_BY_BOOKING_NUMBER = body => {
+  return _Fetch('POST', 'duty-report/chat-view-api.php', {...body}, {});
+};
+
+export const INSERT_CHATS_BY_BOOKING_NUMBER = body => {
+  return _Fetch('POST', 'duty-report/chat-insert-api.php', {...body}, {});
+};
+
+export const GET_TRUSTED_DRIVER_AWARENESS_VIDEOS = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/trusted-driver-awareness-video-api.php',
+    {...body},
+    {},
+  );
+};

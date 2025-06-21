@@ -1,4 +1,4 @@
-import {AppRegistry} from 'react-native';
+import {AppRegistry, Linking} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
 import messaging from '@react-native-firebase/messaging';
@@ -18,9 +18,13 @@ const handleNotificationPress = async (notification, action, isAppOpen) => {
 
   const path = notification?.data?.data?.path;
   const DutyReportPath = path?.includes('DutyReport/');
+  const url = notification?.data?.data?.url;
+  const bookingNumber = notification?.data?.data?.bookingNumber;
+
   // console.log(DutyReportPath, 'duty report path ');
   // return false
   // console.log(notification?.data?.data,"pfwefssswsdsd")
+
   const messageId = notification?.data?.messageId;
 
   // console.log('🔔 Notification Clicked:', path);
@@ -35,6 +39,22 @@ const handleNotificationPress = async (notification, action, isAppOpen) => {
   } catch (error) {
     // console.error('❌ Error sending notification details:', error);
   }
+
+  if (path?.startsWith('expert-consultation') && url) {
+    Linking.openURL(url);
+    return;
+  }
+  if (path == 'ChatScreen' && bookingNumber) {
+    setTimeout(
+      () => {
+        navigationRef?.current?.navigate('ChatScreen', {
+          bookingNumber: bookingNumber,
+        });
+      },
+      isAppOpen ? 100 : 200,
+    );
+    return;
+  }
   if (DutyReportPath) {
     let bokkingId = path?.split('/')[1];
     setTimeout(
@@ -46,15 +66,14 @@ const handleNotificationPress = async (notification, action, isAppOpen) => {
       },
       isAppOpen ? 100 : 2000,
     );
-  } else {
-    setTimeout(
-      () => {
-        // navigate('TrustedDriver');
-        navigationRef?.current?.navigate('TrustedDriver');
-      },
-      isAppOpen ? 100 : 2000,
-    );
+    return;
   }
+  setTimeout(
+    () => {
+      navigationRef?.current?.navigate('TrustedDriver');
+    },
+    isAppOpen ? 100 : 2000,
+  );
 };
 
 // 🔹 Foreground notification listener

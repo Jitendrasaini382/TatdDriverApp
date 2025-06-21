@@ -69,6 +69,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DeviceInfo from 'react-native-device-info';
+import {useFocusEffect} from '@react-navigation/native';
 
 const DutyReportUpdate = ({route, navigation}) => {
   const {bookingNumber, state} = route?.params;
@@ -240,6 +241,14 @@ const DutyReportUpdate = ({route, navigation}) => {
       handleNeedHelpButton();
     }
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (state === 'chat') {
+        GetAllBookingInfo();
+      }
+    }, [state]),
+  );
 
   const GetAllBookingInfo = async () => {
     try {
@@ -1221,44 +1230,77 @@ const DutyReportUpdate = ({route, navigation}) => {
                 data={packageDetailsData}
               />
             </Modal>
-            {/* middle */}
             <View style={styles.middleSection}>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',
+                  // paddingHorizontal: 10,
                 }}>
-                <Text style={{color: AppColors.black, marginRight: 10}}>
-                  {/* {bookingInfo?.data?.customer_name} */}
-                  {bookingInfo?.data?.customer_name?.slice(0, 10)}
-                </Text>
+                <View style={{flex: 1, marginRight: 10}}>
+                  <Text
+                    style={{
+                      color: AppColors.black,
+                      fontWeight: '600',
+                    }}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
+                    {bookingInfo?.data?.customer_name?.slice(0, 30) ||
+                      'Customer'}
+                  </Text>
+                </View>
 
+                {/* Call Button */}
                 <TouchableOpacity
                   style={{
-                    width: 40,
-                    height: 40,
+                    width: 35,
+                    height: 35,
                     backgroundColor: AppColors.white,
                     borderRadius: 20,
                     overflow: 'hidden',
                     elevation: 5,
+                    marginHorizontal: 5,
                   }}
                   onPress={() =>
                     openPhoneDialer(bookingInfo?.data?.circle_phone)
                   }>
                   <Image
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                    }}
+                    style={{width: '100%', height: '100%'}}
                     source={CallingGif}
                     resizeMode="cover"
                   />
                 </TouchableOpacity>
 
-                <Text style={{color: AppColors.black, marginLeft: 10}}>
-                  {bookingInfo?.data?.way_type}
-                </Text>
+                <TouchableOpacity
+                  style={{
+                    width: 35,
+                    height: 35,
+                    backgroundColor: AppColors.mainColor,
+                    borderRadius: 20,
+                    overflow: 'hidden',
+                    elevation: 5,
+                    borderColor: AppColors.mainColor,
+                    borderWidth: 0.5,
+                    marginHorizontal: 5,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onPress={() =>
+                    navigation.navigate('ChatScreen', {bookingNumber})
+                  }>
+                  <MaterialCommunityIcons
+                    name="message-outline"
+                    size={20}
+                    color={AppColors.white}
+                  />
+                </TouchableOpacity>
+
+                <View style={{marginLeft: 10}}>
+                  <Text style={{color: AppColors.black, fontWeight: '500'}}>
+                    {bookingInfo?.data?.way_type}
+                  </Text>
+                </View>
               </View>
 
               <View style={styles.addressCallContainer}>
@@ -1672,135 +1714,6 @@ const DutyReportUpdate = ({route, navigation}) => {
 
       {/* onthewaypopupstart */}
 
-      {/* <Modal
-        transparent={true}
-        animationType="slide"
-        visible={modalVisibleOntheway}
-        onRequestClose={closeModal}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          }}>
-          <View
-            style={{
-              backgroundColor: AppColors.white,
-              width: '90%',
-              borderRadius: 10,
-              elevation: 5,
-              alignContent: 'flex-end',
-            }}>
-            {loader ? (
-              <ActivityIndicator size={'small'} color={AppColors.mainColor} />
-            ) : (
-              <View>
-                <TouchableOpacity
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    right: 0,
-                    backgroundColor: AppColors.white,
-                    // borderRadius: 20,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 30,
-                    height: 30,
-                    zIndex: 10,
-                  }}
-                  onPress={closeModal}>
-                  <Icon name="close" size={16} color={AppColors.black} />
-                </TouchableOpacity>
-
-                <View
-                  style={{
-                    backgroundColor: AppColors.mainColor,
-                    padding: 15,
-                    paddingVertical: 30,
-                    borderRadius: 5,
-                    alignItems: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: 'Merriweather-Bold',
-                      fontSize: 20,
-                      fontWeight: 'bold',
-                      color: AppColors.white,
-                    }}>
-                    {popupsData?.popupdata?.ontheway_alert}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    marginVertical: 10,
-                    paddingHorizontal: 20,
-                    paddingVertical: 10,
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      lineHeight: 22,
-                      fontWeight: 'bold',
-                      textAlign: 'center',
-                      color: AppColors.mainColor,
-                    }}>
-                    {popupsData?.popupdata?.ontheway_alert_h3}
-                  </Text>
-                  <Image
-                    source={Mask}
-                    resizeMode="contain"
-                    style={{
-                      height: 60,
-                      width: 140,
-                      alignSelf: 'center',
-                      marginVertical: 10,
-                    }}
-                  />
-                </View>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    // fontWeight: 'bold',
-                    textAlign: 'center',
-                    color: AppColors.black,
-                  }}>
-                  {popupsData?.popupdata?.ontheway_alert_p}
-                </Text>
-                <TouchableOpacity
-                  disabled={loaderOntheWay}
-                  style={{
-                    backgroundColor: AppColors.mainColor,
-                    marginVertical: 50,
-                    padding: 12,
-                    borderRadius: 6,
-                    width: '60%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginHorizontal: '20%',
-                    marginBottom: 100,
-                  }}
-                  onPress={() => {
-                    isBookingUpcomming();
-                  }}>
-                  <Text
-                    style={{
-                      color: AppColors.white,
-                      fontWeight: '600',
-                      fontSize: 17,
-                      textAlign: 'center',
-                    }}>
-                    {loaderOntheWay
-                      ? 'Please Wait...'
-                      : popupsData?.popupdata?.ontheway_alert_btn}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-        </View>
-      </Modal> */}
-
       <Modal
         transparent={true}
         animationType="fade"
@@ -1841,8 +1754,8 @@ const DutyReportUpdate = ({route, navigation}) => {
                     // right: 12,
                     // width: 36,
                     // height: 36,
-                    alignSelf:"flex-end",
-                    marginBottom:20
+                    alignSelf: 'flex-end',
+                    marginBottom: 20,
                   }}>
                   <Icon name="close" size={20} color={'#999'} />
                 </TouchableOpacity>

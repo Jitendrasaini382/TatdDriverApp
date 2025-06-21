@@ -36,6 +36,7 @@ import DeviceInfo from 'react-native-device-info';
 import {useDispatch, useSelector} from 'react-redux';
 import {Platform} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {resetUserAuthState} from '../../redux/slices/userAuthSlice';
 
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
@@ -191,6 +192,7 @@ const ApplyForDriverJob = ({navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
   const driverMobileNumber = useSelector(e => e?.userAuth?.driverNumber);
   const [referralCode, setReferralCode] = useState('');
+  const dispatch = useDispatch();
 
   const handleRegisterPress = async () => {
     const newErrors = {};
@@ -240,8 +242,14 @@ const ApplyForDriverJob = ({navigation}) => {
         current_address: address,
         agent_number: referralCode,
       });
-      setPopupData(res);
-      setVisible(true);
+      if (res?.isRegistered == '1') {
+        dispatch(resetUserAuthState());
+        await AsyncStorage.clear();
+        return;
+      } else {
+        setPopupData(res);
+        setVisible(true);
+      }
     } catch (error) {
       console.error('Driver Job Apply Error:', error);
     } finally {

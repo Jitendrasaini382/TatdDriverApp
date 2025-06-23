@@ -80,8 +80,8 @@ android {
         applicationId "com.tatd.driver"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 52
-        versionName "2.68"
+        versionCode 53
+        versionName "2.69"
     }
     signingConfigs {
         debug {

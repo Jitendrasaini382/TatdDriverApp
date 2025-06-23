@@ -1272,29 +1272,31 @@ const DutyReportUpdate = ({route, navigation}) => {
                   />
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={{
-                    width: 35,
-                    height: 35,
-                    backgroundColor: AppColors.mainColor,
-                    borderRadius: 20,
-                    overflow: 'hidden',
-                    elevation: 5,
-                    borderColor: AppColors.mainColor,
-                    borderWidth: 0.5,
-                    marginHorizontal: 5,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  onPress={() =>
-                    navigation.navigate('ChatScreen', {bookingNumber})
-                  }>
-                  <MaterialCommunityIcons
-                    name="message-outline"
-                    size={20}
-                    color={AppColors.white}
-                  />
-                </TouchableOpacity>
+                {bookingInfo?.condition?.chat_dynamic_key == '1' ? (
+                  <TouchableOpacity
+                    style={{
+                      width: 35,
+                      height: 35,
+                      backgroundColor: AppColors.mainColor,
+                      borderRadius: 20,
+                      overflow: 'hidden',
+                      elevation: 5,
+                      borderColor: AppColors.mainColor,
+                      borderWidth: 0.5,
+                      marginHorizontal: 5,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                    onPress={() =>
+                      navigation.navigate('ChatScreen', {bookingNumber})
+                    }>
+                    <MaterialCommunityIcons
+                      name="message-outline"
+                      size={20}
+                      color={AppColors.white}
+                    />
+                  </TouchableOpacity>
+                ) : null}
 
                 <View style={{marginLeft: 10}}>
                   <Text style={{color: AppColors.black, fontWeight: '500'}}>

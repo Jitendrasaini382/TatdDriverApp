@@ -960,3 +960,12 @@ export const GET_TRUSTED_DRIVER_AWARENESS_VIDEOS = body => {
     {},
   );
 };
+
+export const UPDATE_TRIGGER_FIVE_STAR_RATING_POPUP = body => {
+  return _Fetch(
+    'POST',
+    'trusted-driver/update-trigger-5star-popup-api.php',
+    {...body},
+    {},
+  );
+};

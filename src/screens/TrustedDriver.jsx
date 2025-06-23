@@ -16,6 +16,7 @@ import {
   AppState,
   Alert,
   Pressable,
+  Animated,
   ActivityIndicator,
   PermissionsAndroid,
   FlatList,
@@ -41,6 +42,7 @@ import Geolocation from '@react-native-community/geolocation';
 import TimerIcon from 'react-native-vector-icons/Ionicons';
 import ScreenGuardModule from 'react-native-screenguard';
 import YoutubePlayer from 'react-native-youtube-iframe';
+import LottieView from 'lottie-react-native';
 
 import {
   ALL_TEN_MINUTE_STATUS_UPDATE,
@@ -64,6 +66,7 @@ import {
   TEN_MINUTE_AVAILABLE_CLICK_POPUP,
   TEN_MINUTE_STATUS_OFF,
   UPDATE_POPUP,
+  UPDATE_TRIGGER_FIVE_STAR_RATING_POPUP,
 } from '../apis/Apis';
 import ExpressBookingModal from '../components/modal/ExpressBookingModal';
 import {
@@ -102,7 +105,7 @@ import {
 } from '../redux/slices/globalSlice';
 import {check} from 'react-native-permissions';
 import axios from 'axios';
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const responsiveSize = size => {
   return (width / 411.42857142857144) * size;
@@ -142,6 +145,9 @@ const TrustedDriver = ({navigation}) => {
   const [secondsNotice, setSecondsNotice] = useState(0);
   const [loaderRfd, setLoaderRfd] = useState(false);
   const [awarenessVideo, setAwarenessVideo] = useState([]);
+  const [fiveStarRatingModal, setFiveStarRatingModal] = useState(false);
+  const [driverImage, setDriverImage] = useState('');
+  const [fiveStarBookingNumber, setFiveStarBookingNumber] = useState('');
 
   const driverMobileNumber = useSelector(
     e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
@@ -981,6 +987,27 @@ const TrustedDriver = ({navigation}) => {
         setShowNeedHelp(false);
       }
       setVideoCount(response?.driver_panel_messages?.training_video_unseen);
+
+      if (response?.driver_panel_messages?.Show_trigger_5star_popup == '1') {
+        setFiveStarRatingModal(true);
+      } else {
+        setFiveStarRatingModal(false);
+      }
+      if (response?.driver_panel_messages?.driver_photo_src) {
+        setDriverImage(response?.driver_panel_messages?.driver_photo_src);
+      } else {
+        setDriverImage('');
+      }
+      if (
+        response?.driver_panel_messages?.Show_trigger_5star_popup_booking_number
+      ) {
+        setFiveStarBookingNumber(
+          response?.driver_panel_messages
+            ?.Show_trigger_5star_popup_booking_number,
+        );
+      } else {
+        setFiveStarBookingNumber('');
+      }
     } catch (error) {}
   };
 
@@ -1275,6 +1302,42 @@ const TrustedDriver = ({navigation}) => {
   });
 
   const viewConfigRef = useRef({viewAreaCoveragePercentThreshold: 50});
+
+  const starAnimations = useRef(
+    Array.from({length: 5}, () => new Animated.Value(1)),
+  ).current;
+
+  useEffect(() => {
+    const animations = starAnimations.map((anim, i) =>
+      Animated.loop(
+        Animated.sequence([
+          Animated.delay(i * 100), // Stagger the start
+          Animated.timing(anim, {
+            toValue: 1.2,
+            duration: 300,
+            useNativeDriver: true,
+          }),
+          Animated.timing(anim, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true,
+          }),
+        ]),
+      ),
+    );
+
+    animations.forEach(anim => anim.start());
+  }, []);
+
+  const updateTriggerFiveStarRatingPopup = async number => {
+    setFiveStarRatingModal(false);
+    try {
+      const response = await UPDATE_TRIGGER_FIVE_STAR_RATING_POPUP({
+        booking_id: number,
+      });
+      getHeadlineData();
+    } catch (err) {}
+  };
 
   return (
     <View style={styles.safeArea}>
@@ -2370,6 +2433,140 @@ const TrustedDriver = ({navigation}) => {
                   </Text>
                 </TouchableOpacity>
               </View>
+            </View>
+          </View>
+        </Modal>
+
+        <Modal
+          visible={fiveStarRatingModal}
+          transparent={true}
+          animationType="fade">
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            }}>
+            <View
+              style={{
+                width: width * 0.85,
+                backgroundColor: '#fff',
+                borderRadius: 20,
+                paddingVertical: 25,
+                paddingHorizontal: 20,
+                alignItems: 'center',
+                elevation: 10,
+                shadowColor: '#000',
+                shadowOpacity: 0.15,
+                shadowOffset: {width: 0, height: 5},
+              }}>
+              <LottieView
+                source={require('../assets/images/ballonAnimation.json')}
+                autoPlay
+                loop={true}
+                style={{
+                  position: 'absolute',
+                  width: width,
+                  height: '100%',
+                  zIndex: -1,
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  updateTriggerFiveStarRatingPopup(
+                    fiveStarBookingNumber ||
+                      headLineData?.driver_panel_messages
+                        ?.Show_trigger_5star_popup_booking_number,
+                  );
+                  setFiveStarRatingModal(false);
+                }}
+                style={{
+                  position: 'absolute',
+                  top: 20,
+                  right: 20,
+                  zIndex: 1,
+                }}>
+                <Icon name="close" size={20} color={AppColors.black} />
+              </TouchableOpacity>
+
+              <View
+                style={{
+                  alignItems: 'center',
+                  marginBottom: 10,
+                  flexDirection: 'row',
+                  justifyContent: 'space-evenly',
+                  width: '100%', // 🟢 THIS IS CRUCIAL
+                  paddingHorizontal: 20,
+                }}>
+                <Image
+                  source={{
+                    uri:
+                      driverImage ||
+                      headLineData?.driver_panel_messages?.driver_photo_src,
+                  }}
+                  style={{
+                    width: 65,
+                    height: 65,
+                    borderRadius: 40,
+                    borderWidth: 2,
+                    borderColor: '#cde7ff',
+                    marginRight: 10,
+                  }}
+                  resizeMode="cover"
+                />
+                <Text
+                  style={{fontSize: 18, fontWeight: '700', color: '#2d3559'}}>
+                  {headLineData?.driver_panel_messages?.driver_name}
+                </Text>
+              </View>
+
+              <Text
+                style={{
+                  fontSize: 22,
+                  fontWeight: '800',
+                  color: '#2d3559',
+                  marginTop: 10,
+                }}>
+                🎉 Congratulations!
+              </Text>
+
+              <View style={{flexDirection: 'row', margin: 30}}>
+                {starAnimations.map((anim, i) => (
+                  <Animated.Text
+                    key={i}
+                    style={{
+                      fontSize: 32,
+                      marginHorizontal: 4,
+                      transform: [{scale: anim}],
+                      color: '#FFD700',
+                    }}>
+                    ⭐
+                  </Animated.Text>
+                ))}
+              </View>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: '#333',
+                  textAlign: 'center',
+                  marginBottom: 8,
+                }}>
+                Your customer provided you 5 stars!
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: '500',
+                  color: '#444',
+                  paddingHorizontal: 8,
+                  paddingVertical: 4,
+                  borderRadius: 5,
+                }}>
+                Keep up the amazing work 🎉
+              </Text>
             </View>
           </View>
         </Modal>

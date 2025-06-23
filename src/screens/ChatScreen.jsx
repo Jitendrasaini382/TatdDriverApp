@@ -401,7 +401,6 @@ const ChatScreen = ({navigation}) => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        {console.log(bookingNumber, 'bookingNumberbookingNumber')}
         <TouchableOpacity
           onPress={() =>
             navigation.navigate('DutyReportUpdate', {
@@ -494,6 +493,7 @@ const ChatScreen = ({navigation}) => {
             renderItem={({item}) => (
               <TouchableOpacity
                 // onPress={() => setMessage(item)}
+                disabled={loader}
                 onPress={() => handleSuggestedMessage(item)}
                 style={styles.suggestionChip}>
                 <Text style={styles.suggestionText}>{item}</Text>
@@ -520,11 +520,14 @@ const ChatScreen = ({navigation}) => {
           }}
           style={styles.input}
         />
-        <TouchableOpacity style={styles.sendButton} onPress={handleSubmit}>
+        <TouchableOpacity
+          disabled={loader}
+          style={styles.sendButton}
+          onPress={handleSubmit}>
           {loader ? (
-            <ActivityIndicator color="white" />
+            <ActivityIndicator color={AppColors.white} />
           ) : (
-            <Icon color="white" name="send" />
+            <Icon color={AppColors.white} name="send" />
           )}
         </TouchableOpacity>
       </View>

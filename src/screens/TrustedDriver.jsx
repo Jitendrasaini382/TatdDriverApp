@@ -1195,7 +1195,7 @@ const TrustedDriver = ({navigation}) => {
       animationRef.current?.stop();
       animationRef.current = null;
     };
-  }, [isRfdOn]);
+  }, [isRfdOn, dispatch]);
 
   const animatedScale = animatedValue.interpolate({
     inputRange: [0, 1],

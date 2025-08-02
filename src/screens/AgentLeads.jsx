@@ -53,7 +53,7 @@ const AgentLeads = ({navigation}) => {
   const agentReferal = async () => {
     try {
       const res = await AGENT_REFERAL_URL({
-        user_type : Platform.OS
+        user_type: Platform.OS,
       });
 
       setreferralData(res);

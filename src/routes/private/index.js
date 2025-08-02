@@ -49,7 +49,6 @@ import LocalseAwarenessPartnerRegistration from '../../screens/LocalseAwarenessP
 import LocalseAwarenessAgentRegistration from '../../screens/LocalseAwarenessAgentRegistration';
 import MyMap from '../../screens/MyMap';
 import ClearMyDuePaymentOvertime from '../../screens/ClearMyDuePaymentOvertime';
-import AgentKycFirst from '../../screens/AgentKycFirst';
 import ChatScreen from '../../screens/ChatScreen';
 
 const Stack = createStackNavigator();
@@ -149,9 +148,6 @@ const PrivateRoute = () => {
         </Stack.Screen>
         <Stack.Screen name="AgentKyc">
           {props => <ErrorBoundry Component={AgentKyc} {...props} />}
-        </Stack.Screen>
-        <Stack.Screen name="AgentKycFirst">
-          {props => <ErrorBoundry Component={AgentKycFirst} {...props} />}
         </Stack.Screen>
         <Stack.Screen name="ChatScreen">
           {props => <ErrorBoundry Component={ChatScreen} {...props} />}

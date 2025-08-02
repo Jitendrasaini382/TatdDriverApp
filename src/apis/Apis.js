@@ -616,7 +616,21 @@ export const GET_AGENT_KYC_SEND_OTP = () => {
 };
 
 export const GET_AGENT_KYC_UPDATE_DETAILS = body => {
-  return _Fetch('POST', 'agent/agent-kyc-update-api.php', {...body}, {});
+  return _Fetch(
+    'POST',
+    'agent/surepass-bank-verification-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const SUBMIT_CONFIRM_AGENT_KYC_DETAILS = body => {
+  return _Fetch(
+    'POST',
+    'agent/surepass-bank-verification-confirm-api.php',
+    {...body},
+    {},
+  );
 };
 export const GET_AGENT_SELECT_STATE = () => {
   return _Fetch('GET', 'agent/agent-select-your-state-api.php', {}, {});

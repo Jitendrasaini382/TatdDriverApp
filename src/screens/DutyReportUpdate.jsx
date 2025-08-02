@@ -1305,7 +1305,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                 </View>
               </View>
 
-              <View style={styles.addressCallContainer}>
+              {/* <View style={styles.addressCallContainer}>
                 <View style={{flex: 1}}>
                   {bookingInfo?.data?.pickup_address && (
                     <TouchableOpacity
@@ -1379,6 +1379,163 @@ const DutyReportUpdate = ({route, navigation}) => {
                     </TouchableOpacity>
                   </View>
                 )}
+              </View> */}
+
+              <View style={{flexDirection: 'row', marginVertical: 10}}>
+                <View style={{alignItems: 'center'}}>
+                  <Image
+                    source={Address}
+                    resizeMode="contain"
+                    style={{
+                      width: 20,
+                      height: 20,
+                      tintColor: 'green',
+                      marginVertical: 6,
+                    }}
+                  />
+                  {bookingInfo?.data?.drop_address && (
+                    <>
+                      <View
+                        style={{
+                          width: 2,
+                          height: 30,
+                          borderStyle: 'dotted',
+                          borderWidth: 1,
+                          borderRadius: 1,
+                          borderColor: AppColors.mainColor,
+                          marginVertical: 2,
+                        }}
+                      />
+                      <Image
+                        source={Address}
+                        resizeMode="contain"
+                        style={{
+                          width: 20,
+                          height: 20,
+                          tintColor: AppColors.red,
+                          marginVertical: 6,
+                        }}
+                      />
+                    </>
+                  )}
+                </View>
+                <View style={{flex: 1, marginLeft: 10}}>
+                  {bookingInfo?.data?.pickup_address && (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginVertical: 6,
+                      }}>
+                      <Text
+                        onPress={() => {
+                          Clipboard.setString(
+                            bookingInfo?.data?.pickup_address,
+                          );
+                          ToastAndroid.show(
+                            'Address copied!',
+                            ToastAndroid.SHORT,
+                          );
+                          openOnlyMap(bookingInfo?.data?.c_latlong);
+                        }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                        style={{
+                          flex: 1,
+                          marginRight: 8,
+                          color: AppColors.black,
+                        }}>
+                        {bookingInfo?.data?.pickup_address}
+                      </Text>
+                      {bookingInfo?.data?.c_latlong &&
+                        bookingInfo?.condition?.next_booking_status_id <= 25 &&
+                        (loaderMap ? (
+                          <ActivityIndicator
+                            size="small"
+                            color={AppColors.mainColor}
+                          />
+                        ) : (
+                          <TouchableOpacity
+                            onPress={() =>
+                              openMap(bookingInfo?.data?.c_latlong)
+                            }
+                            style={{
+                              width: 24,
+                              height: 24,
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}>
+                            <Image
+                              source={NavigationIcon}
+                              resizeMode="contain"
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                transform: [{rotate: '30deg'}],
+                              }}
+                            />
+                          </TouchableOpacity>
+                        ))}
+                    </View>
+                  )}
+
+                  {bookingInfo?.data?.drop_address && (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginVertical: 6,
+                      }}>
+                      <Text
+                        onPress={() => {
+                          Clipboard.setString(bookingInfo?.data?.drop_address);
+                          ToastAndroid.show(
+                            'Address copied!',
+                            ToastAndroid.SHORT,
+                          );
+                          openOnlyMap(bookingInfo?.data?.drop_latlong);
+                        }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                        style={{
+                          flex: 1,
+                          marginRight: 8,
+                          color: AppColors.black,
+                        }}>
+                        {bookingInfo?.data?.drop_address}
+                      </Text>
+                      {bookingInfo?.data?.drop_latlong &&
+                        bookingInfo?.condition?.next_booking_status_id > 25 &&
+                        (loaderMap ? (
+                          <ActivityIndicator
+                            size="small"
+                            color={AppColors.mainColor}
+                          />
+                        ) : (
+                          <TouchableOpacity
+                            onPress={() =>
+                              openMap(bookingInfo?.data?.drop_latlong)
+                            }
+                            style={{
+                              width: 24,
+                              height: 24,
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}>
+                            <Image
+                              source={NavigationIcon}
+                              resizeMode="contain"
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                transform: [{rotate: '30deg'}],
+                              }}
+                            />
+                          </TouchableOpacity>
+                        ))}
+                    </View>
+                  )}
+                </View>
               </View>
             </View>
 
@@ -2150,81 +2307,19 @@ const DutyReportUpdate = ({route, navigation}) => {
                   </Text>
                 </View>
 
-                {/* <Image
-                  source={selectedFile ? {uri: selectedFile.uri} : Agent_Icon}
-                  style={{
-                    width: 200,
-                    height: 200,
-                    marginBottom: 10,
-                    borderRadius: 10,
-                  }}
-                /> */}
-
-                {/* <TouchableOpacity
-                  style={{
-                    width: 150,
-                    height: 150,
-                    borderRadius: 75,
-                    alignSelf: 'center',
-                    //backgroundColor: "#66a6ff",
-                    backgroundColor: '#66a6ff',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    overflow: 'hidden',
-                    margin: 10,
-                    marginTop: 20,
-                    borderWidth: 5,
-                    borderColor: '#fff',
-                  }}
-                  onPress={handleCameraCapture}>
-                  {selectedFile ? (
-                    <Image
-                      source={{uri: selectedFile?.uri}}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        // resizeMode: "cover",
-                        //borderRadius:70
-                      }}
-                    />
-                  ) : (
-                    <Image
-                      source={TrustedPartner}
-                      style={{
-                        width: 50,
-                        height: 50,
-                        opacity: 0.8,
-                        alignSelf: 'center',
-                        marginVertical: 5,
-                      }}
-                    />
-                  )}
-                  <Text style={{marginBottom: 10}}>
-                    {selectedFile ? (
-                      <Text style={{color: 'white', fontSize: 15}}>Edit</Text>
-                    ) : (
-                      <Text style={{color: 'white', fontSize: 15}}>
-                        Upload Image
-                      </Text>
-                    )}
-                  </Text>
-                </TouchableOpacity> */}
                 {showImageField && (
                   <TouchableOpacity
                     onPress={handleCameraCapture}
-                    onPressIn={handlePressIn}
-                    onPressOut={handlePressOut}
                     activeOpacity={0.8}
                     style={{
                       alignSelf: 'center',
                       marginTop: 20,
                     }}>
-                    <Animated.View style={[styles.button, animatedStyle]}>
+                    <View style={[styles.button]}>
                       {selectedFile ? (
-                        <Animated.Image
+                        <Image
                           source={{uri: selectedFile?.uri}}
                           style={styles.image}
-                          entering={FadeIn.duration(500)} // Smooth fade-in animation
                         />
                       ) : (
                         <MaterialCommunityIcons
@@ -2232,13 +2327,12 @@ const DutyReportUpdate = ({route, navigation}) => {
                           size={40}
                           color="#16588e"
                         />
-                        // <Image source={TrustedPartner} style={styles.placeholderImage} />
                       )}
 
                       <Text style={styles.text}>
                         {selectedFile ? 'Edit' : 'Upload Image'}
                       </Text>
-                    </Animated.View>
+                    </View>
                   </TouchableOpacity>
                 )}
 
@@ -2773,10 +2867,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginVertical: 20,
   },
-  addressContainer: {
-    flexDirection: 'row',
-    marginVertical: 8,
-  },
+  // addressContainer: {
+  //   flexDirection: 'row',
+  //   marginVertical: 8,
+  // },
+
   addressIcon: {
     height: 20,
     width: 20,

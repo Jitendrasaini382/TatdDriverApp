@@ -105,6 +105,7 @@ import {
 } from '../redux/slices/globalSlice';
 import {check} from 'react-native-permissions';
 import axios from 'axios';
+import RfdToggleSwitch from '../components/RfdToggleSwitch';
 const {width, height} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -739,6 +740,7 @@ const TrustedDriver = ({navigation}) => {
         const hasPermission = await requestLocationPermission();
         if (!hasPermission) {
           Toast.show({type: 'error', text1: 'Location permission is required'});
+          setLoaderRfd(false);
           return;
         }
 
@@ -772,10 +774,9 @@ const TrustedDriver = ({navigation}) => {
       if (response?.redirect) {
         switch (response.redirect) {
           case 'agent-kyc':
-            navigation.navigate('AgentKycFirst');
-            break;
-          case 'agent-kyc-first':
-            navigation.navigate('AgentKyc');
+            navigation.navigate('AgentKyc', {
+              redirect: 'Trusted',
+            });
             break;
           case 'clear-my-due-payment-overtime':
             navigation.navigate('ClearMyDuePaymentOvertime');
@@ -1154,7 +1155,69 @@ const TrustedDriver = ({navigation}) => {
     setLoginMessage('');
   };
 
-  const viewRef = useRef(null); // Reference to the View
+  const viewRef = useRef(null);
+  const animatedValue = useRef(new Animated.Value(0)).current;
+  const animationRef = useRef(null);
+
+  useEffect(() => {
+    if (!isRfdOn) {
+      // Stop any existing animation
+      animationRef.current?.stop();
+
+      // Reset the animated value
+      animatedValue.setValue(0);
+
+      // Create and start the new loop animation
+      animationRef.current = Animated.loop(
+        Animated.sequence([
+          Animated.timing(animatedValue, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+          Animated.timing(animatedValue, {
+            toValue: 0,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+        ]),
+      );
+
+      animationRef.current.start();
+    } else {
+      // Stop animation when isRfdOn becomes true
+      animationRef.current?.stop();
+      animationRef.current = null; // Clear ref
+      animatedValue.setValue(0);
+    }
+
+    return () => {
+      animationRef.current?.stop();
+      animationRef.current = null;
+    };
+  }, [isRfdOn]);
+
+  const animatedScale = animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 1.1],
+  });
+
+  const animatedShadowOpacity = animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.2, 0.8],
+  });
+
+  const animatedStyle = {
+    transform: [{scale: animatedScale}],
+    shadowColor: 'rgba(59, 130, 246, 1)',
+    shadowOffset: {width: 0, height: 0},
+    shadowRadius: 8,
+    shadowOpacity: animatedShadowOpacity,
+    borderWidth: 2,
+    borderColor: 'rgba(59, 130, 246, 0.6)',
+    borderRadius: 34,
+  };
+
   const [popoverVisible, setPopoverVisible] = useState(false);
   const [popoverPosition, setPopoverPosition] = useState({
     x: 0,
@@ -1829,16 +1892,48 @@ const TrustedDriver = ({navigation}) => {
                             <Text style={styles.notificationCount}>0</Text>
                           </View>
                         </TouchableOpacity>
-                        <View ref={viewRef} style={styles.toggleView}>
-                          <ToggleSwitch
+                        {/* <View ref={viewRef} style={styles.toggleView}> */}
+                        {/* <Animated.View
+                          ref={viewRef}
+                          style={[styles.toggleView, animatedShadowStyle]}>
+                          <RfdToggleSwitch
                             isOn={isRfdOn}
-                            onColor={AppColors.mainColor}
-                            offColor={AppColors.greyColor}
-                            size="medium"
                             onToggle={() => handleToggleButton()}
-                            // disabled={isDisabled}
+                            size="medium"
+                            activeColor={AppColors.mainColor}
                           />
-                        </View>
+                        </Animated.View> */}
+                        <Animated.View
+                          ref={viewRef}
+                          style={[
+                            styles.toggleView,
+                            !isRfdOn ? animatedStyle : styles.staticStyle,
+                          ]}>
+                          <RfdToggleSwitch
+                            isOn={isRfdOn}
+                            onToggle={handleToggleButton}
+                            size="medium"
+                            activeColor={AppColors.mainColor}
+                          />
+                        </Animated.View>
+                        {/* <Animated.View
+                          ref={viewRef}
+                          style={[
+                            {
+                              alignSelf: 'center',
+                              padding: 2,
+                              backgroundColor: '#fff',
+                            },
+                            animatedStyle,
+                          ]}>
+                          <RfdToggleSwitch
+                            isOn={isRfdOn}
+                            onToggle={handleToggleButton}
+                            size="medium"
+                            activeColor={AppColors.mainColor}
+                          />
+                        </Animated.View> */}
+                        {/* </View> */}
                       </View>
                     </View>
 
@@ -2859,7 +2954,7 @@ const TrustedDriver = ({navigation}) => {
               style={{
                 position: 'absolute',
                 top: popoverPositionNeedHelp.y,
-                // left: popoverPosition.x - 200, // Adjust left offset as per design
+                // left: popoverPosition.x + 10, // Adjust left offset as per design
                 width: '70%',
                 // width: 160,
                 alignSelf: 'center',
@@ -3194,12 +3289,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: responsiveSize(5),
     color: 'rgb(256,256,256)',
   },
-  toggleView: {
+  staticStyle: {
     backgroundColor: 'rgb(217, 217, 217)',
     borderRadius: responsiveSize(34),
     borderWidth: 1,
     borderColor: AppColors.greyColor,
     margin: responsiveSize(5),
+  },
+  toggleView: {
+    alignSelf: 'center',
+    padding: 1,
+    backgroundColor: '#fff',
   },
   bottamView: {
     flexDirection: 'row',

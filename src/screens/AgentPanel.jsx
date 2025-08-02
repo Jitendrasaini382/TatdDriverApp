@@ -310,7 +310,9 @@ const AgentPanel = ({navigation}) => {
               <View style={styles.bottamContent}>
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('AgentKyc');
+                    navigation.navigate('AgentKyc', {
+                      redirect: 'AgentPanel',
+                    });
                   }}
                   style={styles.bottamContent2}>
                   <Text style={styles.mainText}>My Bank</Text>

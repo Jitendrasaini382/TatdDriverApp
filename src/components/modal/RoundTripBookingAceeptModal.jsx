@@ -118,12 +118,14 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
             ]);
             dispatch(setTriggerFunction(true));
             dispatch(setRefreshKey());
+            setOpenModal(false);
           } else {
             navigation.navigate('DutyReportUpdate', {
               bookingNumber: booking_number,
               isFirstTime: true,
               isType: 'Ondemand',
             });
+            setOpenModal(false);
           }
         } else {
           Alert.alert('', response?.message, [
@@ -135,6 +137,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
               },
             },
           ]);
+          setOpenModal(false);
         }
       } catch (error) {
         console.error('Booking acceptance failed:', error);
@@ -218,7 +221,9 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
           styles.acceptButton,
           {
             backgroundColor:
-              checked1 && checked2 || loader ? AppColors.mainColor : '#CCCCCC',
+              (checked1 && checked2) || loader
+                ? AppColors.mainColor
+                : '#CCCCCC',
           },
         ]}>
         <Text style={styles.acceptButtonText}>

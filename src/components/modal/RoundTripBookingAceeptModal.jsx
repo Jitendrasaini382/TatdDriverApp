@@ -10,7 +10,10 @@ import {
   ScrollView,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
-import {FINAL_ACCEPT_BOOKING} from '../../apis/Apis';
+import {
+  CHECK_PREMIUM_DRIVER_ELIGIBLE,
+  FINAL_ACCEPT_BOOKING,
+} from '../../apis/Apis';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {
@@ -82,6 +85,35 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
     }
   };
 
+  const handlePressPremiumDriver = async () => {
+    try {
+      const response = await CHECK_PREMIUM_DRIVER_ELIGIBLE({
+        action: 'premium-diver-eligible',
+        current_language: languageSwitch,
+      });
+
+      if (response?.status_code == 200) {
+        if (response?.eligible == '0') {
+          Alert.alert('', response?.message);
+        } else if (
+          response?.eligible == '1' &&
+          response?.message == 'success'
+        ) {
+          if (response?.registration_premium == '1') {
+            navigation.navigate('PremiumDriverRegistrationProcess');
+          } else {
+            navigation.navigate('PremiumDriver');
+          }
+        }
+      } else {
+        navigation.navigate('TrustedDriver');
+      }
+    } catch (error) {
+    } finally {
+      setLoaderPremium(false);
+    }
+  };
+
   const acceptBooking = async () => {
     setLoader(true);
     const location = await getLocation();
@@ -107,15 +139,28 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
 
         if (response?.status_code == '200') {
           if (response?.msg_type == 'error') {
-            Alert.alert('', response?.message, [
-              {
-                text: 'OK',
-                onPress: () => {
-                  setOpenModal(false);
-                  setLoader(true);
+            if (response?.redirect == 'premiumDriver') {
+              Alert.alert('', response?.message, [
+                {
+                  text: 'OK',
+                  onPress: () => {
+                    handlePressPremiumDriver();
+                    setOpenModal(false);
+                    setLoader(true);
+                  },
                 },
-              },
-            ]);
+              ]);
+            } else {
+              Alert.alert('', response?.message, [
+                {
+                  text: 'OK',
+                  onPress: () => {
+                    setOpenModal(false);
+                    setLoader(true);
+                  },
+                },
+              ]);
+            }
             dispatch(setTriggerFunction(true));
             dispatch(setRefreshKey());
             setOpenModal(false);

@@ -5,10 +5,10 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  SafeAreaView,
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {RightArrow_White} from '../assets/images';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';

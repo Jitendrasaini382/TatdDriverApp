@@ -17,7 +17,7 @@ import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
 import {SEND_REQUEST_AADHAR_EXEMPTION, VERIFY_AADHAR_OTP} from '../apis/Apis';
 import {Triangle_Icon} from '../assets/images';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useSafeAreaInsets,SafeAreaView} from 'react-native-safe-area-context';
 import {useSelector} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
@@ -73,7 +73,7 @@ const AadharVerifyOtp = ({navigation, route}) => {
         navigation.navigate('TrustedDriver');
         Alert.alert('', response?.message);
       } else {
-        Alert.alert("",response?.message);
+        Alert.alert('', response?.message);
       }
     } catch (error) {
     } finally {
@@ -101,10 +101,10 @@ const AadharVerifyOtp = ({navigation, route}) => {
   };
 
   return (
-    <View style={[styles.safeArea]}>
-      <View
+    <SafeAreaView style={[styles.safeArea]}>
+      {/* <View
         style={{height: insets.top, backgroundColor: AppColors.mainColor}}
-      />
+      /> */}
       <Header backButton={true} />
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
@@ -191,7 +191,7 @@ const AadharVerifyOtp = ({navigation, route}) => {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

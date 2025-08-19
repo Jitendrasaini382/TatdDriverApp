@@ -3,13 +3,13 @@ import {
   StyleSheet,
   Text,
   Dimensions,
-  SafeAreaView,
   View,
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
   Modal,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';

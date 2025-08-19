@@ -1,7 +1,7 @@
 import {
   Dimensions,
   Image,
-  SafeAreaView,
+  KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {PremiumDriverImage, Triangle_Icon} from '../assets/images';
@@ -175,8 +176,10 @@ const PremiumDriverRegistration = ({navigation}) => {
     <>
       <SafeAreaView style={{flex: 1}}>
         <Header backButton={true} />
+        <KeyboardAvoidingView style={{flex:1}}behavior='padding' >
         <View style={{flex: 1, paddingHorizontal: 10}}>
           <ScrollView
+          automaticallyAdjustKeyboardInsets={true}
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="always"
             contentContainerStyle={{paddingBottom: 14}}>
@@ -337,6 +340,7 @@ const PremiumDriverRegistration = ({navigation}) => {
             </View>
           </ScrollView>
         </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </>
   );

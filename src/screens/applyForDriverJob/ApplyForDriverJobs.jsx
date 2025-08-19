@@ -4,10 +4,10 @@ import {
   Button,
   Dimensions,
   Image,
+  KeyboardAvoidingView,
   Linking,
   Modal,
   RefreshControl,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColors} from '../../assets/Colors';
 import {AppLogo, Triangle_Icon} from '../../assets/images';
 import {useEffect, useState} from 'react';
@@ -453,149 +454,118 @@ const ApplyForDriverJob = ({navigation}) => {
     <>
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
         <Header />
-        <View style={{flex: 1, paddingHorizontal: 10}}>
-          <ScrollView
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={() => onRefresh()}
-              />
-            }
-            keyboardShouldPersistTaps="always"
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: 14, flexGrow: 1}}>
-            <View style={styles.mainTopView}>
-              <View style={{flexDirection: 'row'}}>
-                <View style={styles.mainTopContent}>
-                  <Text style={styles.trustedText}>
-                    Trusted & Trained Driver
-                  </Text>
+        <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+          <View style={{flex: 1, paddingHorizontal: 10}}>
+            <ScrollView
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={() => onRefresh()}
+                />
+              }
+              keyboardShouldPersistTaps="always"
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{paddingBottom: 14, flexGrow: 1}}>
+              <View style={styles.mainTopView}>
+                <View style={{flexDirection: 'row'}}>
+                  <View style={styles.mainTopContent}>
+                    <Text style={styles.trustedText}>
+                      Trusted & Trained Driver
+                    </Text>
+                  </View>
+                  <View style={styles.iconContainer}>
+                    <Image
+                      source={Triangle_Icon}
+                      resizeMode={'cover'}
+                      style={styles.icon}
+                    />
+                  </View>
                 </View>
-                <View style={styles.iconContainer}>
-                  <Image
-                    source={Triangle_Icon}
-                    resizeMode={'cover'}
-                    style={styles.icon}
+                <Text style={styles.mainHeading}>Apply For Driver Jobs</Text>
+              </View>
+              {/* content start  */}
+              {allData?.data_english && allData?.data_hindi && (
+                <View style={styles.toggleContainer}>
+                  <TouchableOpacity
+                    style={[
+                      styles.button,
+                      selectedLanguage === 'Hindi' && styles.selectedButton,
+                    ]}
+                    onPress={() => setSelectedLanguage('Hindi')}>
+                    <Text
+                      style={[
+                        styles.text,
+                        selectedLanguage === 'Hindi' && styles.selectedText,
+                      ]}>
+                      Hindi
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={[
+                      styles.button,
+                      selectedLanguage === 'English' && styles.selectedButton,
+                    ]}
+                    onPress={() => setSelectedLanguage('English')}>
+                    <Text
+                      style={[
+                        styles.text,
+                        selectedLanguage === 'English' && styles.selectedText,
+                      ]}>
+                      English
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              {allData?.data_english && allData?.data_hindi && (
+                <View style={styles.cardContainer}>
+                  <Text style={styles.cardHeading}>
+                    {selectedLanguage === 'Hindi'
+                      ? 'कंपनी की जानकारी'
+                      : 'Company Info'}
+                  </Text>
+                  <ScrollView
+                    style={styles.cardText}
+                    nestedScrollEnabled={true}
+                    showsVerticalScrollIndicator={true}>
+                    <Text style={styles.scrollableText}>
+                      {selectedLanguage === 'Hindi'
+                        ? allData?.data_english
+                        : allData?.data_hindi}
+                    </Text>
+                  </ScrollView>
+                </View>
+              )}
+
+              <View style={{flexDirection: 'row', gap: 15, marginTop: 20}}>
+                <View style={{flex: 1}}>
+                  <CustomTextInput
+                    value={driverName}
+                    onChangeText={e => {
+                      setDriverName(e);
+                      if (errors.driverName && e.trim()) {
+                        setErrors(prev => ({...prev, driverName: null}));
+                      }
+                    }}
+                    placeholder="Driver Name"
+                    iconName={
+                      <Icon name="user" size={15} color={AppColors.greyColor} />
+                    }
+                    error={errors.driverName}
                   />
                 </View>
               </View>
-              <Text style={styles.mainHeading}>Apply For Driver Jobs</Text>
-            </View>
-            {/* content start  */}
-            {allData?.data_english && allData?.data_hindi && (
-              <View style={styles.toggleContainer}>
-                <TouchableOpacity
-                  style={[
-                    styles.button,
-                    selectedLanguage === 'Hindi' && styles.selectedButton,
-                  ]}
-                  onPress={() => setSelectedLanguage('Hindi')}>
-                  <Text
-                    style={[
-                      styles.text,
-                      selectedLanguage === 'Hindi' && styles.selectedText,
-                    ]}>
-                    Hindi
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={[
-                    styles.button,
-                    selectedLanguage === 'English' && styles.selectedButton,
-                  ]}
-                  onPress={() => setSelectedLanguage('English')}>
-                  <Text
-                    style={[
-                      styles.text,
-                      selectedLanguage === 'English' && styles.selectedText,
-                    ]}>
-                    English
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {allData?.data_english && allData?.data_hindi && (
-              <View style={styles.cardContainer}>
-                <Text style={styles.cardHeading}>
-                  {selectedLanguage === 'Hindi'
-                    ? 'कंपनी की जानकारी'
-                    : 'Company Info'}
-                </Text>
-                <ScrollView
-                  style={styles.cardText}
-                  nestedScrollEnabled={true}
-                  showsVerticalScrollIndicator={true}>
-                  <Text style={styles.scrollableText}>
-                    {selectedLanguage === 'Hindi'
-                      ? allData?.data_english
-                      : allData?.data_hindi}
-                  </Text>
-                </ScrollView>
-              </View>
-            )}
-
-            <View style={{flexDirection: 'row', gap: 15, marginTop: 20}}>
-              <View style={{flex: 1}}>
-                <CustomTextInput
-                  value={driverName}
+              <View style={{marginTop: 20}}>
+                <CustomAddressInput
+                  value={address}
                   onChangeText={e => {
-                    setDriverName(e);
-                    if (errors.driverName && e.trim()) {
-                      setErrors(prev => ({...prev, driverName: null}));
+                    setAddress(e);
+                    if (errors.address && e.trim()) {
+                      setErrors(prev => ({...prev, address: null}));
                     }
                   }}
-                  placeholder="Driver Name"
-                  iconName={
-                    <Icon name="user" size={15} color={AppColors.greyColor} />
-                  }
-                  error={errors.driverName}
-                />
-              </View>
-            </View>
-            <View style={{marginTop: 20}}>
-              <CustomAddressInput
-                value={address}
-                onChangeText={e => {
-                  setAddress(e);
-                  if (errors.address && e.trim()) {
-                    setErrors(prev => ({...prev, address: null}));
-                  }
-                }}
-                placeholder="Enter Current Address"
-                iconName={
-                  <Icon
-                    name="map-marker"
-                    size={15}
-                    color={AppColors.greyColor}
-                  />
-                }
-                error={errors.address}
-              />
-            </View>
-
-            <View style={{flexDirection: 'row', gap: 15, marginTop: 20}}>
-              <View style={{flex: 1}}>
-                <CustomTextInput
-                  value={driverMobileNumber || driverNumber}
-                  placeholder="Driver Number"
-                  keyboardType="numeric"
-                  editable={false}
-                  maxLength={10}
-                  iconName={
-                    <Icon name="phone" size={15} color={AppColors.greyColor} />
-                  }
-                  error={errors.driverNumber}
-                />
-              </View>
-              <View style={{flex: 1}}>
-                <CustomTextInput
-                  value={pincode}
-                  placeholder="Pincode"
-                  keyboardType="numeric"
-                  onChangeText={e => handlePincode(e)}
-                  maxLength={6}
+                  placeholder="Enter Current Address"
                   iconName={
                     <Icon
                       name="map-marker"
@@ -603,292 +573,335 @@ const ApplyForDriverJob = ({navigation}) => {
                       color={AppColors.greyColor}
                     />
                   }
-                  error={errors.pincode}
+                  error={errors.address}
                 />
               </View>
-            </View>
 
-            {serviceableArea && (
               <View style={{flexDirection: 'row', gap: 15, marginTop: 20}}>
                 <View style={{flex: 1}}>
                   <CustomTextInput
-                    value={city}
-                    placeholder="City"
+                    value={driverMobileNumber || driverNumber}
+                    placeholder="Driver Number"
+                    keyboardType="numeric"
                     editable={false}
                     maxLength={10}
                     iconName={
                       <Icon
-                        name="building"
+                        name="phone"
                         size={15}
                         color={AppColors.greyColor}
                       />
                     }
-                    error={errors.city}
+                    error={errors.driverNumber}
                   />
                 </View>
                 <View style={{flex: 1}}>
                   <CustomTextInput
-                    value={zone}
-                    placeholder="Zone"
-                    editable={false}
-                    maxLength={10}
+                    value={pincode}
+                    placeholder="Pincode"
+                    keyboardType="numeric"
+                    onChangeText={e => handlePincode(e)}
+                    maxLength={6}
                     iconName={
-                      <Icon name="home" size={15} color={AppColors.greyColor} />
-                    }
-                    error={errors.zone}
-                  />
-                </View>
-              </View>
-            )}
-            <View
-              style={{
-                marginVertical: 20,
-                flexDirection: 'row',
-                justifyContent: 'center',
-              }}>
-              <View
-                style={{
-                  marginVertical: 30,
-                  alignItems: 'center',
-                }}>
-                <TouchableOpacity
-                  onPress={() => handleRegisterPress()}
-                  activeOpacity={0.8}
-                  style={{
-                    backgroundColor:
-                      serviceableArea || loader ? AppColors.mainColor : 'gray',
-                    paddingHorizontal: 40,
-                    paddingVertical: 14,
-                    borderRadius: 25,
-                    shadowColor: '#000',
-                    shadowOffset: {width: 0, height: 4},
-                    shadowOpacity: 0.2,
-                    shadowRadius: 4,
-                    elevation: 5,
-                    flexDirection: 'row',
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      color: AppColors.white,
-                      fontWeight: '600',
-                      textAlign: 'center',
-                    }}>
-                    Apply Now
-                  </Text>
-                  {loader ? (
-                    <ActivityIndicator
-                      size={'small'}
-                      color={AppColors.white}
-                      style={{marginLeft: 5}}
-                    />
-                  ) : null}
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <Modal visible={visible} animationType="slide" transparent={true}>
-              <View
-                style={{
-                  flex: 1,
-                  backgroundColor: 'rgba(0,0,0,0.5)',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <View
-                  style={{
-                    margin: 5,
-                    backgroundColor: 'white',
-                    borderRadius: 12,
-                    padding: 16,
-                    maxHeight: '95%',
-                    width: '99%',
-                  }}>
-                  {/* Close Icon - Fixed Top Right */}
-                  <TouchableOpacity
-                    onPress={() => setVisible(false)}
-                    style={{
-                      position: 'absolute',
-                      top: 10,
-                      right: 10,
-                      zIndex: 10,
-                      backgroundColor: AppColors.mainColor,
-                      width: 30,
-                      height: 30,
-                      borderRadius: 15,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        color: AppColors.white,
-                        alignSelf: 'center',
-                      }}>
-                      ✕
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => handlePayment(popupData?.price)}
-                    style={{
-                      position: 'absolute',
-                      // top: 130, // tweak this to match where the button originally appears
-                      left: 20,
-                      right: 20,
-                      zIndex: 9,
-                      bottom: 30,
-                      backgroundColor: AppColors.mainColor,
-                      paddingVertical: 12,
-                      borderRadius: 6,
-                      alignItems: 'center',
-                    }}>
-                    <Text
-                      style={{
-                        color: AppColors.white,
-                        fontWeight: '600',
-                        fontSize: 16,
-                      }}>
-                      {popupData?.price_tag}
-                    </Text>
-                  </TouchableOpacity>
-
-                  <ScrollView
-                    contentContainerStyle={{paddingBottom: 24}}
-                    showsVerticalScrollIndicator={false}>
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        fontWeight: '600',
-                        marginVertical: 8,
-                        color: AppColors.black,
-                      }}>
-                      Your Application ID :
-                      <Text style={{color: 'green'}}>
-                        {''} {popupData?.application_id}
-                      </Text>
-                    </Text>
-                    <Text style={[styles.text, {marginBottom: 50}]}>
-                      {selectedLanguage == 'Hindi'
-                        ? popupData?.popup_data
-                        : popupData?.popup_data_english}
-                    </Text>
-                  </ScrollView>
-                </View>
-              </View>
-            </Modal>
-
-            <Modal
-              animationType="slide"
-              transparent={true}
-              onRequestClose={() => setUpdateModal(false)}
-              visible={updateModal}>
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <View
-                  style={{
-                    width: width * 0.85,
-                    backgroundColor: '#fff',
-                    borderRadius: 25,
-                    padding: 15,
-                    alignItems: 'center',
-                    shadowColor: '#000',
-                    shadowOffset: {width: 0, height: 15},
-                    shadowOpacity: 0.3,
-                    shadowRadius: 20,
-                    elevation: 15,
-                    transform: [{translateY: 20}],
-                  }}>
-                  <Image
-                    source={AppLogo}
-                    resizeMode="contain"
-                    style={{height: 70, width: 70}}
-                  />
-                  <Text
-                    style={{
-                      fontSize: 24,
-                      fontWeight: 'bold',
-                      color: '#333',
-                      marginBottom: 10,
-                      textAlign: 'center',
-                    }}>
-                    New Update Available
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      color: '#555',
-                      textAlign: 'center',
-                      marginBottom: 30,
-                    }}>
-                    {upadatePopupData?.app_details?.upgrade_message}
-                  </Text>
-                  <View
-                    style={{
-                      width: '100%',
-                      alignItems: 'center',
-                    }}>
-                    <TouchableOpacity
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: '100%',
-                        paddingVertical: 15,
-                        borderRadius: 30,
-                        backgroundColor: AppColors.mainColor,
-                        elevation: 8,
-                        shadowColor: AppColors.mainColor,
-                        shadowOffset: {width: 0, height: 8},
-                        shadowOpacity: 0.5,
-                        shadowRadius: 10,
-                        marginBottom: 15,
-                      }}
-                      onPress={() => [
-                        openMyUrl(upadatePopupData?.app_details?.app_url),
-                        setUpdateModal(false),
-                      ]}>
-                      <Text
-                        style={{
-                          color: '#fff',
-                          fontSize: 18,
-                          fontWeight: 'bold',
-                          marginRight: 10,
-                        }}>
-                        Update Now
-                      </Text>
-                      <Image
-                        source={AppLogo}
-                        style={{
-                          width: 20,
-                          height: 20,
-                          tintColor: '#fff',
-                        }}
+                      <Icon
+                        name="map-marker"
+                        size={15}
+                        color={AppColors.greyColor}
                       />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        padding: 10,
-                      }}
-                      onPress={() => setUpdateModal(false)}>
-                      <Text
-                        style={{
-                          color: AppColors.mainColor,
-                          fontSize: 16,
-                          fontWeight: 'bold',
-                        }}>
-                        Close
-                      </Text>
-                    </TouchableOpacity>
+                    }
+                    error={errors.pincode}
+                  />
+                </View>
+              </View>
+
+              {serviceableArea && (
+                <View style={{flexDirection: 'row', gap: 15, marginTop: 20}}>
+                  <View style={{flex: 1}}>
+                    <CustomTextInput
+                      value={city}
+                      placeholder="City"
+                      editable={false}
+                      maxLength={10}
+                      iconName={
+                        <Icon
+                          name="building"
+                          size={15}
+                          color={AppColors.greyColor}
+                        />
+                      }
+                      error={errors.city}
+                    />
+                  </View>
+                  <View style={{flex: 1}}>
+                    <CustomTextInput
+                      value={zone}
+                      placeholder="Zone"
+                      editable={false}
+                      maxLength={10}
+                      iconName={
+                        <Icon
+                          name="home"
+                          size={15}
+                          color={AppColors.greyColor}
+                        />
+                      }
+                      error={errors.zone}
+                    />
                   </View>
                 </View>
+              )}
+              <View
+                style={{
+                  marginVertical: 20,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                }}>
+                <View
+                  style={{
+                    marginVertical: 30,
+                    alignItems: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => handleRegisterPress()}
+                    activeOpacity={0.8}
+                    style={{
+                      backgroundColor:
+                        serviceableArea || loader
+                          ? AppColors.mainColor
+                          : 'gray',
+                      paddingHorizontal: 40,
+                      paddingVertical: 14,
+                      borderRadius: 25,
+                      shadowColor: '#000',
+                      shadowOffset: {width: 0, height: 4},
+                      shadowOpacity: 0.2,
+                      shadowRadius: 4,
+                      elevation: 5,
+                      flexDirection: 'row',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: AppColors.white,
+                        fontWeight: '600',
+                        textAlign: 'center',
+                      }}>
+                      Apply Now
+                    </Text>
+                    {loader ? (
+                      <ActivityIndicator
+                        size={'small'}
+                        color={AppColors.white}
+                        style={{marginLeft: 5}}
+                      />
+                    ) : null}
+                  </TouchableOpacity>
+                </View>
               </View>
-            </Modal>
-          </ScrollView>
-        </View>
+
+              <Modal visible={visible} animationType="slide" transparent={true}>
+                <View
+                  style={{
+                    flex: 1,
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      margin: 5,
+                      backgroundColor: 'white',
+                      borderRadius: 12,
+                      padding: 16,
+                      maxHeight: '95%',
+                      width: '99%',
+                    }}>
+                    {/* Close Icon - Fixed Top Right */}
+                    <TouchableOpacity
+                      onPress={() => setVisible(false)}
+                      style={{
+                        position: 'absolute',
+                        top: 10,
+                        right: 10,
+                        zIndex: 10,
+                        backgroundColor: AppColors.mainColor,
+                        width: 30,
+                        height: 30,
+                        borderRadius: 15,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          color: AppColors.white,
+                          alignSelf: 'center',
+                        }}>
+                        ✕
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handlePayment(popupData?.price)}
+                      style={{
+                        position: 'absolute',
+                        // top: 130, // tweak this to match where the button originally appears
+                        left: 20,
+                        right: 20,
+                        zIndex: 9,
+                        bottom: 30,
+                        backgroundColor: AppColors.mainColor,
+                        paddingVertical: 12,
+                        borderRadius: 6,
+                        alignItems: 'center',
+                      }}>
+                      <Text
+                        style={{
+                          color: AppColors.white,
+                          fontWeight: '600',
+                          fontSize: 16,
+                        }}>
+                        {popupData?.price_tag}
+                      </Text>
+                    </TouchableOpacity>
+
+                    <ScrollView
+                      contentContainerStyle={{paddingBottom: 24}}
+                      showsVerticalScrollIndicator={false}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontWeight: '600',
+                          marginVertical: 8,
+                          color: AppColors.black,
+                        }}>
+                        Your Application ID :
+                        <Text style={{color: 'green'}}>
+                          {''} {popupData?.application_id}
+                        </Text>
+                      </Text>
+                      <Text style={[styles.text, {marginBottom: 50}]}>
+                        {selectedLanguage == 'Hindi'
+                          ? popupData?.popup_data
+                          : popupData?.popup_data_english}
+                      </Text>
+                    </ScrollView>
+                  </View>
+                </View>
+              </Modal>
+
+              <Modal
+                animationType="slide"
+                transparent={true}
+                onRequestClose={() => setUpdateModal(false)}
+                visible={updateModal}>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      width: width * 0.85,
+                      backgroundColor: '#fff',
+                      borderRadius: 25,
+                      padding: 15,
+                      alignItems: 'center',
+                      shadowColor: '#000',
+                      shadowOffset: {width: 0, height: 15},
+                      shadowOpacity: 0.3,
+                      shadowRadius: 20,
+                      elevation: 15,
+                      transform: [{translateY: 20}],
+                    }}>
+                    <Image
+                      source={AppLogo}
+                      resizeMode="contain"
+                      style={{height: 70, width: 70}}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 24,
+                        fontWeight: 'bold',
+                        color: '#333',
+                        marginBottom: 10,
+                        textAlign: 'center',
+                      }}>
+                      New Update Available
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: '#555',
+                        textAlign: 'center',
+                        marginBottom: 30,
+                      }}>
+                      {upadatePopupData?.app_details?.upgrade_message}
+                    </Text>
+                    <View
+                      style={{
+                        width: '100%',
+                        alignItems: 'center',
+                      }}>
+                      <TouchableOpacity
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          width: '100%',
+                          paddingVertical: 15,
+                          borderRadius: 30,
+                          backgroundColor: AppColors.mainColor,
+                          elevation: 8,
+                          shadowColor: AppColors.mainColor,
+                          shadowOffset: {width: 0, height: 8},
+                          shadowOpacity: 0.5,
+                          shadowRadius: 10,
+                          marginBottom: 15,
+                        }}
+                        onPress={() => [
+                          openMyUrl(upadatePopupData?.app_details?.app_url),
+                          setUpdateModal(false),
+                        ]}>
+                        <Text
+                          style={{
+                            color: '#fff',
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            marginRight: 10,
+                          }}>
+                          Update Now
+                        </Text>
+                        <Image
+                          source={AppLogo}
+                          style={{
+                            width: 20,
+                            height: 20,
+                            tintColor: '#fff',
+                          }}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={{
+                          padding: 10,
+                        }}
+                        onPress={() => setUpdateModal(false)}>
+                        <Text
+                          style={{
+                            color: AppColors.mainColor,
+                            fontSize: 16,
+                            fontWeight: 'bold',
+                          }}>
+                          Close
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              </Modal>
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </>
   );

@@ -4,12 +4,12 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   ActivityIndicator,
   Modal,
   RefreshControl,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {Dimensions} from 'react-native';
 import {GET_ALL_TRAINING_MODULE_DATA} from '../apis/Apis';
 import Header from '../components/Header';

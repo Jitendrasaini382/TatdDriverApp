@@ -1,5 +1,4 @@
 import {
-  SafeAreaView,
   ScrollView,
   View,
   Text,
@@ -9,6 +8,7 @@ import {
   RefreshControl,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {AppColors} from '../assets/Colors';
 import Header from '../components/Header';
 import {PremiumDriverImage1, PremiumDriverImage2} from '../assets/images';

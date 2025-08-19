@@ -2,7 +2,6 @@ import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -13,7 +12,7 @@ import {
   Keyboard,
 } from 'react-native';
 import Modal from 'react-native-modal';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import {AppFont} from '../assets/FontsFamily';
 import {AppColors} from '../assets/Colors';

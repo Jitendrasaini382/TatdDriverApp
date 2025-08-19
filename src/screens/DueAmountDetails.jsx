@@ -6,12 +6,12 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  SafeAreaView,
   Modal,
   TextInput,
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import {Triangle_Icon} from '../assets/images';
 import {DRIVER_BOOKING_INVOICE, WAITING_MINUTE_INSERT} from '../apis/Apis';

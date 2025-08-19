@@ -4,6 +4,8 @@ import {
   Text,
   Dimensions,
   // SafeAreaView,
+
+  
   View,
   TouchableOpacity,
   Image,

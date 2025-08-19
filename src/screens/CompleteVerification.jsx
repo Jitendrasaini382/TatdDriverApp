@@ -2,7 +2,6 @@ import {
   Dimensions,
   Image,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -15,6 +14,7 @@ import {
   Alert,
   Keyboard,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {LeftArrow, Triangle_Icon} from '../assets/images';

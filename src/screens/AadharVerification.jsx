@@ -13,6 +13,7 @@ import {
   Platform,
   Linking,
   ActivityIndicator,
+  StatusBar,
 } from 'react-native';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -20,7 +21,7 @@ import {AppColors} from '../assets/Colors';
 import {AppFont} from '../assets/FontsFamily';
 import {SEND_AADHAR_OTP, VIEW_AADHAR_NUMBER} from '../apis/Apis';
 import {Triangle_Icon} from '../assets/images';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useSafeAreaInsets, SafeAreaView} from 'react-native-safe-area-context';
 import {useSelector} from 'react-redux';
 import {RefreshControl} from 'react-native';
 
@@ -91,10 +92,11 @@ const AadharVerification = ({navigation, route}) => {
   };
 
   return (
-    <View style={[styles.safeArea]}>
-      <View
+    <SafeAreaView style={[styles.safeArea]}>
+      {/* <StatusBar backgroundColor={AppColors.mainColor} /> */}
+      {/* <View
         style={{height: insets.top, backgroundColor: AppColors.mainColor}}
-      />
+      /> */}
       <Header backButton={true} />
       {loader ? (
         <View
@@ -188,7 +190,7 @@ const AadharVerification = ({navigation, route}) => {
           </View>
         </ScrollView>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

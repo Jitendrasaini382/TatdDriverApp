@@ -4,9 +4,9 @@ import {
   Text,
   StyleSheet,
   Image,
-  SafeAreaView,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import {Triangle_Icon} from '../assets/images';
 import {AppColors} from '../assets/Colors';

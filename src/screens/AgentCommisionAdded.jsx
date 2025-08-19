@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   Image,
-  SafeAreaView,
   ActivityIndicator,
 } from 'react-native';
 import {Check_Offer} from '../assets/images';
@@ -13,6 +12,7 @@ import {AppFont} from '../assets/FontsFamily';
 import {AppColors} from '../assets/Colors';
 import Header from '../components/Header';
 import {AGENT_WALLET_DETAILS} from '../apis/Apis';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {useRoute} from '@react-navigation/native';
 
 const AgentCommisionAdded = ({navigation}) => {

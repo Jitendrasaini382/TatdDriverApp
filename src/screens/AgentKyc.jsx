@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   TextInput,
   Alert,
   ScrollView,
@@ -14,6 +13,7 @@ import {
   Modal,
 } from 'react-native';
 import Header from '../components/Header';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {AppColors} from '../assets/Colors';
 import {
   GET_AGENT_KYC_INFO,

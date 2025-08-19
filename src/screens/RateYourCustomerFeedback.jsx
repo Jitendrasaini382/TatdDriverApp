@@ -7,9 +7,9 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  SafeAreaView,
   Keyboard,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {RATE_YOUR_CUSTOMER} from '../apis/Apis';

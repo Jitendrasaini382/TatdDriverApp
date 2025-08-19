@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
-import {View, Text, Image, StyleSheet, SafeAreaView} from 'react-native';
+import {View, Text, Image, StyleSheet,} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {ThankuLogo} from '../assets/images';
 import Header from '../components/Header';
 import {useRoute} from '@react-navigation/native';

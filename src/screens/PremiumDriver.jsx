@@ -6,7 +6,6 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
   Alert,
 } from 'react-native';
 import {Triangle_Icon} from '../assets/images';
@@ -17,6 +16,7 @@ import {
 import {useSelector} from 'react-redux';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {AppColors} from '../assets/Colors';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PremiumDriver = ({route, navigation}) => {
   //   const {data} = route?.params || null;

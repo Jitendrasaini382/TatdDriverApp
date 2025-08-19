@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  SafeAreaView,
   ActivityIndicator,
 } from 'react-native';
 import {RightArrow_White} from '../assets/images';
@@ -15,7 +14,7 @@ import {AppFont} from '../assets/FontsFamily';
 import {GET_AGENT_SELECT_CITY} from '../apis/Apis';
 import {useSelector} from 'react-redux';
 import {ScrollView} from 'react-native';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 const SelectYourCity = ({route, navigation}) => {
   const {state} = route.params;
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);

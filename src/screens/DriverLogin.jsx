@@ -23,7 +23,7 @@ import {AppFont} from '../assets/FontsFamily';
 import {DRIVER_LOGIN, GET_ALL_DATA_APPLY_FOR_DRIVER_JOBS} from '../apis/Apis';
 import {useNavigation} from '@react-navigation/native';
 import {Triangle_Icon} from '../assets/images';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useSafeAreaInsets,SafeAreaView} from 'react-native-safe-area-context';
 import DeviceInfo from 'react-native-device-info';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {useDispatch, useSelector} from 'react-redux';
@@ -94,6 +94,7 @@ const DriverLogin = () => {
         app_version: appVersion,
         app_type: appType,
       });
+      console.log(response)
       if (response?.status_code == '200' && response?.msg_type == 'error') {
         setLoader(false);
         Alert.alert('', response?.message);
@@ -129,10 +130,10 @@ const DriverLogin = () => {
 
   const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.safeArea]}>
-      <View
+    <SafeAreaView style={[styles.safeArea]}>
+      {/* <View
         style={{height: insets.top, backgroundColor: AppColors.mainColor}}
-      />
+      /> */}
       <Header backButton={false} isAuthenticated={false} />
       <ScrollView
        refreshControl={
@@ -200,7 +201,7 @@ const DriverLogin = () => {
                     onFocus={() => setIsFocused(true)}
                     onPressIn={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
-                  />
+                    />
                 </View>
               </View>
               <View style={{marginHorizontal: moderateScale(30)}}>
@@ -264,9 +265,9 @@ const DriverLogin = () => {
                       <YoutubePlayer
                         height={170}
                         videoId={item}
-                        webViewProps={{
-                          renderToHardwareTextureAndroid: true,
-                        }}
+                        // webViewProps={{
+                        //   renderToHardwareTextureAndroid: true,
+                        // }}
                       />
                     </View>
                   )}
@@ -276,7 +277,7 @@ const DriverLogin = () => {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

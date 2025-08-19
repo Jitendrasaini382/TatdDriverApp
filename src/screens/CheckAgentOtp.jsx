@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,6 +10,7 @@ import {
   Pressable,
   Keyboard,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {AppColors} from '../assets/Colors';
@@ -51,6 +51,7 @@ const CheckAgentOtp = ({navigation, route}) => {
     // return false;
     try {
       const response = await GET_AGENT_KYC_SEND_OTP();
+      console.log(response)
 
       if (response?.status_code == 200) {
         setValidate(response?.OTP);

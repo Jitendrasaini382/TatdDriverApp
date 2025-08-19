@@ -7,14 +7,14 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
-  SafeAreaView,
   Linking,
   BackHandler,
   ActivityIndicator,
   Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {CallingGif} from '../assets/images';
 import {
   GET_ALL_CHATS_BY_BOOKING_NUMBER,
@@ -25,9 +25,11 @@ import {RefreshControl} from 'react-native';
 import {AppColors} from '../assets/Colors';
 import messaging from '@react-native-firebase/messaging';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {Platform} from 'react-native';
 
 const ChatScreen = ({navigation}) => {
   const route = useRoute();
+  const inputRef = useRef()
   const [message, setMessage] = useState('');
   const flatListRef = React.useRef(null);
   const {bookingNumber} = route?.params;
@@ -59,7 +61,7 @@ const ChatScreen = ({navigation}) => {
   );
 
   const getAllChats = async () => {
-    Keyboard.dismiss();
+    // Keyboard.dismiss();
     try {
       const res = await GET_ALL_CHATS_BY_BOOKING_NUMBER({
         booking_number: bookingNumber,
@@ -69,7 +71,12 @@ const ChatScreen = ({navigation}) => {
       setCustomerName(res?.customer_name);
       setDriverNumber(res?.driver_ivr_number);
       setTimeout(() => {
-        scrollToBottom();
+        if (flatListRef.current) {
+          flatListRef.current.scrollToOffset({
+            offset: 999999, // ek bahut bada number de do
+            animated: true,
+          });
+        }
       }, 100);
     } catch (err) {
       console.log(err);
@@ -81,7 +88,8 @@ const ChatScreen = ({navigation}) => {
 
   const handleSubmit = async () => {
     if (!message.trim()) return;
-    Keyboard.dismiss();
+    // inputRef.current?.focus(); 
+
     setLoader(true);
     try {
       const res = await INSERT_CHATS_BY_BOOKING_NUMBER({
@@ -90,9 +98,9 @@ const ChatScreen = ({navigation}) => {
       });
       setMessage(''); // Clear message after sending
       getAllChats(); // Refresh chats
-      setTimeout(() => {
-        scrollToBottom();
-      }, 200);
+      // setTimeout(() => {
+      //   scrollToBottom();
+      // }, 200);
     } catch (err) {
       console.log(err);
       setLoader(false);
@@ -272,7 +280,7 @@ const ChatScreen = ({navigation}) => {
   const handleSuggestedMessage = async text => {
     if (!text.trim()) return;
     setMessage(text);
-    Keyboard.dismiss();
+    // Keyboard.dismiss();
     setLoader(true);
     try {
       await INSERT_CHATS_BY_BOOKING_NUMBER({
@@ -396,7 +404,24 @@ const ChatScreen = ({navigation}) => {
       </View>
     );
   };
+  // const flatListRef = useRef(null);
 
+  useEffect(() => {
+    const showSub = Keyboard.addListener('keyboardDidShow', () => {
+      setTimeout(() => {
+        if (flatListRef.current) {
+          flatListRef.current.scrollToOffset({
+            offset: 999999, 
+            animated: true,
+          });
+        }
+      }, 100);
+    });
+
+    return () => {
+      showSub.remove();
+    };
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
@@ -445,92 +470,102 @@ const ChatScreen = ({navigation}) => {
           {/* <Icon color={'white'} name="phone" style={{marginRight:20, }} /> */}
         </View>
       </View>
-
-      {/* Chat Body */}
-      <FlatList
-        ref={flatListRef}
-        data={flatListData}
-        renderItem={renderFlatListItem}
-        keyExtractor={item => item.id.toString()}
-        contentContainerStyle={styles.chatBody}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="always"
-        initialScrollIndex={
-          flatListData.length > 0 ? flatListData.length - 1 : 0
-        }
-        getItemLayout={(data, index) => ({
-          length: 80, // Approximate item height
-          offset: 80 * index,
-          index,
-        })}
-        onContentSizeChange={() => scrollToBottom()}
-        onLayout={() => scrollToBottom()}
-        ListHeaderComponent={() => <ListHeaderCards />}
-        // ListHeaderComponent={() => (
-        //   <View style={styles.centeredNotice}>
-        //     <Text style={styles.encryptionNotice}>
-        //       🔐 Messages and calls are end-to-end encrypted.
-        //     </Text>
-        //   </View>
-        // )}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => {
-              setRefreshing(true);
-              getAllChats();
-            }}
-          />
-        }
-      />
-      {suggestChat && suggestChat?.length > 0 && (
-        <View style={styles.suggestionContainer}>
+      <KeyboardAvoidingView
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+        // keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0} // header ke hisaab se adjust karo
+        style={{flex: 1}}
+        contentContainerStyle={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}>
+        <View style={{flex: 1}}>
+          {/* Chat Body */}
           <FlatList
-            horizontal
-            data={suggestChat}
-            keyExtractor={(item, index) => index.toString()}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item}) => (
-              <TouchableOpacity
-                // onPress={() => setMessage(item)}
-                disabled={loader}
-                onPress={() => handleSuggestedMessage(item)}
-                style={styles.suggestionChip}>
-                <Text style={styles.suggestionText}>{item}</Text>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
-      )}
-
-      {/* Input */}
-      <View style={styles.inputRow}>
-        <TextInput
-          placeholder="Message"
-          placeholderTextColor="#999"
-          value={message}
-          //   onChangeText={text => setMessage(text)}
-          onChangeText={text => {
-            const digitCount = (text.match(/\d/g) || []).length;
-            if (digitCount <= 9) {
-              setMessage(text);
-            } else {
-              setMessage('');
+            automaticallyAdjustKeyboardInsets={true}
+            ref={flatListRef}
+            data={flatListData}
+            renderItem={renderFlatListItem}
+            keyExtractor={item => item.id.toString()}
+            contentContainerStyle={styles.chatBody}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="always"
+            initialScrollIndex={
+              flatListData.length > 0 ? flatListData.length - 1 : 0
             }
-          }}
-          style={styles.input}
-        />
-        <TouchableOpacity
-          disabled={loader}
-          style={styles.sendButton}
-          onPress={handleSubmit}>
-          {loader ? (
-            <ActivityIndicator color={AppColors.white} />
-          ) : (
-            <Icon color={AppColors.white} name="send" />
+            getItemLayout={(data, index) => ({
+              length: 80, // Approximate item height
+              offset: 80 * index,
+              index,
+            })}
+            onContentSizeChange={() => scrollToBottom()}
+            onLayout={() => scrollToBottom()}
+            ListHeaderComponent={() => <ListHeaderCards />}
+            // ListHeaderComponent={() => (
+            //   <View style={styles.centeredNotice}>
+            //     <Text style={styles.encryptionNotice}>
+            //       🔐 Messages and calls are end-to-end encrypted.
+            //     </Text>
+            //   </View>
+            // )}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => {
+                  setRefreshing(true);
+                  getAllChats();
+                }}
+              />
+            }
+          />
+          {suggestChat && suggestChat?.length > 0 && (
+            <View style={styles.suggestionContainer}>
+              <FlatList
+                horizontal
+                data={suggestChat}
+                keyExtractor={(item, index) => index.toString()}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    // onPress={() => setMessage(item)}
+                    disabled={loader}
+                    onPress={() => handleSuggestedMessage(item)}
+                    style={styles.suggestionChip}>
+                    <Text style={styles.suggestionText}>{item}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
           )}
-        </TouchableOpacity>
-      </View>
+
+          {/* Input */}
+          <View style={styles.inputRow}>
+            <TextInput
+            ref={inputRef}
+              placeholder="Message"
+              placeholderTextColor="#999"
+              value={message}
+              //   onChangeText={text => setMessage(text)}
+              onChangeText={text => {
+                const digitCount = (text.match(/\d/g) || []).length;
+                if (digitCount <= 9) {
+                  setMessage(text);
+                } else {
+                  setMessage('');
+                }
+              }}
+              style={styles.input}
+            />
+            <TouchableOpacity
+              disabled={loader}
+              style={styles.sendButton}
+              onPress={handleSubmit}>
+              {loader ? (
+                <ActivityIndicator color={AppColors.white} />
+              ) : (
+                <Icon color={AppColors.white} name="send" />
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

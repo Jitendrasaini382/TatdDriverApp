@@ -4,11 +4,11 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
 import {Dimensions} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   GET_ALL_TRAINING_MODULE_DATA,
   SUBMIT_ALL_TRAINING_MODULE_DATA,

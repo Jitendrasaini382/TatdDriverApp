@@ -6,13 +6,13 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
   Alert,
 } from 'react-native';
 import {Triangle_Icon} from '../assets/images';
 import Header from '../components/Header';
 import {APPLY_DRIVER_AVAILABLE_TEN_MINUTES} from '../apis/Apis';
 import {useSelector} from 'react-redux';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {AppColors} from '../assets/Colors';
 

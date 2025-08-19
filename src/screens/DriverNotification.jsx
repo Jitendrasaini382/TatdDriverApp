@@ -1,10 +1,11 @@
 import React, {useState, useCallback} from 'react';
-import {View, SafeAreaView, ScrollView, StyleSheet} from 'react-native';
+import {View, ScrollView, StyleSheet} from 'react-native';
 import ToggleButton from '../components/ToggleButton';
 import Header from '../components/Header';
 import AllNotificationComponent from '../components/AllNotificationsDetails';
 import {AppColors} from '../assets/Colors';
 import {RefreshControl} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DriverNotifications = ({navigation}) => {
   const [currentView, setCurrentView] = useState('NOTIFICATIONS');

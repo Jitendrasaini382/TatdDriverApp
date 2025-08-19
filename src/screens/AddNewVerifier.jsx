@@ -2,9 +2,9 @@ import {
   Alert,
   Dimensions,
   Image,
+  KeyboardAvoidingView,
   Modal,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {Triangle_Icon} from '../assets/images';
@@ -164,7 +165,8 @@ const AddNewVerifier = ({navigation}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <Header backButton={true} />
-      <View style={{flex: 1, paddingHorizontal: 10}}>
+     <KeyboardAvoidingView style={{flex:1}}  behavior='padding'>
+     <View style={{flex: 1, paddingHorizontal: 10}}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="always"
@@ -286,6 +288,7 @@ const AddNewVerifier = ({navigation}) => {
           </View>
         </ScrollView>
       </View>
+     </KeyboardAvoidingView>
 
       {/* Relation Modal */}
       <Modal

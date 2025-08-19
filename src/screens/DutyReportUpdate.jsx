@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-  SafeAreaView,
   ScrollView,
   View,
   Text,
@@ -20,6 +19,7 @@ import {
   ToastAndroid,
   Pressable,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {
   Address,
@@ -999,7 +999,9 @@ const DutyReportUpdate = ({route, navigation}) => {
         style={{
           backgroundColor: AppColors.white,
           flexDirection: 'row',
-          elevation: 5,
+          // elevation: 5,
+          borderBottomWidth:1,
+          borderBottomColor:"#000000f",
           justifyContent: 'space-between',
         }}>
         <View

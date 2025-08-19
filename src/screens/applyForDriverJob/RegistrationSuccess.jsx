@@ -11,6 +11,7 @@ import {
   Platform,
   BackHandler,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {LinearGradient} from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {resetUserAuthState} from '../../redux/slices/userAuthSlice';
@@ -185,183 +186,185 @@ const RegistrationSuccess = ({navigation}) => {
   }, [dispatch]);
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#16588e" />
+    <SafeAreaView style={{flex: 1}}>
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor="#16588e" />
 
-      <LinearGradient
-        colors={['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe']}
-        style={styles.backgroundGradient}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 1}}
-      />
+        <LinearGradient
+          colors={['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe']}
+          style={styles.backgroundGradient}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+        />
 
-      <View style={styles.particlesContainer}>
-        {particleAnimations.map((_, index) => (
-          <Particle key={index} index={index} />
-        ))}
-      </View>
-
-      {/* Language Toggle Button */}
-      <TouchableOpacity
-        onPress={() => setLanguage(prev => (prev === 'hi' ? 'en' : 'hi'))}
-        style={{
-          alignSelf: 'flex-end',
-          marginTop: 20,
-          marginRight: 20,
-          backgroundColor: '#ffffffbb',
-          paddingVertical: 6,
-          paddingHorizontal: 12,
-          borderRadius: 12,
-          elevation: 4,
-        }}>
-        <Text style={{fontSize: 12, fontWeight: '600'}}>
-          {language === 'hi' ? 'Switch to English' : 'हिंदी में बदलें'}
-        </Text>
-      </TouchableOpacity>
-
-      <Animated.View
-        style={[
-          styles.mainCard,
-          {
-            transform: [
-              {
-                translateY: cardAnimation.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [50, 0],
-                }),
-              },
-              {
-                scale: cardAnimation.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0.9, 1],
-                }),
-              },
-            ],
-            opacity: cardAnimation,
-          },
-        ]}>
-        <View style={styles.cardContent}>
-          <View style={styles.successMessage}>
-            <Text style={styles.successText}>
-              {language === 'en'
-                ? response?.english_title
-                : response?.hindi_title}
-            </Text>
-            <Text style={styles.successSubtext}>
-              {language === 'en'
-                ? response?.english_subtitle
-                : response?.hindi_subtitle}
-            </Text>
-          </View>
-
-          <Animated.View
-            style={[
-              styles.detailsSection,
-              {
-                transform: [
-                  {
-                    translateY: detailsAnimation.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [30, 0],
-                    }),
-                  },
-                ],
-                opacity: detailsAnimation,
-              },
-            ]}>
-            <View style={styles.detailsContainer}>
-              <View style={styles.detailRow}>
-                <LinearGradient
-                  colors={['#16588e', '#2172b8']}
-                  style={styles.detailIcon}>
-                  <Text style={styles.detailIconText}>#</Text>
-                </LinearGradient>
-                <View style={styles.detailInfo}>
-                  <Text style={styles.detailTitle}>
-                    {content[language].regId}
-                  </Text>
-                  <Text style={styles.detailValue}>
-                    {response?.application_id}
-                  </Text>
-                </View>
-              </View>
-
-              <View style={styles.detailRow}>
-                <LinearGradient
-                  colors={['#16588e', '#2172b8']}
-                  style={styles.detailIcon}>
-                  <Text style={styles.detailIconText}>👤</Text>
-                </LinearGradient>
-                <View style={styles.detailInfo}>
-                  <Text style={styles.detailTitle}>
-                    {content[language].driverName}
-                  </Text>
-                  <Text style={styles.detailValue}>
-                    {response?.driver_name}
-                  </Text>
-                </View>
-              </View>
-
-              <View style={styles.detailRow}>
-                <LinearGradient
-                  colors={['#16588e', '#2172b8']}
-                  style={styles.detailIcon}>
-                  <Text style={styles.detailIconText}>📅</Text>
-                </LinearGradient>
-                <View style={styles.detailInfo}>
-                  <Text style={styles.detailTitle}>
-                    {content[language].date}
-                  </Text>
-                  <Text style={styles.detailValue}>
-                    {formatDate(response?.registration_date)}
-                  </Text>
-                </View>
-              </View>
-
-              <View style={[styles.detailRow, styles.lastDetailRow]}>
-                <LinearGradient
-                  colors={['#10b981', '#6ee7b7']}
-                  style={styles.detailIcon}>
-                  <Text style={styles.detailIconText}>✓</Text>
-                </LinearGradient>
-                <View style={styles.detailInfo}>
-                  <Text style={styles.detailTitle}>
-                    {content[language].payment}
-                  </Text>
-                  <Text style={[styles.detailValue, {color: '#10b981'}]}>
-                    {content[language].paymentStatus}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </Animated.View>
-
-          <Animated.View
-            style={[
-              styles.loginButtonContainer,
-              {
-                transform: [{scale: buttonAnimation}],
-              },
-            ]}>
-            <TouchableOpacity
-              style={styles.loginButton}
-              onPress={() => dispatch(resetUserAuthState())}
-              activeOpacity={0.8}>
-              <LinearGradient
-                colors={['#16588e', '#2172b8']}
-                style={styles.loginButtonGradient}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 1}}>
-                <Text style={styles.loginButtonText}>
-                  {content[language].dashboard}
-                </Text>
-                <Icon name="arrow-forward" size={20} color="white" />
-              </LinearGradient>
-            </TouchableOpacity>
-          </Animated.View>
+        <View style={styles.particlesContainer}>
+          {particleAnimations.map((_, index) => (
+            <Particle key={index} index={index} />
+          ))}
         </View>
-      </Animated.View>
-    </View>
+
+        {/* Language Toggle Button */}
+        <TouchableOpacity
+          onPress={() => setLanguage(prev => (prev === 'hi' ? 'en' : 'hi'))}
+          style={{
+            alignSelf: 'flex-end',
+            marginTop: 20,
+            marginRight: 20,
+            backgroundColor: '#ffffffbb',
+            paddingVertical: 6,
+            paddingHorizontal: 12,
+            borderRadius: 12,
+            elevation: 4,
+          }}>
+          <Text style={{fontSize: 12, fontWeight: '600'}}>
+            {language === 'hi' ? 'Switch to English' : 'हिंदी में बदलें'}
+          </Text>
+        </TouchableOpacity>
+
+        <Animated.View
+          style={[
+            styles.mainCard,
+            {
+              transform: [
+                {
+                  translateY: cardAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [50, 0],
+                  }),
+                },
+                {
+                  scale: cardAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0.9, 1],
+                  }),
+                },
+              ],
+              opacity: cardAnimation,
+            },
+          ]}>
+          <View style={styles.cardContent}>
+            <View style={styles.successMessage}>
+              <Text style={styles.successText}>
+                {language === 'en'
+                  ? response?.english_title
+                  : response?.hindi_title}
+              </Text>
+              <Text style={styles.successSubtext}>
+                {language === 'en'
+                  ? response?.english_subtitle
+                  : response?.hindi_subtitle}
+              </Text>
+            </View>
+
+            <Animated.View
+              style={[
+                styles.detailsSection,
+                {
+                  transform: [
+                    {
+                      translateY: detailsAnimation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [30, 0],
+                      }),
+                    },
+                  ],
+                  opacity: detailsAnimation,
+                },
+              ]}>
+              <View style={styles.detailsContainer}>
+                <View style={styles.detailRow}>
+                  <LinearGradient
+                    colors={['#16588e', '#2172b8']}
+                    style={styles.detailIcon}>
+                    <Text style={styles.detailIconText}>#</Text>
+                  </LinearGradient>
+                  <View style={styles.detailInfo}>
+                    <Text style={styles.detailTitle}>
+                      {content[language].regId}
+                    </Text>
+                    <Text style={styles.detailValue}>
+                      {response?.application_id}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={styles.detailRow}>
+                  <LinearGradient
+                    colors={['#16588e', '#2172b8']}
+                    style={styles.detailIcon}>
+                    <Text style={styles.detailIconText}>👤</Text>
+                  </LinearGradient>
+                  <View style={styles.detailInfo}>
+                    <Text style={styles.detailTitle}>
+                      {content[language].driverName}
+                    </Text>
+                    <Text style={styles.detailValue}>
+                      {response?.driver_name}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={styles.detailRow}>
+                  <LinearGradient
+                    colors={['#16588e', '#2172b8']}
+                    style={styles.detailIcon}>
+                    <Text style={styles.detailIconText}>📅</Text>
+                  </LinearGradient>
+                  <View style={styles.detailInfo}>
+                    <Text style={styles.detailTitle}>
+                      {content[language].date}
+                    </Text>
+                    <Text style={styles.detailValue}>
+                      {formatDate(response?.registration_date)}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={[styles.detailRow, styles.lastDetailRow]}>
+                  <LinearGradient
+                    colors={['#10b981', '#6ee7b7']}
+                    style={styles.detailIcon}>
+                    <Text style={styles.detailIconText}>✓</Text>
+                  </LinearGradient>
+                  <View style={styles.detailInfo}>
+                    <Text style={styles.detailTitle}>
+                      {content[language].payment}
+                    </Text>
+                    <Text style={[styles.detailValue, {color: '#10b981'}]}>
+                      {content[language].paymentStatus}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </Animated.View>
+
+            <Animated.View
+              style={[
+                styles.loginButtonContainer,
+                {
+                  transform: [{scale: buttonAnimation}],
+                },
+              ]}>
+              <TouchableOpacity
+                style={styles.loginButton}
+                onPress={() => dispatch(resetUserAuthState())}
+                activeOpacity={0.8}>
+                <LinearGradient
+                  colors={['#16588e', '#2172b8']}
+                  style={styles.loginButtonGradient}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 1}}>
+                  <Text style={styles.loginButtonText}>
+                    {content[language].dashboard}
+                  </Text>
+                  <Icon name="arrow-forward" size={20} color="white" />
+                </LinearGradient>
+              </TouchableOpacity>
+            </Animated.View>
+          </View>
+        </Animated.View>
+      </View>
+    </SafeAreaView>
   );
 };
 

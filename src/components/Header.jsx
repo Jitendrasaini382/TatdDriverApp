@@ -47,7 +47,9 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
     display: 'flex',
     flexDirection: 'row',
-    elevation: 5,
+    // elevation: 5,
+    borderBottomWidth:1,
+    borderBottomColor:"#27222212",
     justifyContent: 'space-between',
   },
   leftContent: {

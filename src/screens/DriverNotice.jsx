@@ -1,10 +1,10 @@
 import React, {useState, useCallback} from 'react';
-import {View, SafeAreaView, ScrollView, Text, StyleSheet} from 'react-native';
+import {View, ScrollView, Text, StyleSheet} from 'react-native';
 import ToggleButton from '../components/ToggleButton';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import AllNoticeBoardDetails from '../components/AllNoticeBoardDetails';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 const DriverNotice = ({navigation}) => {
   const [currentView, setCurrentView] = useState('NOTICE BOARD');
 

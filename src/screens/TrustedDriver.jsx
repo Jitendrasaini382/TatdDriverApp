@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -43,7 +42,7 @@ import TimerIcon from 'react-native-vector-icons/Ionicons';
 import ScreenGuardModule from 'react-native-screenguard';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import LottieView from 'lottie-react-native';
-
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   ALL_TEN_MINUTE_STATUS_UPDATE,
   CHECK_PREMIUM_DRIVER_ELIGIBLE,
@@ -1229,7 +1228,7 @@ const TrustedDriver = ({navigation}) => {
     if (viewRef.current) {
       viewRef.current.measure((fx, fy, width, height, px, py) => {
         console.log({x: px, y: py, width, height});
-        setPopoverPosition({x: px, y: py, width, height});
+        setPopoverPosition({x: px, y: py - insets.top, width, height});
         setPopoverVisible(true);
       });
     }
@@ -1248,7 +1247,7 @@ const TrustedDriver = ({navigation}) => {
     if (viewRefNeedHelp.current) {
       viewRefNeedHelp.current.measure((fx, fy, width, height, px, py) => {
         console.log({x: px, y: py, width, height});
-        setPopoverPositionNeedHelp({x: px, y: py + height + 10, width, height}); // y + height se popover neeche show hoga
+        setPopoverPositionNeedHelp({x: px, y: py + 10, width, height}); // y + height se popover neeche show hoga
         setPopoverVisibleNeedHelp(true);
       });
     }
@@ -1404,9 +1403,9 @@ const TrustedDriver = ({navigation}) => {
 
   return (
     <View style={styles.safeArea}>
-      <View
+      {/* <View
         style={{height: insets.top, backgroundColor: AppColors.mainColor}}
-      />
+      /> */}
       <SafeAreaView style={{flex: 1}}>
         {/* <Header extraButton={true} showNeedHelp={showNeedHelp} />
         {myBookingModal && <MyBookingModal />} */}
@@ -1702,7 +1701,9 @@ const TrustedDriver = ({navigation}) => {
                 style={{
                   backgroundColor: AppColors.white,
                   flexDirection: 'row',
-                  elevation: 5,
+                  // elevation: 5,
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#27222212',
                   justifyContent: 'space-between',
                 }}>
                 <View
@@ -2958,6 +2959,7 @@ const TrustedDriver = ({navigation}) => {
                 width: '70%',
                 // width: 160,
                 alignSelf: 'center',
+                // left:popoverPositionNeedHelp.x/2,
                 justifyContent: 'center',
                 backgroundColor: '#fff',
                 paddingVertical: 10,

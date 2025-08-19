@@ -6,9 +6,9 @@ import {
   ScrollView,
   TouchableOpacity,
   Linking,
-  SafeAreaView,
 } from 'react-native';
 import {useSelector} from 'react-redux';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {AppColors} from '../assets/Colors';
 import YoutubePlayer from 'react-native-youtube-iframe';
 

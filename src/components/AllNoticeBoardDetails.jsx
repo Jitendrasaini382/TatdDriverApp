@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  SafeAreaView,
   ScrollView,
   Alert,
   StyleSheet,
@@ -12,6 +11,7 @@ import {
 } from 'react-native';
 import {CloseEnvelop, OpenEnvelop} from '../assets/images';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './Header';
 import {AppColors} from '../assets/Colors';
 import {DRIVER_NOTICE} from '../apis/Apis';

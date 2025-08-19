@@ -2,11 +2,11 @@ import {
   ActivityIndicator,
   Dimensions,
   FlatList,
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, {useEffect, useState} from 'react';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
@@ -61,11 +61,11 @@ const MyBonusStatusHistory = () => {
 
   return (
     <View style={{flex: 1, backgroundColor: AppColors.white}}>
-      <View
+      {/* <View
         style={{height: insets.top, backgroundColor: AppColors.mainColor}}
-      />
+      /> */}
       <SafeAreaView style={{flex: 1}}>
-        <Header backButton={true} />
+        <Header backButton={true} />    
 
         <View style={styles.content}>
           <View style={styles.container}>

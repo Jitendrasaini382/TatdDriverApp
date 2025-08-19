@@ -5,12 +5,12 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   ActivityIndicator,
   FlatList,
   Button,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {CloseEnvelop, OpenEnvelop} from '../assets/images';
 import {useNavigation} from '@react-navigation/native';
 import Header from './Header';

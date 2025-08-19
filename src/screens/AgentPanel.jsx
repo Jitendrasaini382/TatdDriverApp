@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {
   Image,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -19,6 +18,7 @@ import {
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {AppFont} from '../assets/FontsFamily';
 import {ArrowFadeBlue, CallingGif, Headerlogo} from '../assets/images';
 import {Linking} from 'react-native';
@@ -130,8 +130,11 @@ const AgentPanel = ({navigation}) => {
         style={{
           backgroundColor: AppColors.white,
           flexDirection: 'row',
-          elevation: 5,
+          // elevation: 5,
+          // borderBottomWidth:0.3,
+          // borderBottomColor:"black",
           justifyContent: 'space-between',
+
         }}>
         <View
           style={{

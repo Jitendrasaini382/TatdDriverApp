@@ -19,9 +19,9 @@ const MyBookingAgencyModal = ({setModalVisible}) => {
   const dispatch = useDispatch();
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => dispatch(setMyBookingAgencyModal(false))}>
-      <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <TouchableWithoutFeedback
+        onPress={() => dispatch(setMyBookingAgencyModal(false))}>
         <View
           style={{
             backgroundColor: AppColors.white,
@@ -116,18 +116,33 @@ const MyBookingAgencyModal = ({setModalVisible}) => {
                   </Text>
                 </View>
                 <View style={{alignItems: 'center', margin: 10}}>
-                  <Button
+                  <TouchableOpacity
+                    onPress={() => {
+                      Alert.alert(' Looking... Booking Page ');
+                    }}
+                    style={{padding: 8, backgroundColor: AppColors.mainColor}}>
+                    <Text
+                      style={{
+                        color: AppColors.white,
+                        fontSize: 17,
+                        fontWeight: '500',
+                      }}>
+                      Book Now
+                    </Text>
+                  </TouchableOpacity>
+                  {/* <Button
                     onPress={() => Alert.alert(' Looking... Booking Page ')}
                     color={AppColors.mainColor}
+                    // style={{backgroundColor:"black"}}
                     title="Book Now"
-                  />
+                  /> */}
                 </View>
               </View>
             </View>
           </View>
         </View>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 };
 

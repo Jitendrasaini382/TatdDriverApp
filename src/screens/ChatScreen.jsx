@@ -29,7 +29,7 @@ import {Platform} from 'react-native';
 
 const ChatScreen = ({navigation}) => {
   const route = useRoute();
-  const inputRef = useRef()
+  const inputRef = useRef();
   const [message, setMessage] = useState('');
   const flatListRef = React.useRef(null);
   const {bookingNumber} = route?.params;
@@ -88,7 +88,7 @@ const ChatScreen = ({navigation}) => {
 
   const handleSubmit = async () => {
     if (!message.trim()) return;
-    // inputRef.current?.focus(); 
+    // inputRef.current?.focus();
 
     setLoader(true);
     try {
@@ -411,7 +411,7 @@ const ChatScreen = ({navigation}) => {
       setTimeout(() => {
         if (flatListRef.current) {
           flatListRef.current.scrollToOffset({
-            offset: 999999, 
+            offset: 999999,
             animated: true,
           });
         }
@@ -442,6 +442,7 @@ const ChatScreen = ({navigation}) => {
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'space-between',
+            alignItems:"center"
           }}>
           <Text style={styles.headerTitle}>{customerName || 'Customer'}</Text>
           {/* <Text style={styles.headerSubtitle}>Business Account</Text> */}
@@ -471,7 +472,7 @@ const ChatScreen = ({navigation}) => {
         </View>
       </View>
       <KeyboardAvoidingView
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+        // keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
         // keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0} // header ke hisaab se adjust karo
         style={{flex: 1}}
         contentContainerStyle={{flex: 1}}
@@ -479,7 +480,7 @@ const ChatScreen = ({navigation}) => {
         <View style={{flex: 1}}>
           {/* Chat Body */}
           <FlatList
-            automaticallyAdjustKeyboardInsets={true}
+            // automaticallyAdjustKeyboardInsets={true}
             ref={flatListRef}
             data={flatListData}
             renderItem={renderFlatListItem}
@@ -538,7 +539,7 @@ const ChatScreen = ({navigation}) => {
           {/* Input */}
           <View style={styles.inputRow}>
             <TextInput
-            ref={inputRef}
+              ref={inputRef}
               placeholder="Message"
               placeholderTextColor="#999"
               value={message}

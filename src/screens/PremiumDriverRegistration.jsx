@@ -494,6 +494,8 @@ const styles = StyleSheet.create({
     // height:40
   },
   input: {
+    paddingStart:5,
+    minHeight:40,
     flex: 1,
     fontSize: 14,
     color: AppColors.black,

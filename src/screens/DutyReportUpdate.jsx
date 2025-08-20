@@ -18,8 +18,9 @@ import {
   Clipboard,
   ToastAndroid,
   Pressable,
+  KeyboardAvoidingView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {
   Address,
@@ -70,6 +71,7 @@ import Animated, {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DeviceInfo from 'react-native-device-info';
 import {useFocusEffect} from '@react-navigation/native';
+import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 
 const DutyReportUpdate = ({route, navigation}) => {
   const {bookingNumber, state} = route?.params;
@@ -555,31 +557,54 @@ const DutyReportUpdate = ({route, navigation}) => {
     }
   };
 
+  // const requestCameraPermission = async () => {
+  //   if (Platform.OS === 'android') {
+  //     try {
+  //       const granted = await PermissionsAndroid.request(
+  //         PermissionsAndroid.PERMISSIONS.CAMERA,
+  //         {
+  //           title: 'Camera Permission',
+  //           message: 'This app needs access to your camera to capture photos.',
+  //           buttonNeutral: 'Ask Me Later',
+  //           buttonNegative: 'Cancel',
+  //           buttonPositive: 'OK',
+  //         },
+  //       );
+  //       return granted === PermissionsAndroid.RESULTS.GRANTED;
+  //     } catch (err) {
+  //       console.warn(err);
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // };
   const requestCameraPermission = async () => {
-    if (Platform.OS === 'android') {
+    // console.log("p")
+   try {
+    if (Platform.OS === "android") {
       try {
         const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.CAMERA,
-          {
-            title: 'Camera Permission',
-            message: 'This app needs access to your camera to capture photos.',
-            buttonNeutral: 'Ask Me Later',
-            buttonNegative: 'Cancel',
-            buttonPositive: 'OK',
-          },
+          PermissionsAndroid.PERMISSIONS.CAMERA
         );
         return granted === PermissionsAndroid.RESULTS.GRANTED;
       } catch (err) {
         console.warn(err);
         return false;
       }
+    } else{
+      // Alert.alert()
+      const result = await request(PERMISSIONS.IOS.CAMERA);
+      return result === RESULTS.GRANTED;
     }
-    return true;
+   } catch (error) {
+    console.log(error)
+   }
+    // return false;
   };
-
   const handleCameraCapture = async () => {
     try {
       const hasPermission = await requestCameraPermission();
+      // console.log(hasPermission,"poiu")
       if (hasPermission) {
         launchCamera(
           {
@@ -614,7 +639,9 @@ const DutyReportUpdate = ({route, navigation}) => {
           ],
         );
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const driverReached = async () => {
@@ -949,9 +976,9 @@ const DutyReportUpdate = ({route, navigation}) => {
 
   const showPopover = () => {
     if (viewRef.current) {
-      viewRef.current.measure((fx, fy, width, height, px, py) => {
-        console.log({x: px, y: py, width, height});
-        setPopoverPosition({x: px, y: py + height + 10, width, height}); // y + height se popover neeche show hoga
+      viewRef.current.measureInWindow((x, y, width, height) => {
+        console.log({x: x, y: y, width, height});
+        setPopoverPosition({x: x, y: y + height + 10, width, height}); // y + height se popover neeche show hoga
         setPopoverVisible(true);
       });
     }
@@ -1000,8 +1027,8 @@ const DutyReportUpdate = ({route, navigation}) => {
           backgroundColor: AppColors.white,
           flexDirection: 'row',
           // elevation: 5,
-          borderBottomWidth:1,
-          borderBottomColor:"#000000f",
+          borderBottomWidth: 1,
+          borderBottomColor: '#00000027',
           justifyContent: 'space-between',
         }}>
         <View
@@ -1615,7 +1642,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         </ScrollView>
       )}
       {/* First time popup */}
-
+      {/* center modal */}
       <Modal
         transparent={true}
         animationType="slide"
@@ -2251,7 +2278,8 @@ const DutyReportUpdate = ({route, navigation}) => {
         animationType="slide"
         visible={modalVisibleinput}
         onRequestClose={() => setModalVisibleinput(false)}>
-        <View
+       <KeyboardAvoidingView style={{flex:1}}  behavior={Platform.OS=="ios"?"padding":null} >
+       <View
           style={{
             flex: 1,
             justifyContent: 'center',
@@ -2274,7 +2302,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                 size={'small'}
               />
             ) : (
-              <ScrollView keyboardShouldPersistTaps="always">
+              <ScrollView keyboardShouldPersistTaps='handled' >
                 <TouchableOpacity
                   style={{
                     position: 'absolute',
@@ -2459,6 +2487,7 @@ const DutyReportUpdate = ({route, navigation}) => {
           </View>
           <Toast visibilityTime={3000} />
         </View>
+       </KeyboardAvoidingView>
       </Modal>
 
       {/* otpsendmodalend */}
@@ -2696,7 +2725,7 @@ const DutyReportUpdate = ({route, navigation}) => {
               style={{
                 position: 'absolute',
                 top: -10,
-                left: 180,
+                left: popoverPosition.x,
                 width: 0,
                 height: 0,
                 borderLeftWidth: 10,

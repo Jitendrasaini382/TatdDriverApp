@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   Alert,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -70,6 +71,7 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
   };
 
   return (
+    <SafeAreaView  style={{flex:1}} >
     <ScrollView style={styles.container}>
       <TouchableOpacity
         onPress={() => setTicketDetailsModal(false)}
@@ -98,6 +100,7 @@ const TicketDetailsModal = ({setTicketDetailsModal, ticketId}) => {
         </View>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 

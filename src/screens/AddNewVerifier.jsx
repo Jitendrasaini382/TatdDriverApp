@@ -290,7 +290,9 @@ const AddNewVerifier = ({navigation}) => {
       </View>
      </KeyboardAvoidingView>
 
-      {/* Relation Modal */}
+      {/* Relation Modal   */}
+
+      {/* in center */}
       <Modal
         transparent
         visible={relationModalVisible}

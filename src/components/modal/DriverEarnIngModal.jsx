@@ -6,10 +6,12 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  SafeAreaView
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
 import {DRIVER_EARNING} from '../../apis/Apis';
+// import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 const DriverEarningModal = ({setIsModalVisible, bookingNumber}) => {
   const [tripDetails, setTripDetails] = useState({});
@@ -41,12 +43,14 @@ const DriverEarningModal = ({setIsModalVisible, bookingNumber}) => {
     <ActivityIndicator
       style={{flex: 1, alignContent: 'center'}}
       color={AppColors.mainColor}
-      size={'small'}
+      size={'small'} 
     />
   ) : (
-    <>
-      <TouchableWithoutFeedback style={{flex: 1}} onPress={closeModal}>
-        <View style={styles.container}>
+    <> 
+    <SafeAreaView style={{flex:1 }} >
+      <TouchableWithoutFeedback  onPress={closeModal}>
+       <View style={{}} >
+       <View style={styles.container}>
           <View style={styles.topContent}>
             <Text style={styles.headerText}>Package Details</Text>
             <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
@@ -104,7 +108,10 @@ const DriverEarningModal = ({setIsModalVisible, bookingNumber}) => {
             <Text style={styles.closeModalButtonText}>Close</Text>
           </TouchableOpacity>
         </View>
+
+       </View>
       </TouchableWithoutFeedback>
+      </SafeAreaView>
     </>
   );
 };

@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
@@ -6,6 +6,7 @@ import {AppFont} from '../../assets/FontsFamily';
 const AgentPanelModal = ({setAgentPanelModal, data}) => {
   if (!data) return null;
   return (
+    <SafeAreaView style={{flex:1}}  >
     <View style={{flex: 1, margin: 10}}>
       <View style={styles.container}>
         <View style={styles.header}>
@@ -89,6 +90,7 @@ const AgentPanelModal = ({setAgentPanelModal, data}) => {
         </View>
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 

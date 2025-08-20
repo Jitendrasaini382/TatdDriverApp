@@ -20,6 +20,7 @@ import {
   PermissionsAndroid,
   FlatList,
 } from 'react-native';
+import {findNodeHandle, UIManager} from 'react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -1226,9 +1227,9 @@ const TrustedDriver = ({navigation}) => {
   });
   const showPopover = () => {
     if (viewRef.current) {
-      viewRef.current.measure((fx, fy, width, height, px, py) => {
-        console.log({x: px, y: py, width, height});
-        setPopoverPosition({x: px, y: py - insets.top, width, height});
+      viewRef.current.measureInWindow((x, y, width, height) => {
+        console.log({x, y, width, height});
+        setPopoverPosition({x, y, width, height});
         setPopoverVisible(true);
       });
     }
@@ -1245,9 +1246,9 @@ const TrustedDriver = ({navigation}) => {
 
   const showPopoverNeedHelp = () => {
     if (viewRefNeedHelp.current) {
-      viewRefNeedHelp.current.measure((fx, fy, width, height, px, py) => {
-        console.log({x: px, y: py, width, height});
-        setPopoverPositionNeedHelp({x: px, y: py + 10, width, height}); // y + height se popover neeche show hoga
+      viewRefNeedHelp.current.measureInWindow((x, y, width, height) => {
+        console.log({x: x, y: y, width, height});
+        setPopoverPositionNeedHelp({x, y: y + height + 10, width, height}); // y + height se popover neeche show hoga
         setPopoverVisibleNeedHelp(true);
       });
     }
@@ -2900,45 +2901,47 @@ const TrustedDriver = ({navigation}) => {
 
         <Toast visibilityTime={3000} topOffset={20} />
         <Modal transparent animationType="fade" visible={popoverVisible}>
-          <TouchableOpacity
-            style={{flex: 1, backgroundColor: 'rgba(121, 129, 116, 0.48)'}}
-            activeOpacity={1}
-            onPress={() => setPopoverVisible(false)}>
-            <View
-              style={{
-                position: 'absolute',
-                top: popoverPosition.y, // Align with the target view's top
-                left: popoverPosition.x - 120, // Position to the left
-                width: 110,
-                backgroundColor: AppColors.white,
-                padding: 10,
-                borderRadius: 5,
-                elevation: 5,
-                shadowColor: '#000',
-                shadowOffset: {width: 0, height: 2},
-                shadowOpacity: 0.25,
-                shadowRadius: 4,
-              }}>
+          <SafeAreaView style={{flex: 1}}>
+            <TouchableOpacity
+              style={{flex: 1, backgroundColor: 'rgba(121, 129, 116, 0.48)'}}
+              activeOpacity={1}
+              onPress={() => setPopoverVisible(false)}>
               <View
                 style={{
                   position: 'absolute',
-                  top: 5,
-                  right: -10,
-                  width: 0,
-                  height: 0,
-                  borderLeftWidth: 10,
-                  borderRightWidth: 10,
-                  borderBottomWidth: 10,
-                  borderLeftColor: 'transparent',
-                  borderRightColor: 'transparent',
-                  borderBottomColor: AppColors.white, // Matches the popover background
-                }}
-              />
-              <Text style={{color: AppColors.black, fontSize: 15}}>
-                Turn It ON.
-              </Text>
-            </View>
-          </TouchableOpacity>
+                  top: popoverPosition.y, // Align with the target view's top
+                  left: popoverPosition.x - 120, // Position to the left
+                  width: 110,
+                  backgroundColor: AppColors.white,
+                  padding: 10,
+                  borderRadius: 5,
+                  elevation: 5,
+                  shadowColor: '#000',
+                  shadowOffset: {width: 0, height: 2},
+                  shadowOpacity: 0.25,
+                  shadowRadius: 4,
+                }}>
+                <View
+                  style={{
+                    position: 'absolute',
+                    top: 5,
+                    right: -10,
+                    width: 0,
+                    height: 0,
+                    borderLeftWidth: 10,
+                    borderRightWidth: 10,
+                    borderBottomWidth: 10,
+                    borderLeftColor: 'transparent',
+                    borderRightColor: 'transparent',
+                    borderBottomColor: AppColors.white, // Matches the popover background
+                  }}
+                />
+                <Text style={{color: AppColors.black, fontSize: 15}}>
+                  Turn It ON.
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </SafeAreaView>
         </Modal>
 
         {/* need help popup start */}
@@ -2975,7 +2978,10 @@ const TrustedDriver = ({navigation}) => {
                 style={{
                   position: 'absolute',
                   top: -10,
-                  left: 180,
+                  left: Math.floor(
+                    popoverPositionNeedHelp.x -
+                      popoverPositionNeedHelp.width / 2,
+                  ),
                   width: 0,
                   height: 0,
                   borderLeftWidth: 10,
@@ -3097,7 +3103,9 @@ const TrustedDriver = ({navigation}) => {
                 style={{
                   position: 'absolute',
                   top: -10,
-                  left: 120,
+                  left:
+                    popoverPositionNeedHelp.x -
+                    popoverPositionNeedHelp.width / 2,
                   width: 0,
                   height: 0,
                   borderLeftWidth: 10,

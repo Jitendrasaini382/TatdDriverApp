@@ -1,4 +1,4 @@
-import {Button, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Button, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import {AppColors} from '../../assets/Colors';
@@ -8,6 +8,7 @@ const AgentLeadsModal = ({setAgentLeadsModal, data}) => {
   if (!data) return null;
 
   return (
+    <SafeAreaView style={{flex:1}}  >
     <View
       style={{
         backgroundColor: AppColors.gray,
@@ -77,6 +78,7 @@ const AgentLeadsModal = ({setAgentLeadsModal, data}) => {
         </Text>
       </TouchableOpacity>
     </View>
+    </SafeAreaView>
   );
 };
 

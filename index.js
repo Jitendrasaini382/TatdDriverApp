@@ -1,4 +1,4 @@
-import {AppRegistry, Linking} from 'react-native';
+import {Alert, AppRegistry, Linking} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
 import messaging from '@react-native-firebase/messaging';
@@ -9,6 +9,11 @@ import {navigationRef} from './src/routes/private';
 import {checkBatteryOptimization} from './src/utils/permissions';
 import {enableScreens} from 'react-native-screens';
 import './gesture-handler';
+import store from './src/redux/store';
+import {
+  resetUserAuthState,
+  setUserAuthStates,
+} from './src/redux/slices/userAuthSlice';
 
 enableScreens();
 
@@ -54,6 +59,24 @@ const handleNotificationPress = async (notification, action, isAppOpen) => {
       isAppOpen ? 100 : 200,
     );
     return;
+  } else if (path == 'applyForDriverJobs') {
+    // Alert.alert("")
+    // setTimeout(
+    //   () => {
+    //     navigationRef?.current?.navigate('ChatScreen', {
+    //       // bookingNumber: bookingNumber,
+    //     });
+    //   },
+    //   isAppOpen ? 100 : 200,
+    // );
+    // return;
+    // store.dispatch(resetUserAuthState())
+    store.dispatch(
+      setUserAuthStates({
+        key: 'isRegistered',
+        value: false,
+      }),
+    );
   }
   if (DutyReportPath) {
     let bokkingId = path?.split('/')[1];

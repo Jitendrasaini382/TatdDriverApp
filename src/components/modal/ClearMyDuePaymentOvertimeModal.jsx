@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Dimensions,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -35,6 +36,7 @@ const ClearMyDuePaymentOvertimeModal = ({
   // console.log(tripDetails, 'tripDetails >>>>>>>>>>>>>>>>>>>>>>>>>>');
 
   return (
+    <SafeAreaView style={{flex:1}} >
     <ScrollView>
       <View style={styles.modalContainer}>
         <View style={styles.headerContainer}>
@@ -169,6 +171,7 @@ const ClearMyDuePaymentOvertimeModal = ({
         </TouchableOpacity>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 

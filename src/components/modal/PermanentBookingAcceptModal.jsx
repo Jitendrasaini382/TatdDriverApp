@@ -7,6 +7,7 @@ import {
   Alert,
   Pressable,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
@@ -189,6 +190,7 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
   };
 
   return (
+    <SafeAreaView style={{flex:1}} >
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={styles.card}>
         <Text style={styles.header}>{data?.instructions}</Text>
@@ -232,6 +234,7 @@ const PermanentBookingAcceptModal = ({setOpenModal, data}) => {
         </View>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 

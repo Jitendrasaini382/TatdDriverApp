@@ -10,9 +10,10 @@ import {
   Alert,
   RefreshControl,
   Keyboard,
+  Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import {AppFont} from '../assets/FontsFamily';
 import {AppColors} from '../assets/Colors';
@@ -238,6 +239,7 @@ const TicketsDriver = ({navigation}) => {
     ),
     [handleTicketPress],
   );
+  const insets = useSafeAreaInsets()
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -266,14 +268,16 @@ const TicketsDriver = ({navigation}) => {
           onBackdropPress={() => setCreateTicketModal(false)}
           animationIn="fadeInDown"
           animationOut="fadeOutUp"
+          style={{marginTop:Platform.OS=="ios"?insets.top:0}}
           isVisible={createTicketModal}>
           <View
             style={{
               flex: 1,
-              justifyContent: 'flex-start',
+              // justifyContent: 'flex-start',
               backgroundColor: AppColors.white,
-              padding: 10,
+              // padding: 10,
               borderWidth: 2,
+              // paddingTop:insets.top,
               borderRadius: 10,
               borderColor: '#e7e7e7',
             }}>

@@ -245,6 +245,8 @@ const DriverTrainingModulePhaseOne = ({navigation}) => {
             <Text style={{color: AppColors.white, fontSize: 20}}>Submit</Text>
           </TouchableOpacity>
         ) : null}
+
+        {/* center modal */}
         <Modal visible={isVisible} transparent animationType="slide">
           <View style={styles.modalOverlay}>
             <View style={styles.modalContainer}>

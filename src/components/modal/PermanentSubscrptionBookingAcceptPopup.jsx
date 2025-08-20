@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Alert,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {
@@ -100,6 +101,7 @@ const PermanentSubscrptionBookingAcceptPopup = ({setOpenModal, PS_ID}) => {
   };
 
   return (
+    <SafeAreaView style={{flex:1}} >
     <ScrollView contentContainerStyle={styles.container}>
       {loading ? (
         <View
@@ -209,6 +211,7 @@ const PermanentSubscrptionBookingAcceptPopup = ({setOpenModal, PS_ID}) => {
         </View>
       )}
     </ScrollView>
+    </SafeAreaView>
   );
 };
 

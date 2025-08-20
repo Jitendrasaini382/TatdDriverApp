@@ -94,9 +94,9 @@ const AgentPanel = ({navigation}) => {
 
   const showPopover = () => {
     if (viewRef.current) {
-      viewRef.current.measure((fx, fy, width, height, px, py) => {
-        console.log({x: px, y: py, width, height});
-        setPopoverPosition({x: px, y: py + height + 10, width, height}); // y + height se popover neeche show hoga
+      viewRef.current.measureInWindow((x, y, width, height) => {
+        console.log({x,y, width, height});
+        setPopoverPosition({x: x, y: y + height + 10, width, height}); // y + height se popover neeche show hoga
         setPopoverVisible(true);
       });
     }

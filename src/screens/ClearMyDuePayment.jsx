@@ -165,7 +165,7 @@ const ClearMyDuePayment = ({navigation}) => {
                     ))}
                 </View>
                 <Modal
-                  backdropOpacity={0}
+                  // backdropOpacity={1}
                   onBackdropPress={() => setMyDuePaymentModal(false)}
                   animationIn={'fadeInDown'}
                   animationOut={'fadeOutUp'}

@@ -6,6 +6,7 @@ import {
   ScrollView,
   Alert,
   Pressable,
+  SafeAreaView,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {AppFont} from '../../assets/FontsFamily';
@@ -54,6 +55,7 @@ const ConfirmReferFriendModal = ({
   if (!data) return null;
 
   return (
+    <SafeAreaView style={{flex:1}}  >
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={styles.card}>
         <Text style={styles.header}>{data?.title}</Text>
@@ -79,6 +81,7 @@ const ConfirmReferFriendModal = ({
         </View>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 

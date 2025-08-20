@@ -160,18 +160,19 @@ const PremiumDriverRegistrationProcess = ({navigation}) => {
   }));
   return (
     <>
+      
+      <SafeAreaView style={{flex: 1,}}>
       <Header
         backButton={true}
         customeNavigation={{
           name: 'TrustedDriver',
         }}
       />
-      <SafeAreaView style={{flex: 1, paddingHorizontal: 10, marginTop: 20}}>
         <ScrollView
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          contentContainerStyle={{paddingBottom: 100}}
+          contentContainerStyle={{paddingBottom: 100,paddingHorizontal:10,paddingTop:5}}
           showsVerticalScrollIndicator={false}>
           <View>
             <Text style={{color: 'black', fontSize: 25, fontWeight: 'bold'}}>

@@ -8,6 +8,7 @@ import {
   Pressable,
   Alert,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {AppColors} from '../../assets/Colors';
 import {
@@ -199,6 +200,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   };
 
   return (
+    <SafeAreaView style={{flex:1}} >
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerTextContainer}>
@@ -282,6 +284,7 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
         </Text>
       </TouchableOpacity>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 

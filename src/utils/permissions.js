@@ -5,9 +5,10 @@ import {
   Platform,
   Vibration,
 } from 'react-native';
-import {request, check, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {openSettings, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 import IntentLauncher from '@yz1311/react-native-intent-launcher';
 import notifee from '@notifee/react-native';
+// import {  } from 'react-native-permissions';
 
 export const requestNotificationPermission = async () => {
   if (Platform.OS === 'android') {
@@ -65,6 +66,47 @@ export const checkVibrationSupport = duration => {
   } catch (error) {}
 };
 
+// export const requestLocationPermission = async () => {
+//   if (Platform.OS === 'android') {
+//     try {
+//       const granted = await PermissionsAndroid.request(
+//         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+//         {
+//           title: 'Location Permission',
+//           message:
+//             'This app requires location access to provide services based on your location.',
+//           buttonPositive: 'OK',
+//           buttonNegative: 'Cancel',
+//         },
+//       );
+
+//       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+//         return true;
+//       } else {
+//         Alert.alert(
+//           'Permission Denied',
+//           'Location permission is required. Please enable it in settings.',
+//           [
+//             {
+//               text: 'Cancel',
+//               style: 'cancel',
+//               onPress: () => {
+//                 return false;
+//               },
+//             },
+//             {
+//               text: 'Go to Settings',
+//               onPress: () => openSettings(),
+//             },
+//           ],
+//         );
+//         return;
+//       }
+//     } catch (err) {
+//       console.warn(err);
+//     }
+//   }
+// };
 export const requestLocationPermission = async () => {
   if (Platform.OS === 'android') {
     try {
@@ -86,30 +128,40 @@ export const requestLocationPermission = async () => {
           'Permission Denied',
           'Location permission is required. Please enable it in settings.',
           [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-              onPress: () => {
-                return false;
-              },
-            },
-            {
-              text: 'Go to Settings',
-              onPress: () => openSettings(),
-            },
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Go to Settings', onPress: () => openSettings() },
           ],
         );
-        return;
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  } else  {
+    try {
+      const result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+
+      if (result === RESULTS.GRANTED) {
+        return true;
+      } else {
+        Alert.alert(
+          'Permission Denied',
+          'Location permission is required. Please enable it in settings.',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Go to Settings', onPress: () => openSettings() },
+          ],
+        );
+        return false;
       }
     } catch (err) {
       console.warn(err);
     }
   }
 };
-
-const openSettings = () => {
-  Linking.openSettings();
-};
+// const openSettings = () => {
+//   Linking.openSettings();
+// };
 
 export const openBatteryOptimizationSettings = () => {
   if (Platform.OS === 'android') {

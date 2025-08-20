@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Dimensions,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -32,6 +33,7 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal, tripDetails}) => {
   // console.log(tripDetails, 'tripDetails >>>>>>>>>>>>>>>>>>>>>>>>>>');
 
   return (
+    <SafeAreaView style={{flex:1}} >  
     <ScrollView>
       <View style={styles.modalContainer}>
         <View style={styles.headerContainer}>
@@ -161,6 +163,7 @@ const ClearMyDuePaymentModal = ({setMyDuePaymentModal, tripDetails}) => {
         </TouchableOpacity>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 

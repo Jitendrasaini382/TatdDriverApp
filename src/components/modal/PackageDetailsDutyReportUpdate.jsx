@@ -1,5 +1,6 @@
 import {
   Dimensions,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -17,164 +18,170 @@ const PackageDetailsDutyReportUpdate = ({
   data,
 }) => {
   return (
-    <TouchableWithoutFeedback
-      onPress={() => setPackageDetailsDutyReportUpdate(false)}>
-      <ScrollView>
-        <View style={styles.wrapper}>
-          <View style={styles.header}>
-            <Text style={styles.headerText}>Package Details</Text>
+    <SafeAreaView style={{flex: 1}}>
+      <TouchableWithoutFeedback
+        onPress={() => setPackageDetailsDutyReportUpdate(false)}>
+        <ScrollView>
+          <View style={styles.wrapper}>
+            <View style={styles.header}>
+              <Text style={styles.headerText}>Package Details</Text>
+              <TouchableOpacity
+                onPress={() => setPackageDetailsDutyReportUpdate(false)}
+                style={styles.closeButton}>
+                <Text style={styles.closeButtonText}>X</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.body}>
+              {data?.Salary && (
+                <View style={styles.row}>
+                  <Text style={styles.label}>Salary</Text>
+                  <Text style={styles.value}>Rs. {data?.Salary}</Text>
+                </View>
+              )}
+
+              {data?.Working_Days && (
+                <View style={styles.row}>
+                  <Text style={styles.label}>Working Days:</Text>
+                  <Text style={styles.value}>{data?.Working_Days}</Text>
+                </View>
+              )}
+
+              {data?.Working_Hours && (
+                <View style={styles.row}>
+                  <Text style={styles.label}>Working Hours :</Text>
+                  <Text style={styles.value}>{data?.Working_Hours}</Text>
+                </View>
+              )}
+
+              {data?.Overtime && (
+                <View style={styles.row}>
+                  <Text style={styles.label}>Overtime :</Text>
+                  <Text style={styles.value}>{data?.Overtime}</Text>
+                </View>
+              )}
+
+              {data?.hours && data?.budget && (
+                <View style={styles.container}>
+                  <View style={styles.textContainer}>
+                    <Text style={[styles.text, {fontSize: width * 0.045}]}>
+                      Trial {data?.hours} hours - {data?.budget} Rs का है।
+                    </Text>
+                  </View>
+                </View>
+              )}
+
+              {data?.message && (
+                <View style={styles.bulletRow}>
+                  <View style={styles.bulletDot} />
+                  <Text style={styles.messageText}>{data?.message}</Text>
+                </View>
+              )}
+
+              {data?.budget !== undefined && (
+                <View style={styles.bulletRow}>
+                  <View style={styles.bulletDot} />
+                  <Text style={styles.bulletText}>
+                    Return to TAT D - Rs. {data?.budget}
+                  </Text>
+                </View>
+              )}
+
+              {data?.trip_type && (
+                <View style={styles.row}>
+                  <Text style={styles.label}>Trip Type:</Text>
+                  <Text style={styles.value}>{String(data?.trip_type)}</Text>
+                </View>
+              )}
+
+              {data?.package && (
+                <View style={styles.row}>
+                  <Text style={styles.label}>Package:</Text>
+                  <Text style={styles.value}>{String(data?.package)}</Text>
+                </View>
+              )}
+
+              {data?.package_price !== undefined && (
+                <View style={styles.row}>
+                  <Text style={styles.label}>
+                    Package Price: {String(data?.payment_mode || '')}
+                  </Text>
+                  <Text style={styles.value}>
+                    {String(data?.package_price)}
+                  </Text>
+                </View>
+              )}
+
+              {data?.gst_amount !== undefined && (
+                <View style={styles.row}>
+                  <Text style={styles.label}>GST : 5%</Text>
+                  <Text style={styles.value}>Rs {data?.gst_amount}</Text>
+                </View>
+              )}
+
+              {data?.commision_amount !== undefined && (
+                <View style={styles.row}>
+                  <Text style={styles.label}>
+                    Commission : {String(data?.commission || '')}
+                  </Text>
+                  <Text style={styles.value}>Rs {data?.commision_amount}</Text>
+                </View>
+              )}
+
+              <View style={styles.divider} />
+
+              {data?.supply_cost !== undefined && (
+                <View style={styles.row}>
+                  <Text style={styles.label}>Net Earning:</Text>
+                  <Text style={styles.value}>Rs {data?.supply_cost}</Text>
+                </View>
+              )}
+
+              <View style={styles.divider} />
+
+              {data?.Overtime_Charges && (
+                <View style={styles.container}>
+                  <View style={styles.bullet} />
+                  <View style={styles.textContainer}>
+                    <Text style={styles.text}>
+                      {String(data?.Overtime_Charges)}
+                    </Text>
+                  </View>
+                </View>
+              )}
+
+              {data?.Night_Charges && (
+                <View style={styles.container}>
+                  <View style={styles.bullet} />
+                  <View style={styles.textContainer}>
+                    <Text style={styles.text}>
+                      {String(data?.Night_Charges)}
+                    </Text>
+                  </View>
+                </View>
+              )}
+
+              {data?.return_to_tatd && (
+                <View style={styles.container}>
+                  <View style={styles.bullet} />
+                  <View style={styles.textContainer}>
+                    <Text style={styles.text}>
+                      {String(data?.return_to_tatd)}
+                    </Text>
+                  </View>
+                </View>
+              )}
+            </View>
+
             <TouchableOpacity
               onPress={() => setPackageDetailsDutyReportUpdate(false)}
-              style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>X</Text>
+              style={styles.payButton}>
+              <Text style={styles.payButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
-
-          <View style={styles.body}>
-            {data?.Salary && (
-              <View style={styles.row}>
-                <Text style={styles.label}>Salary</Text>
-                <Text style={styles.value}>Rs. {data?.Salary}</Text>
-              </View>
-            )}
-
-            {data?.Working_Days && (
-              <View style={styles.row}>
-                <Text style={styles.label}>Working Days:</Text>
-                <Text style={styles.value}>{data?.Working_Days}</Text>
-              </View>
-            )}
-
-            {data?.Working_Hours && (
-              <View style={styles.row}>
-                <Text style={styles.label}>Working Hours :</Text>
-                <Text style={styles.value}>{data?.Working_Hours}</Text>
-              </View>
-            )}
-
-            {data?.Overtime && (
-              <View style={styles.row}>
-                <Text style={styles.label}>Overtime :</Text>
-                <Text style={styles.value}>{data?.Overtime}</Text>
-              </View>
-            )}
-
-            {data?.hours && data?.budget && (
-              <View style={styles.container}>
-                <View style={styles.textContainer}>
-                  <Text style={[styles.text, {fontSize: width * 0.045}]}>
-                    Trial {data?.hours} hours - {data?.budget} Rs का है।
-                  </Text>
-                </View>
-              </View>
-            )}
-
-            {data?.message && (
-              <View style={styles.bulletRow}>
-                <View style={styles.bulletDot} />
-                <Text style={styles.messageText}>{data?.message}</Text>
-              </View>
-            )}
-
-            {data?.budget !== undefined && (
-              <View style={styles.bulletRow}>
-                <View style={styles.bulletDot} />
-                <Text style={styles.bulletText}>
-                  Return to TAT D - Rs. {data?.budget}
-                </Text>
-              </View>
-            )}
-
-            {data?.trip_type && (
-              <View style={styles.row}>
-                <Text style={styles.label}>Trip Type:</Text>
-                <Text style={styles.value}>{String(data?.trip_type)}</Text>
-              </View>
-            )}
-
-            {data?.package && (
-              <View style={styles.row}>
-                <Text style={styles.label}>Package:</Text>
-                <Text style={styles.value}>{String(data?.package)}</Text>
-              </View>
-            )}
-
-            {data?.package_price !== undefined && (
-              <View style={styles.row}>
-                <Text style={styles.label}>
-                  Package Price: {String(data?.payment_mode || '')}
-                </Text>
-                <Text style={styles.value}>{String(data?.package_price)}</Text>
-              </View>
-            )}
-
-            {data?.gst_amount !== undefined && (
-              <View style={styles.row}>
-                <Text style={styles.label}>GST : 5%</Text>
-                <Text style={styles.value}>Rs {data?.gst_amount}</Text>
-              </View>
-            )}
-
-            {data?.commision_amount !== undefined && (
-              <View style={styles.row}>
-                <Text style={styles.label}>
-                  Commission : {String(data?.commission || '')}
-                </Text>
-                <Text style={styles.value}>Rs {data?.commision_amount}</Text>
-              </View>
-            )}
-
-            <View style={styles.divider} />
-
-            {data?.supply_cost !== undefined && (
-              <View style={styles.row}>
-                <Text style={styles.label}>Net Earning:</Text>
-                <Text style={styles.value}>Rs {data?.supply_cost}</Text>
-              </View>
-            )}
-
-            <View style={styles.divider} />
-
-            {data?.Overtime_Charges && (
-              <View style={styles.container}>
-                <View style={styles.bullet} />
-                <View style={styles.textContainer}>
-                  <Text style={styles.text}>
-                    {String(data?.Overtime_Charges)}
-                  </Text>
-                </View>
-              </View>
-            )}
-
-            {data?.Night_Charges && (
-              <View style={styles.container}>
-                <View style={styles.bullet} />
-                <View style={styles.textContainer}>
-                  <Text style={styles.text}>{String(data?.Night_Charges)}</Text>
-                </View>
-              </View>
-            )}
-
-            {data?.return_to_tatd && (
-              <View style={styles.container}>
-                <View style={styles.bullet} />
-                <View style={styles.textContainer}>
-                  <Text style={styles.text}>
-                    {String(data?.return_to_tatd)}
-                  </Text>
-                </View>
-              </View>
-            )}
-          </View>
-
-          <TouchableOpacity
-            onPress={() => setPackageDetailsDutyReportUpdate(false)}
-            style={styles.payButton}>
-            <Text style={styles.payButtonText}>Close</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </TouchableWithoutFeedback>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 };
 

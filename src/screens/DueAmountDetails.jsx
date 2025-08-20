@@ -79,7 +79,7 @@ const DueAmountDetails = ({route, navigation}) => {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex:1}} >
       <Modal
         transparent={true}
         animationType="slide"

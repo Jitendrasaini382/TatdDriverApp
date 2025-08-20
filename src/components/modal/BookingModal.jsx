@@ -74,7 +74,7 @@ const BookingModal = ({data}) => {
 export default React.memo(BookingModal);
 
 const styles = StyleSheet.create({
-  mainContainer: {flex: 1},
+  mainContainer: {flex: 1,borderColor:"black",borderWidth:1},
   subHeading: {
     color: AppColors.mainColor,
     fontSize: 20,

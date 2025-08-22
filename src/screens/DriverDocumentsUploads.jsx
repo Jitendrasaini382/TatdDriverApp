@@ -11,6 +11,7 @@ import {
   ActionSheetIOS,
   Platform,
   ActivityIndicator,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -129,12 +130,12 @@ const DriverDocumentsUploads = ({navigation}) => {
       const image = await (source === 'camera'
         ? ImagePicker.openCamera({
             cropping: true,
-            freeStyleCropEnabled: true,
+            // freeStyleCropEnabled: true,
             cropperCircleOverlay: false,
             compressImageQuality: 0.5,
             cropperToolbarTitle: 'Crop Image',
             cropperActiveWidgetColor: 'red',
-            freeStyleCropEnabled: true,
+            // freeStyleCropEnabled: true,
           })
         : ImagePicker.openPicker({
             cropping: true,
@@ -143,7 +144,7 @@ const DriverDocumentsUploads = ({navigation}) => {
             compressImageQuality: 0.5,
             cropperToolbarTitle: 'Crop Image',
             cropperActiveWidgetColor: 'red',
-            freeStyleCropEnabled: true,
+            // freeStyleCropEnabled: true,
           }));
 
       if (image?.path) {
@@ -283,6 +284,7 @@ const DriverDocumentsUploads = ({navigation}) => {
           </View>
         </View>
       ) : (
+        <KeyboardAvoidingView style={{flex:1}} behavior='padding'>
         <ScrollView
           refreshControl={
             <RefreshControl
@@ -357,6 +359,7 @@ const DriverDocumentsUploads = ({navigation}) => {
             <Text style={styles.submitText}>Submit</Text>
           </TouchableOpacity>
         </ScrollView>
+        </KeyboardAvoidingView>
       )}
     </SafeAreaView>
   );

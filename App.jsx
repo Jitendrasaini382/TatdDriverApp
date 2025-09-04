@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Route from './src/routes/Routes';
-import {Alert, LogBox, Text, TextInput} from 'react-native';
+import {Alert, LogBox, Platform, Text, TextInput} from 'react-native';
 import {Provider} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import store from './src/redux/store';
@@ -61,32 +61,42 @@ const App = () => {
   };
 
   useEffect(() => {
-    createNotificationChannel();
+    if (Platform.OS == 'android') {
+      createNotificationChannel();
+    }
   }, []);
 
   // Handle incoming messages
   const handleIncomingMessages = () => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
+      // Alert.alert("P")
       console.log(remoteMessage, 'Notification onmeesse App.js');
       const channelId = remoteMessage?.data?.channel_id;
+      const sound = remoteMessage?.data?.sound || 'default';
+      console.log(sound)
       const path = remoteMessage?.data?.path;
 
       // console.log(channelId, 'channelIdchannelId app');
       // console.log(path, 'pathpath app.js');
-
+      console.log(remoteMessage);
       try {
         await notifee.displayNotification({
           title: remoteMessage?.data?.title,
           body: remoteMessage?.data?.body,
-          data: remoteMessage,
+          data: remoteMessage.data,
           android: {
             channelId,
             // sound: sound_,
             // vibrationPattern: [500, 300, 500, 300, 500, 300],
             importance: AndroidImportance.HIGH,
           },
+          ios: {
+            sound: `${sound}.wav`,
+          },
         });
-      } catch (error) {}
+      } catch (error) {
+        console.log('Notification Error:', error);
+      }
     });
 
     return unsubscribe;
@@ -126,7 +136,9 @@ const App = () => {
       }
     };
 
-    getReferrer();
+    if (Platform.OS == 'android') {
+      getReferrer();
+    }
   }, []);
 
   return (

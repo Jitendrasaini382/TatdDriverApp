@@ -26,31 +26,8 @@ const BookingModal = ({data}) => {
   }
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
-      <View style={styles.contentContainer}>
-        <TouchableWithoutFeedback onPress={closeModal}>
-          <ScrollView contentContainerStyle={{flexGrow: 1}}>
-            <View style={{marginBottom: 30}}>
-              <TouchableOpacity
-                onPress={() => closeModal()}
-                style={{
-                  position: 'absolute',
-                  top: 10,
-                  right: 10,
-                  width: 30,
-                  height: 30,
-                  borderRadius: 15,
-                  backgroundColor: '#e0e0e0',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={{fontSize: 20, color: '#333', fontWeight: 'bold'}}>
-                  ×
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styles.topHeading}>{data?.body?.line1}</Text>
+    <>
+     <Text style={styles.topHeading}>{data?.body?.line1}</Text>
             <Text style={styles.topHeading}>{data?.body?.line2}</Text>
             <Text style={styles.topHeading}>{data?.body?.line3}</Text>
             <Text style={styles.topHeading}>{data?.body?.line4}</Text>
@@ -58,16 +35,49 @@ const BookingModal = ({data}) => {
             {/* {bulletPoints.map(renderBulletPoint)} */}
             <Text style={styles.subHeading}>{data?.title}</Text>
             <Text style={styles.BottamText}>{data?.body?.p}</Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={closeModal}
-              activeOpacity={0.7}>
-              <Text style={styles.buttonText}>Close</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </TouchableWithoutFeedback>
-      </View>
-    </SafeAreaView>
+    </>
+    // <SafeAreaView style={styles.mainContainer}>
+    //   <View style={styles.contentContainer}>
+    //     <TouchableWithoutFeedback onPress={closeModal}>
+    //       <ScrollView contentContainerStyle={{flexGrow: 1}}>
+    //         <View style={{marginBottom: 30}}>
+    //           <TouchableOpacity
+    //             onPress={() => closeModal()}
+    //             style={{
+    //               position: 'absolute',
+    //               top: 10,
+    //               right: 10,
+    //               width: 30,
+    //               height: 30,
+    //               borderRadius: 15,
+    //               backgroundColor: '#e0e0e0',
+    //               justifyContent: 'center',
+    //               alignItems: 'center',
+    //             }}>
+    //             <Text style={{fontSize: 20, color: '#333', fontWeight: 'bold'}}>
+    //               ×
+    //             </Text>
+    //           </TouchableOpacity>
+    //         </View>
+
+    //         <Text style={styles.topHeading}>{data?.body?.line1}</Text>
+    //         <Text style={styles.topHeading}>{data?.body?.line2}</Text>
+    //         <Text style={styles.topHeading}>{data?.body?.line3}</Text>
+    //         <Text style={styles.topHeading}>{data?.body?.line4}</Text>
+    //         <Text style={styles.topHeading}>{data?.body?.line5}</Text>
+    //         {/* {bulletPoints.map(renderBulletPoint)} */}
+    //         <Text style={styles.subHeading}>{data?.title}</Text>
+    //         <Text style={styles.BottamText}>{data?.body?.p}</Text>
+    //         <TouchableOpacity
+    //           style={styles.button}
+    //           onPress={closeModal}
+    //           activeOpacity={0.7}>
+    //           <Text style={styles.buttonText}>Close</Text>
+    //         </TouchableOpacity>
+    //       </ScrollView>
+    //     </TouchableWithoutFeedback>
+    //   </View>
+    // </SafeAreaView>
   );
 };
 
@@ -92,7 +102,7 @@ const styles = StyleSheet.create({
   },
   topHeading: {
     justifyContent: 'center',
-    color: AppColors.silverGrey,
+    color: AppColors.black,
     paddingVertical: 10,
     fontSize: 20,
     fontWeight: '400',
@@ -101,14 +111,14 @@ const styles = StyleSheet.create({
     marginTop: 5,
     textAlign: 'left',
     justifyContent: 'flex-start',
-    color: AppColors.silverGrey,
+    color: AppColors.black,
     fontSize: 18,
     fontWeight: '400',
   },
   BottamText: {
     textAlign: 'left',
     justifyContent: 'flex-start',
-    color: AppColors.silverGrey,
+    color: AppColors.black,
     fontSize: 18,
     fontWeight: '400',
     marginTop: 5,

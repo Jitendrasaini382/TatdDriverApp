@@ -69,6 +69,7 @@ const AccordionData = () => {
       current_language: languageSwitch,
     })
       .then(e => {
+        console.log(e)
         if (e.status_code === '200') {
           dispatch(setFaqData(e.faq_data));
         } else {

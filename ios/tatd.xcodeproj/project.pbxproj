@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* tatdTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* tatdTests.m */; };
 		048842002D23D53C00EBE30A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 048841FF2D23D53C00EBE30A /* GoogleService-Info.plist */; };
+		07E938D22E6964F8009C14C1 /* tatd_driver_one_time.wav in Resources */ = {isa = PBXBuildFile; fileRef = 07E938CF2E6964F8009C14C1 /* tatd_driver_one_time.wav */; };
+		07E938D32E6964F8009C14C1 /* tatd_driver_three_time.wav in Resources */ = {isa = PBXBuildFile; fileRef = 07E938D02E6964F8009C14C1 /* tatd_driver_three_time.wav */; };
+		07E938D42E6964F8009C14C1 /* ten_minute_booking.wav in Resources */ = {isa = PBXBuildFile; fileRef = 07E938D12E6964F8009C14C1 /* ten_minute_booking.wav */; };
 		0F033187EF9D4725832E443C /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2A9E06684BF34DB0B4E6180A /* Roboto-Black.ttf */; };
 		0F62B6406402468581B32B32 /* Poppins-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C1874F3034254C31A4EE943B /* Poppins-MediumItalic.ttf */; };
 		0FAF45265BA233CBC8594FE9 /* libPods-tatd-tatdTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B4A00C87AA73ADC2087AA128 /* libPods-tatd-tatdTests.a */; };
@@ -70,6 +73,9 @@
 		00E356F21AD99517003FC87E /* tatdTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tatdTests.m; sourceTree = "<group>"; };
 		04042D5E2D12E15900808671 /* tatd.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = tatd.entitlements; path = tatd/tatd.entitlements; sourceTree = "<group>"; };
 		048841FF2D23D53C00EBE30A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		07E938CF2E6964F8009C14C1 /* tatd_driver_one_time.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = tatd_driver_one_time.wav; sourceTree = "<group>"; };
+		07E938D02E6964F8009C14C1 /* tatd_driver_three_time.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = tatd_driver_three_time.wav; sourceTree = "<group>"; };
+		07E938D12E6964F8009C14C1 /* ten_minute_booking.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ten_minute_booking.wav; sourceTree = "<group>"; };
 		0E370B396E4948F59E017EAF /* Poppins-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-LightItalic.ttf"; path = "../src/assets/fonts/Poppins-LightItalic.ttf"; sourceTree = "<group>"; };
 		11510A988B7744729BD3D621 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Bold.ttf"; path = "../src/assets/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* tatd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tatd.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -196,6 +202,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				07E938CF2E6964F8009C14C1 /* tatd_driver_one_time.wav */,
+				07E938D02E6964F8009C14C1 /* tatd_driver_three_time.wav */,
+				07E938D12E6964F8009C14C1 /* ten_minute_booking.wav */,
 				13B07FAE1A68108700A75B9A /* tatd */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* tatdTests */,
@@ -401,6 +410,9 @@
 				95EB9CE6570F4B1B89D91790 /* Roboto-BoldItalic.ttf in Resources */,
 				F350978FBB484E7C86BF2DD6 /* Roboto-Italic.ttf in Resources */,
 				EAA4614D0DEE43809A2D7B85 /* Roboto-Light.ttf in Resources */,
+				07E938D22E6964F8009C14C1 /* tatd_driver_one_time.wav in Resources */,
+				07E938D32E6964F8009C14C1 /* tatd_driver_three_time.wav in Resources */,
+				07E938D42E6964F8009C14C1 /* ten_minute_booking.wav in Resources */,
 				36C5372774434D85B936736D /* Roboto-LightItalic.ttf in Resources */,
 				828A0054CCED40B483CB70BA /* Roboto-Medium.ttf in Resources */,
 				941847E88EA44F548AACE5D6 /* Roboto-MediumItalic.ttf in Resources */,
@@ -659,27 +671,26 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = tatd/tatd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = S9SM5JM9P8;
+				DEVELOPMENT_TEAM = S9SM5JM9P8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = tatd/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "tat d driver partner";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.69;
+				MARKETING_VERSION = 1.2.74;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.tatd.driver;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tatd.driverios;
 				PRODUCT_NAME = tatd;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tatd_driver_app;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -694,26 +705,25 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = tatd/tatd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = S9SM5JM9P8;
+				DEVELOPMENT_TEAM = S9SM5JM9P8;
 				INFOPLIST_FILE = tatd/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "tat d driver partner";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.69;
+				MARKETING_VERSION = 1.2.74;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.tatd.driver;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tatd.driverios;
 				PRODUCT_NAME = tatd;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tatd_driver_app;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -792,10 +802,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -867,10 +874,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

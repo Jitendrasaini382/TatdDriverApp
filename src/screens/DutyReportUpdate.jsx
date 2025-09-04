@@ -54,6 +54,7 @@ import {
   GET_FIRST_POPUP_DATA,
   PACKAGE_DETAILS_DUTY_REPORT,
   PARTNER_ONBOOKING_CALL_SUPPORT,
+  RESTRICT_CALL_TO_CUSTOMER,
   START_BOOKING,
   TALK_TO_CUSTOMER,
 } from '../apis/Apis';
@@ -67,13 +68,17 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
   FadeIn,
+  ColorSpace,
 } from 'react-native-reanimated';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DeviceInfo from 'react-native-device-info';
 import {useFocusEffect} from '@react-navigation/native';
-import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
+import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
+import LanguageNewModal from '../components/modal/LanguageNewModal';
+import {setCurrentView, setLanguageSwitch} from '../redux/slices/globalSlice';
 
 const DutyReportUpdate = ({route, navigation}) => {
+  const dispatch = useDispatch();
   const {bookingNumber, state} = route?.params;
   const isFirstTimeVisit = route?.params?.isFirstTime;
   const isType = route?.params?.isType;
@@ -102,7 +107,14 @@ const DutyReportUpdate = ({route, navigation}) => {
   const [needHelpShow, setNeedHelpShow] = useState(false);
   const [showImageField, setShowImageField] = useState(true);
   const [loaderMap, setLoaderMap] = useState(false);
+  const [isOpenLanguageModal, setisOpenLanguageModal] = useState(false);
+  const [isPreventDriverToCustomerModal, setisPreventDriverToCustomerModal] =
+    useState(false);
+  const [prventCallData, setprventCallData] = useState({});
+  const [callIconLoader, setcallIconLoader] = useState(false);
 
+  const [isShowBookingEndModal, setisShowBookingEndModal] = useState(false);
+  const [bookingEndErrPopupData, setbookingEndErrPopupData] = useState('');
   const talkToCustomer = async () => {
     setLoader(true);
     try {
@@ -227,9 +239,30 @@ const DutyReportUpdate = ({route, navigation}) => {
     }
   };
 
-  const openPhoneDialer = phoneNumber => {
-    let url = `tel:${phoneNumber}`;
-    Linking.openURL(url);
+  const openPhoneDialer = async phoneNumber => {
+    try {
+      setcallIconLoader(true);
+      // setisPreventDriverToCustomerModal(true);
+      console.log('api calling');
+      const res = await RESTRICT_CALL_TO_CUSTOMER({
+        action: 'restriction-customer-number-sharing',
+        booking_id: bookingNumber,
+        current_language: languageSwitch,
+      });
+      if (res?.status_code == 200 && res?.message == 'error') {
+        setisPreventDriverToCustomerModal(true);
+        setprventCallData(res);
+      } else {
+        let url = `tel:${phoneNumber}`;
+        Linking.openURL(url);
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setcallIconLoader(false);
+    }
+    // return false;
   };
 
   const closeModal = () => {
@@ -242,7 +275,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       GetAllBookingInfo();
       handleNeedHelpButton();
     }
-  }, []);
+  }, [languageSwitch]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -288,7 +321,7 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
   useEffect(() => {
     packageDetails();
-  }, []);
+  }, [languageSwitch]);
   const [packageDetailsData, setPackageDetailsData] = useState({});
 
   const packageDetails = async () => {
@@ -580,25 +613,25 @@ const DutyReportUpdate = ({route, navigation}) => {
   // };
   const requestCameraPermission = async () => {
     // console.log("p")
-   try {
-    if (Platform.OS === "android") {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.CAMERA
-        );
-        return granted === PermissionsAndroid.RESULTS.GRANTED;
-      } catch (err) {
-        console.warn(err);
-        return false;
+    try {
+      if (Platform.OS === 'android') {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+          );
+          return granted === PermissionsAndroid.RESULTS.GRANTED;
+        } catch (err) {
+          console.warn(err);
+          return false;
+        }
+      } else {
+        // Alert.alert()
+        const result = await request(PERMISSIONS.IOS.CAMERA);
+        return result === RESULTS.GRANTED;
       }
-    } else{
-      // Alert.alert()
-      const result = await request(PERMISSIONS.IOS.CAMERA);
-      return result === RESULTS.GRANTED;
+    } catch (error) {
+      console.log(error);
     }
-   } catch (error) {
-    console.log(error)
-   }
     // return false;
   };
   const handleCameraCapture = async () => {
@@ -640,7 +673,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         );
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -801,8 +834,12 @@ const DutyReportUpdate = ({route, navigation}) => {
         return false;
       } else {
         if (res?.message_type == 'error') {
-          Alert.alert('', res?.errormessage?.error_message);
+          setbookingEndErrPopupData(res?.errormessage?.error_message);
+          // Alert.alert('', res?.errormessage?.error_message);
           setModalVisibleEnd(false);
+          setTimeout(() => {
+            setisShowBookingEndModal(true);
+          }, 300);
         } else {
           setModalVisibleEnd(false);
           GetAllBookingInfo();
@@ -860,7 +897,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     } else {
       setfirstTimePopup(false);
     }
-  }, []);
+  }, [languageSwitch]);
 
   const handlePressIn = () => {
     scale.value = withSpring(0.95); // Slightly shrink on press
@@ -1228,10 +1265,28 @@ const DutyReportUpdate = ({route, navigation}) => {
                   {bookingInfo?.data?.booking_type}
                 </Text>
               )}
-              <Text style={styles.interviewTimeText}>
-                {bookingInfo?.data?.duty_time_heading}{' '}
-                {bookingInfo?.data?.duty_time_text}
-              </Text>
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                  alignItems: 'center',
+                }}>
+                <Text style={styles.interviewTimeText}>
+                  {bookingInfo?.data?.duty_time_heading}{' '}
+                  {bookingInfo?.data?.duty_time_text}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setisOpenLanguageModal(true);
+                  }}>
+                  <Image
+                    style={{width: 50, height: 50}}
+                    source={require('../assets/images/lan2.png')}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
             <View style={styles.bookingSection}>
               <View>
@@ -1281,25 +1336,32 @@ const DutyReportUpdate = ({route, navigation}) => {
                 </View>
 
                 {/* Call Button */}
-                <TouchableOpacity
-                  style={{
-                    width: 35,
-                    height: 35,
-                    backgroundColor: AppColors.white,
-                    borderRadius: 20,
-                    overflow: 'hidden',
-                    elevation: 5,
-                    marginHorizontal: 5,
-                  }}
-                  onPress={() =>
-                    openPhoneDialer(bookingInfo?.data?.circle_phone)
-                  }>
-                  <Image
-                    style={{width: '100%', height: '100%'}}
-                    source={CallingGif}
-                    resizeMode="cover"
+                {callIconLoader ? (
+                  <ActivityIndicator
+                    color={AppColors.mainColor}
+                    style={{left: -10}}
                   />
-                </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={{
+                      width: 35,
+                      height: 35,
+                      backgroundColor: AppColors.white,
+                      borderRadius: 20,
+                      overflow: 'hidden',
+                      elevation: 5,
+                      marginHorizontal: 5,
+                    }}
+                    onPress={() =>
+                      openPhoneDialer(bookingInfo?.data?.circle_phone)
+                    }>
+                    <Image
+                      style={{width: '100%', height: '100%'}}
+                      source={CallingGif}
+                      resizeMode="cover"
+                    />
+                  </TouchableOpacity>
+                )}
 
                 {bookingInfo?.condition?.chat_dynamic_key == '1' ? (
                   <TouchableOpacity
@@ -2278,150 +2340,97 @@ const DutyReportUpdate = ({route, navigation}) => {
         animationType="slide"
         visible={modalVisibleinput}
         onRequestClose={() => setModalVisibleinput(false)}>
-       <KeyboardAvoidingView style={{flex:1}}  behavior={Platform.OS=="ios"?"padding":null} >
-       <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          }}>
+        <KeyboardAvoidingView
+          style={{flex: 1}}
+          behavior={Platform.OS == 'ios' ? 'padding' : null}>
           <View
             style={{
-              backgroundColor: AppColors.white,
-              width: '90%',
-              borderRadius: 10,
-              // padding: 20,
-              elevation: 5,
-              // minHeight: 400,
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
             }}>
-            {loader ? (
-              <ActivityIndicator
-                color={AppColors.mainColor}
-                style={{flex: 1}}
-                size={'small'}
-              />
-            ) : (
-              <ScrollView keyboardShouldPersistTaps='handled' >
-                <TouchableOpacity
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    right: 0,
-                    backgroundColor: AppColors.white,
-                    // borderRadius: 20,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 30,
-                    height: 30,
-                    zIndex: 10,
-                  }}
-                  onPress={() => setModalVisibleinput(false)}>
-                  <Icon name="close" size={16} color={AppColors.black} />
-                </TouchableOpacity>
-                <View
-                  style={{
-                    backgroundColor: AppColors.mainColor,
-                    padding: 15,
-                    paddingVertical: 30,
-                    borderRadius: 5,
-                    alignItems: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: 'Merriweather-Bold',
-                      fontSize: 20,
-                      color: AppColors.white,
-                    }}>
-                    {popupsData?.popupdata?.start_alert}
-                  </Text>
-                </View>
-
-                {showImageField && (
+            <View
+              style={{
+                backgroundColor: AppColors.white,
+                width: '90%',
+                borderRadius: 10,
+                // padding: 20,
+                elevation: 5,
+                // minHeight: 400,
+              }}>
+              {loader ? (
+                <ActivityIndicator
+                  color={AppColors.mainColor}
+                  style={{flex: 1}}
+                  size={'small'}
+                />
+              ) : (
+                <ScrollView keyboardShouldPersistTaps="handled">
                   <TouchableOpacity
-                    onPress={handleCameraCapture}
-                    activeOpacity={0.8}
                     style={{
-                      alignSelf: 'center',
-                      marginTop: 20,
-                    }}>
-                    <View style={[styles.button]}>
-                      {selectedFile ? (
-                        <Image
-                          source={{uri: selectedFile?.uri}}
-                          style={styles.image}
-                        />
-                      ) : (
-                        <MaterialCommunityIcons
-                          name="camera"
-                          size={40}
-                          color="#16588e"
-                        />
-                      )}
-
-                      <Text style={styles.text}>
-                        {selectedFile ? 'Edit' : 'Upload Image'}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-
-                <View style={{padding: 20}}>
-                  <TextInput
-                    style={{
-                      borderColor: '#c4c4be',
-                      borderWidth: 1.5,
-                      borderRadius: 8,
-                      paddingHorizontal: 10,
-                      fontSize: 16,
-                      color: '#333',
-                      backgroundColor: '#fff',
-                      // marginTop: 10,
-                      padding: 10,
+                      position: 'absolute',
+                      top: 0,
+                      right: 0,
+                      backgroundColor: AppColors.white,
+                      // borderRadius: 20,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 30,
+                      height: 30,
+                      zIndex: 10,
                     }}
-                    placeholder="Enter Otp"
-                    placeholderTextColor="#aaa"
-                    value={inputValue}
-                    maxLength={4}
-                    keyboardType="number-pad"
-                    onChangeText={text => setInputValue(text)}
-                  />
+                    onPress={() => setModalVisibleinput(false)}>
+                    <Icon name="close" size={16} color={AppColors.black} />
+                  </TouchableOpacity>
                   <View
                     style={{
-                      // alignItems: 'center',
-                      marginBottom: 10,
+                      backgroundColor: AppColors.mainColor,
+                      padding: 15,
+                      paddingVertical: 30,
+                      borderRadius: 5,
+                      alignItems: 'center',
                     }}>
-                    <TouchableOpacity
-                      disabled={loaderResendOtp}
-                      onPress={() => dutyReportResendOtp()}>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          fontWeight: '400',
-                          color: AppColors.mainColor,
-                          alignSelf: 'flex-start',
-                          marginVertical: 5,
-                        }}
-                        onLayout={event => {
-                          const {width} = event.nativeEvent.layout;
-                          setTextWidth(width);
-                        }}>
-                        {loaderResendOtp
-                          ? 'Please Wait...'
-                          : popupsData?.popupdata?.resend_otp_text}
-                      </Text>
-                    </TouchableOpacity>
-                    <View
+                    <Text
                       style={{
-                        marginTop: 2,
-                        height: 1,
-                        backgroundColor: AppColors.mainColor,
-                        width: textWidth,
-                      }}
-                    />
+                        fontFamily: 'Merriweather-Bold',
+                        fontSize: 20,
+                        color: AppColors.white,
+                      }}>
+                      {popupsData?.popupdata?.start_alert}
+                    </Text>
                   </View>
 
-                  {popupsData?.popupdata?.start_kms_eligibility == '1' && (
+                  {showImageField && (
+                    <TouchableOpacity
+                      onPress={handleCameraCapture}
+                      activeOpacity={0.8}
+                      style={{
+                        alignSelf: 'center',
+                        marginTop: 20,
+                      }}>
+                      <View style={[styles.button]}>
+                        {selectedFile ? (
+                          <Image
+                            source={{uri: selectedFile?.uri}}
+                            style={styles.image}
+                          />
+                        ) : (
+                          <MaterialCommunityIcons
+                            name="camera"
+                            size={40}
+                            color="#16588e"
+                          />
+                        )}
+
+                        <Text style={styles.text}>
+                          {selectedFile ? 'Edit' : 'Upload Image'}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+
+                  <View style={{padding: 20}}>
                     <TextInput
                       style={{
                         borderColor: '#c4c4be',
@@ -2431,63 +2440,120 @@ const DutyReportUpdate = ({route, navigation}) => {
                         fontSize: 16,
                         color: '#333',
                         backgroundColor: '#fff',
-                        marginTop: 20,
+                        // marginTop: 10,
                         padding: 10,
                       }}
-                      placeholder={
-                        popupsData?.popupdata?.start_kms_placeholder_text ||
-                        'Enter Start KM'
-                      }
+                      placeholder="Enter Otp"
                       placeholderTextColor="#aaa"
-                      value={inputKmsValue}
+                      value={inputValue}
+                      maxLength={4}
                       keyboardType="number-pad"
-                      onChangeText={text => setInputKmsValue(text)}
+                      onChangeText={text => setInputValue(text)}
                     />
-                  )}
-                </View>
-
-                <View style={{marginVertical: 5}}>
-                  <TouchableOpacity
-                    disabled={loader}
-                    style={{
-                      backgroundColor: AppColors.mainColor,
-                      marginTop: '10%',
-                      padding: 12,
-                      borderRadius: 6,
-                      width: '60%',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginHorizontal: '20%',
-                      marginBottom: 50,
-                    }}
-                    // onPress={() => {
-                    //   driverReached();
-                    // }}
-                    onPress={() => {
-                      if (popupsData?.popupdata?.start_kms_eligibility == '1') {
-                        showStartAlert();
-                      } else {
-                        driverReached();
-                      }
-                    }}>
-                    <Text
+                    <View
                       style={{
-                        color: AppColors.white,
-                        fontWeight: '600',
-                        textAlign: 'center',
+                        // alignItems: 'center',
+                        marginBottom: 10,
                       }}>
-                      {loader
-                        ? 'Please Wait ...'
-                        : popupsData?.popupdata?.start_alert_btn}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </ScrollView>
-            )}
+                      <TouchableOpacity
+                        disabled={loaderResendOtp}
+                        onPress={() => dutyReportResendOtp()}>
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            fontWeight: '400',
+                            color: AppColors.mainColor,
+                            alignSelf: 'flex-start',
+                            marginVertical: 5,
+                          }}
+                          onLayout={event => {
+                            const {width} = event.nativeEvent.layout;
+                            setTextWidth(width);
+                          }}>
+                          {loaderResendOtp
+                            ? 'Please Wait...'
+                            : popupsData?.popupdata?.resend_otp_text}
+                        </Text>
+                      </TouchableOpacity>
+                      <View
+                        style={{
+                          marginTop: 2,
+                          height: 1,
+                          backgroundColor: AppColors.mainColor,
+                          width: textWidth,
+                        }}
+                      />
+                    </View>
+
+                    {popupsData?.popupdata?.start_kms_eligibility == '1' && (
+                      <TextInput
+                        style={{
+                          borderColor: '#c4c4be',
+                          borderWidth: 1.5,
+                          borderRadius: 8,
+                          paddingHorizontal: 10,
+                          fontSize: 16,
+                          color: '#333',
+                          backgroundColor: '#fff',
+                          marginTop: 20,
+                          padding: 10,
+                        }}
+                        placeholder={
+                          popupsData?.popupdata?.start_kms_placeholder_text ||
+                          'Enter Start KM'
+                        }
+                        placeholderTextColor="#aaa"
+                        value={inputKmsValue}
+                        keyboardType="number-pad"
+                        onChangeText={text => setInputKmsValue(text)}
+                      />
+                    )}
+                  </View>
+
+                  <View style={{marginVertical: 5}}>
+                    <TouchableOpacity
+                      disabled={loader}
+                      style={{
+                        backgroundColor: AppColors.mainColor,
+                        marginTop: '10%',
+                        padding: 12,
+                        borderRadius: 6,
+                        width: '60%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginHorizontal: '20%',
+                        marginBottom: 50,
+                      }}
+                      // onPress={() => {
+                      //   driverReached();
+                      // }}
+                      onPress={() => {
+                        if (
+                          popupsData?.popupdata?.start_kms_eligibility == '1'
+                        ) {
+                          showStartAlert();
+                        } else {
+                          driverReached();
+                        }
+                      }}>
+                      <Text
+                        style={{
+                          color: AppColors.white,
+                          fontWeight: '600',
+                          textAlign: 'center',
+                        }}>
+                        {loader
+                          ? 'Please Wait ...'
+                          : popupsData?.popupdata?.start_alert_btn}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </ScrollView>
+              )}
+            </View>
+            <Toast visibilityTime={3000} />
           </View>
-          <Toast visibilityTime={3000} />
-        </View>
-       </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* otpsendmodalend */}
@@ -2814,6 +2880,373 @@ const DutyReportUpdate = ({route, navigation}) => {
       </Modal>
 
       {/* endmodalend */}
+
+      {/* Modal to prevent the driver call  */}
+      <Modal
+        visible={isPreventDriverToCustomerModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setisPreventDriverToCustomerModal(false)}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              backgroundColor: AppColors.white,
+              minHeight: 200,
+              width: '85%',
+              borderRadius: 20,
+              padding: 24,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 10,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 20,
+              elevation: 10,
+            }}>
+            {/* Header with title and close button */}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 16,
+                position: 'relative',
+              }}>
+              {/* Centered Heading */}
+              {/* <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: '700',
+                  color: '#2D3748',
+                  textAlign: 'center',
+                  flex: 1,
+                }}>
+                Oops! Something went wrong
+              </Text> */}
+
+              {/* Cross Icon in right corner */}
+              <TouchableOpacity
+                onPress={() => setisPreventDriverToCustomerModal(false)}
+                style={{
+                  position: 'absolute',
+                  right: -8,
+                  top: -8,
+                  width: 32,
+                  height: 32,
+                  borderRadius: 16,
+                  backgroundColor: '#F7FAFC',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 4,
+                  elevation: 3,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: '#718096',
+                    fontWeight: '600',
+                  }}>
+                  ✕
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Error Icon */}
+            <View
+              style={{
+                alignItems: 'center',
+                marginBottom: 20,
+              }}>
+              <View
+                style={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: 32,
+                  backgroundColor: '#FED7D7',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 30,
+                    color: '#E53E3E',
+                  }}>
+                  ⚠️
+                </Text>
+              </View>
+            </View>
+
+            {/* Caption below heading */}
+            <View
+              style={{
+                alignItems: 'center',
+                marginBottom: 24,
+                paddingHorizontal: 8,
+              }}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: '#17181b',
+                  textAlign: 'center',
+                  lineHeight: 24,
+                  fontWeight: '400',
+                }}>
+                {prventCallData?.alert_message}
+              </Text>
+            </View>
+
+            {/* Action Buttons */}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                gap: 12,
+              }}>
+              {/* Cancel Button */}
+              {/* <TouchableOpacity
+                onPress={() => setisPreventDriverToCustomerModal(false)}
+                style={{
+                  flex: 1,
+                  paddingVertical: 14,
+                  paddingHorizontal: 20,
+                  borderRadius: 12,
+                  borderWidth: 1.5,
+                  borderColor: '#E2E8F0',
+                  backgroundColor: '#FFFFFF',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: '600',
+                    color: '#4A5568',
+                  }}>
+                  Cancel
+                </Text>
+              </TouchableOpacity> */}
+
+              {/* Try Again Button */}
+              <TouchableOpacity
+                onPress={() => {
+                  // Add your retry logic here
+                  setisPreventDriverToCustomerModal(false);
+                }}
+                style={{
+                  flex: 1,
+                  paddingVertical: 14,
+                  paddingHorizontal: 20,
+                  borderRadius: 12,
+                  backgroundColor: AppColors.mainColor,
+                  alignItems: 'center',
+                  shadowColor: AppColors.mainColor,
+                  shadowOffset: {
+                    width: 0,
+                    height: 4,
+                  },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 8,
+                  elevation: 4,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: '600',
+                    color: '#FFFFFF',
+                  }}>
+                  {languageSwitch === 'english' ? 'Got it' : 'समझ गया'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* modal for Booking End Api Error */}
+
+      <Modal
+        visible={isShowBookingEndModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => false}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              backgroundColor: AppColors.white,
+              minHeight: 200,
+              width: '85%',
+              borderRadius: 20,
+              padding: 24,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 10,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 20,
+              elevation: 10,
+            }}>
+            {/* Header with title and close button */}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 16,
+                position: 'relative',
+              }}>
+              {/* Cross Icon in right corner */}
+              <TouchableOpacity
+                onPress={() => setisShowBookingEndModal(false)}
+                style={{
+                  position: 'absolute',
+                  right: -8,
+                  top: -8,
+                  width: 32,
+                  height: 32,
+                  borderRadius: 16,
+                  backgroundColor: '#F7FAFC',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 4,
+                  elevation: 3,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: '#718096',
+                    fontWeight: '600',
+                  }}>
+                  ✕
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Error Icon */}
+            <View
+              style={{
+                alignItems: 'center',
+                marginBottom: 20,
+              }}>
+              <View
+                style={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: 32,
+                  backgroundColor: '#FED7D7',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 30,
+                    color: '#E53E3E',
+                  }}>
+                  ⚠️
+                </Text>
+              </View>
+            </View>
+
+            {/* Caption below heading */}
+            <View
+              style={{
+                alignItems: 'center',
+                marginBottom: 24,
+                paddingHorizontal: 8,
+              }}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: '#17181b',
+                  textAlign: 'center',
+                  lineHeight: 24,
+                  fontWeight: '400',
+                }}>
+                {bookingEndErrPopupData}
+              </Text>
+            </View>
+
+            {/* Action Buttons */}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                gap: 12,
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  // Add your retry logic here
+                  setisShowBookingEndModal(false);
+                }}
+                style={{
+                  flex: 1,
+                  paddingVertical: 14,
+                  paddingHorizontal: 20,
+                  borderRadius: 12,
+                  backgroundColor: AppColors.mainColor,
+                  alignItems: 'center',
+                  shadowColor: AppColors.mainColor,
+                  shadowOffset: {
+                    width: 0,
+                    height: 4,
+                  },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 8,
+                  elevation: 4,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: '600',
+                    color: '#FFFFFF',
+                  }}>
+                  {languageSwitch === 'english' ? 'Ok' : 'ठीक है'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <LanguageNewModal
+        visible={isOpenLanguageModal}
+        onSelect={e => {
+          // console.log(e, 'oiuytr');
+        }}
+        onClose={() => {
+          setisOpenLanguageModal(false);
+        }}
+        onConfirm={() => {
+          setisOpenLanguageModal(false);
+        }}
+        selectedLanguage={languageSwitch}
+      />
     </SafeAreaView>
   );
 };

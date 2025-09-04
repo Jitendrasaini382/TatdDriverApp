@@ -1138,7 +1138,7 @@ PODS:
     - React-utils
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - SDWebImage (~> 5.11.1)
+    - SDWebImage (~> 5.21.0)
     - Yoga
   - react-native-webview (13.13.2):
     - DoubleConversion
@@ -1449,15 +1449,53 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNImageCropPicker (0.42.0):
+  - RNImageCropPicker (0.51.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
     - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
     - React-RCTImage
-    - RNImageCropPicker/QBImagePickerController (= 0.42.0)
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - RNImageCropPicker/QBImagePickerController (= 0.51.0)
     - TOCropViewController (~> 2.7.4)
-  - RNImageCropPicker/QBImagePickerController (0.42.0):
+    - Yoga
+  - RNImageCropPicker/QBImagePickerController (0.51.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
     - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
     - React-RCTImage
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
     - TOCropViewController (~> 2.7.4)
+    - Yoga
   - RNNotifee (9.1.8):
     - React-Core
     - RNNotifee/NotifeeCore (= 9.1.8)
@@ -1557,9 +1595,9 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - SDWebImage (5.11.1):
-    - SDWebImage/Core (= 5.11.1)
-  - SDWebImage/Core (5.11.1)
+  - SDWebImage (5.21.1):
+    - SDWebImage/Core (= 5.21.1)
+  - SDWebImage/Core (5.21.1)
   - SocketRocket (0.7.0)
   - TOCropViewController (2.7.4)
   - Yoga (0.0.0)
@@ -1906,7 +1944,7 @@ SPEC CHECKSUMS:
   react-native-otp-verify: 6d153f8a8e8392c6a51f9d94c090dc16d7c756b2
   react-native-razorpay: ab51e7be3d906f49b26198d978fc6f163e846d30
   react-native-safe-area-context: 758e894ca5a9bd1868d2a9cfbca7326a2b6bf9dc
-  react-native-screenguard: 61479ba4becb120b899e52aae3cd3606d8cc587c
+  react-native-screenguard: 9d8c43234bc2e4ad712b61b5c0a750fe412eebc5
   react-native-webview: 311760d736aea5712c17f8de313f00b11e33375e
   React-nativeconfig: 9f223cd321823afdecf59ed00861ab2d69ee0fc1
   React-NativeModulesApple: 1cd770ed7dc463e55d02a05f7fc3be46076d393e
@@ -1938,7 +1976,7 @@ SPEC CHECKSUMS:
   RNFBCrashlytics: be60e847609d023891621dfde7ac8be4872a988b
   RNFBMessaging: 72cf5cca8a14ef9dc66b82b75b5cca1091f169e5
   RNGestureHandler: 4c50b5e4ca199cf497511d44e3fe45d54d62e279
-  RNImageCropPicker: b0afedeefd8655254a15c34103718455fde6ce59
+  RNImageCropPicker: 51090547fdb79faef4c0c6207fc645aa9915ab3c
   RNNotifee: 5e3b271e8ea7456a36eec994085543c9adca9168
   RNPermissions: 7c36e93b47ebf5148a4e55e3fb0c29fc77b171fd
   RNReanimated: f1a8e928e0a5e8698c354c226d8d5f80629f8658
@@ -1947,7 +1985,7 @@ SPEC CHECKSUMS:
   RNSound: 314cc5226453ef4a3314a196c65e8a65e5106a7b
   RNSVG: 2df577ee9762d1b6deef820173b59b064c2570fe
   RNVectorIcons: 6c795cacc9276decc31d8e1a139b9cc6fc0479ca
-  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
+  SDWebImage: f29024626962457f3470184232766516dee8dfea
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
   Yoga: ae3c32c514802d30f687a04a6a35b348506d411f

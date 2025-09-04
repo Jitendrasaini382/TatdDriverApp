@@ -15,22 +15,21 @@ import {
   setUserAuthStates,
 } from './src/redux/slices/userAuthSlice';
 
-enableScreens();
-
 // 🔹 Function to handle notification click
 const handleNotificationPress = async (notification, action, isAppOpen) => {
-  if (!notification?.data) return;
-
-  const path = notification?.data?.data?.path;
+  if (!notification) return;
+  const allRoutes = navigationRef?.current?.getRootState()?.routeNames;
+  // console.log(allRoutes, 'AAA');
+  const path = notification?.data?.path;
   const DutyReportPath = path?.includes('DutyReport/');
-  const url = notification?.data?.data?.url;
-  const bookingNumber = notification?.data?.data?.bookingNumber;
+  const url = notification?.data?.url;
+  const bookingNumber = notification?.data?.bookingNumber;
 
   // console.log(DutyReportPath, 'duty report path ');
   // return false
   // console.log(notification?.data?.data,"pfwefssswsdsd")
 
-  const messageId = notification?.data?.messageId;
+  const messageId = notification?.messageId;
 
   // console.log('🔔 Notification Clicked:', path);
 
@@ -71,12 +70,14 @@ const handleNotificationPress = async (notification, action, isAppOpen) => {
     // );
     // return;
     // store.dispatch(resetUserAuthState())
+    // return false;
     store.dispatch(
       setUserAuthStates({
         key: 'isRegistered',
         value: false,
       }),
     );
+    return;
   }
   if (DutyReportPath) {
     let bokkingId = path?.split('/')[1];
@@ -91,6 +92,12 @@ const handleNotificationPress = async (notification, action, isAppOpen) => {
     );
     return;
   }
+
+  if (allRoutes?.includes(path)) {
+    navigationRef?.current?.navigate(path);
+    return;
+  }
+
   setTimeout(
     () => {
       navigationRef?.current?.navigate('TrustedDriver');
@@ -119,7 +126,7 @@ notifee.onBackgroundEvent(async ({type, detail}) => {
 
 // 🔹 Firebase Background Message Handler
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  // console.log('📩 Background message received:', remoteMessage);
+  console.log('📩 Background message received:', remoteMessage);
 
   const channelId = remoteMessage?.data?.channel_id || 'default_channel';
   const title = remoteMessage?.data?.title || 'New Notification';
@@ -129,12 +136,15 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
   await notifee.displayNotification({
     title,
     body,
-    data: remoteMessage, // Ensure data is passed properly
+    data: remoteMessage?.data, // Ensure data is passed properly
 
     android: {
       channelId: channelId,
       pressAction: {id: 'default'},
       importance: AndroidImportance.HIGH,
+    },
+    ios: {
+      sound: `${sound}.wav`,
     },
   });
 });

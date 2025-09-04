@@ -108,7 +108,7 @@ const AadharVerifyOtp = ({navigation, route}) => {
       <Header backButton={true} />
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
-        keyboardShouldPersistTaps="always">
+        keyboardShouldPersistTaps="handled" >
         <View style={styles.mainContainer}>
           <View style={styles.contentContainer}>
             <View style={styles.mainView}>

@@ -169,7 +169,8 @@ const AddNewVerifier = ({navigation}) => {
      <View style={{flex: 1, paddingHorizontal: 10}}>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="always"
+          keyboardShouldPersistTaps="handled"
+          // automaticallyAdjustKeyboardInsets={true}
           contentContainerStyle={{paddingBottom: 14}}>
           <View style={styles.mainTopView}>
             <View style={{flexDirection: 'row'}}>
@@ -410,6 +411,7 @@ const styles = StyleSheet.create({
     borderColor: AppColors.borderColor,
     borderWidth: 1,
     paddingRight: 5,
+    minHeight:40
   },
   inputFocused: {
     borderColor: 'skyblue',

@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
+  Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -19,6 +20,7 @@ import {CallingGif} from '../assets/images';
 import {
   GET_ALL_CHATS_BY_BOOKING_NUMBER,
   INSERT_CHATS_BY_BOOKING_NUMBER,
+  RESTRICT_CALL_TO_CUSTOMER,
 } from '../apis/Apis';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {RefreshControl} from 'react-native';
@@ -26,6 +28,7 @@ import {AppColors} from '../assets/Colors';
 import messaging from '@react-native-firebase/messaging';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Platform} from 'react-native';
+import {useSelector} from 'react-redux';
 
 const ChatScreen = ({navigation}) => {
   const route = useRoute();
@@ -73,7 +76,7 @@ const ChatScreen = ({navigation}) => {
       setTimeout(() => {
         if (flatListRef.current) {
           flatListRef.current.scrollToOffset({
-            offset: 999999, // ek bahut bada number de do
+            offset: 999999,
             animated: true,
           });
         }
@@ -255,9 +258,40 @@ const ChatScreen = ({navigation}) => {
     }
   };
 
-  const openPhoneDialer = phoneNumber => {
-    let url = `tel:${phoneNumber}`;
-    Linking.openURL(url);
+  // const openPhoneDialer = phoneNumber => {
+  //   let url = `tel:${phoneNumber}`;
+  //   Linking.openURL(url);
+  // };
+  const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  const [isPreventDriverToCustomerModal, setisPreventDriverToCustomerModal] =
+    useState(false);
+  const [prventCallData, setprventCallData] = useState({});
+  const [callIconLoader, setcallIconLoader] = useState(false);
+  const openPhoneDialer = async phoneNumber => {
+    try {
+      setcallIconLoader(true);
+      // setisPreventDriverToCustomerModal(true);
+      // return false
+      console.log('api calling');
+      const res = await RESTRICT_CALL_TO_CUSTOMER({
+        action: 'restriction-customer-number-sharing',
+        booking_id: bookingNumber,
+        current_language: languageSwitch,
+      });
+      if (res?.status_code == 200 && res?.message == 'error') {
+        setisPreventDriverToCustomerModal(true);
+        setprventCallData(res);
+      } else {
+        let url = `tel:${phoneNumber}`;
+        Linking.openURL(url);
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setcallIconLoader(false);
+    }
+    // return false;
   };
 
   useEffect(() => {
@@ -442,31 +476,40 @@ const ChatScreen = ({navigation}) => {
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'space-between',
-            alignItems:"center"
+            alignItems: 'center',
           }}>
           <Text style={styles.headerTitle}>{customerName || 'Customer'}</Text>
           {/* <Text style={styles.headerSubtitle}>Business Account</Text> */}
+
           {driverNumber && (
-            <TouchableOpacity
-              style={{
-                width: 30,
-                height: 30,
-                backgroundColor: AppColors.white,
-                borderRadius: 20,
-                overflow: 'hidden',
-                elevation: 5,
-                marginRight: 20,
-              }}
-              onPress={() => openPhoneDialer(driverNumber)}>
-              <Image
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-                source={CallingGif}
-                resizeMode="cover"
-              />
-            </TouchableOpacity>
+            <>
+              {callIconLoader ? (
+                <ActivityIndicator
+                  style={{marginRight: 20, width: 30, height: 30}}
+                />
+              ) : (
+                <TouchableOpacity
+                  style={{
+                    width: 30,
+                    height: 30,
+                    backgroundColor: AppColors.white,
+                    borderRadius: 20,
+                    overflow: 'hidden',
+                    elevation: 5,
+                    marginRight: 20,
+                  }}
+                  onPress={() => openPhoneDialer(driverNumber)}>
+                  <Image
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                    source={CallingGif}
+                    resizeMode="cover"
+                  />
+                </TouchableOpacity>
+              )}
+            </>
           )}
           {/* <Icon color={'white'} name="phone" style={{marginRight:20, }} /> */}
         </View>
@@ -567,6 +610,198 @@ const ChatScreen = ({navigation}) => {
           </View>
         </View>
       </KeyboardAvoidingView>
+      <Modal
+        visible={isPreventDriverToCustomerModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setisPreventDriverToCustomerModal(false)}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              backgroundColor: AppColors.white,
+              minHeight: 200,
+              width: '85%',
+              borderRadius: 20,
+              padding: 24,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 10,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 20,
+              elevation: 10,
+            }}>
+            {/* Header with title and close button */}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 16,
+                position: 'relative',
+              }}>
+              {/* Centered Heading */}
+              {/* <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: '700',
+                        color: '#2D3748',
+                        textAlign: 'center',
+                        flex: 1,
+                      }}>
+                      Oops! Something went wrong
+                    </Text> */}
+
+              {/* Cross Icon in right corner */}
+              <TouchableOpacity
+                onPress={() => setisPreventDriverToCustomerModal(false)}
+                style={{
+                  position: 'absolute',
+                  right: -8,
+                  top: -8,
+                  width: 32,
+                  height: 32,
+                  borderRadius: 16,
+                  backgroundColor: '#F7FAFC',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 4,
+                  elevation: 3,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: '#718096',
+                    fontWeight: '600',
+                  }}>
+                  ✕
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Error Icon */}
+            <View
+              style={{
+                alignItems: 'center',
+                marginBottom: 20,
+              }}>
+              <View
+                style={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: 32,
+                  backgroundColor: '#FED7D7',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 30,
+                    color: '#E53E3E',
+                  }}>
+                  ⚠️
+                </Text>
+              </View>
+            </View>
+
+            {/* Caption below heading */}
+            <View
+              style={{
+                alignItems: 'center',
+                marginBottom: 24,
+                paddingHorizontal: 8,
+              }}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: '#17181b',
+                  textAlign: 'center',
+                  lineHeight: 24,
+                  fontWeight: '400',
+                }}>
+                {prventCallData?.alert_message}
+              </Text>
+            </View>
+
+            {/* Action Buttons */}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                gap: 12,
+              }}>
+              {/* Cancel Button */}
+              {/* <TouchableOpacity
+                      onPress={() => setisPreventDriverToCustomerModal(false)}
+                      style={{
+                        flex: 1,
+                        paddingVertical: 14,
+                        paddingHorizontal: 20,
+                        borderRadius: 12,
+                        borderWidth: 1.5,
+                        borderColor: '#E2E8F0',
+                        backgroundColor: '#FFFFFF',
+                        alignItems: 'center',
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontWeight: '600',
+                          color: '#4A5568',
+                        }}>
+                        Cancel
+                      </Text>
+                    </TouchableOpacity> */}
+
+              {/* Try Again Button */}
+              <TouchableOpacity
+                onPress={() => {
+                  // Add your retry logic here
+                  setisPreventDriverToCustomerModal(false);
+                }}
+                style={{
+                  flex: 1,
+                  paddingVertical: 14,
+                  paddingHorizontal: 20,
+                  borderRadius: 12,
+                  backgroundColor: AppColors.mainColor,
+                  alignItems: 'center',
+                  shadowColor: AppColors.mainColor,
+                  shadowOffset: {
+                    width: 0,
+                    height: 4,
+                  },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 8,
+                  elevation: 4,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: '600',
+                    color: '#FFFFFF',
+                  }}>
+                  {languageSwitch === 'english' ? 'Got it' : 'समझ गया'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

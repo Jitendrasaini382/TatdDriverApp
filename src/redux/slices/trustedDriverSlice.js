@@ -14,6 +14,8 @@ const initialState = {
   isRefresh: false,
   trainingVideoData: [],
   isNeedHelpShow: false,
+  premiumDriverBookingAcceptErr: '',
+  isPremiumDriverElegibleErr: '',
 };
 
 const trustedDriverSlice = createSlice({
@@ -70,6 +72,12 @@ const trustedDriverSlice = createSlice({
     setIsNeedHelpShow: (state, action) => {
       state.isNeedHelpShow = action.payload;
     },
+    setPremiumDriverBookingAcceptErr: (state, action) => {
+      state.premiumDriverBookingAcceptErr = action.payload;
+    },
+    setIsPremiumDriverElegibleErr: (state, action) => {
+      state.isPremiumDriverElegibleErr = action.payload;
+    },
   },
 });
 
@@ -88,6 +96,8 @@ export const {
   setIsRefresh,
   setTrainingVideoData,
   setIsNeedHelpShow,
+  setPremiumDriverBookingAcceptErr,
+  setIsPremiumDriverElegibleErr
 } = trustedDriverSlice.actions;
 
 export default trustedDriverSlice.reducer;

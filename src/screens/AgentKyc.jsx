@@ -11,6 +11,7 @@ import {
   Keyboard,
   RefreshControl,
   Modal,
+  KeyboardAvoidingView,
 } from 'react-native';
 import Header from '../components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -329,6 +330,7 @@ const AgentKyc = ({navigation}) => {
           style={{flex: 1}}
         />
       ) : (
+        <KeyboardAvoidingView style={{flex:1}} behavior='padding' >
         <ScrollView
           refreshControl={
             <RefreshControl
@@ -336,6 +338,7 @@ const AgentKyc = ({navigation}) => {
               onRefresh={getAllAgentKycInfo}
             />
           }
+          automaticallyAdjustKeyboardInsets={true}
           keyboardShouldPersistTaps="always"
           style={styles.container}>
           <Text style={styles.title}>
@@ -429,6 +432,7 @@ const AgentKyc = ({navigation}) => {
             </View>
           )}
         </ScrollView>
+        </KeyboardAvoidingView>
       )}
 
       {showModal && (

@@ -11,22 +11,28 @@ import {
 import {Triangle_Icon} from '../assets/images';
 import Header from '../components/Header';
 import {
+  CHECK_PREMIUM_DRIVER_ELIGIBLE,
   PREMIUM_DRIVER_APPLY,
 } from '../apis/Apis';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {AppColors} from '../assets/Colors';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {setIsPremiumDriverElegibleErr} from '../redux/slices/trustedDriverSlice';
+import SlideupModal from '../components/modal/SlideUpModal';
+import LottieView from 'lottie-react-native';
 
 const PremiumDriver = ({route, navigation}) => {
   //   const {data} = route?.params || null;
   const [playing, setPlaying] = useState(true);
   const [data, setData] = useState({});
-
+  const dispatch = useDispatch();
   const [loader, setLoader] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
-
+  const isPremiumDriverElegibleErr = useSelector(
+    e => e?.trustedDriverSlice?.isPremiumDriverElegibleErr,
+  );
   useEffect(() => {
     setLoader(true);
 
@@ -37,7 +43,24 @@ const PremiumDriver = ({route, navigation}) => {
     if (!data) {
       return false;
     } else {
-      navigation.navigate('PremiumDriverRegistration', {data: data});
+      try {
+        const response = await CHECK_PREMIUM_DRIVER_ELIGIBLE({
+          action: 'premium-diver-eligible',
+          current_language: languageSwitch,
+        });
+        if (response?.status_code == 200) {
+          if (response?.eligible == '0') {
+            // setTimeout(() => {
+            dispatch(setIsPremiumDriverElegibleErr(response?.message));
+            // });
+          } else {
+            navigation.navigate('PremiumDriverRegistration', {data: data});
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+      // navigation.navigate('PremiumDriverRegistration', {data: data});
     }
   };
 
@@ -295,6 +318,50 @@ const PremiumDriver = ({route, navigation}) => {
           </View>
         </View>
       </ScrollView>
+      <SlideupModal
+        visible={isPremiumDriverElegibleErr !== ''}
+        onClose={() => dispatch(setIsPremiumDriverElegibleErr(''))}
+        loading={false}>
+        <View style={{justifyContent: 'center', flexDirection: 'row'}}>
+          <LottieView
+            autoPlay
+            style={{width: 100, height: 100}}
+            source={require('../assets/images/Alert.json')}
+          />
+        </View>
+        <Text
+          style={{
+            fontSize: 18,
+            color: 'red',
+            textAlign: 'center',
+            lineHeight: 24,
+            fontWeight: '400',
+          }}>
+          {isPremiumDriverElegibleErr}
+        </Text>
+        {/* <TouchableOpacity
+                  style={{
+                    backgroundColor: AppColors?.mainColor || '#007AFF',
+                    borderRadius: 8,
+                    paddingVertical: 15,
+                    marginTop: 15,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  onPress={() => {
+                    handlePressPremiumDriver();
+                  }}>
+                  <Text
+                    style={{
+                      color: '#fff',
+                      fontSize: 16,
+                      fontWeight: 'bold',
+                      fontFamily: 'Roboto-Medium',
+                    }}>
+                    {languageSwitch === 'english' ? 'Register' : 'पंजीकरण करवाएं'}
+                  </Text>
+                </TouchableOpacity> */}
+      </SlideupModal>
     </SafeAreaView>
   );
 };

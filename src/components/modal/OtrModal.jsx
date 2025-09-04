@@ -26,48 +26,54 @@ const OtrModal = ({data}) => {
   }
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
-      <TouchableWithoutFeedback onPress={closeModal}>
-        <View style={styles.mainContainer}>
-          <View style={styles.contentContainer}>
-            <View style={{marginBottom: 10}}>
-              <TouchableOpacity
-                onPress={() => closeModal()}
-                style={{
-                  position: 'absolute',
-                  top: 10,
-                  right: 10,
-                  width: 30,
-                  height: 30,
-                  borderRadius: 15,
-                  backgroundColor: '#e0e0e0',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={{fontSize: 20, color: '#333', fontWeight: 'bold'}}>
-                  ×
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.topHeading}>{data?.title}</Text>
-            <Text style={styles.middleText}>{data?.body?.line1}</Text>
-            <Text style={styles.middleText}>{data?.body?.line2}</Text>
-            <Text style={styles.middleText}>{data?.body?.line3}</Text>
-            {/* <Text style={styles.BottamText}>
-              When you are sent to a customer, it is expected that you will
-              reach on time. Your OTR increases when you reach on time,
-              otherwise, it decreases.
-            </Text> */}
-            <TouchableOpacity
-              style={styles.button}
-              onPress={closeModal}
-              activeOpacity={0.7}>
-              <Text style={styles.buttonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </SafeAreaView>
+    <>
+      <Text style={styles.topHeading}>{data?.title}</Text>
+      <Text style={styles.middleText}>{data?.body?.line1}</Text>
+      <Text style={styles.middleText}>{data?.body?.line2}</Text>
+      <Text style={styles.middleText}>{data?.body?.line3}</Text>
+    </>
+    // <SafeAreaView style={styles.mainContainer}>
+    //   <TouchableWithoutFeedback onPress={closeModal}>
+    //     <View style={styles.mainContainer}>
+    //       <View style={styles.contentContainer}>
+    //         <View style={{marginBottom: 10}}>
+    //           <TouchableOpacity
+    //             onPress={() => closeModal()}
+    //             style={{
+    //               position: 'absolute',
+    //               top: 10,
+    //               right: 10,
+    //               width: 30,
+    //               height: 30,
+    //               borderRadius: 15,
+    //               backgroundColor: '#e0e0e0',
+    //               justifyContent: 'center',
+    //               alignItems: 'center',
+    //             }}>
+    //             <Text style={{fontSize: 20, color: '#333', fontWeight: 'bold'}}>
+    //               ×
+    //             </Text>
+    //           </TouchableOpacity>
+    //         </View>
+    //         <Text style={styles.topHeading}>{data?.title}</Text>
+    //         <Text style={styles.middleText}>{data?.body?.line1}</Text>
+    //         <Text style={styles.middleText}>{data?.body?.line2}</Text>
+    //         <Text style={styles.middleText}>{data?.body?.line3}</Text>
+    //         <Text style={styles.BottamText}>
+    //           When you are sent to a customer, it is expected that you will
+    //           reach on time. Your OTR increases when you reach on time,
+    //           otherwise, it decreases.
+    //         </Text>
+    //         {/* <TouchableOpacity
+    //           style={styles.button}
+    //           onPress={closeModal}
+    //           activeOpacity={0.7}>
+    //           <Text style={styles.buttonText}>Close</Text>
+    //         </TouchableOpacity> */}
+    //       </View>
+    //     </View>
+    //   </TouchableWithoutFeedback>
+    // </SafeAreaView>
   );
 };
 
@@ -99,7 +105,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     textAlign: 'left',
     justifyContent: 'flex-start',
-    color: AppColors.silverGrey,
+    color: AppColors.black,
     fontSize: 18,
     fontWeight: '400',
     fontFamily: AppFont.regularFont,

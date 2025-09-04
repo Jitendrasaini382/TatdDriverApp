@@ -364,9 +364,9 @@ const CheckDriverOtp = ({navigation, route}) => {
               style={{
                 flexDirection: 'column',
                 marginTop: verticalScale(25),
-                justifyContent: 'flex-start',
-                alignItems: 'flex-start',
-                marginLeft: moderateScale(30),
+                // justifyContent: 'flex-start',
+                // alignItems: 'flex-start',
+                // marginLeft: moderateScale(30),
               }}>
               <View>
                 <Text

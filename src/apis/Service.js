@@ -144,9 +144,10 @@ const _Fetch = (method, path, body, headers = {}) => {
       headers: finalHeaders, // Pass merged headers
     })
       .then(response => {
-        // if (path !== 'driver-job/driver-interface-text-video-content.php') {
-        // console.log(`Response data: ${path}`, response.data);
-        // }
+        if (path !== 'driver-job/driver-interface-text-video-content.php') {
+        // console.log(`Response data: ${path}  ${response}`);
+        // console.log(response,path)
+        }
         if (response.data.status_code == 200) {
           resolve(response.data);
         } else {

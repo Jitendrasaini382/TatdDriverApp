@@ -19,14 +19,15 @@ import {
   ActivityIndicator,
   PermissionsAndroid,
   FlatList,
+  TouchableWithoutFeedback,
 } from 'react-native';
-import {findNodeHandle, UIManager} from 'react-native';
+// import {findNodeHandle, UIManager} from 'react-native';
 import {Marquee} from '@animatereactnative/marquee';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ToggleSwitch from 'toggle-switch-react-native';
 import {AppColors} from '../assets/Colors';
-import Header from '../components/Header';
+// import Header from '../components/Header';
 import OtrModal from '../components/modal/OtrModal';
 import RatingModal from '../components/modal/RatingModal';
 import BookingModal from '../components/modal/BookingModal';
@@ -48,6 +49,7 @@ import {
   ALL_TEN_MINUTE_STATUS_UPDATE,
   CHECK_PREMIUM_DRIVER_ELIGIBLE,
   DRIVER_AVAILABLE_TEN_MINUTES,
+  DRIVER_FAQ,
   DRIVER_HEADLINE,
   DRIVER_NOTICE,
   DRIVER_NOTIFICATION,
@@ -78,9 +80,11 @@ import {
   setBookingModal,
   setExpressBookingModal,
   setIsNeedHelpShow,
+  setIsPremiumDriverElegibleErr,
   setModalVisible,
   setMyBookingAgencyModal,
   setMyBookingModal,
+  setPremiumDriverBookingAcceptErr,
   setRatingModal,
   setVideosContent,
 } from '../redux/slices/trustedDriverSlice';
@@ -106,6 +110,7 @@ import {
 import {check} from 'react-native-permissions';
 import axios from 'axios';
 import RfdToggleSwitch from '../components/RfdToggleSwitch';
+import SlideupModal from '../components/modal/SlideUpModal';
 const {width, height} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -149,7 +154,14 @@ const TrustedDriver = ({navigation}) => {
   const [fiveStarRatingModal, setFiveStarRatingModal] = useState(false);
   const [driverImage, setDriverImage] = useState('');
   const [fiveStarBookingNumber, setFiveStarBookingNumber] = useState('');
-
+  const trustedRef = useRef(null);
+  const premiumDriverBookingAcceptErr = useSelector(
+    e => e?.trustedDriverSlice?.premiumDriverBookingAcceptErr,
+  );
+  const isPremiumDriverElegibleErr = useSelector(
+    e => e?.trustedDriverSlice?.isPremiumDriverElegibleErr,
+  );
+  // console.log(premiumDriverBookingAcceptErr)
   const driverMobileNumber = useSelector(
     e => e?.userAuth?.userProfile?.data?.driver_mobile_number,
   );
@@ -497,6 +509,7 @@ const TrustedDriver = ({navigation}) => {
     };
   }, []);
 
+  // console.log(languageSwitch)
   useEffect(() => {
     if (jwt) {
       if (isRfdOn) {
@@ -532,24 +545,38 @@ const TrustedDriver = ({navigation}) => {
 
       try {
         // Fetch update popup data
+        // navigation.navigate('PremiumDriverRegistrationProcess');
+        // navigation.navigate('PremiumDriver');
+
+        // return false
         const response = await CHECK_PREMIUM_DRIVER_ELIGIBLE({
           action: 'premium-diver-eligible',
           current_language: languageSwitch,
         });
 
         if (response?.status_code == 200) {
-          if (response?.eligible == '0') {
-            Alert.alert('', response?.message);
-          } else if (
-            response?.eligible == '1' &&
-            response?.message == 'success'
-          ) {
-            if (response?.registration_premium == '1') {
-              navigation.navigate('PremiumDriverRegistrationProcess');
-            } else {
-              navigation.navigate('PremiumDriver');
-            }
+          if (response?.registration_premium == '1') {
+            navigation.navigate('PremiumDriverRegistrationProcess');
+          } else {
+            navigation.navigate('PremiumDriver');
           }
+
+          // if (response?.eligible == '0') {
+          //   dispatch(setPremiumDriverBookingAcceptErr(''));
+          //   setTimeout(() => {
+          //     dispatch(setIsPremiumDriverElegibleErr(response?.message));
+          //   });
+          //   // Alert.alert('', response?.message);
+          // } else if (
+          //   response?.eligible == '1' &&
+          //   response?.message == 'success'
+          // ) {
+          //   if (response?.registration_premium == '1') {
+          //     navigation.navigate('PremiumDriverRegistrationProcess');
+          //   } else {
+          //     navigation.navigate('PremiumDriver');
+          //   }
+          // }
         } else {
           navigation.navigate('TrustedDriver');
         }
@@ -561,7 +588,9 @@ const TrustedDriver = ({navigation}) => {
       showPopover();
     }
   };
-
+  // useEffect(() => {
+  //   getFcmToken();
+  // }, []);
   const getFcmToken = async () => {
     try {
       let tokenvalue = null;
@@ -569,6 +598,9 @@ const TrustedDriver = ({navigation}) => {
       if (Platform.OS === 'ios') {
         // Register for remote messages
         await messaging().registerDeviceForRemoteMessages();
+        console.log(
+          'registerDeviceForRemoteMessagesregisterDeviceForRemoteMessagesregisterDeviceForRemoteMessages',
+        );
 
         // Request permission for push notifications
         const authStatus = await messaging().requestPermission();
@@ -582,7 +614,9 @@ const TrustedDriver = ({navigation}) => {
         }
 
         // Check APNS token
+        // messaging().setAPNSToken('SIMULATOR_TEST_TOKEN');
         const apnsToken = await messaging().getAPNSToken();
+        console.log(apnsToken, 'APMSNSSN');
 
         if (!apnsToken) {
           return;
@@ -590,6 +624,7 @@ const TrustedDriver = ({navigation}) => {
 
         // Fetch FCM token
         tokenvalue = await messaging().getToken();
+        console.log(tokenvalue);
       } else {
         requestNotificationPermission();
         // Fetch FCM token for Android
@@ -684,7 +719,7 @@ const TrustedDriver = ({navigation}) => {
         app_type: appType,
         user_type: 'Driver',
       });
-
+      // console.log(response,"ertyuio")
       if (response?.app_details) {
         const {version, force_update, app_url} = response?.app_details;
 
@@ -726,6 +761,9 @@ const TrustedDriver = ({navigation}) => {
   });
 
   const handleToggleButton = async () => {
+    // Toast.show({type: 'error', text1: 'Location permission is required'});
+    // navigation.navigate('DriverDocumentsUploads');
+    // return
     setLoaderRfd(true);
     try {
       const newRfdValue = isRfdOn ? '0' : '1';
@@ -745,6 +783,7 @@ const TrustedDriver = ({navigation}) => {
         }
 
         const location = await getLocation();
+        console.log(location,"LOCATION SENDING FROM RFD")
         if (location?.latitude && location?.longitude) {
           updatedLoginButton.latitude = location?.latitude;
           updatedLoginButton.longitude = location?.longitude;
@@ -826,9 +865,11 @@ const TrustedDriver = ({navigation}) => {
         action: 'ondemand_bookings',
         current_language: languageSwitch,
       });
+      console.log(response,"ONNN")
 
       setAllOndemandBookings(response);
     } catch (error) {
+      console.log(error,"ONN")
       setLoading(false);
     } finally {
       setLoading(false);
@@ -856,6 +897,7 @@ const TrustedDriver = ({navigation}) => {
         action: 'trusted_other_data',
         current_language: languageSwitch,
       });
+      // console.log(response)
 
       setAllTrustedData(response);
       dispatch(
@@ -1225,8 +1267,14 @@ const TrustedDriver = ({navigation}) => {
     width: 0,
     height: 0,
   });
-  const showPopover = () => {
+  const showPopover = async () => {
     if (viewRef.current) {
+      // console.log(trustedRef)
+      // trustedRef?.current?.scrollToEnd({ animated: true, offset: 0 })
+      await trustedRef.current?.scrollTo({
+        y: 0,
+        animated: false,
+      });
       viewRef.current.measureInWindow((x, y, width, height) => {
         console.log({x, y, width, height});
         setPopoverPosition({x, y, width, height});
@@ -1402,6 +1450,30 @@ const TrustedDriver = ({navigation}) => {
     } catch (err) {}
   };
 
+  const [commissionpressData, setcommissionpressData] = useState('');
+  const [commissionPressLoader, setcommissionPressLoader] = useState(false);
+  const [isShowingCommissionPressModal, setisShowingCommissionPressModal] =
+    useState(false);
+  const fetchDriverFaq = async () => {
+    setcommissionPressLoader(true);
+    try {
+      const res = await DRIVER_FAQ({
+        action: 'driver_faq',
+        current_language: languageSwitch,
+      });
+      setcommissionpressData(res?.faq_data[1]?.faq_answer);
+      console.log(res?.faq_data[2]?.faq_answer, 'FAQ DATA');
+    } catch (error) {
+      console.log(err);
+    } finally {
+      setcommissionPressLoader(false);
+    }
+  };
+  const showComissionModal = () => {
+    setisShowingCommissionPressModal(true);
+    fetchDriverFaq();
+  };
+
   return (
     <View style={styles.safeArea}>
       {/* <View
@@ -1430,6 +1502,8 @@ const TrustedDriver = ({navigation}) => {
         )}
 
         <ScrollView
+          ref={trustedRef}
+          // bounces={false}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -1861,14 +1935,18 @@ const TrustedDriver = ({navigation}) => {
                   <View style={styles.middleContent}>
                     {/* Top div */}
                     <View style={styles.topView}>
-                      <View style={styles.topLeft}>
+                      <TouchableOpacity
+                        style={styles.topLeft}
+                        onPress={() => {
+                          showComissionModal();
+                        }}>
                         <Text style={styles.topLeftText}>
                           {decodedToken &&
                             decodedToken?.DriverCommisonData?.commission}
                           %
                         </Text>
                         <Text style={styles.bottamLeftText}>Commission</Text>
-                      </View>
+                      </TouchableOpacity>
                       <View style={styles.topRight}>
                         <TouchableOpacity
                           onPress={() => navigation.navigate('DriverEarning')}>
@@ -2167,14 +2245,14 @@ const TrustedDriver = ({navigation}) => {
                   onToggle={label => dispatch(setCurrentView(label))}
                 />
 
-                <Text
+                {/* <Text
                   style={{
                     color: AppColors.red,
                     marginVertical: 5,
                     marginHorizontal: 15,
                   }}>
                   {loginMessage}
-                </Text>
+                </Text> */}
 
                 {awarenessVideo && awarenessVideo?.length > 0 && (
                   <View>
@@ -2383,30 +2461,69 @@ const TrustedDriver = ({navigation}) => {
         )}
         {/* Modals */}
 
-        <Modal
+        {/* <Modal
           animationType="slide"
           transparent={true}
           onRequestClose={() => dispatch(setModalVisible(false))}
           visible={isModalVisible}
           style={{justifyContent: 'center', alignItems: 'center'}}>
           <OtrModal data={allTrustedData?.otr_popup_data} />
-        </Modal>
+        </Modal> */}
 
-        <Modal
+        <SlideupModal
+          visible={isModalVisible}
+          onClose={() => dispatch(setModalVisible(false))}
+          loading={false}>
+          <ScrollView
+            contentContainerStyle={{
+              paddingBottom: Platform.OS == 'ios' ? insets.bottom : 0,
+            }}>
+            <OtrModal data={allTrustedData?.otr_popup_data} />
+          </ScrollView>
+        </SlideupModal>
+
+        {/* <Modal
           animationType="slide"
           transparent={true}
           onRequestClose={() => dispatch(setRatingModal(false))}
           visible={ratingModal}>
-          <RatingModal data={allTrustedData?.rating_popup_data} />
-        </Modal>
+         
+        </Modal> */}
 
-        <Modal
+        <SlideupModal
+          visible={ratingModal}
+          onClose={() => dispatch(setRatingModal(false))}
+          loading={false}>
+          <ScrollView
+            contentContainerStyle={{
+              // paddingBottom: Platform.OS == 'ios' ? insets.bottom : 0,
+              paddingBottom: insets.bottom,
+            }}>
+            <RatingModal data={allTrustedData?.rating_popup_data} />
+          </ScrollView>
+        </SlideupModal>
+
+        {/* <Modal
           animationType="slide"
           transparent={true}
           onRequestClose={() => dispatch(setBookingModal(false))}
           visible={bookingModal}>
           <BookingModal data={allTrustedData?.booking_popup_data} />
-        </Modal>
+        </Modal> */}
+
+        <SlideupModal
+          visible={bookingModal}
+          onClose={() => dispatch(setBookingModal(false))}
+          loading={false}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingBottom:
+                Platform.OS == 'ios' ? insets.bottom : insets.bottom,
+            }}>
+            <BookingModal data={allTrustedData?.booking_popup_data} />
+          </ScrollView>
+        </SlideupModal>
 
         <Modal
           animationType="slide"
@@ -2899,7 +3016,7 @@ const TrustedDriver = ({navigation}) => {
           </View>
         </Modal>
 
-        <Toast visibilityTime={3000} topOffset={20} />
+        <Toast visibilityTime={3000} topOffset={insets.top} />
         <Modal transparent animationType="fade" visible={popoverVisible}>
           <SafeAreaView style={{flex: 1}}>
             <TouchableOpacity
@@ -3201,7 +3318,234 @@ const TrustedDriver = ({navigation}) => {
           </TouchableOpacity>
         </Modal>
 
-        {/* need help popup end */}
+        {/* <Modal
+          visible={isShowingCommissionPressModal}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setisShowingCommissionPressModal(false)}>
+          <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
+            <TouchableWithoutFeedback
+              onPress={() => setisShowingCommissionPressModal(false)}>
+              <View style={{flex: 1}} />
+            </TouchableWithoutFeedback>
+
+            <View
+             >
+              <View
+                style={{
+                  backgroundColor: AppColors.white,
+                  minHeight: 200,
+
+                  borderTopLeftRadius:16,
+                      borderTopRightRadius:16,
+                  padding: 24,
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 10,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 20,
+                  elevation: 10,
+                }}>
+
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: 16,
+                    position: 'relative',
+                  }}>
+
+                  <TouchableOpacity
+                    onPress={() => setisShowingCommissionPressModal(false)}
+                    style={{
+                      position: 'absolute',
+                      right: -8,
+                      top: -8,
+                      width: 32,
+                      height: 32,
+                      borderRadius: 16,
+                      
+                      backgroundColor: '#F7FAFC',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      shadowColor: '#000',
+                      shadowOffset: {
+                        width: 0,
+                        height: 2,
+                      },
+                      shadowOpacity: 0.1,
+                      shadowRadius: 4,
+                      elevation: 3,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: AppColors.mainColor,
+                        fontWeight: '800',
+                      }}>
+                      ✕
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+
+                <View
+                  style={{
+                    alignItems: 'center',
+                    paddingHorizontal: 8,
+                  }}>
+                  {commissionPressLoader ? (
+                    <ActivityIndicator
+                      size={'large'}
+                      color={AppColors.mainColor}
+                    />
+                  ) : (
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        color: '#17181b',
+                        textAlign: 'center',
+                        lineHeight: 24,
+                        fontWeight: '400',
+                      }}>
+                      {commissionpressData}
+                    </Text>
+                  )}
+                </View>
+              </View>
+            </View>
+          </View>
+        </Modal> */}
+        <SlideupModal
+          visible={isShowingCommissionPressModal}
+          onClose={() => setisShowingCommissionPressModal(false)}
+          loading={commissionPressLoader}>
+          <Text
+            style={{
+              fontSize: 18,
+              color: '#17181b',
+              textAlign: 'justify',
+              lineHeight: 28,
+              marginTop: 20,
+              fontWeight: '400',
+            }}>
+            {commissionpressData?.trim()}
+          </Text>
+        </SlideupModal>
+
+        <SlideupModal
+          visible={loginMessage !== ''}
+          onClose={() => setLoginMessage('')}
+          loading={false}>
+          <View style={{justifyContent: 'center', flexDirection: 'row'}}>
+            <LottieView
+              autoPlay
+              style={{width: 100, height: 100}}
+              source={require('../assets/images/Alert.json')}
+            />
+          </View>
+          <Text
+            style={{
+              fontSize: 18,
+              color: 'red',
+              textAlign: 'center',
+              lineHeight: 24,
+              fontWeight: '400',
+            }}>
+            {loginMessage}
+          </Text>
+        </SlideupModal>
+        <SlideupModal
+          visible={premiumDriverBookingAcceptErr !== ''}
+          onClose={() => dispatch(setPremiumDriverBookingAcceptErr(''))}
+          loading={false}>
+          <View style={{justifyContent: 'center', flexDirection: 'row'}}>
+            <LottieView
+              autoPlay
+              style={{width: 100, height: 100}}
+              source={require('../assets/images/Alert.json')}
+            />
+          </View>
+          <Text
+            style={{
+              fontSize: 18,
+              color: 'red',
+              textAlign: 'center',
+              lineHeight: 24,
+              fontWeight: '400',
+            }}>
+            {premiumDriverBookingAcceptErr}
+          </Text>
+          <TouchableOpacity
+            style={{
+              backgroundColor: AppColors?.mainColor || '#007AFF',
+              borderRadius: 8,
+              paddingVertical: 15,
+              marginTop: 15,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onPress={() => {
+              handlePressPremiumDriver();
+            }}>
+            <Text
+              style={{
+                color: '#fff',
+                fontSize: 16,
+                fontWeight: 'bold',
+                fontFamily: 'Roboto-Medium',
+              }}>
+              {languageSwitch === 'english' ? 'Register' : 'पंजीकरण करवाएं'}
+            </Text>
+          </TouchableOpacity>
+        </SlideupModal>
+        <SlideupModal
+          visible={isPremiumDriverElegibleErr !== ''}
+          onClose={() => dispatch(setIsPremiumDriverElegibleErr(''))}
+          loading={false}>
+          <View style={{justifyContent: 'center', flexDirection: 'row'}}>
+            <LottieView
+              autoPlay
+              style={{width: 100, height: 100}}
+              source={require('../assets/images/Alert.json')}
+            />
+          </View>
+          <Text
+            style={{
+              fontSize: 18,
+              color: 'red',
+              textAlign: 'center',
+              lineHeight: 24,
+              fontWeight: '400',
+            }}>
+            {isPremiumDriverElegibleErr}
+          </Text>
+          {/* <TouchableOpacity
+            style={{
+              backgroundColor: AppColors?.mainColor || '#007AFF',
+              borderRadius: 8,
+              paddingVertical: 15,
+              marginTop: 15,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onPress={() => {
+              handlePressPremiumDriver();
+            }}>
+            <Text
+              style={{
+                color: '#fff',
+                fontSize: 16,
+                fontWeight: 'bold',
+                fontFamily: 'Roboto-Medium',
+              }}>
+              {languageSwitch === 'english' ? 'Register' : 'पंजीकरण करवाएं'}
+            </Text>
+          </TouchableOpacity> */}
+        </SlideupModal>
       </SafeAreaView>
     </View>
   );

@@ -13,8 +13,9 @@ import {
   RefreshControl,
   Alert,
   Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {LeftArrow, Triangle_Icon} from '../assets/images';
@@ -122,264 +123,270 @@ const CompleteVerification = ({navigation}) => {
           style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
         />
       ) : (
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={async () => {
-                setRefreshing(true);
-                await getDriverRefrenceList();
-                setRefreshing(false);
-              }}
-            />
-          }
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="always"
-          contentContainerStyle={{paddingBottom: 20, paddingHorizontal: 12}}>
-          <View style={styles.mainTopView}>
-            <View style={{flexDirection: 'row'}}>
-              <View style={styles.mainTopContent}>
-                <Text style={styles.trustedText}>Trusted & Trained Driver</Text>
-              </View>
-              <View style={styles.iconContainer}>
-                <Image
-                  source={Triangle_Icon}
-                  resizeMode={'cover'}
-                  style={styles.icon}
-                />
-              </View>
-            </View>
-            <Text style={styles.mainHeading}>
-              Driver Refrence Verification List
-            </Text>
-          </View>
-
-          <View style={styles.toggleContainer}>
-            <TouchableOpacity
-              style={[
-                styles.button,
-                selectedLanguage === 'Hindi' && styles.selectedButton,
-              ]}
-              onPress={() => setSelectedLanguage('Hindi')}>
-              <Text
-                style={[
-                  styles.text,
-                  selectedLanguage === 'Hindi' && styles.selectedText,
-                ]}>
-                Hindi
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.button,
-                selectedLanguage === 'English' && styles.selectedButton,
-              ]}
-              onPress={() => setSelectedLanguage('English')}>
-              <Text
-                style={[
-                  styles.text,
-                  selectedLanguage === 'English' && styles.selectedText,
-                ]}>
-                English
-              </Text>
-            </TouchableOpacity>
-          </View>
-          {/* Address */}
-          <View style={styles.addressContainer}>
-            <Text style={styles.addressText}>{allData?.address} </Text>
-          </View>
-
-          {/* Add Verifier Button */}
-          <View style={styles.connectContainer}>
-            <Pressable
-              onPress={() => navigation.navigate('AddNewVerifier')}
-              style={styles.connectButton}>
-              <Icon
-                color={AppColors.white}
-                size={18}
-                name="plus"
-                style={styles.buttonIcon}
+        <KeyboardAvoidingView behavior="padding" style={{flex: 1}}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={async () => {
+                  setRefreshing(true);
+                  await getDriverRefrenceList();
+                  setRefreshing(false);
+                }}
               />
-              <Image style={styles.rightArrow} source={LeftArrow} />
-            </Pressable>
-            <Text style={styles.instructionText}>
-              {selectedLanguage == 'Hindi'
-                ? allData?.alert_message_hindi
-                : allData?.alert_message_english}
-            </Text>
-          </View>
+            }
+            showsVerticalScrollIndicator={false}
+            automaticallyAdjustKeyboardInsets={true}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{paddingBottom: 20, paddingHorizontal: 12}}>
+            <View style={styles.mainTopView}>
+              <View style={{flexDirection: 'row'}}>
+                <View style={styles.mainTopContent}>
+                  <Text style={styles.trustedText}>
+                    Trusted & Trained Driver
+                  </Text>
+                </View>
+                <View style={styles.iconContainer}>
+                  <Image
+                    source={Triangle_Icon}
+                    resizeMode={'cover'}
+                    style={styles.icon}
+                  />
+                </View>
+              </View>
+              <Text style={styles.mainHeading}>
+                Driver Refrence Verification List
+              </Text>
+            </View>
 
-          {/* YouTube Video */}
-          <View style={styles.videoContainer}>
-            <YoutubePlayer
-              height={250}
-              videoId={
-                selectedLanguage == 'Hindi'
-                  ? allData?.hindi_vedio
-                  : allData?.english_vedio
-              }
-            />
-          </View>
+            <View style={styles.toggleContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  selectedLanguage === 'Hindi' && styles.selectedButton,
+                ]}
+                onPress={() => setSelectedLanguage('Hindi')}>
+                <Text
+                  style={[
+                    styles.text,
+                    selectedLanguage === 'Hindi' && styles.selectedText,
+                  ]}>
+                  Hindi
+                </Text>
+              </TouchableOpacity>
 
-          {/* FlatList for Contact Cards */}
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  selectedLanguage === 'English' && styles.selectedButton,
+                ]}
+                onPress={() => setSelectedLanguage('English')}>
+                <Text
+                  style={[
+                    styles.text,
+                    selectedLanguage === 'English' && styles.selectedText,
+                  ]}>
+                  English
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {/* Address */}
+            <View style={styles.addressContainer}>
+              <Text style={styles.addressText}>{allData?.address} </Text>
+            </View>
 
-          <FlatList
-            keyboardShouldPersistTaps="always"
-            data={refrenceList}
-            keyExtractor={item => item?.id.toString()}
-            renderItem={({item, index}) => {
-              const status = item?.status === 'Verified';
-              const bgColor = status
-                ? AppColors.mainColor
-                : AppColors.greyColor;
-              const textColor = status ? AppColors.white : AppColors.black;
+            {/* Add Verifier Button */}
+            <View style={styles.connectContainer}>
+              <Pressable
+                onPress={() => navigation.navigate('AddNewVerifier')}
+                style={styles.connectButton}>
+                <Icon
+                  color={AppColors.white}
+                  size={18}
+                  name="plus"
+                  style={styles.buttonIcon}
+                />
+                <Image style={styles.rightArrow} source={LeftArrow} />
+              </Pressable>
+              <Text style={styles.instructionText}>
+                {selectedLanguage == 'Hindi'
+                  ? allData?.alert_message_hindi
+                  : allData?.alert_message_english}
+              </Text>
+            </View>
 
-              return (
-                <View
-                  style={{
-                    backgroundColor: bgColor,
-                    padding: 12,
-                    borderRadius: 10,
-                    marginTop: 15,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                  }}>
-                  <View style={{flex: 1}}>
-                    <Text
-                      style={{
-                        color: textColor,
-                        fontSize: 14,
-                        marginVertical: 2,
-                        fontWeight: '500',
-                      }}>
-                      Name - {item?.verifier_name}
-                    </Text>
-                    <Text
-                      style={{
-                        color: textColor,
-                        fontSize: 14,
-                        marginVertical: 2,
-                        fontWeight: '500',
-                      }}>
-                      Number - {item?.verifier_number}
-                    </Text>
-                    <Text
-                      style={{
-                        color: textColor,
-                        fontSize: 14,
-                        marginVertical: 2,
-                        fontWeight: '500',
-                      }}>
-                      Relation - {item?.relationship_with_verifier}
-                    </Text>
-                  </View>
+            {/* YouTube Video */}
+            <View style={styles.videoContainer}>
+              <YoutubePlayer
+                height={250}
+                videoId={
+                  selectedLanguage == 'Hindi'
+                    ? allData?.hindi_vedio
+                    : allData?.english_vedio
+                }
+              />
+            </View>
 
+            {/* FlatList for Contact Cards */}
+
+            <FlatList
+              keyboardShouldPersistTaps="always"
+              data={refrenceList}
+              keyExtractor={item => item?.id.toString()}
+              renderItem={({item, index}) => {
+                const status = item?.status === 'Verified';
+                const bgColor = status
+                  ? AppColors.mainColor
+                  : AppColors.greyColor;
+                const textColor = status ? AppColors.white : AppColors.black;
+
+                return (
                   <View
                     style={{
+                      backgroundColor: bgColor,
+                      padding: 12,
+                      borderRadius: 10,
+                      marginTop: 15,
+                      flexDirection: 'row',
                       justifyContent: 'space-between',
-                      alignItems: 'flex-end',
+                      alignItems: 'flex-start',
                     }}>
-                    {status ? (
-                      <>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            padding: 6,
-                            borderWidth: 2,
-                            paddingHorizontal: 20,
-                            borderColor: '#FFFFFF',
-                            borderRadius: 10,
-                            backgroundColor: '#25568D',
-                          }}>
-                          <Icon name="check" size={24} color="#FFFFFF" />
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'flex-end',
-                            marginTop: 8,
-                          }}>
-                          <Text
-                            style={{
-                              color: textColor,
-                              marginRight: 6,
-                              fontSize: 14,
-                              fontWeight: '500',
-                            }}>
-                            Verified
-                          </Text>
-                        </View>
-                      </>
-                    ) : (
-                      <>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            marginBottom: 8,
-                          }}>
-                          <TextInput
-                            placeholder={
-                              selectedLanguage === 'Hindi'
-                                ? 'OTP भरें'
-                                : 'Enter Otp'
-                            }
-                            keyboardType="number-pad"
-                            placeholderTextColor="#555"
-                            value={otpList[item.id] || ''}
-                            onChangeText={text =>
-                              setOtpList(prev => ({
-                                ...prev,
-                                [item.id]: text,
-                              }))
-                            }
-                            style={{
-                              borderWidth: 1,
-                              borderColor: '#aaa',
-                              paddingVertical: 3,
-                              paddingHorizontal: 10,
-                              borderRadius: 5,
-                              fontSize: 13,
-                              minWidth: 80,
-                              marginRight: 6,
-                              backgroundColor: '#f9f9f9',
-                              color: '#333',
-                            }}
-                          />
+                    <View style={{flex: 1}}>
+                      <Text
+                        style={{
+                          color: textColor,
+                          fontSize: 14,
+                          marginVertical: 2,
+                          fontWeight: '500',
+                        }}>
+                        Name - {item?.verifier_name}
+                      </Text>
+                      <Text
+                        style={{
+                          color: textColor,
+                          fontSize: 14,
+                          marginVertical: 2,
+                          fontWeight: '500',
+                        }}>
+                        Number - {item?.verifier_number}
+                      </Text>
+                      <Text
+                        style={{
+                          color: textColor,
+                          fontSize: 14,
+                          marginVertical: 2,
+                          fontWeight: '500',
+                        }}>
+                        Relation - {item?.relationship_with_verifier}
+                      </Text>
+                    </View>
 
-                          <Pressable
+                    <View
+                      style={{
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-end',
+                      }}>
+                      {status ? (
+                        <>
+                          <View
                             style={{
-                              backgroundColor: AppColors.mainColor,
-                              paddingVertical: 6,
-                              paddingHorizontal: 12,
-                              borderRadius: 5,
-                            }}
-                            onPress={() => handleOtpSubmit(item)}>
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              padding: 6,
+                              borderWidth: 2,
+                              paddingHorizontal: 20,
+                              borderColor: '#FFFFFF',
+                              borderRadius: 10,
+                              backgroundColor: '#25568D',
+                            }}>
+                            <Icon name="check" size={24} color="#FFFFFF" />
+                          </View>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              justifyContent: 'flex-end',
+                              marginTop: 8,
+                            }}>
                             <Text
                               style={{
-                                color: '#fff',
-                                fontSize: 13,
-                                fontWeight: '600',
+                                color: textColor,
+                                marginRight: 6,
+                                fontSize: 14,
+                                fontWeight: '500',
                               }}>
-                              {selectedLanguage == 'English'
-                                ? 'Submit'
-                                : 'जमा करें'}
+                              Verified
                             </Text>
-                          </Pressable>
-                        </View>
-                      </>
-                    )}
+                          </View>
+                        </>
+                      ) : (
+                        <>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              marginBottom: 8,
+                            }}>
+                            <TextInput
+                              placeholder={
+                                selectedLanguage === 'Hindi'
+                                  ? 'OTP भरें'
+                                  : 'Enter Otp'
+                              }
+                              keyboardType="number-pad"
+                              placeholderTextColor="#555"
+                              value={otpList[item.id] || ''}
+                              onChangeText={text =>
+                                setOtpList(prev => ({
+                                  ...prev,
+                                  [item.id]: text,
+                                }))
+                              }
+                              style={{
+                                borderWidth: 1,
+                                borderColor: '#aaa',
+                                paddingVertical: 3,
+                                paddingHorizontal: 10,
+                                borderRadius: 5,
+                                fontSize: 13,
+                                minHeight: 38,
+                                minWidth: 80,
+                                marginRight: 6,
+                                backgroundColor: '#f9f9f9',
+                                color: '#333',
+                              }}
+                            />
+
+                            <Pressable
+                              style={{
+                                backgroundColor: AppColors.mainColor,
+                                paddingVertical: 6,
+                                paddingHorizontal: 12,
+                                borderRadius: 5,
+                              }}
+                              onPress={() => handleOtpSubmit(item)}>
+                              <Text
+                                style={{
+                                  color: '#fff',
+                                  fontSize: 13,
+                                  fontWeight: '600',
+                                }}>
+                                {selectedLanguage == 'English'
+                                  ? 'Submit'
+                                  : 'जमा करें'}
+                              </Text>
+                            </Pressable>
+                          </View>
+                        </>
+                      )}
+                    </View>
                   </View>
-                </View>
-              );
-            }}
-            ListFooterComponent={<View style={{height: 20}} />}
-          />
-        </ScrollView>
+                );
+              }}
+              ListFooterComponent={<View style={{height: 20}} />}
+            />
+          </ScrollView>
+        </KeyboardAvoidingView>
       )}
     </SafeAreaView>
   );

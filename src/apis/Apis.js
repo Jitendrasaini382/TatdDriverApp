@@ -266,6 +266,15 @@ export const CUSTOMER_WANT_TO_CANCEL = body => {
   );
 };
 
+export const RESTRICT_CALL_TO_CUSTOMER = body => {
+  return _Fetch(
+    'POST',
+    'duty-report/restriction-customer-number-sharing-dial-api.php',
+    {...body},
+    {},
+  );
+};
+
 export const WAITING_MINUTE_INSERT = body => {
   return _Fetch(
     'POST',

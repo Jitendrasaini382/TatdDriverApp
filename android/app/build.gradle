@@ -1,4 +1,7 @@
 apply plugin: "com.android.application"
+// project.ext.react = [
+//     nodeExecutableAndArgs: [System.getProperty("NODE_BINARY") ?: "/usr/local/bin/node"]
+// ]
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 apply plugin: 'com.google.gms.google-services'
@@ -7,6 +10,7 @@ apply plugin: 'com.google.firebase.crashlytics'
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
  */
+
 react {
     /* Folders */
     //   The root of your project, i.e. where "package.json" lives. Default is '..'
@@ -56,6 +60,10 @@ react {
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
  */
 def enableProguardInReleaseBuilds = false
+react {
+    nodeExecutableAndArgs = [System.getenv("NODE_BINARY") ?: "node"]
+}
+
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
@@ -70,19 +78,61 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+// android {
+//     ndkVersion rootProject.ext.ndkVersion
+//     buildToolsVersion rootProject.ext.buildToolsVersion
+//     compileSdk rootProject.ext.compileSdkVersion
+
+//     namespace "com.tatd.driver"
+//     defaultConfig {
+//         applicationId "com.tatd.driver"
+//         minSdkVersion rootProject.ext.minSdkVersion
+//         targetSdkVersion rootProject.ext.targetSdkVersion
+//         versionCode 58
+//         versionName "2.74"
+//     }
+//     signingConfigs {
+//         debug {
+//             storeFile file('debug.keystore')
+//             storePassword 'android'
+//             keyAlias 'androiddebugkey'
+//             keyPassword 'android'
+//         }
+//     }
+//     buildTypes {
+//         debug {
+//             signingConfig signingConfigs.debug
+//         }
+//         release {
+//             // Caution! In production, you need to generate your own keystore file.
+//             // see https://reactnative.dev/docs/signed-apk-android.
+//             signingConfig signingConfigs.debug
+//             minifyEnabled enableProguardInReleaseBuilds
+//             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+//         }
+//     }
+// }
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace "com.tatd.driver"
+
     defaultConfig {
         applicationId "com.tatd.driver"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 57
-        versionName "2.73"
+        versionCode 58
+        versionName "2.74"
+
+        // Ensure debug symbols (helps with alignment + crash reporting)
+        ndk {
+            debugSymbolLevel = 'FULL'
+        }
     }
+
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
@@ -91,19 +141,26 @@ android {
             keyPassword 'android'
         }
     }
+
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
+    // 🚀 This is the key part to support 16 KB devices
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
+        }
+    }
 }
+
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin

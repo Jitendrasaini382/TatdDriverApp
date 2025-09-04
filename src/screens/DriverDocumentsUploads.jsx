@@ -13,7 +13,7 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import ImagePicker from 'react-native-image-crop-picker';
 import {
   DRIVER_DOCUMENT_UPLOADED_STATUS,
@@ -284,81 +284,88 @@ const DriverDocumentsUploads = ({navigation}) => {
           </View>
         </View>
       ) : (
-        <KeyboardAvoidingView style={{flex:1}} behavior='padding'>
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={() => {
-                setRefreshing(true);
-                // getDriverUploadedData();
-                getDriverDocumentUploadedStatus();
-              }}
-            />
-          }
-          contentContainerStyle={styles.scrollContainer}>
-          <Text style={styles.title}>Driver's Document Upload</Text>
+        <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+          <ScrollView
+            // automaticallyAdjustKeyboardInsets={true}
 
-          <Text style={[styles.label, {alignSelf: 'center'}]}>
-            Upload Driver Photo
-          </Text>
-          <TouchableOpacity
-            onPress={() => openCameraOrGallery('driver_photo')}
-            style={[
-              styles.uploadBox,
-              {height: 200, width: 200, alignSelf: 'center'},
-              errors.driver_photo && {borderColor: 'red'},
-            ]}>
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => {
+                  setRefreshing(true);
+                  // getDriverUploadedData();
+                  getDriverDocumentUploadedStatus();
+                }}
+              />
+            }
+            contentContainerStyle={styles.scrollContainer}>
+            <Text style={styles.title}>Driver's Document Upload</Text>
+
+            <Text style={[styles.label, {alignSelf: 'center'}]}>
+              Upload Driver Photo
+            </Text>
             <TouchableOpacity
-              onPress={() => openCameraOrGallery('driver_photo')}>
-              {images.driver_photo ? (
-                <Image
-                  source={{uri: images.driver_photo}}
-                  style={[styles.image, {height: 200, width: 200}]}
-                />
-              ) : (
-                <Text style={styles.placeholderText}>Upload Driver Photo</Text>
-              )}
+              onPress={() => openCameraOrGallery('driver_photo')}
+              style={[
+                styles.uploadBox,
+                {height: 200, width: 200, alignSelf: 'center'},
+                errors.driver_photo && {borderColor: 'red'},
+              ]}>
+              <TouchableOpacity
+                onPress={() => openCameraOrGallery('driver_photo')}>
+                {images.driver_photo ? (
+                  <Image
+                    source={{uri: images.driver_photo}}
+                    style={[styles.image, {height: 200, width: 200}]}
+                  />
+                ) : (
+                  <Text style={styles.placeholderText}>
+                    Upload Driver Photo
+                  </Text>
+                )}
+              </TouchableOpacity>
             </TouchableOpacity>
-          </TouchableOpacity>
-          {errors.driver_photo ? (
-            <Text style={styles.errorTextCenter}>{errors.driver_photo}</Text>
-          ) : null}
+            {errors.driver_photo ? (
+              <Text style={styles.errorTextCenter}>{errors.driver_photo}</Text>
+            ) : null}
 
-          <Text style={styles.label}>Aadhaar Card (Front & Back)</Text>
-          <View style={styles.row}>
-            {renderImageBox('aadhar_number_file_front', 'Aadhaar Card Front')}
-            {renderImageBox('aadhar_number_file_back', 'Aadhaar Card Back')}
-          </View>
+            <Text style={styles.label}>Aadhaar Card (Front & Back)</Text>
+            <View style={styles.row}>
+              {renderImageBox('aadhar_number_file_front', 'Aadhaar Card Front')}
+              {renderImageBox('aadhar_number_file_back', 'Aadhaar Card Back')}
+            </View>
 
-          <Text style={styles.label}>License (Front & Back)</Text>
-          <View style={styles.row}>
-            {renderImageBox('licence_number_file_front', 'License Front')}
-            {renderImageBox('licence_number_file_back', 'License Back')}
-          </View>
+            <Text style={styles.label}>License (Front & Back)</Text>
+            <View style={styles.row}>
+              {renderImageBox('licence_number_file_front', 'License Front')}
+              {renderImageBox('licence_number_file_back', 'License Back')}
+            </View>
 
-          <Text style={styles.label}>Current Address</Text>
-          <TextInput
-            style={[styles.input, errors.address && {borderColor: 'red'}]}
-            placeholder="Enter Current Address"
-            placeholderTextColor={'grey'}
-            value={address}
-            onChangeText={text => {
-              setAddress(text);
-              if (text.trim()) {
-                setErrors(prev => ({...prev, address: ''}));
-              }
-            }}
-            multiline
-          />
-          {errors.address ? (
-            <Text style={styles.errorText}>{errors.address}</Text>
-          ) : null}
+            <Text style={styles.label}>Current Address</Text>
+            <TextInput
+              style={[styles.input, errors.address && {borderColor: 'red'}]}
+              placeholder="Enter Current Address"
+              placeholderTextColor={'grey'}
+              value={address}
+              onChangeText={text => {
+                setAddress(text);
+                if (text.trim()) {
+                  setErrors(prev => ({...prev, address: ''}));
+                }
+              }}
 
-          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={styles.submitText}>Submit</Text>
-          </TouchableOpacity>
-        </ScrollView>
+              // multiline={true}
+            />
+            {errors.address ? (
+              <Text style={styles.errorText}>{errors.address}</Text>
+            ) : null}
+
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleSubmit}>
+              <Text style={styles.submitText}>Submit</Text>
+            </TouchableOpacity>
+          </ScrollView>
         </KeyboardAvoidingView>
       )}
     </SafeAreaView>
@@ -421,9 +428,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: AppColors.borderColor,
     padding: 10,
+    height: 40,
     flex: 1,
     borderRadius: 5,
-    marginTop: 5,
+    // marginTop: 5,
     color: AppColors.black,
   },
   submitButton: {

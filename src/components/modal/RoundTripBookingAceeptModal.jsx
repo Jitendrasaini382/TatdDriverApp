@@ -24,6 +24,7 @@ import {
 import {requestLocationPermission} from '../../utils/permissions';
 import Geolocation from '@react-native-community/geolocation';
 import IntentLauncher from '@yz1311/react-native-intent-launcher';
+import {setPremiumDriverBookingAcceptErr} from '../../redux/slices/trustedDriverSlice';
 
 const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   if (!trip) return null;
@@ -141,16 +142,20 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
         if (response?.status_code == '200') {
           if (response?.msg_type == 'error') {
             if (response?.redirect == 'premiumDriver') {
-              Alert.alert('', response?.message, [
-                {
-                  text: 'OK',
-                  onPress: () => {
-                    handlePressPremiumDriver();
-                    setOpenModal(false);
-                    setLoader(true);
-                  },
-                },
-              ]);
+              setOpenModal(false);
+              setTimeout(() => {
+                dispatch(setPremiumDriverBookingAcceptErr(response?.message));
+              }, 100);
+              // Alert.alert('', response?.message, [
+              //   {
+              //     text: 'OK',
+              //     onPress: () => {
+              //       handlePressPremiumDriver();
+              //       setOpenModal(false);
+              //       setLoader(true);
+              //     },
+              //   },
+              // ]);
             } else {
               Alert.alert('', response?.message, [
                 {
@@ -200,90 +205,93 @@ const RoundTripBookingAceeptModal = ({setOpenModal, trip}) => {
   };
 
   return (
-    <SafeAreaView style={{flex:1}} >
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.headerTextContainer}>
-          <Text style={styles.headerText}>{driverConsent?.accept_heading}</Text>
-        </View>
-        <TouchableOpacity onPress={() => setOpenModal(false)}>
-          <Text style={styles.closeButton}>X</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.contentContainer}>
-        <Text style={styles.contentText}>
-          {driverConsent?.accept_paragraph1}
-        </Text>
-        <Text style={styles.contentText}>
-          {driverConsent?.accept_paragraph2}
-        </Text>
-      </View>
-      <View style={styles.checkboxContainer}>
-        {/* First Checkbox */}
-        <View style={styles.checkboxRow}>
-          <TouchableOpacity
-            onPress={() => setChecked1(!checked1)}
-            style={[
-              styles.checkbox,
-              {
-                backgroundColor: checked1
-                  ? AppColors.mainColor
-                  : AppColors.white,
-              },
-            ]}>
-            {checked1 && <Text style={styles.checkboxTick}>✔</Text>}
-          </TouchableOpacity>
-          <Pressable onPress={() => setChecked1(!checked1)}>
-            <Text style={styles.checkboxLabel}>
-              {driverConsent?.checkboxLabel1}
+    <SafeAreaView style={{flex: 1}}>
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.headerTextContainer}>
+            <Text style={styles.headerText}>
+              {driverConsent?.accept_heading}
             </Text>
-          </Pressable>
+          </View>
+          <TouchableOpacity onPress={() => setOpenModal(false)}>
+            <Text style={styles.closeButton}>X</Text>
+          </TouchableOpacity>
         </View>
+        <View style={styles.contentContainer}>
+          <Text style={styles.contentText}>
+            {driverConsent?.accept_paragraph1}
+          </Text>
+          <Text style={styles.contentText}>
+            {driverConsent?.accept_paragraph2}
+          </Text>
+        </View>
+        <View style={styles.checkboxContainer}>
+          {/* First Checkbox */}
+          <View style={styles.checkboxRow}>
+            <TouchableOpacity
+              onPress={() => setChecked1(!checked1)}
+              style={[
+                styles.checkbox,
+                {
+                  backgroundColor: checked1
+                    ? AppColors.mainColor
+                    : AppColors.white,
+                },
+              ]}>
+              {checked1 && <Text style={styles.checkboxTick}>✔</Text>}
+            </TouchableOpacity>
+            <Pressable onPress={() => setChecked1(!checked1)}>
+              <Text style={styles.checkboxLabel}>
+                {driverConsent?.checkboxLabel1}
+              </Text>
+            </Pressable>
+          </View>
 
-        {/* Second Checkbox */}
-        <View style={styles.checkboxRow}>
-          <TouchableOpacity
-            onPress={() => setChecked2(!checked2)}
-            style={[
-              styles.checkbox,
-              {
-                backgroundColor: checked2
-                  ? AppColors.mainColor
-                  : AppColors.white,
-              },
-            ]}>
-            {checked2 && <Text style={styles.checkboxTick}>✔</Text>}
-          </TouchableOpacity>
-          <Pressable onPress={() => setChecked2(!checked2)}>
-            <Text style={styles.checkboxLabel}>
-              {driverConsent?.checkboxLabel2}
-            </Text>
-          </Pressable>
+          {/* Second Checkbox */}
+          <View style={styles.checkboxRow}>
+            <TouchableOpacity
+              onPress={() => setChecked2(!checked2)}
+              style={[
+                styles.checkbox,
+                {
+                  backgroundColor: checked2
+                    ? AppColors.mainColor
+                    : AppColors.white,
+                },
+              ]}>
+              {checked2 && <Text style={styles.checkboxTick}>✔</Text>}
+            </TouchableOpacity>
+            <Pressable onPress={() => setChecked2(!checked2)}>
+              <Text style={styles.checkboxLabel}>
+                {driverConsent?.checkboxLabel2}
+              </Text>
+            </Pressable>
+          </View>
         </View>
-      </View>
-      <TouchableOpacity
-        onPress={() => acceptBooking()}
-        disabled={!(checked1 && checked2) || loader}
-        style={[
-          styles.acceptButton,
-          {
-            backgroundColor:
-              (checked1 && checked2) || loader
-                ? AppColors.mainColor
-                : '#CCCCCC',
-          },
-        ]}>
-        <Text style={styles.acceptButtonText}>
-          {loader ? (
-            <>
-              <ActivityIndicator size="small" color="#FFFFFF" /> Please Wait...
-            </>
-          ) : (
-            'Accept'
-          )}
-        </Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <TouchableOpacity
+          onPress={() => acceptBooking()}
+          disabled={!(checked1 && checked2) || loader}
+          style={[
+            styles.acceptButton,
+            {
+              backgroundColor:
+                (checked1 && checked2) || loader
+                  ? AppColors.mainColor
+                  : '#CCCCCC',
+            },
+          ]}>
+          <Text style={styles.acceptButtonText}>
+            {loader ? (
+              <>
+                <ActivityIndicator size="small" color="#FFFFFF" /> Please
+                Wait...
+              </>
+            ) : (
+              'Accept'
+            )}
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 };

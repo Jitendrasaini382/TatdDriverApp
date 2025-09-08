@@ -36,7 +36,7 @@ const BookingView = ({
             onPress={() => navigation.navigate('AgentPanel')}
             style={styles.connectButton}>
             <Icon color={AppColors.white} size={15} name="plus" />
-            <Image style={styles.rightArrow} source={LeftArrow} />
+            <Image resizeMode='contain' resizeMethod='resize' style={styles.rightArrow} source={LeftArrow} />
           </Pressable>
           <Text style={styles.connectText}>{panelData}</Text>
         </View>
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
     width: width * 0.2,
   },
   rightArrow: {
-    resizeMode: 'center',
+    // resizeMode: 'center',
     height: 20,
     width: 20,
   },

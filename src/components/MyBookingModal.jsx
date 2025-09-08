@@ -168,7 +168,8 @@ const MyBookingModal = ({}) => {
                                   {item?.booking_id} - {item?.booking_date}
                                 </Text>
                                 <Image
-                                  resizeMode="center"
+                                  resizeMode="contain"
+                                  resizeMethod="resize"
                                   style={styles.arrowIcon}
                                   source={RightArrow}
                                 />
@@ -231,7 +232,8 @@ const MyBookingModal = ({}) => {
                                     {'        '}+ {booking?.amount}
                                   </Text>
                                   <Image
-                                    resizeMode="center"
+                                    resizeMode="contain"
+                                    resizeMethod="resize"
                                     style={styles.arrowIcon}
                                     source={RightArrow}
                                   />
@@ -259,7 +261,8 @@ const MyBookingModal = ({}) => {
                             {myBookingData?.clear_my_due_txt}
                           </Text>
                           <Image
-                            resizeMode="center"
+                            resizeMode="contain"
+                            resizeMethod="resize"
                             style={styles.arrowIcon}
                             source={RightArrow}
                           />

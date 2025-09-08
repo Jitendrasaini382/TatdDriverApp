@@ -934,10 +934,54 @@ const DutyReportUpdate = ({route, navigation}) => {
     }
   };
 
+  // const openMap = async latLong => {
+  //   try {
+  //     setLoaderMap(true);
+
+  //     if (
+  //       !latLong ||
+  //       typeof latLong !== 'string' ||
+  //       !latLong.includes(',') ||
+  //       latLong.split(',').length !== 2 ||
+  //       latLong.split(',').some(coord => isNaN(parseFloat(coord.trim())))
+  //     ) {
+  //       setLoaderMap(false);
+  //       return null;
+  //     }
+
+  //     const currentLocation = await getLocation();
+  //     const customerLocation = createLatLng(latLong);
+
+  //     const googleMapsAppURL = `google.navigation:q=${customerLocation?.lat},${customerLocation?.lng}&mode=d`;
+  //     const googleMapsWebURL = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation?.latitude},${currentLocation?.longitude}&destination=${customerLocation?.lat},${customerLocation?.lng}&travelmode=driving`;
+
+  //     if (bookingInfo?.condition?.live_tracking == 1) {
+  //       navigation.navigate('MyMap', {
+  //         googleMapsWebURL,
+  //         timing: bookingInfo?.condition?.api_timing,
+  //         bookingNumber,
+  //       });
+  //     } else {
+  //       const supported = await Linking.canOpenURL('google.navigation:q=0,0');
+
+  //       if (supported) {
+  //         await Linking.openURL(googleMapsAppURL);
+  //       } else {
+  //         await Linking.openURL(googleMapsWebURL);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error('Error opening Google Maps', error);
+  //   } finally {
+  //     setLoaderMap(false);
+  //   }
+  // };
   const openMap = async latLong => {
     try {
       setLoaderMap(true);
-
+      console.log('lat----long', latLong);
+  
+      // Validate latLong
       if (
         !latLong ||
         typeof latLong !== 'string' ||
@@ -945,25 +989,57 @@ const DutyReportUpdate = ({route, navigation}) => {
         latLong.split(',').length !== 2 ||
         latLong.split(',').some(coord => isNaN(parseFloat(coord.trim())))
       ) {
+        console.error('Invalid latLong format:', latLong);
         setLoaderMap(false);
         return null;
       }
-
+  
+      // Get current location
       const currentLocation = await getLocation();
-      const customerLocation = createLatLng(latLong);
-
-      const googleMapsAppURL = `google.navigation:q=${customerLocation?.lat},${customerLocation?.lng}&mode=d`;
-      const googleMapsWebURL = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation?.latitude},${currentLocation?.longitude}&destination=${customerLocation?.lat},${customerLocation?.lng}&travelmode=driving`;
-
+      console.log('current-----', currentLocation);
+  
+      if (!currentLocation) {
+        console.error('Current location not found');
+        setLoaderMap(false);
+        return null;
+      }
+  
+      const [latitude, longitude] = latLong.split(',').map(coord => coord.trim());
+  
+      // iOS Apple Maps
+      const appleMapsURL = `maps://?daddr=${latitude},${longitude}&dirflg=d`;
+  
+      // iOS Google Maps
+      const googleMapsIOSURL = `comgooglemaps://?saddr=${currentLocation.latitude},${currentLocation.longitude}&daddr=${latitude},${longitude}&directionsmode=driving`;
+  
+      // Android Google Maps
+      const googleMapsAppURL = `google.navigation:q=${latitude},${longitude}&mode=d`;
+  
+      // Web fallback
+      const googleMapsWebURL = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation.latitude},${currentLocation.longitude}&destination=${latitude},${longitude}&travelmode=driving`;
+  
+      // If live tracking enabled → navigate inside app map
       if (bookingInfo?.condition?.live_tracking == 1) {
         navigation.navigate('MyMap', {
+          drop_address: bookingInfo?.data?.drop_address,
+          pickup_address: bookingInfo?.data?.pickup_address,
           googleMapsWebURL,
           timing: bookingInfo?.condition?.api_timing,
           bookingNumber,
         });
+        return;
+      }
+  
+      // Platform-wise handling
+      if (Platform.OS === 'ios') {
+        const supported = await Linking.canOpenURL('comgooglemaps://');
+        if (supported) {
+          await Linking.openURL(googleMapsIOSURL);
+        } else {
+          await Linking.openURL(appleMapsURL);
+        }
       } else {
-        const supported = await Linking.canOpenURL('google.navigation:q=0,0');
-
+        const supported = await Linking.canOpenURL('geo:');
         if (supported) {
           await Linking.openURL(googleMapsAppURL);
         } else {
@@ -971,12 +1047,12 @@ const DutyReportUpdate = ({route, navigation}) => {
         }
       }
     } catch (error) {
-      console.error('Error opening Google Maps', error);
+      console.error('Error opening Maps:', error);
     } finally {
       setLoaderMap(false);
     }
   };
-
+  
   const handleLogoPress = () => {
     navigation.navigate('TrustedDriver');
   };

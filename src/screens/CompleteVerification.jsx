@@ -206,7 +206,7 @@ const CompleteVerification = ({navigation}) => {
                   name="plus"
                   style={styles.buttonIcon}
                 />
-                <Image style={styles.rightArrow} source={LeftArrow} />
+                <Image style={styles.rightArrow} resizeMode='contain' resizeMethod='resize' source={LeftArrow} />
               </Pressable>
               <Text style={styles.instructionText}>
                 {selectedLanguage == 'Hindi'
@@ -496,7 +496,7 @@ const styles = StyleSheet.create({
     width: width * 0.2,
   },
   rightArrow: {
-    resizeMode: 'contain',
+    // resizeMode: 'contain',
     height: 20,
     width: 20,
     marginLeft: 8,

@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {RightArrow_White} from '../assets/images';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
@@ -72,7 +72,8 @@ const SelectYourState = ({navigation}) => {
                   <Image
                     source={RightArrow_White}
                     style={styles.arrowImage}
-                    resizeMode="center"
+                    resizeMode="contain"
+                    resizeMethod="resize"
                   />
                 </TouchableOpacity>
               ))}

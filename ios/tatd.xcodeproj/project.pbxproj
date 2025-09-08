@@ -672,7 +672,7 @@
 				CODE_SIGN_ENTITLEMENTS = tatd/tatd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = S9SM5JM9P8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = tatd/Info.plist;
@@ -706,7 +706,7 @@
 				CODE_SIGN_ENTITLEMENTS = tatd/tatd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = S9SM5JM9P8;
 				INFOPLIST_FILE = tatd/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "tat d driver partner";

@@ -14,7 +14,7 @@ import {AppFont} from '../assets/FontsFamily';
 import {GET_AGENT_SELECT_CITY} from '../apis/Apis';
 import {useSelector} from 'react-redux';
 import {ScrollView} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 const SelectYourCity = ({route, navigation}) => {
   const {state} = route.params;
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
@@ -74,7 +74,8 @@ const SelectYourCity = ({route, navigation}) => {
                   <Text style={styles.buttonText}>{city}</Text>
                   <Image
                     style={styles.arrowImage}
-                    resizeMode="center"
+                    resizeMode="contain"
+                    resizeMethod="resize"
                     source={RightArrow_White}
                   />
                 </TouchableOpacity>

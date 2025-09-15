@@ -50,6 +50,7 @@ import LocalseAwarenessAgentRegistration from '../../screens/LocalseAwarenessAge
 import MyMap from '../../screens/MyMap';
 import ClearMyDuePaymentOvertime from '../../screens/ClearMyDuePaymentOvertime';
 import ChatScreen from '../../screens/ChatScreen';
+import DriverLiveTrack from '../../screens/DriverLiveTrack';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -255,6 +256,9 @@ const PrivateRoute = () => {
 
         <Stack.Screen name="MyMap">
           {props => <ErrorBoundry Component={MyMap} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="DriverLiveTrack">
+          {props => <ErrorBoundry Component={DriverLiveTrack} {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
     </>

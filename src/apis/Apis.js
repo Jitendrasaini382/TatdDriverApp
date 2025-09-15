@@ -189,7 +189,7 @@ export const WEEKLY_BOOKING_ACCEPT = body => {
 
 export const PERMANENT_REFER_POPUP = body => {
   return _Fetch(
-    'GET',
+  'GET',
     `trusted-driver/permanent-booking-refer-view.php?action=permanent_booking_refer_view&current_language=${body}`,
   );
 };
@@ -988,6 +988,16 @@ export const UPDATE_TRIGGER_FIVE_STAR_RATING_POPUP = body => {
   return _Fetch(
     'POST',
     'trusted-driver/update-trigger-5star-popup-api.php',
+    {...body},
+    {},
+  );
+};
+
+export const UPDATE_DRIVER_LATLONGS_VIA_LIVE_TRACK = body => {
+  // console.log(body)
+  return _Fetch(
+    'POST',
+    'duty-report/driver-latlong-store-by-socket.php',
     {...body},
     {},
   );

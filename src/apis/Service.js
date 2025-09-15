@@ -128,6 +128,7 @@ axiosClient.interceptors.response.use(
 );
 
 const _Fetch = (method, path, body, headers = {}) => {
+  // console.log(path,"oiuytgf")
   return new Promise((resolve, reject) => {
     // Merge headers: If headers are passed, merge with default headers
     const finalHeaders = {
@@ -145,8 +146,11 @@ const _Fetch = (method, path, body, headers = {}) => {
     })
       .then(response => {
         if (path !== 'driver-job/driver-interface-text-video-content.php') {
-        // console.log(`Response data: ${path}  ${response}`);
-        // console.log(response,path)
+        console.log(`Response data: ${path}  ${response}`);
+        // if(path == "trusted-driver/ondemand-bookings-view-1.php"){
+          // console.log(response,path)
+
+        // }
         }
         if (response.data.status_code == 200) {
           resolve(response.data);

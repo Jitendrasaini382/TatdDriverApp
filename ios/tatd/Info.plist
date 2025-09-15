@@ -121,7 +121,11 @@
 	<array>
 		<string>fetch</string>
 		<string>remote-notification</string>
+		<string>audio</string>
+        <string>location</string>
 	</array>
+	<key>MBXAccessToken</key>
+<string>pk.eyJ1IjoiYWJkdWwtYW5zYXJpLTIwMjUiLCJhIjoiY21mNnJ4NGJvMGdpbjJqczlpYWo2c3Q5dyJ9.oRrXSrtmuvpUppJiUrADiw</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

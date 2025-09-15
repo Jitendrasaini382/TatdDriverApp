@@ -13,7 +13,7 @@ import {
   Platform,
 } from 'react-native';
 import Share from 'react-native-share';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Modal from 'react-native-modal';
 
 import AgentLeadsModal from '../components/modal/AgentLeadsModal';

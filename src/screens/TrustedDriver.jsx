@@ -45,6 +45,7 @@ import ScreenGuardModule from 'react-native-screenguard';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import LottieView from 'lottie-react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {
   ALL_TEN_MINUTE_STATUS_UPDATE,
   CHECK_PREMIUM_DRIVER_ELIGIBLE,
@@ -89,7 +90,10 @@ import {
   setVideosContent,
 } from '../redux/slices/trustedDriverSlice';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {setUserAuthStates} from '../redux/slices/userAuthSlice';
+import {
+  resetUserAuthState,
+  setUserAuthStates,
+} from '../redux/slices/userAuthSlice';
 import {
   Agent_Icon,
   AppLogo,
@@ -155,6 +159,7 @@ const TrustedDriver = ({navigation}) => {
   const [driverImage, setDriverImage] = useState('');
   const [fiveStarBookingNumber, setFiveStarBookingNumber] = useState('');
   const trustedRef = useRef(null);
+  const [isDriverLogutModalShow, setisDriverLogutModalShow] = useState(false);
   const premiumDriverBookingAcceptErr = useSelector(
     e => e?.trustedDriverSlice?.premiumDriverBookingAcceptErr,
   );
@@ -783,7 +788,7 @@ const TrustedDriver = ({navigation}) => {
         }
 
         const location = await getLocation();
-        console.log(location,"LOCATION SENDING FROM RFD")
+        console.log(location, 'LOCATION SENDING FROM RFD');
         if (location?.latitude && location?.longitude) {
           updatedLoginButton.latitude = location?.latitude;
           updatedLoginButton.longitude = location?.longitude;
@@ -865,11 +870,11 @@ const TrustedDriver = ({navigation}) => {
         action: 'ondemand_bookings',
         current_language: languageSwitch,
       });
-      console.log(response,"ONNN")
+      console.log(response, 'ONNN');
 
       setAllOndemandBookings(response);
     } catch (error) {
-      console.log(error,"ONN")
+      console.log(error, 'ONN');
       setLoading(false);
     } finally {
       setLoading(false);
@@ -898,7 +903,6 @@ const TrustedDriver = ({navigation}) => {
         current_language: languageSwitch,
       });
       // console.log(response)
-
       setAllTrustedData(response);
       dispatch(
         setDriverConsentData(response?.ondemand_driver_consent_popup_data),
@@ -1948,6 +1952,18 @@ const TrustedDriver = ({navigation}) => {
                         <Text style={styles.bottamLeftText}>Commission</Text>
                       </TouchableOpacity>
                       <View style={styles.topRight}>
+                        {/* <TouchableOpacity
+                          style={{marginEnd: 8}}
+                          onPress={() => {
+                            setisDriverLogutModalShow(true);
+                          }}>
+                          <SimpleLineIcons
+                            name="logout"
+                            size={20}
+                            color={'white'}
+                          />
+                          
+                        </TouchableOpacity> */}
                         <TouchableOpacity
                           onPress={() => navigation.navigate('DriverEarning')}>
                           <View style={styles.earningView}>
@@ -2482,6 +2498,65 @@ const TrustedDriver = ({navigation}) => {
           </ScrollView>
         </SlideupModal>
 
+        <SlideupModal
+          visible={isDriverLogutModalShow}
+          onClose={() => setisDriverLogutModalShow(false)}
+          loading={false}>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: '700',
+              color: '#222',
+              // marginBottom: 16,
+              marginTop: 15,
+              textAlign: 'center',
+            }}>
+            {languageSwitch == 'hindi'
+              ? 'क्या आप लॉग आउट करना चाहते हैं?'
+              : 'Are you sure you want to logout?'}
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '100%',
+              marginTop: 40,
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                setisDriverLogutModalShow(false);
+              }}
+              style={{
+                flex: 1,
+                marginRight: 8,
+                paddingVertical: 12,
+                borderRadius: 8,
+                borderWidth: 1,
+                borderColor: '#ccc',
+                alignItems: 'center',
+              }}>
+              <Text style={{fontSize: 16, color: '#333'}}>Cancel</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                setisDriverLogutModalShow(false);
+                dispatch(resetUserAuthState());
+              }}
+              style={{
+                flex: 1,
+                marginLeft: 8,
+                paddingVertical: 12,
+                borderRadius: 8,
+                backgroundColor: '#E53935',
+                alignItems: 'center',
+              }}>
+              <Text style={{fontSize: 16, color: '#fff', fontWeight: '600'}}>
+                Logout
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </SlideupModal>
         {/* <Modal
           animationType="slide"
           transparent={true}

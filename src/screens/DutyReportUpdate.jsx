@@ -337,7 +337,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       setLoader(false);
     }
   };
-
+  console.log(bookingInfo?.condition);
   const dutyReportBookingAccept = async () => {
     setLoader(true);
     try {
@@ -420,18 +420,45 @@ const DutyReportUpdate = ({route, navigation}) => {
       setLoaderOntheWay(false);
     }
   };
+  const [loaderForLiveTrack, setloaderForLiveTrack] = useState(false);
   const driverOnTheWay = async () => {
     try {
+      setloaderForLiveTrack(true);
       const onTheWayApi = await DRIVER_ON_THE_WAY({
         action: 'duty_report_booking_ontheway',
         booking_id: bookingNumber,
         current_language: languageSwitch,
         trip_status: bookingInfo?.condition?.next_booking_status_id,
       });
+      const currentLocation = await getLocation();
+      console.log('current-----', currentLocation);
+
+      if (!currentLocation) {
+        console.error('Current location not found');
+        // setLoaderMap(false);
+        setloaderForLiveTrack(false);
+
+        return null;
+      }
+      if (bookingInfo?.condition?.live_tracking == 1) {
+        navigation.navigate('DriverLiveTrack', {
+          bookingNumber: bookingNumber,
+          clatlong: bookingInfo?.data?.c_latlong,
+          currentLocation: currentLocation,
+          drivernumber: driverMobileNumber,
+          onReady: () => setloaderForLiveTrack(false),
+        });
+      } else {
+        openGoogleMap(bookingInfo?.data?.c_latlong);
+        setloaderForLiveTrack(false);
+      }
 
       GetAllBookingInfo();
       setModalVisibleOntheway(false);
-    } catch (err) {}
+    } catch (err) {
+      setloaderForLiveTrack(false);
+    } finally {
+    }
   };
 
   const getLocation = async () => {
@@ -934,53 +961,63 @@ const DutyReportUpdate = ({route, navigation}) => {
     }
   };
 
-  // const openMap = async latLong => {
-  //   try {
-  //     setLoaderMap(true);
+  const openGoogleMap = async latLong => {
+    try {
+      setLoaderMap(true);
 
-  //     if (
-  //       !latLong ||
-  //       typeof latLong !== 'string' ||
-  //       !latLong.includes(',') ||
-  //       latLong.split(',').length !== 2 ||
-  //       latLong.split(',').some(coord => isNaN(parseFloat(coord.trim())))
-  //     ) {
-  //       setLoaderMap(false);
-  //       return null;
-  //     }
+      if (
+        !latLong ||
+        typeof latLong !== 'string' ||
+        !latLong.includes(',') ||
+        latLong.split(',').length !== 2 ||
+        latLong.split(',').some(coord => isNaN(parseFloat(coord.trim())))
+      ) {
+        setLoaderMap(false);
+        return null;
+      }
 
-  //     const currentLocation = await getLocation();
-  //     const customerLocation = createLatLng(latLong);
+      const currentLocation = await getLocation();
+      const customerLocation = createLatLng(latLong);
 
-  //     const googleMapsAppURL = `google.navigation:q=${customerLocation?.lat},${customerLocation?.lng}&mode=d`;
-  //     const googleMapsWebURL = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation?.latitude},${currentLocation?.longitude}&destination=${customerLocation?.lat},${customerLocation?.lng}&travelmode=driving`;
+      // Google Maps App URL
+      const googleMapsAppURL = `google.navigation:q=${customerLocation?.lat},${customerLocation?.lng}&mode=d`;
 
-  //     if (bookingInfo?.condition?.live_tracking == 1) {
-  //       navigation.navigate('MyMap', {
-  //         googleMapsWebURL,
-  //         timing: bookingInfo?.condition?.api_timing,
-  //         bookingNumber,
-  //       });
-  //     } else {
-  //       const supported = await Linking.canOpenURL('google.navigation:q=0,0');
+      // Google Maps Web URL
+      const googleMapsWebURL = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation?.latitude},${currentLocation?.longitude}&destination=${customerLocation?.lat},${customerLocation?.lng}&travelmode=driving`;
 
-  //       if (supported) {
-  //         await Linking.openURL(googleMapsAppURL);
-  //       } else {
-  //         await Linking.openURL(googleMapsWebURL);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error('Error opening Google Maps', error);
-  //   } finally {
-  //     setLoaderMap(false);
-  //   }
-  // };
+      // Apple Maps URL (iOS fallback)
+      const appleMapsURL = `http://maps.apple.com/?saddr=${currentLocation?.latitude},${currentLocation?.longitude}&daddr=${customerLocation?.lat},${customerLocation?.lng}&dirflg=d`;
+
+      if (Platform.OS === 'android') {
+        // Android: Prefer Google Maps app if installed
+        const supported = await Linking.canOpenURL('google.navigation:q=0,0');
+        if (supported) {
+          await Linking.openURL(googleMapsAppURL);
+        } else {
+          await Linking.openURL(googleMapsWebURL);
+        }
+      } else {
+        // iOS: Check if Google Maps app exists, else fallback to Apple Maps
+        const supported = await Linking.canOpenURL('comgooglemaps://');
+        if (supported) {
+          const googleMapsIOSURL = `comgooglemaps://?saddr=${currentLocation?.latitude},${currentLocation?.longitude}&daddr=${customerLocation?.lat},${customerLocation?.lng}&directionsmode=driving`;
+          await Linking.openURL(googleMapsIOSURL);
+        } else {
+          await Linking.openURL(appleMapsURL);
+        }
+      }
+    } catch (error) {
+      console.error('Error opening Maps', error);
+    } finally {
+      setLoaderMap(false);
+    }
+  };
+
   const openMap = async latLong => {
     try {
       setLoaderMap(true);
       console.log('lat----long', latLong);
-  
+
       // Validate latLong
       if (
         !latLong ||
@@ -993,31 +1030,40 @@ const DutyReportUpdate = ({route, navigation}) => {
         setLoaderMap(false);
         return null;
       }
-  
+
       // Get current location
       const currentLocation = await getLocation();
       console.log('current-----', currentLocation);
-  
+
       if (!currentLocation) {
         console.error('Current location not found');
         setLoaderMap(false);
         return null;
       }
-  
-      const [latitude, longitude] = latLong.split(',').map(coord => coord.trim());
-  
+      navigation.navigate('DriverLiveTrack', {
+        bookingNumber: bookingNumber,
+        clatlong: bookingInfo?.data?.c_latlong,
+        currentLocation: currentLocation,
+        drivernumber: driverMobileNumber,
+      });
+
+      return;
+      const [latitude, longitude] = latLong
+        .split(',')
+        .map(coord => coord.trim());
+
       // iOS Apple Maps
       const appleMapsURL = `maps://?daddr=${latitude},${longitude}&dirflg=d`;
-  
+
       // iOS Google Maps
       const googleMapsIOSURL = `comgooglemaps://?saddr=${currentLocation.latitude},${currentLocation.longitude}&daddr=${latitude},${longitude}&directionsmode=driving`;
-  
+
       // Android Google Maps
       const googleMapsAppURL = `google.navigation:q=${latitude},${longitude}&mode=d`;
-  
+
       // Web fallback
       const googleMapsWebURL = `https://www.google.com/maps/dir/?api=1&origin=${currentLocation.latitude},${currentLocation.longitude}&destination=${latitude},${longitude}&travelmode=driving`;
-  
+
       // If live tracking enabled → navigate inside app map
       if (bookingInfo?.condition?.live_tracking == 1) {
         navigation.navigate('MyMap', {
@@ -1029,7 +1075,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         });
         return;
       }
-  
+
       // Platform-wise handling
       if (Platform.OS === 'ios') {
         const supported = await Linking.canOpenURL('comgooglemaps://');
@@ -1052,7 +1098,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       setLoaderMap(false);
     }
   };
-  
+
   const handleLogoPress = () => {
     navigation.navigate('TrustedDriver');
   };
@@ -1116,7 +1162,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       console.log('PARTNER_ONBOOKING_CALL_SUPPORT execution completed');
     }
   };
-
+  // console.log(bookingInfo?.condition);
   return (
     <SafeAreaView
       style={{
@@ -1599,11 +1645,23 @@ const DutyReportUpdate = ({route, navigation}) => {
                           Clipboard.setString(
                             bookingInfo?.data?.pickup_address,
                           );
-                          ToastAndroid.show(
-                            'Address copied!',
-                            ToastAndroid.SHORT,
-                          );
-                          openOnlyMap(bookingInfo?.data?.c_latlong);
+                          if (bookingInfo?.condition?.live_tracking == 1) {
+                            if (
+                              bookingInfo?.condition?.next_booking_status_id <
+                              20
+                            ) {
+                              // ToastAndroid.show(
+                              //   'Address copied!',
+                              //   ToastAndroid.SHORT,
+                              // );
+                              openGoogleMap(bookingInfo?.data?.c_latlong);
+                            } else {
+                              openMap(bookingInfo?.data?.c_latlong);
+                            }
+                          } else {
+                            openGoogleMap(bookingInfo?.data?.c_latlong);
+                          }
+                          // openOnlyMap(bookingInfo?.data?.c_latlong);
                         }}
                         numberOfLines={3}
                         ellipsizeMode="tail"
@@ -1623,9 +1681,28 @@ const DutyReportUpdate = ({route, navigation}) => {
                           />
                         ) : (
                           <TouchableOpacity
-                            onPress={() =>
-                              openMap(bookingInfo?.data?.c_latlong)
-                            }
+                            onPress={() => {
+                              Clipboard.setString(
+                                bookingInfo?.data?.pickup_address,
+                              );
+                              if (bookingInfo?.condition?.live_tracking == 1) {
+                                if (
+                                  bookingInfo?.condition
+                                    ?.next_booking_status_id < 20
+                                ) {
+                                  // ToastAndroid.show(
+                                  //   'Address copied!',
+                                  //   ToastAndroid.SHORT,
+                                  // );
+                                  openGoogleMap(bookingInfo?.data?.c_latlong);
+                                } else {
+                                  openMap(bookingInfo?.data?.c_latlong);
+                                }
+                              } else {
+                                openGoogleMap(bookingInfo?.data?.c_latlong);
+                              }
+                              // openOnlyMap(bookingInfo?.data?.c_latlong);
+                            }}
                             style={{
                               width: 24,
                               height: 24,
@@ -1680,9 +1757,28 @@ const DutyReportUpdate = ({route, navigation}) => {
                           />
                         ) : (
                           <TouchableOpacity
-                            onPress={() =>
-                              openMap(bookingInfo?.data?.drop_latlong)
-                            }
+                            onPress={() => {
+                              // openMap(bookingInfo?.data?.drop_latlong)
+                              if (bookingInfo?.condition?.live_tracking == 1) {
+                                if (
+                                  bookingInfo?.condition
+                                    ?.next_booking_status_id < 20
+                                ) {
+                                  // ToastAndroid.show(
+                                  //   'Address copied!',
+                                  //   ToastAndroid.SHORT,
+                                  // );
+                                  openGoogleMap(
+                                    bookingInfo?.data?.drop_latlong,
+                                  );
+                                } else {
+                                  openMap(bookingInfo?.data?.drop_latlong);
+                                }
+                              } else {
+                                openGoogleMap(bookingInfo?.data?.drop_latlong);
+                              }
+                              // openOnlyMap(bookingInfo?.data?.c_latlong);
+                            }}
                             style={{
                               width: 24,
                               height: 24,
@@ -2132,7 +2228,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                 </Text>
 
                 <TouchableOpacity
-                  disabled={loaderOntheWay}
+                  disabled={loaderOntheWay || loaderForLiveTrack}
                   onPress={isBookingUpcomming}
                   style={{
                     backgroundColor: AppColors.mainColor,
@@ -2142,7 +2238,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     alignSelf: 'center',
-                    opacity: loaderOntheWay ? 0.6 : 1,
+                    opacity: loaderOntheWay || loaderForLiveTrack ? 0.6 : 1,
                   }}>
                   <Text
                     style={{
@@ -2150,8 +2246,14 @@ const DutyReportUpdate = ({route, navigation}) => {
                       fontSize: 14,
                       fontWeight: '800',
                     }}>
-                    {loaderOntheWay
+                    {/* {loaderOntheWay
                       ? 'Please Wait...'
+                      : loaderForLiveTrack
+                      ? 'Please wait, redirecting to map...'
+                      : popupsData?.popupdata?.ontheway_alert_btn ||
+                        'On The Way'} */}
+                    {loaderOntheWay || loaderForLiveTrack
+                      ? 'Please wait...'
                       : popupsData?.popupdata?.ontheway_alert_btn ||
                         'On The Way'}
                   </Text>

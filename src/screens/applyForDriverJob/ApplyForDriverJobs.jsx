@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Linking,
   Modal,
+  Pressable,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -17,7 +18,7 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColors} from '../../assets/Colors';
-import {AppLogo, Triangle_Icon} from '../../assets/images';
+import {AppLogo, Headerlogo, Triangle_Icon} from '../../assets/images';
 import {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Header from '../../components/Header';
@@ -453,10 +454,40 @@ const ApplyForDriverJob = ({navigation}) => {
   return (
     <>
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-        <Header />
+        {/* <Header logout={true} /> */}
+        <View
+          style={{
+            flexDirection: 'row',
+            paddingHorizontal: 10,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <Pressable>
+            <Image
+              source={Headerlogo}
+              style={{resizeMode: 'contain', height: 70, width: 140}}
+            />
+          </Pressable>
+          <TouchableOpacity
+          onPress={()=>{
+            dispatch(resetUserAuthState())
+          }}
+            style={{
+              paddingHorizontal: 10,
+              borderColor: 'black',
+              borderWidth: 1,
+              paddingVertical: 5,
+              borderRadius: 6,
+            }}>
+            <Text style={{color: 'black', fontSize: 15, color: 'red'}}>
+              Logout
+            </Text>
+          </TouchableOpacity>
+        </View>
         <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
           <View style={{flex: 1, paddingHorizontal: 10}}>
             <ScrollView
+              nestedScrollEnabled={true}
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing}

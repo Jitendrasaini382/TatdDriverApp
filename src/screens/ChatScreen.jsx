@@ -282,7 +282,7 @@ const ChatScreen = ({navigation}) => {
         setisPreventDriverToCustomerModal(true);
         setprventCallData(res);
       } else {
-        let url = `tel:${phoneNumber}`;
+        let url = `tel:+${phoneNumber}`;
         Linking.openURL(url);
       }
       console.log(res);

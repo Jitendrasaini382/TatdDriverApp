@@ -45,7 +45,7 @@ target 'tatd' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
   target 'tatdTests' do
     inherit! :complete
     # Pods for testing

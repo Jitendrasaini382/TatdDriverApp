@@ -51,6 +51,7 @@ import MyMap from '../../screens/MyMap';
 import ClearMyDuePaymentOvertime from '../../screens/ClearMyDuePaymentOvertime';
 import ChatScreen from '../../screens/ChatScreen';
 import DriverLiveTrack from '../../screens/DriverLiveTrack';
+import DriverVideoUpload from '../../screens/DrivervideoUpload';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -72,6 +73,7 @@ const PrivateRoute = () => {
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
         )}
 
+        
         <Stack.Screen name="TrustedDriver">
           {props => <ErrorBoundry Component={TrustedDriver} {...props} />}
         </Stack.Screen>
@@ -259,6 +261,9 @@ const PrivateRoute = () => {
         </Stack.Screen>
         <Stack.Screen name="DriverLiveTrack">
           {props => <ErrorBoundry Component={DriverLiveTrack} {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="DriverVideoUpload">
+          {props => <ErrorBoundry Component={DriverVideoUpload} {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
     </>

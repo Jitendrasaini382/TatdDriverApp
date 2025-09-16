@@ -1186,6 +1186,49 @@ PODS:
     - ReactCommon/turbomodule/core
     - SDWebImage (~> 5.21.0)
     - Yoga
+  - react-native-video (6.16.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - react-native-video/Video (= 6.16.1)
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - react-native-video/Video (6.16.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-webview (13.13.2):
     - DoubleConversion
     - glog
@@ -1436,6 +1479,9 @@ PODS:
     - React-logger (= 0.74.2)
     - React-perflogger (= 0.74.2)
     - React-utils (= 0.74.2)
+  - ReactNativeFileAccess (3.2.0):
+    - React-Core
+    - ZIPFoundation
   - RNCAsyncStorage (1.24.0):
     - React-Core
   - RNCMaskedView (0.3.2):
@@ -1474,6 +1520,8 @@ PODS:
     - FirebaseCoreExtension
     - React-Core
     - RNFBApp
+  - RNFS (2.20.0):
+    - React-Core
   - RNGestureHandler (2.24.0):
     - DoubleConversion
     - glog
@@ -1649,6 +1697,7 @@ PODS:
   - TOCropViewController (2.7.4)
   - Turf (2.8.0)
   - Yoga (0.0.0)
+  - ZIPFoundation (0.9.19)
 
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
@@ -1703,6 +1752,7 @@ DEPENDENCIES:
   - react-native-razorpay (from `../node_modules/react-native-razorpay`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-screenguard (from `../node_modules/react-native-screenguard`)
+  - react-native-video (from `../node_modules/react-native-video`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -1727,12 +1777,14 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReactNativeFileAccess (from `../node_modules/react-native-file-access`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - "RNNotifee (from `../node_modules/@notifee/react-native`)"
@@ -1779,6 +1831,7 @@ SPEC REPOS:
     - Solar-dev
     - TOCropViewController
     - Turf
+    - ZIPFoundation
 
 EXTERNAL SOURCES:
   boost:
@@ -1866,6 +1919,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-screenguard:
     :path: "../node_modules/react-native-screenguard"
+  react-native-video:
+    :path: "../node_modules/react-native-video"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-nativeconfig:
@@ -1914,6 +1969,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativeFileAccess:
+    :path: "../node_modules/react-native-file-access"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCMaskedView:
@@ -1926,6 +1983,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/crashlytics"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNImageCropPicker:
@@ -2019,6 +2078,7 @@ SPEC CHECKSUMS:
   react-native-razorpay: ab51e7be3d906f49b26198d978fc6f163e846d30
   react-native-safe-area-context: 758e894ca5a9bd1868d2a9cfbca7326a2b6bf9dc
   react-native-screenguard: 9d8c43234bc2e4ad712b61b5c0a750fe412eebc5
+  react-native-video: 061eb256514515409a396846bb79b88a8a38ae92
   react-native-webview: 311760d736aea5712c17f8de313f00b11e33375e
   React-nativeconfig: 9f223cd321823afdecf59ed00861ab2d69ee0fc1
   React-NativeModulesApple: 1cd770ed7dc463e55d02a05f7fc3be46076d393e
@@ -2043,12 +2103,14 @@ SPEC CHECKSUMS:
   React-runtimescheduler: c5ba36755abc3c28a8cd327325b13599af586204
   React-utils: 08bb648cea0f37a0aa5df0c4f9ef50e5484ee0eb
   ReactCommon: 4968ff446d467c4def1945125e59f82e3e986af3
+  ReactNativeFileAccess: 3667f2bedf0f192af8f2cea891ad622acb082aad
   RNCAsyncStorage: b6410dead2732b5c72a7fdb1ecb5651bbcf4674b
   RNCMaskedView: af7c1703f39cdef08a99275bfcadf324aa403403
   RNDeviceInfo: ae26ae45db3f9937f038a284bcd0a1db8d70db96
   RNFBApp: 5e27e8311042d41fa8350f1751ab42e042c39d52
   RNFBCrashlytics: be60e847609d023891621dfde7ac8be4872a988b
   RNFBMessaging: 72cf5cca8a14ef9dc66b82b75b5cca1091f169e5
+  RNFS: 89de7d7f4c0f6bafa05343c578f61118c8282ed8
   RNGestureHandler: 4c50b5e4ca199cf497511d44e3fe45d54d62e279
   RNImageCropPicker: 51090547fdb79faef4c0c6207fc645aa9915ab3c
   RNNotifee: 5e3b271e8ea7456a36eec994085543c9adca9168
@@ -2065,7 +2127,8 @@ SPEC CHECKSUMS:
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
   Turf: aa2ede4298009639d10db36aba1a7ebaad072a5e
   Yoga: ae3c32c514802d30f687a04a6a35b348506d411f
+  ZIPFoundation: b8c29ea7ae353b309bc810586181fd073cb3312c
 
-PODFILE CHECKSUM: 291bcac09f96d8878d4b113c5d1a501c90daad97
+PODFILE CHECKSUM: 028e84751fafe0eb6d4a492d970d3d7d47db3484
 
 COCOAPODS: 1.16.2

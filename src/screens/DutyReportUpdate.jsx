@@ -233,7 +233,11 @@ const DutyReportUpdate = ({route, navigation}) => {
     } else if (bookingInfo?.condition?.next_booking_status_name == 'Reach') {
       setModalVisibleRich(true);
     } else if (bookingInfo?.condition?.next_booking_status_name == 'Start') {
-      setModalVisibleinput(true);
+      // setModalVisibleinput(true);
+      navigation.navigate("DriverVideoUpload",{
+        bookingNumber,
+        videoType:"Start",
+      })
     } else if (bookingInfo?.condition?.next_booking_status_name == 'End') {
       setModalVisibleEnd(true);
     }

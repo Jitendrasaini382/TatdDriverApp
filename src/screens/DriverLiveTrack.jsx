@@ -76,6 +76,8 @@ export default function Drivertrack({route, navigation}) {
           latitude: customerLocation?.latitude,
           longitude: customerLocation?.longitude,
         }}
+        logoEnabled={true}
+        attributionEnabled={true}
         style={styles.container}
         // shouldSimulateRoute={true}
         shouldSimulateRoute={false}

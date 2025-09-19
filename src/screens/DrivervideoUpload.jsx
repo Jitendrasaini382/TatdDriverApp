@@ -187,7 +187,7 @@ const CarVideoUpload = () => {
       const camera = await request(PERMISSIONS.IOS.CAMERA);
       const mic = await request(PERMISSIONS.IOS.MICROPHONE); // uncomment this line
       console.log(camera, mic);
-      return camera === RESULTS.GRANTED
+      return camera === RESULTS.GRANTED;
     }
   };
   const [isShowingConfirmModal, setisShowingConfirmModal] = useState(false);

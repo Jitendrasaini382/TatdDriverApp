@@ -127,8 +127,8 @@ android {
         applicationId "com.tatd.driver"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 60
-        versionName "2.76"
+        versionCode 61
+        versionName "2.77"
 
         // Ensure debug symbols (helps with alignment + crash reporting)
         ndk {

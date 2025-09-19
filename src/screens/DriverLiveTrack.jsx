@@ -1,13 +1,21 @@
 import MapboxNavigation from '@pawan-pk/react-native-mapbox-navigation';
 import axios from 'axios';
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {useEffect, useRef} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {UPDATE_DRIVER_LATLONGS_VIA_LIVE_TRACK} from '../apis/Apis';
+import {
+  ANALYISIS_MAPBOX_USAGE,
+  UPDATE_DRIVER_LATLONGS_VIA_LIVE_TRACK,
+} from '../apis/Apis';
 
 export default function Drivertrack({route, navigation}) {
-  const {bookingNumber, drivernumber, clatlong, currentLocation} =
-    route.params ?? {};
+  const {
+    bookingNumber,
+    drivernumber,
+    clatlong,
+    currentLocation,
+    customerNumber,
+  } = route.params ?? {};
   const lastSentRef = useRef(0);
   const prevLocationRef = useRef({lat: null, lng: null});
   const socketRef = useRef(null);
@@ -25,8 +33,22 @@ export default function Drivertrack({route, navigation}) {
       }
     : {latitude: null, longitude: null};
 
+  const sendanalysisForMapBox = async () => {
+    try {
+      const res = await ANALYISIS_MAPBOX_USAGE({
+        // mobile_number: customerNumber,
+        booking_number: bookingNumber,
+      });
+      // if (__DEV__) {
+      console.log(res);
+      // }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     // WebSocket setup
+    sendanalysisForMapBox();
     const socket = new WebSocket('ws://13.127.217.133:8080');
     socketRef.current = socket;
 
@@ -79,7 +101,7 @@ export default function Drivertrack({route, navigation}) {
         logoEnabled={true}
         attributionEnabled={true}
         style={styles.container}
-        // shouldSimulateRoute={true}
+        // shouldSimulateRoute={Platform.OS=="android"?true:false}
         shouldSimulateRoute={false}
         showCancelButton={true}
         hideStatusView={true}

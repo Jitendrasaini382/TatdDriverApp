@@ -73,7 +73,6 @@ const PrivateRoute = () => {
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
         )}
 
-        
         <Stack.Screen name="TrustedDriver">
           {props => <ErrorBoundry Component={TrustedDriver} {...props} />}
         </Stack.Screen>
@@ -262,9 +261,10 @@ const PrivateRoute = () => {
         <Stack.Screen name="DriverLiveTrack">
           {props => <ErrorBoundry Component={DriverLiveTrack} {...props} />}
         </Stack.Screen>
-        <Stack.Screen name="DriverVideoUpload">
-          {props => <ErrorBoundry Component={DriverVideoUpload} {...props} />}
-        </Stack.Screen>
+        <Stack.Screen name="DriverVideoUpload" component={DriverVideoUpload} />
+        {/* {props => <ErrorBoundry Component={DriverVideoUpload} {...props} */}
+        {/* />} */}
+        {/* </Stack.Screen> */}
       </Stack.Navigator>
     </>
   );

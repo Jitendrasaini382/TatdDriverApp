@@ -920,6 +920,7 @@ const TrustedDriver = ({navigation}) => {
         action: 'check_popup',
         current_language: languageSwitch,
       });
+
       if (!response) {
         console.log('Response is undefined or null');
         return;
@@ -1952,18 +1953,20 @@ const TrustedDriver = ({navigation}) => {
                         <Text style={styles.bottamLeftText}>Commission</Text>
                       </TouchableOpacity>
                       <View style={styles.topRight}>
-                        {/* <TouchableOpacity
-                          style={{marginEnd: 8}}
-                          onPress={() => {
-                            setisDriverLogutModalShow(true);
-                          }}>
-                          <SimpleLineIcons
-                            name="logout"
-                            size={20}
-                            color={'white'}
-                          />
-                          
-                        </TouchableOpacity> */}
+                        {__DEV__ && (
+                          <TouchableOpacity
+                            style={{marginEnd: 8}}
+                            onPress={() => {
+                              setisDriverLogutModalShow(true);
+                            }}>
+                            <SimpleLineIcons
+                              name="logout"
+                              size={20}
+                              color={'white'}
+                            />
+                          </TouchableOpacity>
+                        )}
+
                         <TouchableOpacity
                           onPress={() => navigation.navigate('DriverEarning')}>
                           <View style={styles.earningView}>

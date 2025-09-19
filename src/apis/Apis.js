@@ -1,4 +1,5 @@
 import _Fetch from './Service';
+import axios from 'axios';
 
 function generateSessionToken() {
   return Math.random().toString(10).substr(2, 10);
@@ -189,7 +190,7 @@ export const WEEKLY_BOOKING_ACCEPT = body => {
 
 export const PERMANENT_REFER_POPUP = body => {
   return _Fetch(
-  'GET',
+    'GET',
     `trusted-driver/permanent-booking-refer-view.php?action=permanent_booking_refer_view&current_language=${body}`,
   );
 };
@@ -1001,4 +1002,33 @@ export const UPDATE_DRIVER_LATLONGS_VIA_LIVE_TRACK = body => {
     {...body},
     {},
   );
+};
+
+export const UPLOAD_VIDEO_OF_DRIVERS_CAR = body => {
+  console.log(body);
+  return _Fetch('POST', 'duty-report/car_video_upload_validation.php', body, {
+    'Content-Type': 'multipart/form-data',
+  });
+};
+export const SUBMIT_FINAL_VIDEO_OF_DRIVERS_CAR = body => {
+  console.log(body);
+  return _Fetch('POST', 'duty-report/car-video-upload-success.php', body, {});
+};
+
+export const GET_ALL_DYNAMIC_FUNCTIONS = async () => {
+  return axios
+    .get(
+      `https://www.tatd.in/app-api/dynamic/dynamic-function-api.php?id=${new Date()}`,
+    )
+    .then(response => {
+      return response?.data;
+    })
+    .catch(error => {
+      console.error('GET Error:', error);
+    });
+};
+
+export const ANALYISIS_MAPBOX_USAGE = body => {
+  console.log(body);
+  return _Fetch('POST', 'duty-report/mapbox-usage-api.php', body, {});
 };

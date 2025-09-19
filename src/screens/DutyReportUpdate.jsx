@@ -49,6 +49,7 @@ import {
   DUTY_REPORT_BOOKING_ACCEPT,
   DUTY_REPORT_RESEND_OTP,
   DUTY_REPORT_TRIP_STATUS_POPUP_VIEW,
+  GET_ALL_DYNAMIC_FUNCTIONS,
   GET_BOOKING_INFO,
   GET_BOOKING_STATUS_ID,
   GET_FIRST_POPUP_DATA,
@@ -76,6 +77,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 import LanguageNewModal from '../components/modal/LanguageNewModal';
 import {setCurrentView, setLanguageSwitch} from '../redux/slices/globalSlice';
+import Routes from '../routes/Routes';
 
 const DutyReportUpdate = ({route, navigation}) => {
   const dispatch = useDispatch();
@@ -115,6 +117,7 @@ const DutyReportUpdate = ({route, navigation}) => {
 
   const [isShowBookingEndModal, setisShowBookingEndModal] = useState(false);
   const [bookingEndErrPopupData, setbookingEndErrPopupData] = useState('');
+  const [dynamicFunctionsKeys, setdynamicFunctionsKeys] = useState([]);
   const talkToCustomer = async () => {
     setLoader(true);
     try {
@@ -131,6 +134,14 @@ const DutyReportUpdate = ({route, navigation}) => {
     }
   };
 
+  const getAllDynamicFunctions = async () => {
+    const res = await GET_ALL_DYNAMIC_FUNCTIONS();
+    console.log(res, 'dynamic functions');
+    setdynamicFunctionsKeys(res?.data);
+  };
+  useEffect(() => {
+    getAllDynamicFunctions();
+  }, []);
   const notPickupPhoneCustomer = async () => {
     setLoader(true);
     try {
@@ -167,6 +178,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     try {
       GetAllBookingInfo();
       handleNeedHelpButton();
+      getAllDynamicFunctions();
     } catch (error) {
     } finally {
       setRefreshing(false);
@@ -221,9 +233,31 @@ const DutyReportUpdate = ({route, navigation}) => {
 
   const [packageDetailsDutyReportUpdate, setPackageDetailsDutyReportUpdate] =
     useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!loader) {
+        if (route?.params?.action == '25') {
+          setModalVisibleinput(true);
+        } else if (route?.params?.action == '30') {
+          setModalVisibleEnd(true);
+        }
+
+        // 🟢 once done, remove "action" param
+        if (route?.params?.action) {
+          navigation.setParams({action: ''});
+        }
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [loader, route?.params?.action]);
 
   const [bookingInfo, setbookingInfo] = useState({});
   const handleSwipe = () => {
+    const isDynamicKeyEnableForVideoRecord =
+      bookingInfo?.condition?.car_video_upload;
+    console.log(isDynamicKeyEnableForVideoRecord);
+    // return false;
     if (bookingInfo?.condition?.next_booking_status_name == 'Accept') {
       setacceptBookingPopup(true);
     } else if (
@@ -233,20 +267,37 @@ const DutyReportUpdate = ({route, navigation}) => {
     } else if (bookingInfo?.condition?.next_booking_status_name == 'Reach') {
       setModalVisibleRich(true);
     } else if (bookingInfo?.condition?.next_booking_status_name == 'Start') {
-      // setModalVisibleinput(true);
-      navigation.navigate("DriverVideoUpload",{
-        bookingNumber,
-        videoType:"Start",
-      })
+      if (
+        bookingInfo?.condition?.car_video_upoload_sucess_key == '0' &&
+        isDynamicKeyEnableForVideoRecord == '1'
+      ) {
+        navigation.navigate('DriverVideoUpload', {
+          bookingNumber,
+          status_id: bookingInfo?.condition?.next_booking_status_id,
+          videoUrl: bookingInfo?.condition?.car_video_upload_sample,
+        });
+      } else {
+        setModalVisibleinput(true);
+      }
     } else if (bookingInfo?.condition?.next_booking_status_name == 'End') {
-      setModalVisibleEnd(true);
+      if (
+        bookingInfo?.condition?.car_video_upoload_sucess_key == '1' &&
+        isDynamicKeyEnableForVideoRecord == '1'
+      ) {
+        navigation.navigate('DriverVideoUpload', {
+          bookingNumber,
+          status_id: bookingInfo?.condition?.next_booking_status_id,
+          videoUrl: bookingInfo?.condition?.car_video_upload_sample,
+        });
+      } else {
+        setModalVisibleEnd(true);
+      }
     }
   };
 
   const openPhoneDialer = async phoneNumber => {
     try {
       setcallIconLoader(true);
-      // setisPreventDriverToCustomerModal(true);
       console.log('api calling');
       const res = await RESTRICT_CALL_TO_CUSTOMER({
         action: 'restriction-customer-number-sharing',
@@ -296,6 +347,9 @@ const DutyReportUpdate = ({route, navigation}) => {
         booking_id: bookingNumber,
         current_language: languageSwitch,
       });
+      console.log('====================================');
+      console.log(response?.duty_report_booking_info);
+      console.log('====================================');
       const freeStorage = await DeviceInfo.getFreeDiskStorage();
       const isGreaterThan500MB = freeStorage > 2 * 1024 * 1024 * 1024;
       if (isGreaterThan500MB) {
@@ -341,7 +395,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       setLoader(false);
     }
   };
-  console.log(bookingInfo?.condition);
+  // console.log(bookingInfo?.condition);
   const dutyReportBookingAccept = async () => {
     setLoader(true);
     try {
@@ -450,6 +504,7 @@ const DutyReportUpdate = ({route, navigation}) => {
           clatlong: bookingInfo?.data?.c_latlong,
           currentLocation: currentLocation,
           drivernumber: driverMobileNumber,
+          customerNumber: bookingInfo?.data?.circle_phone,
           onReady: () => setloaderForLiveTrack(false),
         });
       } else {
@@ -979,7 +1034,6 @@ const DutyReportUpdate = ({route, navigation}) => {
         setLoaderMap(false);
         return null;
       }
-
       const currentLocation = await getLocation();
       const customerLocation = createLatLng(latLong);
 
@@ -1049,6 +1103,7 @@ const DutyReportUpdate = ({route, navigation}) => {
         clatlong: bookingInfo?.data?.c_latlong,
         currentLocation: currentLocation,
         drivernumber: driverMobileNumber,
+        customerNumber: bookingInfo?.data?.circle_phone,
       });
 
       return;
@@ -1646,6 +1701,16 @@ const DutyReportUpdate = ({route, navigation}) => {
                       }}>
                       <Text
                         onPress={() => {
+                          if (
+                            !(
+                              bookingInfo?.data?.c_latlong &&
+                              bookingInfo?.condition?.next_booking_status_id <=
+                                25
+                            )
+                          ) {
+                            return false;
+                          }
+
                           Clipboard.setString(
                             bookingInfo?.data?.pickup_address,
                           );
@@ -1674,7 +1739,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                           marginRight: 8,
                           color: AppColors.black,
                         }}>
-                        {bookingInfo?.data?.pickup_address}
+                        <Text>{bookingInfo?.data?.pickup_address}</Text>
                       </Text>
                       {bookingInfo?.data?.c_latlong &&
                         bookingInfo?.condition?.next_booking_status_id <= 25 &&
@@ -2494,7 +2559,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                         fontWeight: '600',
                         fontSize: 17,
                       }}>
-                      {`${popupsData?.popupdata?.reach_alert_btn} ....`}
+                      {`${popupsData?.popupdata?.reach_alert_btn}`}
                     </Text>
                   ) : (
                     <Text
@@ -2536,8 +2601,9 @@ const DutyReportUpdate = ({route, navigation}) => {
               style={{
                 backgroundColor: AppColors.white,
                 width: '90%',
-                borderRadius: 10,
+                borderRadius: 12,
                 // padding: 20,
+                overflow: 'hidden',
                 elevation: 5,
                 // minHeight: 400,
               }}>
@@ -2589,7 +2655,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                       activeOpacity={0.8}
                       style={{
                         alignSelf: 'center',
-                        marginTop: 20,
+                        // marginTop: 20,
                       }}>
                       <View style={[styles.button]}>
                         {selectedFile ? (

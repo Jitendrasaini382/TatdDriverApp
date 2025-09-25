@@ -34,7 +34,7 @@ target 'tatd' do
   pod 'FirebaseCore', :modular_headers => true
   pod 'FirebaseCrashlytics', :modular_headers => true
   pod 'FirebaseSessions', :modular_headers => true
-  pod 'FirebaseInstallations', :modular_headcders => true
+  pod 'FirebaseInstallations', :modular_headers => true
   pod 'FirebaseCoreExtension', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
   pod 'GoogleDataTransport', :modular_headers => true

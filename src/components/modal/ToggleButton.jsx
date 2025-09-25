@@ -21,6 +21,7 @@ const ToggleButton = ({button1Label, button2Label, onToggle}) => {
     dispatch(setCurrentView(label));
 
     const language = label.toLowerCase();
+    // console.log(label,"LAABLLLLLL",language,"LANNGUAAGE")
     await switchLanguage(language);
   };
   const token = useSelector(e => e.userAuth);

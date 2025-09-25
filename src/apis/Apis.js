@@ -232,6 +232,7 @@ export const APPLY_PERMANENT_BOOKING = body => {
 };
 
 export const GET_BOOKING_INFO = body => {
+  console.log(body,"GET_BOOKING__INFO")
   return _Fetch(
     'POST',
     'duty-report/duty_report_booking_info_api.php',

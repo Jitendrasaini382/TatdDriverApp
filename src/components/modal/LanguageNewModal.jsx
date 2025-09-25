@@ -15,6 +15,7 @@ import {
   setCurrentView,
   setLanguageSwitch,
 } from '../../redux/slices/globalSlice';
+import {LANGUAGE_SWITCH} from '../../apis/Apis';
 
 const {width, height} = Dimensions.get('window');
 
@@ -38,15 +39,30 @@ const LanguageSelectionModal = ({
   onSelect,
 }) => {
   const dispatch = useDispatch();
+  const currentView = useSelector(e => e?.globalSlice?.currentView);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
   //   const [languageSwitch, setlanguageSwitch] = useState(languageSwitch1);
 
-  const handleLanguageSelect = language => {
-    onSelect(language);
-    dispatch(setLanguageSwitch(language));
+  const handleLanguageSelect = async language => {
+    // onSelect(language);
+    console.log(language);
+    // return
+    // dispatch(setLanguageSwitch(language?.value));
+    dispatch(setCurrentView(language?.label));
+    // const language_ = language.toLowerCase();
+    switchLanguage(language?.value);
     // setlanguageSwitch(language);
   };
-
+  const switchLanguage = async language => {
+    try {
+      const response = await LANGUAGE_SWITCH({
+        action: 'update_language',
+        current_language: language,
+      });
+      console.log(response.current_language, 'response.current_language');
+      dispatch(setLanguageSwitch(response.current_language));
+    } catch (error) {}
+  };
   const handleConfirm = () => {
     onClose();
   };
@@ -63,7 +79,7 @@ const LanguageSelectionModal = ({
         </TouchableWithoutFeedback>
         <View style={styles.modalContainer}>
           <Text style={styles.title}>
-            {languageSwitch == 'english' ? 'Choose Language' : 'भाषा चुनें'}
+            {currentView == 'English' ? 'Choose Language' : 'भाषा चुनें'}
           </Text>
 
           <View style={styles.languageContainer}>
@@ -71,16 +87,26 @@ const LanguageSelectionModal = ({
               <View style={styles.languageOption}>
                 <RadioButton
                   label="English"
-                  selected={languageSwitch == 'english'}
-                  onSelect={() => handleLanguageSelect('english')}
+                  selected={currentView == 'English'}
+                  onSelect={() =>
+                    handleLanguageSelect({
+                      label: 'English',
+                      value: 'english',
+                    })
+                  }
                 />
               </View>
 
               <View style={styles.languageOption}>
                 <RadioButton
                   label="हिंदी"
-                  selected={languageSwitch == 'hindi'}
-                  onSelect={() => handleLanguageSelect('hindi')}
+                  selected={currentView == 'Hindi'}
+                  onSelect={() =>
+                    handleLanguageSelect({
+                      label: 'Hindi',
+                      value: 'hindi',
+                    })
+                  }
                 />
               </View>
             </View>
@@ -90,7 +116,7 @@ const LanguageSelectionModal = ({
             style={styles.confirmButton}
             onPress={handleConfirm}>
             <Text style={styles.confirmButtonText}>
-              {languageSwitch === 'english' ? 'Confirm' : 'पुष्टि करें'}
+              {currentView == 'English' ? 'Confirm' : 'पुष्टि करें'}
             </Text>
           </TouchableOpacity>
         </View>

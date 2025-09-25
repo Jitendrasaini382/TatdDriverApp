@@ -141,7 +141,7 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
   useEffect(() => {
     getAllDynamicFunctions();
-  }, []);
+  }, [languageSwitch]);
   const notPickupPhoneCustomer = async () => {
     setLoader(true);
     try {
@@ -173,7 +173,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     }
   };
 
-  const onRefresh = useCallback(async () => {
+  const onRefresh =() => {
     setRefreshing(true);
     try {
       GetAllBookingInfo();
@@ -183,7 +183,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     } finally {
       setRefreshing(false);
     }
-  }, []);
+  }
 
   const customerWantToCancel = async () => {
     setLoader(true);
@@ -367,6 +367,11 @@ const DutyReportUpdate = ({route, navigation}) => {
       ) {
         setCancelState('cancel');
       } else {
+        console.log(
+          response?.duty_report_booking_info?.condition
+            ?.car_video_upload_sample,
+          'VIDEO FOR SAMPLE VIDEO',
+        );
         setbookingInfo(response?.duty_report_booking_info);
         const statusId =
           response?.duty_report_booking_info?.condition?.next_booking_status_id;
@@ -508,7 +513,7 @@ const DutyReportUpdate = ({route, navigation}) => {
           onReady: () => setloaderForLiveTrack(false),
         });
       } else {
-        openGoogleMap(bookingInfo?.data?.c_latlong);
+        // openGoogleMap(bookingInfo?.data?.c_latlong);
         setloaderForLiveTrack(false);
       }
 
@@ -1925,7 +1930,9 @@ const DutyReportUpdate = ({route, navigation}) => {
                   data={bookingInfo?.condition}
                 />
               )}
-
+              {/* {
+  console.log(bookingInfo?.data?.youtube_video,languageSwitch,"video from booking info")
+} */}
               {bookingInfo?.data?.youtube_video && (
                 <View style={{marginTop: 20}}>
                   <YoutubePlayer

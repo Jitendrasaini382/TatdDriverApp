@@ -49,6 +49,7 @@ const PremiumDriver = ({route, navigation}) => {
           current_language: languageSwitch,
         });
         if (response?.status_code == 200) {
+          console.log(response)
           if (response?.eligible == '0') {
             // setTimeout(() => {
             dispatch(setIsPremiumDriverElegibleErr(response?.message));

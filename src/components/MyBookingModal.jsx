@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   ScrollView,
   Linking,
+  Dimensions,
 } from 'react-native';
 import {RightArrow} from '../assets/images';
 import {AppColors} from '../assets/Colors';
@@ -19,7 +20,7 @@ import {setMyBookingModal} from '../redux/slices/trustedDriverSlice';
 import {MY_BOOKING_TOP_NAVBAR} from '../apis/Apis';
 import {useNavigation} from '@react-navigation/native';
 import {Skeleton} from '@rneui/themed';
-
+const DEVICE = Dimensions.get('window');
 const MyBookingModal = ({}) => {
   const navigation = useNavigation();
   const [myBookingStyle, setMyBookingStyle] = useState(true);
@@ -71,101 +72,159 @@ const MyBookingModal = ({}) => {
   return (
     <Modal transparent visible={myBookingModal}>
       <SafeAreaView style={{flex: 1}}>
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => dispatch(setMyBookingModal(false))}
-            style={{flex: 1, position: 'relative'}}>
-            <View style={styles.container}>
-              <TouchableOpacity
-                onPress={() => dispatch(setMyBookingModal(false))}>
-                <View style={styles.closeButtonContainer}>
-                  <Text style={styles.closeButtonText}>x</Text>
+        {/* <ScrollView contentContainerStyle={{flexGrow: 1}}> */}
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => dispatch(setMyBookingModal(false))}
+          style={{flex: 1, position: 'relative'}}>
+          <View style={styles.container}>
+            <TouchableOpacity
+              onPress={() => dispatch(setMyBookingModal(false))}>
+              <View style={styles.closeButtonContainer}>
+                <Text style={styles.closeButtonText}>x</Text>
+              </View>
+            </TouchableOpacity>
+
+            <View style={styles.tabContainer}>
+              <TouchableOpacity onPress={() => setMyBookingStyle(true)}>
+                <View
+                  style={[styles.tabItem, myBookingStyle && styles.activeTab]}>
+                  <Text
+                    style={[
+                      styles.tabText,
+                      myBookingStyle && styles.activeTabText,
+                    ]}>
+                    {myBookingData?.mybooking_txt}
+                  </Text>
                 </View>
               </TouchableOpacity>
-
-              <View style={styles.tabContainer}>
-                <TouchableOpacity onPress={() => setMyBookingStyle(true)}>
-                  <View
+              <TouchableOpacity onPress={() => setMyBookingStyle(false)}>
+                <View
+                  style={[styles.tabItem, !myBookingStyle && styles.activeTab]}>
+                  <Text
                     style={[
-                      styles.tabItem,
-                      myBookingStyle && styles.activeTab,
+                      styles.tabText,
+                      !myBookingStyle && styles.activeTabText,
                     ]}>
-                    <Text
-                      style={[
-                        styles.tabText,
-                        myBookingStyle && styles.activeTabText,
-                      ]}>
-                      {myBookingData?.mybooking_txt}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setMyBookingStyle(false)}>
-                  <View
-                    style={[
-                      styles.tabItem,
-                      !myBookingStyle && styles.activeTab,
-                    ]}>
-                    <Text
-                      style={[
-                        styles.tabText,
-                        !myBookingStyle && styles.activeTabText,
-                      ]}>
-                      {myBookingData?.due_txt}
-                      {myBookingData?.total}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
+                    {myBookingData?.due_txt}
+                    {myBookingData?.total}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
 
-              {loader && (
-                <FlatList
-                  data={[{}, {}, {}]}
-                  renderItem={({item, index}) => {
-                    return (
-                      <>
-                        <Skeleton
-                          width={220}
-                          height={40}
-                          style={{
-                            borderRadius: 10,
-                            padding: 10,
-                            marginVertical: 5,
-                            marginHorizontal: 5,
-                          }}
-                          animation={'wave'}
-                        />
-                      </>
-                    );
-                  }}
-                />
-              )}
+            {loader && (
+              <FlatList
+                data={[{}, {}, {}]}
+                renderItem={({item, index}) => {
+                  return (
+                    <>
+                      <Skeleton
+                        width={220}
+                        height={40}
+                        style={{
+                          borderRadius: 10,
+                          padding: 10,
+                          marginVertical: 5,
+                          marginHorizontal: 5,
+                        }}
+                        animation={'wave'}
+                      />
+                    </>
+                  );
+                }}
+              />
+            )}
 
-              {myBookingStyle && !loader ? (
+            {myBookingStyle && !loader ? (
+              <>
+                <View style={styles.bookingContainer}>
+                  <FlatList
+
+                    showsVerticalScrollIndicator={false}
+                    data={myBookingData.bookings || []}
+                    keyExtractor={(item, index) =>
+                      `${item.booking_id}-${index}`
+                    }
+                    renderItem={({item}) => {
+                      return (
+                        <>
+                          <TouchableOpacity onPress={() => handleSubmit(item)}>
+                            <View
+                              style={[
+                                styles.bookingCard,
+                                {backgroundColor: item?.bg},
+                              ]}>
+                              <Text
+                                style={[
+                                  styles.bookingText,
+                                  {color: item.color},
+                                ]}>
+                                {item?.booking_id} - {item?.booking_date}
+                              </Text>
+                              <Image
+                                resizeMode="contain"
+                                resizeMethod="resize"
+                                style={styles.arrowIcon}
+                                source={RightArrow}
+                              />
+                            </View>
+                          </TouchableOpacity>
+                        </>
+                      );
+                    }}
+                    ListEmptyComponent={
+                      <View style={[styles.bookingCard]}>
+                        <Text style={{color: AppColors.black}}>
+                          No bookings available
+                        </Text>
+                      </View>
+                    }
+                    contentContainerStyle={[
+                      myBookingData?.bookings?.length === 0 && {
+                        flexGrow: 1,
+                        justifyContent: 'center',
+                      },{paddingBottom:150}]
+                    }
+                  />
+                </View>
+              </>
+            ) : (
+              !loader && (
                 <>
-                  <View style={styles.bookingContainer}>
-                    <FlatList
-                      showsVerticalScrollIndicator={false}
-                      data={myBookingData.bookings || []}
-                      keyExtractor={(item, index) =>
-                        `${item.booking_id}-${index}`
-                      }
-                      renderItem={({item}) => {
-                        return (
-                          <>
-                            <TouchableOpacity
-                              onPress={() => handleSubmit(item)}>
+                  <ScrollView style={styles.bookingContainer}>
+                    {myBookingData?.clear_my_due_bookings &&
+                    myBookingData?.clear_my_due_bookings.length > 0
+                      ? myBookingData?.clear_my_due_bookings.map(
+                          (booking, index) => (
+                            <Pressable
+                              key={index}
+                              onPress={() =>
+                                navigation.navigate('DutyReportUpdate', {
+                                  bookingNumber: booking?.booking_id,
+                                  state: '',
+                                })
+                              }>
                               <View
                                 style={[
                                   styles.bookingCard,
-                                  {backgroundColor: item?.bg},
+                                  styles.activeBookingCard,
                                 ]}>
                                 <Text
                                   style={[
                                     styles.bookingText,
-                                    {color: item.color},
+                                    styles.activeBookingText,
+                                    {fontWeight: '700'},
                                   ]}>
-                                  {item?.booking_id} - {item?.booking_date}
+                                  {booking?.booking_id}
+                                </Text>
+                                <Text
+                                  style={[
+                                    styles.bookingText,
+                                    styles.activeBookingText,
+                                    {fontWeight: '700'},
+                                  ]}>
+                                  {'        '}+ {booking?.amount}
                                 </Text>
                                 <Image
                                   resizeMode="contain"
@@ -174,107 +233,40 @@ const MyBookingModal = ({}) => {
                                   source={RightArrow}
                                 />
                               </View>
-                            </TouchableOpacity>
-                          </>
-                        );
-                      }}
-                      ListEmptyComponent={
-                        <View style={[styles.bookingCard]}>
-                          <Text style={{color: AppColors.black}}>
-                            No bookings available
-                          </Text>
-                        </View>
-                      }
-                      contentContainerStyle={
-                        myBookingData?.bookings?.length === 0 && {
-                          flexGrow: 1,
-                          justifyContent: 'center',
-                        }
-                      }
-                    />
-                  </View>
-                </>
-              ) : (
-                !loader && (
-                  <>
-                    <ScrollView style={styles.bookingContainer}>
-                      {myBookingData?.clear_my_due_bookings &&
-                      myBookingData?.clear_my_due_bookings.length > 0
-                        ? myBookingData?.clear_my_due_bookings.map(
-                            (booking, index) => (
-                              <Pressable
-                                key={index}
-                                onPress={() =>
-                                  navigation.navigate('DutyReportUpdate', {
-                                    bookingNumber: booking?.booking_id,
-                                    state: '',
-                                  })
-                                }>
-                                <View
-                                  style={[
-                                    styles.bookingCard,
-                                    styles.activeBookingCard,
-                                  ]}>
-                                  <Text
-                                    style={[
-                                      styles.bookingText,
-                                      styles.activeBookingText,
-                                      {fontWeight: '700'},
-                                    ]}>
-                                    {booking?.booking_id}
-                                  </Text>
-                                  <Text
-                                    style={[
-                                      styles.bookingText,
-                                      styles.activeBookingText,
-                                      {fontWeight: '700'},
-                                    ]}>
-                                    {'        '}+ {booking?.amount}
-                                  </Text>
-                                  <Image
-                                    resizeMode="contain"
-                                    resizeMethod="resize"
-                                    style={styles.arrowIcon}
-                                    source={RightArrow}
-                                  />
-                                </View>
-                              </Pressable>
-                            ),
-                          )
-                        : null}
+                            </Pressable>
+                          ),
+                        )
+                      : null}
 
-                      <Pressable
-                        onPress={() => {
-                          navigation.navigate('ClearMyDuePayment'),
-                            dispatch(setMyBookingModal(false));
-                        }}>
-                        <View
+                    <Pressable
+                      onPress={() => {
+                        navigation.navigate('ClearMyDuePayment'),
+                          dispatch(setMyBookingModal(false));
+                      }}>
+                      <View
+                        style={[styles.bookingCard, styles.activeBookingCard]}>
+                        <Text
                           style={[
-                            styles.bookingCard,
-                            styles.activeBookingCard,
+                            styles.bookingText,
+                            styles.activeBookingText,
                           ]}>
-                          <Text
-                            style={[
-                              styles.bookingText,
-                              styles.activeBookingText,
-                            ]}>
-                            {myBookingData?.clear_my_due_txt}
-                          </Text>
-                          <Image
-                            resizeMode="contain"
-                            resizeMethod="resize"
-                            style={styles.arrowIcon}
-                            source={RightArrow}
-                          />
-                        </View>
-                      </Pressable>
-                    </ScrollView>
-                  </>
-                )
-              )}
-            </View>
-          </TouchableOpacity>
-        </ScrollView>
+                          {myBookingData?.clear_my_due_txt}
+                        </Text>
+                        <Image
+                          resizeMode="contain"
+                          resizeMethod="resize"
+                          style={styles.arrowIcon}
+                          source={RightArrow}
+                        />
+                      </View>
+                    </Pressable>
+                  </ScrollView>
+                </>
+              )
+            )}
+          </View>
+        </TouchableOpacity>
+        {/* </ScrollView> */}
       </SafeAreaView>
     </Modal>
   );
@@ -301,7 +293,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     width: 250,
     minHeight: 100,
-    maxHeight: 700,
+    maxHeight: DEVICE.height * 0.7,
   },
   closeButtonContainer: {
     alignItems: 'flex-end',

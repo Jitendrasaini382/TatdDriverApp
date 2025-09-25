@@ -105,6 +105,7 @@
 		69CC3F612BAC496F90A0D38F /* Poppins-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Thin.ttf"; path = "../src/assets/fonts/Poppins-Thin.ttf"; sourceTree = "<group>"; };
 		6BC225B5014C423AAA520EA5 /* Poppins-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Black.ttf"; path = "../src/assets/fonts/Poppins-Black.ttf"; sourceTree = "<group>"; };
 		762B14CED9586FDC1B433D5A /* Pods-tatd.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tatd.debug.xcconfig"; path = "Target Support Files/Pods-tatd/Pods-tatd.debug.xcconfig"; sourceTree = "<group>"; };
+		763617ABEC67AB158AD96106 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = tatd/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		78CE37ECCF7444019CBE7CE2 /* AbhayaLibre-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "AbhayaLibre-Regular.ttf"; path = "../src/assets/fonts/AbhayaLibre-Regular.ttf"; sourceTree = "<group>"; };
 		795EE074AF7E443BBECD8C43 /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-ThinItalic.ttf"; path = "../src/assets/fonts/Roboto-ThinItalic.ttf"; sourceTree = "<group>"; };
 		806559EFADF54BDEAD8526B7 /* Poppins-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Poppins-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
@@ -191,6 +192,7 @@
 				2D6A500F5A7A41A0C7F78C1C /* PrivacyInfo.xcprivacy */,
 				D914E443C9A707BFDDAC57A3 /* PrivacyInfo.xcprivacy */,
 				E82A0CB8320914DA48785EF8 /* PrivacyInfo.xcprivacy */,
+				763617ABEC67AB158AD96106 /* PrivacyInfo.xcprivacy */,
 			);
 			name = tatd;
 			sourceTree = "<group>";
@@ -684,7 +686,7 @@
 				CODE_SIGN_ENTITLEMENTS = tatd/tatd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = S9SM5JM9P8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = tatd/Info.plist;
@@ -694,7 +696,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.75;
+				MARKETING_VERSION = 1.2.76;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -718,7 +720,7 @@
 				CODE_SIGN_ENTITLEMENTS = tatd/tatd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = S9SM5JM9P8;
 				INFOPLIST_FILE = tatd/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "tat d driver partner";
@@ -727,7 +729,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.75;
+				MARKETING_VERSION = 1.2.76;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

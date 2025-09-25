@@ -48,16 +48,16 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera to take photos.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>We need your location in all conditions</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to provide better service.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need microphone access for videos</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>We need permission to save photos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need access to your photo library to upload images.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>We use your location to send your position to our system so your rides or deliveries are recorded correctly.</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>We use your location while the app is open to send your position to our system for accurate ride or delivery records.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AbhayaLibre-Bold.ttf</string>

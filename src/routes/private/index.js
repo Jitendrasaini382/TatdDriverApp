@@ -52,6 +52,7 @@ import ClearMyDuePaymentOvertime from '../../screens/ClearMyDuePaymentOvertime';
 import ChatScreen from '../../screens/ChatScreen';
 import DriverLiveTrack from '../../screens/DriverLiveTrack';
 import DriverVideoUpload from '../../screens/DrivervideoUpload';
+import CmdRoutes from '../../screens/CmdRoutes';
 
 const Stack = createStackNavigator();
 export const navigationRef = createRef();
@@ -262,6 +263,8 @@ const PrivateRoute = () => {
           {props => <ErrorBoundry Component={DriverLiveTrack} {...props} />}
         </Stack.Screen>
         <Stack.Screen name="DriverVideoUpload" component={DriverVideoUpload} />
+        <Stack.Screen name="CmdRoutes" component={CmdRoutes} />
+
         {/* {props => <ErrorBoundry Component={DriverVideoUpload} {...props} */}
         {/* />} */}
         {/* </Stack.Screen> */}

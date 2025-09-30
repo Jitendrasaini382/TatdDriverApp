@@ -16,7 +16,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {AppColors} from '../../assets/Colors';
 import {AppLogo, Headerlogo, Triangle_Icon} from '../../assets/images';
 import {useEffect, useState} from 'react';
@@ -47,7 +47,6 @@ const scale = size => (width / designWidth) * size;
 const verticalScale = size => (height / designHeight) * size;
 const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;
-
 const CustomTextInput = ({
   value,
   onChangeText,
@@ -176,6 +175,8 @@ const CustomAddressInput = ({
 };
 
 const ApplyForDriverJob = ({navigation}) => {
+  const insets = useSafeAreaInsets();
+
   const [pincode, setPincode] = useState('');
   const [driverName, setDriverName] = useState('');
   const [driverNumber, setDriverNumber] = useState('');
@@ -443,7 +444,9 @@ const ApplyForDriverJob = ({navigation}) => {
           navigation.navigate('RazorPayPaymentScreenDriverJob', {
             response: res?.razor_order_id_data,
           });
-          setVisible(false);
+          // setTimeout(()=>{
+          //   setVisible(false);
+          // },2000)
         }
       }
     } catch (error) {
@@ -469,9 +472,9 @@ const ApplyForDriverJob = ({navigation}) => {
             />
           </Pressable>
           <TouchableOpacity
-          onPress={()=>{
-            dispatch(resetUserAuthState())
-          }}
+            onPress={() => {
+              dispatch(resetUserAuthState());
+            }}
             style={{
               paddingHorizontal: 10,
               borderColor: 'black',
@@ -487,6 +490,9 @@ const ApplyForDriverJob = ({navigation}) => {
         <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
           <View style={{flex: 1, paddingHorizontal: 10}}>
             <ScrollView
+            automaticallyAdjustKeyboardInsets={true}
+            keyboardDismissMode="interactive"
+            keyboardShouldPersistTaps="handled"
               nestedScrollEnabled={true}
               refreshControl={
                 <RefreshControl
@@ -494,9 +500,9 @@ const ApplyForDriverJob = ({navigation}) => {
                   onRefresh={() => onRefresh()}
                 />
               }
-              keyboardShouldPersistTaps="always"
+              // keyboardShouldPersistTaps="always"
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{paddingBottom: 14, flexGrow: 1}}>
+              contentContainerStyle={{paddingBottom: 14}}>
               <View style={styles.mainTopView}>
                 <View style={{flexDirection: 'row'}}>
                   <View style={styles.mainTopContent}>
@@ -733,6 +739,8 @@ const ApplyForDriverJob = ({navigation}) => {
               <Modal visible={visible} animationType="slide" transparent={true}>
                 <View
                   style={{
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
                     flex: 1,
                     backgroundColor: 'rgba(0,0,0,0.5)',
                     justifyContent: 'center',

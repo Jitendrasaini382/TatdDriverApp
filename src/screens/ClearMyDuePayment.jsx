@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
 import ClearMyDuePaymentModal from '../components/modal/ClearMyDuePaymentModal';
@@ -23,8 +23,10 @@ import {
   PAY_CMD_CREATE_ORDER_ID,
 } from '../apis/Apis';
 import {useSelector} from 'react-redux';
+import {useRoute} from '@react-navigation/native';
 
 const ClearMyDuePayment = ({navigation}) => {
+  const routes = useRoute();
   const [myDuePaymentModal, setMyDuePaymentModal] = useState(false);
   const [loader, setLoader] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -64,7 +66,7 @@ const ClearMyDuePayment = ({navigation}) => {
       console.log('Stopping loader...');
       setLoader(false);
     }
-};
+  };
 
   const handlePayment = async amount => {
     try {
@@ -73,7 +75,10 @@ const ClearMyDuePayment = ({navigation}) => {
         action: 'clear_my_due',
         payment_amount: amount,
       });
-      if (response?.status_code == 200 && response?.razor_order_id_data?.orderId) {
+      if (
+        response?.status_code == 200 &&
+        response?.razor_order_id_data?.orderId
+      ) {
         navigation.navigate('RazorPayPaymentScreen', {
           pageType: 'clear_my_due_test',
           description: 'Clear My Due Test',
@@ -88,7 +93,8 @@ const ClearMyDuePayment = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header backButton={true} />
+      {/* <Header backButton={true} /> */}
+      {routes?.params?.routeType !== 'Tab' && <Header backButton />}
 
       {loader ? (
         <ActivityIndicator
@@ -207,7 +213,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
   },
   contentContainer: {
-    marginTop: 30,
+    // marginTop: 30,
     padding: 10,
     elevation: 5,
   },

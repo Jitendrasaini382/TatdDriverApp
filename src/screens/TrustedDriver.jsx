@@ -796,6 +796,7 @@ const TrustedDriver = ({navigation}) => {
       }
 
       const response = await LOGIN_BUTTON(updatedLoginButton);
+      console.log(response, 'api dat of rfd');
 
       if (response?.rfd == '1') {
         dispatch(setLoginStatus(true));
@@ -803,7 +804,6 @@ const TrustedDriver = ({navigation}) => {
       } else {
         dispatch(setLoginStatus(false));
       }
-
       if (response?.message?.length <= 30 && response?.message) {
         setLoginMessage('');
         Toast.show({
@@ -811,7 +811,7 @@ const TrustedDriver = ({navigation}) => {
           text1: response?.message,
         });
       } else {
-        setLoginMessage(response?.message);
+        setLoginMessage(response?.message || '');
         setTimeout(() => setLoginMessage(''), 5000);
       }
 
@@ -826,7 +826,7 @@ const TrustedDriver = ({navigation}) => {
             navigation.navigate('ClearMyDuePaymentOvertime');
             break;
           case 'clear-my-due-payment':
-            navigation.navigate('ClearMyDuePayment');
+            navigation.navigate('CmdRoutes');
             break;
           case 'driver-training-module':
             navigation.navigate('DriverTrainingModulePhaseOne');
@@ -847,6 +847,7 @@ const TrustedDriver = ({navigation}) => {
             openMyUrl(response?.url);
             break;
         }
+        // return;
       }
     } catch (error) {
       setLoaderRfd(false);
@@ -2219,7 +2220,7 @@ const TrustedDriver = ({navigation}) => {
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => navigation.navigate('ClearMyDuePayment')}
+                      onPress={() => navigation.navigate('CmdRoutes')}
                       style={[
                         styles.bottamContent4,
                         {

@@ -86,6 +86,7 @@
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = tatd/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		19FFE32A12024BD5906F2D1A /* AbhayaLibre-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "AbhayaLibre-Medium.ttf"; path = "../src/assets/fonts/AbhayaLibre-Medium.ttf"; sourceTree = "<group>"; };
 		1FFC54608C2C12C889909D8C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = tatd/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		23199E1AF18629927A2C459D /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = tatd/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		263FD1DCE06C48BF97955FCB /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../src/assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
 		2851186D6B903962B1ACE644 /* Pods-tatd-tatdTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tatd-tatdTests.debug.xcconfig"; path = "Target Support Files/Pods-tatd-tatdTests/Pods-tatd-tatdTests.debug.xcconfig"; sourceTree = "<group>"; };
 		2A9E06684BF34DB0B4E6180A /* Roboto-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Black.ttf"; path = "../src/assets/fonts/Roboto-Black.ttf"; sourceTree = "<group>"; };
@@ -193,6 +194,7 @@
 				D914E443C9A707BFDDAC57A3 /* PrivacyInfo.xcprivacy */,
 				E82A0CB8320914DA48785EF8 /* PrivacyInfo.xcprivacy */,
 				763617ABEC67AB158AD96106 /* PrivacyInfo.xcprivacy */,
+				23199E1AF18629927A2C459D /* PrivacyInfo.xcprivacy */,
 			);
 			name = tatd;
 			sourceTree = "<group>";
@@ -686,7 +688,7 @@
 				CODE_SIGN_ENTITLEMENTS = tatd/tatd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = S9SM5JM9P8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = tatd/Info.plist;
@@ -696,7 +698,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.76;
+				MARKETING_VERSION = 1.2.77;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -705,8 +707,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tatd.driverios;
 				PRODUCT_NAME = tatd;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -720,7 +727,7 @@
 				CODE_SIGN_ENTITLEMENTS = tatd/tatd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = S9SM5JM9P8;
 				INFOPLIST_FILE = tatd/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "tat d driver partner";
@@ -729,7 +736,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.76;
+				MARKETING_VERSION = 1.2.77;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -738,7 +745,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tatd.driverios;
 				PRODUCT_NAME = tatd;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

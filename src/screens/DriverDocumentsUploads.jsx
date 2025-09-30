@@ -130,23 +130,25 @@ const DriverDocumentsUploads = ({navigation}) => {
       const image = await (source === 'camera'
         ? ImagePicker.openCamera({
             cropping: true,
-            // freeStyleCropEnabled: true,
+            freeStyleCropEnabled: true,
             cropperCircleOverlay: false,
-            compressImageQuality: 0.5,
+            compressImageQuality: Platform.OS == 'ios' ? 1 : 0.5,
             cropperToolbarTitle: 'Crop Image',
             cropperActiveWidgetColor: 'red',
+            freeStyleCropEnabled: true,
             // freeStyleCropEnabled: true,
           })
         : ImagePicker.openPicker({
             cropping: true,
             freeStyleCropEnabled: true,
             cropperCircleOverlay: false,
-            compressImageQuality: 0.5,
+            compressImageQuality: Platform.OS == 'ios' ? 1 : 0.5,
             cropperToolbarTitle: 'Crop Image',
             cropperActiveWidgetColor: 'red',
             // freeStyleCropEnabled: true,
           }));
 
+      console.log(image);
       if (image?.path) {
         setImages(prev => ({...prev, [docType]: image.path}));
         setErrors(prev => ({...prev, [docType]: ''}));

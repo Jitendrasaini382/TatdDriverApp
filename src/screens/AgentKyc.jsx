@@ -14,7 +14,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import Header from '../components/Header';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColors} from '../assets/Colors';
 import {
   GET_AGENT_KYC_INFO,
@@ -27,6 +27,7 @@ import YoutubePlayer from 'react-native-youtube-iframe';
 
 const AgentKyc = ({navigation}) => {
   const route = useRoute();
+  console.log(route);
   const redirect = route?.params?.redirect;
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
   const [videoId, setVideoId] = useState('');
@@ -322,7 +323,7 @@ const AgentKyc = ({navigation}) => {
 
   return (
     <SafeAreaView style={{backgroundColor: AppColors.white, flex: 1}}>
-      <Header backButton />
+      {route?.params?.routeType !== 'Tab' && <Header backButton />}
       {loader ? (
         <ActivityIndicator
           size="large"
@@ -330,111 +331,112 @@ const AgentKyc = ({navigation}) => {
           style={{flex: 1}}
         />
       ) : (
-        <KeyboardAvoidingView style={{flex:1}} behavior='padding' >
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={getAllAgentKycInfo}
-            />
-          }
-          automaticallyAdjustKeyboardInsets={true}
-          keyboardShouldPersistTaps="always"
-          style={styles.container}>
-          <Text style={styles.title}>
-            {redirect !== 'Trusted' ? 'Update' : 'Add'} Bank Details
-          </Text>
-          <View style={styles.card}>
-            <DetailInput
-              label="Beneficiary Name"
-              value={agentKycInfo?.beneficiaryName}
-              onChangeText={text => handleInputChange('beneficiaryName', text)}
-              onEndEditing={() =>
-                handleInputChange(
-                  'beneficiaryName',
-                  agentKycInfo.beneficiaryName.toUpperCase(),
-                )
-              }
-              error={errors.beneficiaryName}
-              isEditing={isEditing}
-            />
-
-            <DetailInput
-              label="Beneficiary Account Number"
-              value={agentKycInfo?.accountNumber}
-              onChangeText={text => handleInputChange('accountNumber', text)}
-              keyboardType="numeric"
-              secureTextEntry={true}
-              error={errors.accountNumber}
-              isEditing={isEditing}
-            />
-            <DetailInput
-              label="Reconfirm Account Number"
-              value={agentKycInfo?.confirmAccountNumber}
-              onChangeText={text =>
-                handleInputChange('confirmAccountNumber', text)
-              }
-              keyboardType="numeric"
-              error={errors.confirmAccountNumber}
-              isEditing={isEditing}
-            />
-            {!shortForm && (
+        <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={getAllAgentKycInfo}
+              />
+            }
+            automaticallyAdjustKeyboardInsets={true}
+            keyboardShouldPersistTaps="always"
+            style={styles.container}>
+            <Text style={styles.title}>
+              {redirect !== 'Trusted' ? 'Update' : 'Add'} Bank Details
+            </Text>
+            <View style={styles.card}>
               <DetailInput
-                label="Bank Name"
-                value={agentKycInfo?.bankName}
-                onChangeText={text => handleInputChange('bankName', text)}
-                error={errors.bankName}
+                label="Beneficiary Name"
+                value={agentKycInfo?.beneficiaryName}
+                onChangeText={text =>
+                  handleInputChange('beneficiaryName', text)
+                }
+                onEndEditing={() =>
+                  handleInputChange(
+                    'beneficiaryName',
+                    agentKycInfo.beneficiaryName.toUpperCase(),
+                  )
+                }
+                error={errors.beneficiaryName}
                 isEditing={isEditing}
               />
-            )}
-            <DetailInput
-              label="IFSC Code"
-              onEndEditing={() =>
-                handleInputChange(
-                  'ifscCode',
-                  agentKycInfo.ifscCode.toUpperCase(),
-                )
-              }
-              value={agentKycInfo?.ifscCode}
-              onChangeText={text => handleInputChange('ifscCode', text)}
-              error={errors.ifscCode}
-              maxLength={11}
-              isEditing={isEditing}
-            />
-            <TouchableOpacity
-              style={[
-                styles.button,
-                {
-                  backgroundColor: loaderSubmit
-                    ? AppColors.greyColor
-                    : AppColors.mainColor,
-                },
-              ]}
-              disabled={loaderSubmit}
-              onPress={handleButtonPress}>
-              {loaderSubmit ? (
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <ActivityIndicator size="small" color="white" />
-                  <Text style={[styles.buttonText, {marginLeft: 8}]}>
-                    Updating...
-                  </Text>
-                </View>
-              ) : (
-                <Text style={styles.buttonText}>
-                  {isEditing ? 'Add' : 'Edit'}
-                </Text>
+
+              <DetailInput
+                label="Beneficiary Account Number"
+                value={agentKycInfo?.accountNumber}
+                onChangeText={text => handleInputChange('accountNumber', text)}
+                keyboardType="numeric"
+                secureTextEntry={true}
+                error={errors.accountNumber}
+                isEditing={isEditing}
+              />
+              <DetailInput
+                label="Reconfirm Account Number"
+                value={agentKycInfo?.confirmAccountNumber}
+                onChangeText={text =>
+                  handleInputChange('confirmAccountNumber', text)
+                }
+                keyboardType="numeric"
+                error={errors.confirmAccountNumber}
+                isEditing={isEditing}
+              />
+              {!shortForm && (
+                <DetailInput
+                  label="Bank Name"
+                  value={agentKycInfo?.bankName}
+                  onChangeText={text => handleInputChange('bankName', text)}
+                  error={errors.bankName}
+                  isEditing={isEditing}
+                />
               )}
-            </TouchableOpacity>
-          </View>
-          {videoId && (
-            <View style={{marginTop: 20, padding: 12}}>
-              <YoutubePlayer height={200} videoId={videoId} />
+              <DetailInput
+                label="IFSC Code"
+                onEndEditing={() =>
+                  handleInputChange(
+                    'ifscCode',
+                    agentKycInfo.ifscCode.toUpperCase(),
+                  )
+                }
+                value={agentKycInfo?.ifscCode}
+                onChangeText={text => handleInputChange('ifscCode', text)}
+                error={errors.ifscCode}
+                maxLength={11}
+                isEditing={isEditing}
+              />
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  {
+                    backgroundColor: loaderSubmit
+                      ? AppColors.greyColor
+                      : AppColors.mainColor,
+                  },
+                ]}
+                disabled={loaderSubmit}
+                onPress={handleButtonPress}>
+                {loaderSubmit ? (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <ActivityIndicator size="small" color="white" />
+                    <Text style={[styles.buttonText, {marginLeft: 8}]}>
+                      Updating...
+                    </Text>
+                  </View>
+                ) : (
+                  <Text style={styles.buttonText}>
+                    {isEditing ? 'Add' : 'Edit'}
+                  </Text>
+                )}
+              </TouchableOpacity>
             </View>
-          )}
-        </ScrollView>
+            {videoId && (
+              <View style={{marginTop: 20, padding: 12}}>
+                <YoutubePlayer height={200} videoId={videoId} />
+              </View>
+            )}
+          </ScrollView>
         </KeyboardAvoidingView>
       )}
-
       {showModal && (
         <Modal
           animationType="fade"

@@ -444,6 +444,9 @@ const ApplyForDriverJob = ({navigation}) => {
           navigation.navigate('RazorPayPaymentScreenDriverJob', {
             response: res?.razor_order_id_data,
           });
+          if (Platform.OS == 'android') {
+            setVisible(false);
+          }
           // setTimeout(()=>{
           //   setVisible(false);
           // },2000)
@@ -487,12 +490,14 @@ const ApplyForDriverJob = ({navigation}) => {
             </Text>
           </TouchableOpacity>
         </View>
-        <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+        <KeyboardAvoidingView
+          style={{flex: 1}}
+          behavior={Platform.OS == 'ios' ? null : 'padding'}>
           <View style={{flex: 1, paddingHorizontal: 10}}>
             <ScrollView
-            automaticallyAdjustKeyboardInsets={true}
-            keyboardDismissMode="interactive"
-            keyboardShouldPersistTaps="handled"
+              automaticallyAdjustKeyboardInsets={true}
+              keyboardDismissMode="interactive"
+              keyboardShouldPersistTaps="handled"
               nestedScrollEnabled={true}
               refreshControl={
                 <RefreshControl
@@ -739,8 +744,11 @@ const ApplyForDriverJob = ({navigation}) => {
               <Modal visible={visible} animationType="slide" transparent={true}>
                 <View
                   style={{
-                    paddingTop: insets.top,
-                    paddingBottom: insets.bottom,
+                    ...(Platform.OS == 'ios' && {
+                      paddingTop: insets.top,
+                      paddingBottom: insets.bottom,
+                    }),
+
                     flex: 1,
                     backgroundColor: 'rgba(0,0,0,0.5)',
                     justifyContent: 'center',
@@ -752,7 +760,7 @@ const ApplyForDriverJob = ({navigation}) => {
                       backgroundColor: 'white',
                       borderRadius: 12,
                       padding: 16,
-                      maxHeight: '95%',
+                      maxHeight: '99%',
                       width: '99%',
                     }}>
                     {/* Close Icon - Fixed Top Right */}

@@ -768,6 +768,7 @@ const TrustedDriver = ({navigation}) => {
   const handleToggleButton = async () => {
     // Toast.show({type: 'error', text1: 'Location permission is required'});
     // navigation.navigate('DriverDocumentsUploads');
+
     // return
     setLoaderRfd(true);
     try {

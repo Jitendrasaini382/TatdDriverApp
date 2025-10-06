@@ -49,6 +49,7 @@ const DriverDocumentsUploads = ({navigation}) => {
   const [message, setMessage] = useState('');
   const [docVerification, setDocVerification] = useState(false);
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  const [loader, setLoader] = useState(false);
 
   const openCameraOrGallery = docType => {
     if (Platform.OS === 'ios') {
@@ -132,17 +133,24 @@ const DriverDocumentsUploads = ({navigation}) => {
             cropping: true,
             freeStyleCropEnabled: true,
             cropperCircleOverlay: false,
-            compressImageQuality: Platform.OS == 'ios' ? 1 : 0.5,
+            // compressImageQuality: Platform.OS == 'ios' ? 1 : 0.5,
+            compressImageQuality: 0.5,
+            width: 3000,
+            height: 3000,
             cropperToolbarTitle: 'Crop Image',
             cropperActiveWidgetColor: 'red',
-            freeStyleCropEnabled: true,
+
+            // freeStyleCropEnabled: true,
+
             // freeStyleCropEnabled: true,
           })
         : ImagePicker.openPicker({
             cropping: true,
             freeStyleCropEnabled: true,
             cropperCircleOverlay: false,
-            compressImageQuality: Platform.OS == 'ios' ? 1 : 0.5,
+            compressImageQuality: 0.5,
+            width: 3000,
+            height: 3000,
             cropperToolbarTitle: 'Crop Image',
             cropperActiveWidgetColor: 'red',
             // freeStyleCropEnabled: true,
@@ -210,6 +218,7 @@ const DriverDocumentsUploads = ({navigation}) => {
     formData.append('current_address', address);
 
     try {
+      setLoader(true);
       const response = await DRIVER_DOCUMENTS_UPLOAD(formData);
 
       console.log(response, 'responseresponse DRIVER_DOCUMENTS_UPLOAD');
@@ -219,6 +228,8 @@ const DriverDocumentsUploads = ({navigation}) => {
       }
     } catch (error) {
       console.log('API request failed', error);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -365,7 +376,11 @@ const DriverDocumentsUploads = ({navigation}) => {
             <TouchableOpacity
               style={styles.submitButton}
               onPress={handleSubmit}>
-              <Text style={styles.submitText}>Submit</Text>
+              {loader ? (
+                <ActivityIndicator size="small" color={AppColors.white} />
+              ) : (
+                <Text style={styles.submitText}>Submit</Text>
+              )}
             </TouchableOpacity>
           </ScrollView>
         </KeyboardAvoidingView>

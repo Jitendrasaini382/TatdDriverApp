@@ -853,7 +853,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     paddingHorizontal: 10,
     paddingVertical: 4,
-    overflow:"hidden",
+    overflow: 'hidden',
     borderRadius: 5,
   },
   centeredNotice: {

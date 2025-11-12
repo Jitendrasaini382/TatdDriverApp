@@ -11,6 +11,7 @@ import {
   ScrollView,
   Clipboard,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import Share from 'react-native-share';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -148,6 +149,7 @@ const AgentLeads = ({navigation}) => {
   };
 
   const [err, seterr] = useState('');
+  const [loader, setLoader] = useState(false);
   const addCustomer = async () => {
     try {
       if (mobile.trim().length == 0) {
@@ -162,6 +164,7 @@ const AgentLeads = ({navigation}) => {
 
       seterr('');
       Keyboard.dismiss();
+      setLoader(true);
       const res = await AGENT_ADD_CUSTOMER({
         customer_mobile: mobile,
         city: route?.params?.city || '',
@@ -178,6 +181,7 @@ const AgentLeads = ({navigation}) => {
       // seterr('Failed to add customer. Please try again..');
       navigation.navigate('AgentPanel');
     } finally {
+      setLoader(false);
       // setLoading(false); // Stop loading
     }
   };
@@ -201,59 +205,68 @@ const AgentLeads = ({navigation}) => {
               maxLength={10}
               value={mobile}
               style={styles.input}
-              placeholder="Driver का नंबर ?"
+              placeholder="Driver का नंबर (10 digits)"
               placeholderTextColor="#999"
             />
             <TouchableOpacity
+              disabled={loader}
               onPress={() => {
                 addCustomer();
               }}
               style={styles.button}>
-              <Text style={styles.buttonText}>Send</Text>
+              {loader ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Text style={styles.buttonText}>Send</Text>
+              )}
             </TouchableOpacity>
           </View>
           <Text style={{color: 'red', fontSize: 14, marginVertical: 5}}>
             {err}
           </Text>
         </View>
-        <View style={styles.middleView}>
-          <View style={styles.middleLeftView}>
-            <Text style={styles.middleLeftText}>OR</Text>
-          </View>
-          <View>
-            <TouchableOpacity onPress={copyToClipboard}>
-              <Image style={styles.imageCopyIcon} source={Copy_Icon} />
-            </TouchableOpacity>
+        {Platform.OS == 'android' && (
+          <>
+            <View style={styles.middleView}>
+              <View style={styles.middleLeftView}>
+                <Text style={styles.middleLeftText}>OR</Text>
+              </View>
+              <View>
+                <TouchableOpacity onPress={copyToClipboard}>
+                  <Image style={styles.imageCopyIcon} source={Copy_Icon} />
+                </TouchableOpacity>
 
-            <Text style={styles.middleRightText}>Copy</Text>
-          </View>
-        </View>
-        <View style={styles.bottamView}>
-          <View style={styles.iconView}>
-            <TouchableOpacity onPress={openWhatsApp}>
-              <Image style={styles.ImageIcon} source={WhatsApp_Icon} />
-            </TouchableOpacity>
-            <Text style={styles.textIcon}>Whatsapp</Text>
-          </View>
-          <View style={styles.iconView}>
-            <TouchableOpacity onPress={openFacebookMessenger}>
-              <Image style={styles.ImageIcon} source={Facebook_Icon} />
-            </TouchableOpacity>
-            <Text style={styles.textIcon}>Facebook</Text>
-          </View>
-          <View style={styles.iconView}>
-            <TouchableOpacity onPress={openLinkedIn}>
-              <Image style={styles.ImageIcon} source={Linkedin_Icon} />
-            </TouchableOpacity>
-            <Text style={styles.textIcon}>Linkedin</Text>
-          </View>
-          <View style={styles.iconView}>
-            <TouchableOpacity onPress={openTwitter}>
-              <Image style={styles.ImageIcon} source={Twitter_Icon} />
-            </TouchableOpacity>
-            <Text style={styles.textIcon}>Twitter</Text>
-          </View>
-        </View>
+                <Text style={styles.middleRightText}>Copy</Text>
+              </View>
+            </View>
+            <View style={styles.bottamView}>
+              <View style={styles.iconView}>
+                <TouchableOpacity onPress={openWhatsApp}>
+                  <Image style={styles.ImageIcon} source={WhatsApp_Icon} />
+                </TouchableOpacity>
+                <Text style={styles.textIcon}>Whatsapp</Text>
+              </View>
+              <View style={styles.iconView}>
+                <TouchableOpacity onPress={openFacebookMessenger}>
+                  <Image style={styles.ImageIcon} source={Facebook_Icon} />
+                </TouchableOpacity>
+                <Text style={styles.textIcon}>Facebook</Text>
+              </View>
+              <View style={styles.iconView}>
+                <TouchableOpacity onPress={openLinkedIn}>
+                  <Image style={styles.ImageIcon} source={Linkedin_Icon} />
+                </TouchableOpacity>
+                <Text style={styles.textIcon}>Linkedin</Text>
+              </View>
+              <View style={styles.iconView}>
+                <TouchableOpacity onPress={openTwitter}>
+                  <Image style={styles.ImageIcon} source={Twitter_Icon} />
+                </TouchableOpacity>
+                <Text style={styles.textIcon}>Twitter</Text>
+              </View>
+            </View>
+          </>
+        )}
       </ScrollView>
 
       <Modal
@@ -281,8 +294,8 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
     borderRadius: 10,
     padding: 20,
-    width: '100%',
-    alignSelf: 'center',
+    // width: '100%',
+    // alignSelf: 'center',
     borderWidth: 1,
     borderColor: '#ccc',
     paddingVertical: 40,
@@ -353,6 +366,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
+    minWidth: 50,
   },
   buttonText: {
     color: AppColors.white,

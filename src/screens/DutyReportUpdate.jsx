@@ -173,7 +173,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     }
   };
 
-  const onRefresh =() => {
+  const onRefresh = () => {
     setRefreshing(true);
     try {
       GetAllBookingInfo();
@@ -183,7 +183,7 @@ const DutyReportUpdate = ({route, navigation}) => {
     } finally {
       setRefreshing(false);
     }
-  }
+  };
 
   const customerWantToCancel = async () => {
     setLoader(true);
@@ -2822,156 +2822,160 @@ const DutyReportUpdate = ({route, navigation}) => {
         animationType="slide"
         visible={modalVisibleEnd}
         onRequestClose={() => setModalVisibleEnd(false)}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          }}>
+        <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
           <View
             style={{
-              backgroundColor: AppColors.white,
-              width: '90%',
-              borderRadius: 10,
-              // padding: 20,
-              elevation: 5,
-              // minHeight: 400,
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
             }}>
-            <ScrollView keyboardShouldPersistTaps="always">
-              <TouchableOpacity
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  backgroundColor: AppColors.white,
-                  // borderRadius: 20,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 30,
-                  height: 30,
-                  zIndex: 10,
-                }}
-                onPress={() => setModalVisibleEnd(false)}>
-                <Icon name="close" size={16} color={AppColors.black} />
-              </TouchableOpacity>
-              <View
-                style={{
-                  backgroundColor: AppColors.mainColor,
-                  padding: 15,
-                  paddingVertical: 30,
-                  borderRadius: 5,
-                  alignItems: 'center',
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'Merriweather-Bold',
-                    fontSize: 18,
-                    color: AppColors.white,
-                  }}>
-                  {popupsData?.popupdata?.end_alert}
-                </Text>
-              </View>
-              <View style={{marginVertical: 10, padding: 20}}>
-                {popupsData?.popupdata?.end_kms_eligibility == '1' && (
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                      marginVertical: 10,
-                      textAlign: 'center',
-                      color: AppColors.whatsAppIconColor,
-                    }}>
-                    Package - {popupsData?.popupdata?.Package}
-                  </Text>
-                )}
-                {popupsData?.popupdata?.end_kms_eligibility == '1' && (
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                      textAlign: 'center',
-                      marginVertical: 10,
-                      color: AppColors.whatsAppIconColor,
-                    }}>
-                    Start Meter Reading -{' '}
-                    {popupsData?.popupdata?.start_meter_reading} KMs
-                  </Text>
-                )}
-                {popupsData?.popupdata?.end_kms_eligibility == '1' ? (
-                  <TextInput
-                    style={{
-                      borderColor: '#c4c4be',
-                      borderWidth: 1.5,
-                      borderRadius: 8,
-                      paddingHorizontal: 10,
-                      fontSize: 16,
-                      color: '#333',
-                      backgroundColor: '#fff',
-                      marginVertical: 10,
-                      padding: 10,
-                    }}
-                    placeholder={
-                      popupsData?.popupdata?.end_kms_placeholder_text ||
-                      'Enter End KMS'
-                    }
-                    placeholderTextColor="#aaa"
-                    value={inputEndKmsValue}
-                    keyboardType="number-pad"
-                    onChangeText={text => setInputEndKmsValue(text)}
-                  />
-                ) : (
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                      textAlign: 'center',
-                      color: AppColors.mainColor,
-                      marginVertical: 10,
-                    }}>
-                    {popupsData?.popupdata?.end_alert_h3}
-                  </Text>
-                )}
-              </View>
-              <View style={{marginVertical: 10}}>
+            <View
+              style={{
+                backgroundColor: AppColors.white,
+                width: '90%',
+                borderRadius: 10,
+                // padding: 20,
+                elevation: 5,
+                // minHeight: 400,
+              }}>
+              <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode='interactive'>
                 <TouchableOpacity
-                  disabled={endModalLoader}
                   style={{
-                    backgroundColor: AppColors.mainColor,
-                    marginTop: 20,
-                    padding: 12,
-                    borderRadius: 6,
-                    width: '60%',
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    backgroundColor: AppColors.white,
+                    // borderRadius: 20,
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginHorizontal: '20%',
-                    marginBottom: 30,
+                    width: 30,
+                    height: 30,
+                    zIndex: 10,
                   }}
-                  // onPress={() => {
-                  //   bookingEnd(popupsData?.popupdata?.start_meter_reading);
-                  // }}
-                  onPress={() => {
-                    if (popupsData?.popupdata?.end_kms_eligibility == '1') {
-                      showEndAlert(popupsData?.popupdata?.start_meter_reading);
-                    } else {
-                      bookingEnd(popupsData?.popupdata?.start_meter_reading);
-                    }
+                  onPress={() => setModalVisibleEnd(false)}>
+                  <Icon name="close" size={16} color={AppColors.black} />
+                </TouchableOpacity>
+                <View
+                  style={{
+                    backgroundColor: AppColors.mainColor,
+                    padding: 15,
+                    paddingVertical: 30,
+                    borderRadius: 5,
+                    alignItems: 'center',
                   }}>
                   <Text
                     style={{
+                      fontFamily: 'Merriweather-Bold',
+                      fontSize: 18,
                       color: AppColors.white,
-                      fontWeight: '600',
-                      textAlign: 'center',
                     }}>
-                    {endModalLoader
-                      ? 'Please Wait...'
-                      : popupsData?.popupdata?.end_alert_btn}
+                    {popupsData?.popupdata?.end_alert}
                   </Text>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
+                </View>
+                <View style={{marginVertical: 10, padding: 20}}>
+                  {popupsData?.popupdata?.end_kms_eligibility == '1' && (
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                        marginVertical: 10,
+                        textAlign: 'center',
+                        color: AppColors.whatsAppIconColor,
+                      }}>
+                      Package - {popupsData?.popupdata?.Package}
+                    </Text>
+                  )}
+                  {popupsData?.popupdata?.end_kms_eligibility == '1' && (
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                        marginVertical: 10,
+                        color: AppColors.whatsAppIconColor,
+                      }}>
+                      Start Meter Reading -{' '}
+                      {popupsData?.popupdata?.start_meter_reading} KMs
+                    </Text>
+                  )}
+                  {popupsData?.popupdata?.end_kms_eligibility == '1' ? (
+                    <TextInput
+                      style={{
+                        borderColor: '#c4c4be',
+                        borderWidth: 1.5,
+                        borderRadius: 8,
+                        paddingHorizontal: 10,
+                        fontSize: 16,
+                        color: '#333',
+                        backgroundColor: '#fff',
+                        marginVertical: 10,
+                        padding: 10,
+                      }}
+                      placeholder={
+                        popupsData?.popupdata?.end_kms_placeholder_text ||
+                        'Enter End KMS'
+                      }
+                      placeholderTextColor="#aaa"
+                      value={inputEndKmsValue}
+                      keyboardType="number-pad"
+                      onChangeText={text => setInputEndKmsValue(text)}
+                    />
+                  ) : (
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                        color: AppColors.mainColor,
+                        marginVertical: 10,
+                      }}>
+                      {popupsData?.popupdata?.end_alert_h3}
+                    </Text>
+                  )}
+                </View>
+                <View style={{marginVertical: 10}}>
+                  <TouchableOpacity
+                    disabled={endModalLoader}
+                    style={{
+                      backgroundColor: AppColors.mainColor,
+                      marginTop: 20,
+                      padding: 12,
+                      borderRadius: 6,
+                      width: '60%',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginHorizontal: '20%',
+                      marginBottom: 30,
+                    }}
+                    // onPress={() => {
+                    //   bookingEnd(popupsData?.popupdata?.start_meter_reading);
+                    // }}
+                    onPress={() => {
+                      if (popupsData?.popupdata?.end_kms_eligibility == '1') {
+                        showEndAlert(
+                          popupsData?.popupdata?.start_meter_reading,
+                        );
+                      } else {
+                        bookingEnd(popupsData?.popupdata?.start_meter_reading);
+                      }
+                    }}>
+                    <Text
+                      style={{
+                        color: AppColors.white,
+                        fontWeight: '600',
+                        textAlign: 'center',
+                      }}>
+                      {endModalLoader
+                        ? 'Please Wait...'
+                        : popupsData?.popupdata?.end_alert_btn}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
+            </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* need help button Modal */}

@@ -18,7 +18,7 @@ import {
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppFont} from '../assets/FontsFamily';
 import {ArrowFadeBlue, CallingGif, Headerlogo} from '../assets/images';
 import {Linking} from 'react-native';
@@ -95,7 +95,7 @@ const AgentPanel = ({navigation}) => {
   const showPopover = () => {
     if (viewRef.current) {
       viewRef.current.measureInWindow((x, y, width, height) => {
-        console.log({x,y, width, height});
+        console.log({x, y, width, height});
         setPopoverPosition({x: x, y: y + height + 10, width, height}); // y + height se popover neeche show hoga
         setPopoverVisible(true);
       });
@@ -134,7 +134,6 @@ const AgentPanel = ({navigation}) => {
           // borderBottomWidth:0.3,
           // borderBottomColor:"black",
           justifyContent: 'space-between',
-
         }}>
         <View
           style={{
@@ -249,9 +248,17 @@ const AgentPanel = ({navigation}) => {
                       <Icon
                         name="plus"
                         color={AppColors.white}
-                        size={10}
+                        size={14}
                         style={styles.iconStyle}
                       />
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: AppColors.white,
+                          fontFamily: AppFont.regularFont,
+                        }}>
+                        Add Your Driver
+                      </Text>
                       <Image source={ArrowFadeBlue} style={styles.arrowImage} />
                     </TouchableOpacity>
                   </View>
@@ -644,6 +651,7 @@ const styles = StyleSheet.create({
     paddingTop: '3%',
     marginBottom: '3%',
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
   },
   topLeft: {
@@ -670,10 +678,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 15,
     paddingVertical: 7,
+    gap: 5,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    alignItems: 'center',
   },
-  iconStyle: {margin: 5, marginRight: 10},
+  iconStyle: {},
   earningView: {
     paddingHorizontal: responsiveSize(6),
     paddingVertical: responsiveSize(4),

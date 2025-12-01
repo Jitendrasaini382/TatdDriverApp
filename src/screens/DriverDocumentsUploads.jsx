@@ -24,6 +24,7 @@ import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {useSelector} from 'react-redux';
 import {RefreshControl} from 'react-native';
+import {ColorSpace} from 'react-native-reanimated';
 
 const DriverDocumentsUploads = ({navigation}) => {
   const [images, setImages] = useState({
@@ -102,6 +103,7 @@ const DriverDocumentsUploads = ({navigation}) => {
     }
   };
 
+
   const getDriverUploadedData = async () => {
     setLoading(true);
     try {
@@ -109,6 +111,7 @@ const DriverDocumentsUploads = ({navigation}) => {
         action: 'get_driver_upload_image',
       });
 
+      // console.log(response);
       if (response?.status_code == 200) {
         setAddress(response?.current_address);
         setImages({
@@ -120,12 +123,18 @@ const DriverDocumentsUploads = ({navigation}) => {
         });
       }
     } catch (error) {
+      Alert.alert("")
+      console.log(error)
+
     } finally {
       setRefreshing(false);
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    getDriverUploadedData();
+  }, []);
   const pickImage = async (source, docType) => {
     try {
       const image = await (source === 'camera'

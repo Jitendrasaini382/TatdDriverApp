@@ -16,6 +16,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {AppColors} from '../../assets/Colors';
 import {AppLogo, Headerlogo, Triangle_Icon} from '../../assets/images';
@@ -196,6 +197,10 @@ const ApplyForDriverJob = ({navigation}) => {
   const driverMobileNumber = useSelector(e => e?.userAuth?.driverNumber);
   const [referralCode, setReferralCode] = useState('');
   const dispatch = useDispatch();
+  const [isCheckBox, setIsCheckBox] = useState({
+    first: false,
+    second: false,
+  });
 
   const handleRegisterPress = async () => {
     const newErrors = {};
@@ -765,7 +770,13 @@ const ApplyForDriverJob = ({navigation}) => {
                     }}>
                     {/* Close Icon - Fixed Top Right */}
                     <TouchableOpacity
-                      onPress={() => setVisible(false)}
+                      onPress={() => {
+                        setVisible(false);
+                        setIsCheckBox({
+                          first: false,
+                          second: false,
+                        });
+                      }}
                       style={{
                         position: 'absolute',
                         top: 10,
@@ -788,6 +799,11 @@ const ApplyForDriverJob = ({navigation}) => {
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
+                      disabled={
+                        !Object.entries(isCheckBox).every(
+                          ([key, value]) => value,
+                        )
+                      }
                       onPress={() => handlePayment(popupData?.price)}
                       style={{
                         position: 'absolute',
@@ -796,7 +812,11 @@ const ApplyForDriverJob = ({navigation}) => {
                         right: 20,
                         zIndex: 9,
                         bottom: 30,
-                        backgroundColor: AppColors.mainColor,
+                        backgroundColor: Object.entries(isCheckBox).every(
+                          ([key, value]) => value,
+                        )
+                          ? AppColors.mainColor
+                          : 'gray',
                         paddingVertical: 12,
                         borderRadius: 6,
                         alignItems: 'center',
@@ -826,11 +846,72 @@ const ApplyForDriverJob = ({navigation}) => {
                           {''} {popupData?.application_id}
                         </Text>
                       </Text>
-                      <Text style={[styles.text, {marginBottom: 50}]}>
+                      <Text style={[styles.text]}>
                         {selectedLanguage == 'Hindi'
                           ? popupData?.popup_data
                           : popupData?.popup_data_english}
                       </Text>
+                      <View style={{marginTop: 10}} />
+                      <BouncyCheckbox
+                        size={22}
+                        isChecked={isCheckBox.first}
+                        fillColor={AppColors.mainColor}
+                        unFillColor="#FFFFFF"
+                        text={
+                          selectedLanguage == 'hindi'
+                            ? popupData?.age_check_hindi
+                            : popupData?.age_check_english
+                        }
+                        iconStyle={{borderColor: AppColors.mainColor}}
+                        innerIconStyle={{borderWidth: 2}}
+                        textStyle={[
+                          styles.text,
+                          {
+                            textDecorationLine: 'none',
+                          },
+                        ]}
+                        onPress={() => {
+                          // console.log(isChecked);
+                          // setisChecked(!isChecked);
+                          setIsCheckBox(() => {
+                            return {
+                              ...isCheckBox,
+                              first: !isCheckBox.first,
+                            };
+                          });
+                        }}
+                      />
+                      <View style={{marginVertical: 5}} />
+                      <BouncyCheckbox
+                        isChecked={isCheckBox.second}
+                        size={22}
+                        fillColor={AppColors.mainColor}
+                        unFillColor="#FFFFFF"
+                        text={
+                          selectedLanguage == 'hindi'
+                            ? popupData?.license_check_hindi
+                            : popupData?.license_check_english
+                        }
+                        iconStyle={{borderColor: AppColors.mainColor}}
+                        innerIconStyle={{borderWidth: 2}}
+                        textStyle={[
+                          styles.text,
+                          {
+                            textDecorationLine: 'none',
+                          },
+                        ]}
+                        onPress={() => {
+                          // console.log(isChecked);
+                          // setisChecked(!isChecked);
+                          setIsCheckBox(() => {
+                            return {
+                              ...isCheckBox,
+                              second: !isCheckBox.second,
+                            };
+                          });
+                        }}
+                      />
+                      <View style={{marginBottom: insets.bottom * 2}} />
                     </ScrollView>
                   </View>
                 </View>

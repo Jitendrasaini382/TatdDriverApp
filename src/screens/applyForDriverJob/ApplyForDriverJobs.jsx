@@ -832,7 +832,9 @@ const ApplyForDriverJob = ({navigation}) => {
                     </TouchableOpacity>
 
                     <ScrollView
-                      contentContainerStyle={{paddingBottom: 24}}
+                      contentContainerStyle={{
+                        paddingBottom: insets.bottom + 50,
+                      }}
                       showsVerticalScrollIndicator={false}>
                       <Text
                         style={{
@@ -858,7 +860,7 @@ const ApplyForDriverJob = ({navigation}) => {
                         fillColor={AppColors.mainColor}
                         unFillColor="#FFFFFF"
                         text={
-                          selectedLanguage == 'hindi'
+                          selectedLanguage == 'Hindi'
                             ? popupData?.age_check_hindi
                             : popupData?.age_check_english
                         }
@@ -888,7 +890,7 @@ const ApplyForDriverJob = ({navigation}) => {
                         fillColor={AppColors.mainColor}
                         unFillColor="#FFFFFF"
                         text={
-                          selectedLanguage == 'hindi'
+                          selectedLanguage == 'Hindi'
                             ? popupData?.license_check_hindi
                             : popupData?.license_check_english
                         }

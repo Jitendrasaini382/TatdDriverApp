@@ -46,6 +46,8 @@ const AgentPanel = ({navigation}) => {
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
   const showNeedHelp = useSelector(e => e?.trustedDriverSlice?.isNeedHelpShow);
   const [refreshing, setRefreshing] = useState(false);
+  //   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data?.CommisionTrackerData);
+  // console.log(decodedToken,"decodtoekn")
 
   useEffect(() => {
     setAgentPanelModal(true);

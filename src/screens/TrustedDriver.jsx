@@ -1,5 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import NetInfo from '@react-native-community/netinfo';
+
 import {
   ScrollView,
   StyleSheet,
@@ -56,7 +58,9 @@ import {
   DRIVER_NOTIFICATION,
   DRIVER_TRAINING_VIDEOS,
   EXPRESS_BOOKING_POPUP,
+  FETCH_DRIVER_ELIGIBILITY_DATA,
   GET_ALL_AVAILABILITY,
+  GET_ALL_DYNAMIC_FUNCTIONS,
   GET_FCM_TOKEN,
   GET_LOCALSE_BUTTON_SHOWING,
   GET_TRUSTED_DRIVER_AWARENESS_VIDEOS,
@@ -528,10 +532,22 @@ const TrustedDriver = ({navigation}) => {
       // }
       getAllTrustedData();
       getAwarenessVideo();
+
       getHomeNotification();
       getHomeNotice();
     }
   }, [languageSwitch, refreshKey, isRfdOn]);
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      if (state.isConnected) {
+        // call again when network comes back
+        getAwarenessVideo();
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const openMyUrl = url => {
     Linking.openURL(url).then(() => {});
@@ -1461,6 +1477,11 @@ const TrustedDriver = ({navigation}) => {
   const [commissionPressLoader, setcommissionPressLoader] = useState(false);
   const [isShowingCommissionPressModal, setisShowingCommissionPressModal] =
     useState(false);
+
+  const [isShowingCommissionPressModal2, setisShowingCommissionPressModal2] =
+    useState(false);
+  const [commissionpressData2, setcommissionpressData2] = useState('');
+
   const fetchDriverFaq = async () => {
     setcommissionPressLoader(true);
     try {
@@ -1469,6 +1490,7 @@ const TrustedDriver = ({navigation}) => {
         current_language: languageSwitch,
       });
       setcommissionpressData(res?.faq_data[1]?.faq_answer);
+      setisShowingCommissionPressModal(true);
       console.log(res?.faq_data[2]?.faq_answer, 'FAQ DATA');
     } catch (error) {
       console.log(err);
@@ -1476,9 +1498,44 @@ const TrustedDriver = ({navigation}) => {
       setcommissionPressLoader(false);
     }
   };
-  const showComissionModal = () => {
-    setisShowingCommissionPressModal(true);
-    fetchDriverFaq();
+
+  const fetchDriverFaqNew = async () => {
+    // setcommissionPressLoader(true);
+    try {
+      const res = await FETCH_DRIVER_ELIGIBILITY_DATA({
+        action: 'commission-eligibility-api',
+        current_language: languageSwitch,
+      });
+      console.log(res, 'FAQ DATA2');
+      setcommissionpressData2(res);
+      setisShowingCommissionPressModal2(true);
+    } catch (error) {
+      console.log(err);
+    } finally {
+      setcommissionPressLoader(false);
+    }
+  };
+
+  const showComissionModal = async () => {
+    setcommissionPressLoader(true);
+
+    try {
+      const res = await GET_ALL_DYNAMIC_FUNCTIONS();
+
+      const dynamicFunctionsKeys = res?.data?.find(e => {
+        return e?.function_id == 40;
+      });
+
+      if (dynamicFunctionsKeys && dynamicFunctionsKeys?.active_status == '1') {
+        await fetchDriverFaqNew();
+      } else {
+        await fetchDriverFaq();
+      }
+    } catch {
+      console.log(err);
+    } finally {
+      setcommissionPressLoader(false);
+    }
   };
 
   return (
@@ -1947,11 +2004,19 @@ const TrustedDriver = ({navigation}) => {
                         onPress={() => {
                           showComissionModal();
                         }}>
-                        <Text style={styles.topLeftText}>
-                          {decodedToken &&
-                            decodedToken?.DriverCommisonData?.commission}
-                          %
-                        </Text>
+                        {commissionPressLoader ? (
+                          <ActivityIndicator
+                            size={'large'}
+                            color={AppColors.mainColor}
+                          />
+                        ) : (
+                          <Text style={styles.topLeftText}>
+                            {decodedToken &&
+                              decodedToken?.DriverCommisonData?.commission}
+                            %
+                          </Text>
+                        )}
+
                         <Text style={styles.bottamLeftText}>Commission</Text>
                       </TouchableOpacity>
                       <View style={styles.topRight}>
@@ -1973,9 +2038,12 @@ const TrustedDriver = ({navigation}) => {
                           onPress={() => navigation.navigate('DriverEarning')}>
                           <View style={styles.earningView}>
                             <Text style={styles.rupeeIcon}>
-                              <Icon name="rupee" size={responsiveSize(8)} />{' '}
-                              {decodedToken &&
+                              <Icon name="rupee" size={responsiveSize(8)} />
+                              {/* {decodedToken &&
                                 decodedToken?.DriverCommisonData
+                                  ?.earning_30days} */}
+                              {decodedToken &&
+                                decodedToken?.CommisionTrackerData
                                   ?.earning_30days}
                             </Text>
                           </View>
@@ -2282,6 +2350,10 @@ const TrustedDriver = ({navigation}) => {
                       data={awarenessVideo}
                       keyExtractor={(item, index) => item + index}
                       horizontal
+                      pagingEnabled={false} // ❌ don't use pagingEnabled with partial width items
+                      snapToInterval={width * 0.8 + 15}
+                      decelerationRate="fast"
+                      snapToAlignment="start"
                       showsHorizontalScrollIndicator={false}
                       contentContainerStyle={{paddingHorizontal: 10}}
                       onViewableItemsChanged={onViewRef.current}
@@ -3514,6 +3586,357 @@ const TrustedDriver = ({navigation}) => {
             }}>
             {commissionpressData?.trim()}
           </Text>
+        </SlideupModal>
+
+        <SlideupModal
+          visible={isShowingCommissionPressModal2}
+          onClose={() => setisShowingCommissionPressModal2(false)}
+          loading={commissionPressLoader}>
+          <ScrollView>
+            <View style={{paddingTop: 10, paddingBottom: insets.bottom + 50}}>
+              <View
+                style={{
+                  borderColor: AppColors.borderColor,
+                  borderWidth: 1,
+                  backgroundColor: '#eef1ff',
+                  borderRadius: 12,
+                  padding: 10,
+                  marginBottom: 10,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 40,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    marginBottom: 10,
+                    // marginVertical: 10,
+                    // lineHeight: 35,
+                    color: AppColors.black,
+                  }}>
+                  {/* {commissionpressData2?.weeklyBookingProgressHeading} */}
+                  {/* 15% */}
+                  {commissionpressData2?.commissionOne}%
+                </Text>
+                {/* <Text
+                style={{
+                  fontSize: 16,
+                  // fontWeight: 'bold',
+                  textAlign: 'center',
+                  // marginVertical: 10,
+                  color: AppColors.black,
+                  top: -10,
+                }}>
+                Commission
+              </Text> */}
+
+                <View
+                  style={{
+                    backgroundColor: '#eef3ff',
+                    padding: 16,
+                    borderRadius: 12,
+                    alignItems: 'center',
+                    marginBottom: 22,
+                  }}>
+                  {languageSwitch == 'english' ? (
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: '700',
+                        color: '#2c3e50',
+                        top: -15,
+                      }}>
+                      Milestone:{' '}
+                      {
+                        commissionpressData2?.response_commission_15?.filter(
+                          item => item.has_booking == 1,
+                        ).length
+                      }
+                      /{commissionpressData2?.milestoneKeyfifteen} days
+                      completed
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: '700',
+                        color: '#2c3e50',
+                        top: -15,
+                      }}>
+                      माइलस्टोन:{' '}
+                      {
+                        commissionpressData2?.response_commission_15?.filter(
+                          item => item.has_booking == 1,
+                        ).length
+                      }
+                      /{commissionpressData2?.milestoneKeyfifteen} दिन पूरे
+                    </Text>
+                  )}
+
+                  {/* Progress Bar */}
+                  <View
+                    style={{
+                      height: 12,
+                      backgroundColor: '#dfe6ff',
+                      borderRadius: 8,
+                      overflow: 'hidden',
+                      width: '100%',
+                      marginTop: 10,
+                    }}>
+                    <View
+                      style={{
+                        height: 12,
+                        backgroundColor: '#4e8cff',
+
+                        width: `${
+                          (commissionpressData2?.response_commission_15?.filter(
+                            item => item.has_booking == 1,
+                          ).length /
+                            commissionpressData2?.milestoneKeyfifteen) *
+                          100
+                        }%`,
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* DAY GRID */}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    gap: 5,
+                    // flexWrap: 'wrap',
+                    justifyContent: 'space-between',
+                  }}>
+                  {commissionpressData2?.response_commission_15?.map(
+                    (item, index) => {
+                      return (
+                        <View
+                          key={index}
+                          style={{
+                            // width: '13%',
+                            flex: 1,
+                            // gap:5,
+                            padding: 10,
+                            borderRadius: 10,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginBottom: 10,
+                            backgroundColor: item.has_booking
+                              ? '#d4ffdf'
+                              : '#ffe0e0',
+                            borderWidth: 1,
+                            borderColor: item.has_booking
+                              ? '#a3e7b3'
+                              : '#ffb3b3',
+                          }}>
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              color: item.done ? '#057c2f' : '#b30000',
+                              fontWeight: item.has_booking ? '700' : '500',
+                              textAlign: 'center',
+                            }}>
+                            {item.date?.split('-')[2]}{' '}
+                            {item.has_booking ? '✔' : '✖'}
+                          </Text>
+                        </View>
+                      );
+                    },
+                  )}
+                </View>
+
+                {/* Footer Message */}
+                <View
+                  style={{
+                    marginVertical: 16,
+                    padding: 12,
+                    backgroundColor: '#fffbe6',
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: '#ffe8a3',
+                  }}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      fontSize: 15,
+                      color: '#8a6d00',
+                    }}>
+                    {commissionpressData2?.commission15Message}
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  backgroundColor: '#eef7ff',
+                  paddingVertical: 10,
+                  borderRadius: 10,
+                  borderColor: AppColors.borderColor,
+                  borderWidth: 1,
+                  borderRadius: 12,
+                  padding: 10,
+                  marginBottom: 10,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 40,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    marginTop: 10,
+                    color: AppColors.black,
+                  }}>
+                  {/* {commissionpressData2?.weeklyBookingProgressHeading} */}
+                  {/* 10% */}
+                  {commissionpressData2?.commissionTwo}%
+                </Text>
+                {/* <Text
+                  style={{
+                    fontSize: 16,
+                    // fontWeight: 'bold',
+                    textAlign: 'center',
+                    top: -10,
+                    // marginVertical: 10,
+                    color: AppColors.black,
+                  }}>
+                  Commission
+                </Text> */}
+
+                <View
+                  style={{
+                    backgroundColor: '#eef3ff',
+                    padding: 16,
+                    borderRadius: 12,
+                    alignItems: 'center',
+                    marginBottom: 22,
+                    // top:-1
+                  }}>
+                  {languageSwitch == 'english' ? (
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: '700',
+                        color: '#2c3e50',
+                        top: -15,
+                      }}>
+                      Milestone:{' '}
+                      {
+                        commissionpressData2?.response_commission_10?.filter(
+                          item => item.has_booking == 1,
+                        ).length
+                      }
+                      /{commissionpressData2?.milestoneKey} days completed
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        top: -15,
+                        fontSize: 16,
+                        fontWeight: '700',
+                        color: '#2c3e50',
+                      }}>
+                      माइलस्टोन:{' '}
+                      {
+                        commissionpressData2?.response_commission_10?.filter(
+                          item => item.has_booking == 1,
+                        ).length
+                      }
+                      /{commissionpressData2?.milestoneKey} दिन पूरे
+                    </Text>
+                  )}
+
+                  {/* Progress Bar */}
+                  <View
+                    style={{
+                      height: 12,
+                      backgroundColor: '#dfe6ff',
+                      borderRadius: 8,
+                      overflow: 'hidden',
+                      width: '100%',
+                      marginTop: 10,
+                    }}>
+                    <View
+                      style={{
+                        height: 12,
+                        backgroundColor: '#4e8cff',
+                        width: `${
+                          (commissionpressData2?.response_commission_10?.filter(
+                            item => item.has_booking == 1,
+                          ).length /
+                            commissionpressData2?.milestoneKey) *
+                          100
+                        }%`,
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* DAY GRID */}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    // flexWrap: 'wrap',
+                    gap: 5,
+                    justifyContent: 'space-between',
+                  }}>
+                  {commissionpressData2?.response_commission_10?.map(
+                    (item, index) => {
+                      return (
+                        <View
+                          key={index}
+                          style={{
+                            // width: '13%',
+                            flex: 1,
+                            // gap:5,
+                            padding: 10,
+                            borderRadius: 10,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginBottom: 10,
+                            backgroundColor: item.has_booking
+                              ? '#d4ffdf'
+                              : '#ffe0e0',
+                            borderWidth: 1,
+                            borderColor: item.has_booking
+                              ? '#a3e7b3'
+                              : '#ffb3b3',
+                          }}>
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              color: item.done ? '#057c2f' : '#b30000',
+                              fontWeight: item.has_booking ? '700' : '500',
+                              textAlign: 'center',
+                            }}>
+                            {item.date?.split('-')[2]}{' '}
+                            {item.has_booking ? '✔' : '✖'}
+                          </Text>
+                        </View>
+                      );
+                    },
+                  )}
+                </View>
+
+                {/* Footer Message */}
+                <View
+                  style={{
+                    marginTop: 16,
+                    padding: 12,
+                    backgroundColor: '#fffbe6',
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: '#ffe8a3',
+                  }}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      fontSize: 15,
+                      color: '#8a6d00',
+                    }}>
+                    {commissionpressData2?.commission10Message}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
         </SlideupModal>
 
         <SlideupModal

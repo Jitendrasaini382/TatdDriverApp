@@ -3,13 +3,13 @@ import Route from './src/routes/Routes';
 import {Alert, LogBox, Platform, Text, TextInput} from 'react-native';
 import {Provider} from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
-import store from './src/redux/store';
+import store, { _persistor, persistor } from './src/redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
 import notifee, {
   AndroidImportance,
   AndroidVisibility,
 } from '@notifee/react-native';
-import {persistStore} from 'redux-persist';
+
 import {NavigationContainer} from '@react-navigation/native';
 import {navigationRef} from './src/routes/private';
 import {PlayInstallReferrer} from 'react-native-play-install-referrer';
@@ -22,7 +22,7 @@ TextInput.defaultProps.allowFontScaling = false;
 LogBox.ignoreAllLogs();
 
 const App = () => {
-  const persistor = persistStore(store);
+  // const persistor = persistStore(store);
 
   const createNotificationChannel = async () => {
     try {
@@ -143,7 +143,7 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate loading={null} persistor={_persistor}>
         <NavigationContainer ref={navigationRef}>
           <Route />
         </NavigationContainer>

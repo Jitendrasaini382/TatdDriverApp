@@ -232,7 +232,7 @@ export const APPLY_PERMANENT_BOOKING = body => {
 };
 
 export const GET_BOOKING_INFO = body => {
-  console.log(body,"GET_BOOKING__INFO")
+  console.log(body, 'GET_BOOKING__INFO');
   return _Fetch(
     'POST',
     'duty-report/duty_report_booking_info_api.php',
@@ -1032,4 +1032,13 @@ export const GET_ALL_DYNAMIC_FUNCTIONS = async () => {
 export const ANALYISIS_MAPBOX_USAGE = body => {
   console.log(body);
   return _Fetch('POST', 'duty-report/mapbox-usage-api.php', body, {});
+};
+export const FETCH_DRIVER_ELIGIBILITY_DATA = body => {
+  // console.log(body);
+  return _Fetch(
+    'POST',
+    'trusted-driver/commission-eligibility-api.php',
+    body,
+    {},
+  );
 };

@@ -7,7 +7,7 @@ import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
 import {SEND_NOTIFICATION_DETAILS} from './src/apis/Apis';
 import {navigationRef} from './src/routes/private';
 import {checkBatteryOptimization} from './src/utils/permissions';
-import {enableScreens} from 'react-native-screens';
+// import {enableScreens} from 'react-native-screens';
 import './gesture-handler';
 import store from './src/redux/store';
 import {
@@ -30,16 +30,19 @@ const handleNotificationPress = async (notification, action, isAppOpen) => {
   // console.log(notification?.data?.data,"pfwefssswsdsd")
 
   const messageId = notification?.messageId;
+  // Alert.alert(messageId)
+  // console.log(notification,"xxx")
+  // return
 
   // console.log('🔔 Notification Clicked:', path);
 
   try {
-    await SEND_NOTIFICATION_DETAILS({
+    SEND_NOTIFICATION_DETAILS({
       action: 'update',
       received_status: action,
       firebase_message_id: messageId,
     });
-    // console.log('✅ send notification details successful');
+    console.log('✅ send notification details successful');
   } catch (error) {
     // console.error('❌ Error sending notification details:', error);
   }
@@ -56,6 +59,7 @@ const handleNotificationPress = async (notification, action, isAppOpen) => {
         });
       },
       isAppOpen ? 100 : 200,
+      // 0,
     );
     return;
   } else if (path == 'applyForDriverJobs') {
@@ -117,6 +121,7 @@ notifee.onForegroundEvent(async ({type, detail}) => {
 
 // 🔹 Background notification listener
 notifee.onBackgroundEvent(async ({type, detail}) => {
+  // Alert.alert('oo');
   if (type === EventType.PRESS) {
     await handleNotificationPress(detail?.notification, 'clicked');
   } else if (type == EventType.DISMISSED) {

@@ -294,22 +294,22 @@ const ChatScreen = ({navigation}) => {
     // return false;
   };
 
-  useEffect(() => {
-    const backAction = () => {
-      navigation.navigate('DutyReportUpdate', {
-        bookingNumber: bookingNumber,
-        state: 'chat',
-      });
-      return true; // prevent default behavior (going back)
-    };
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     navigation.navigate('DutyReportUpdate', {
+  //       bookingNumber: bookingNumber,
+  //       state: 'chat',
+  //     });
+  //     return true; // prevent default behavior (going back)
+  //   };
 
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
+  //   const backHandler = BackHandler.addEventListener(
+  //     'hardwareBackPress',
+  //     backAction,
+  //   );
 
-    return () => backHandler.remove(); // cleanup
-  }, []);
+  //   return () => backHandler.remove(); // cleanup
+  // }, []);
 
   const handleSuggestedMessage = async text => {
     if (!text.trim()) return;
@@ -462,10 +462,11 @@ const ChatScreen = ({navigation}) => {
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate('DutyReportUpdate', {
-              bookingNumber: bookingNumber,
-              state: 'chat',
-            })
+            // navigation.navigate('DutyReportUpdate', {
+            //   bookingNumber: bookingNumber,
+            //   state: 'chat',
+            // })
+            navigation.goBack()
           }
           style={styles.backButton}>
           <Icon name="arrow-left" size={20} color="white" />

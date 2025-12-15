@@ -4,6 +4,7 @@ import userAuth from './slices/userAuthSlice';
 import trustedDriverSlice from './slices/trustedDriverSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import globalSlice from './slices/globalSlice';
+import {persistStore} from 'redux-persist';
 import {thunk} from 'redux-thunk';
 import persistReducer from 'redux-persist/es/persistReducer';
 
@@ -29,3 +30,4 @@ const store = configureStore({
 });
 
 export default store;
+export const _persistor = persistStore(store);

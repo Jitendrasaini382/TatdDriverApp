@@ -103,6 +103,7 @@
 		5D3C6F4159ED45D684198C53 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../src/assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		60DEC70AA78C4E34B131007F /* AbhayaLibre-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "AbhayaLibre-SemiBold.ttf"; path = "../src/assets/fonts/AbhayaLibre-SemiBold.ttf"; sourceTree = "<group>"; };
 		65648F43085844DD94EAA304 /* Poppins-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLightItalic.ttf"; path = "../src/assets/fonts/Poppins-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
+		66015ACEC77A833A044753FC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = tatd/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		69CC3F612BAC496F90A0D38F /* Poppins-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Thin.ttf"; path = "../src/assets/fonts/Poppins-Thin.ttf"; sourceTree = "<group>"; };
 		6BC225B5014C423AAA520EA5 /* Poppins-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Black.ttf"; path = "../src/assets/fonts/Poppins-Black.ttf"; sourceTree = "<group>"; };
 		762B14CED9586FDC1B433D5A /* Pods-tatd.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tatd.debug.xcconfig"; path = "Target Support Files/Pods-tatd/Pods-tatd.debug.xcconfig"; sourceTree = "<group>"; };
@@ -197,6 +198,7 @@
 				763617ABEC67AB158AD96106 /* PrivacyInfo.xcprivacy */,
 				23199E1AF18629927A2C459D /* PrivacyInfo.xcprivacy */,
 				BDFD6B3977B593D51C7116CD /* PrivacyInfo.xcprivacy */,
+				66015ACEC77A833A044753FC /* PrivacyInfo.xcprivacy */,
 			);
 			name = tatd;
 			sourceTree = "<group>";

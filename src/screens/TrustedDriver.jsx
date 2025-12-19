@@ -722,8 +722,9 @@ const TrustedDriver = ({navigation}) => {
       // if(videosContent){
       //   getTrainingVideo();
       // }
-      // if (isRfdOn) {
-      await getAllOndemandBookings();
+      if (isRfdOn) {
+        await getAllOndemandBookings();
+      }
       await getPermanentSubscriptionBooking();
       dispatch(setRefreshKey());
       // }
@@ -1543,7 +1544,7 @@ const TrustedDriver = ({navigation}) => {
       {/* <View
         style={{height: insets.top, backgroundColor: AppColors.mainColor}}
       /> */}
-      <SafeAreaView style={{flex: 1}}>
+      <View style={{flex: 1, paddingTop: useSafeAreaInsets().top}}>
         {/* <Header extraButton={true} showNeedHelp={showNeedHelp} />
         {myBookingModal && <MyBookingModal />} */}
 
@@ -2438,7 +2439,11 @@ const TrustedDriver = ({navigation}) => {
         {/* bottam Tab bar */}
         {showNotice && homeNoticeData ? null : showNotification &&
           homeNotificationData ? null : (
-          <View style={{justifyContent: 'flex-end'}}>
+          <View
+            style={{
+              justifyContent: 'flex-end',
+              ...(Platform.OS == 'android' && {marginBottom: insets.bottom}),
+            }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -4049,7 +4054,7 @@ const TrustedDriver = ({navigation}) => {
             </Text>
           </TouchableOpacity> */}
         </SlideupModal>
-      </SafeAreaView>
+      </View>
     </View>
   );
 };

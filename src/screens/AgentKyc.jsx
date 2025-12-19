@@ -273,9 +273,8 @@ const AgentKyc = ({navigation}) => {
 
       if (!ifscCode.trim()) {
         newErrors.ifscCode = 'IFSC Code is required';
-      } else if (!/^[A-Z0-9]{11}$/.test(ifscCode)) {
-        newErrors.ifscCode =
-          'IFSC Code must be 11 characters, no special characters';
+      } else if (!/^[A-Za-z0-9]{11}$/.test(ifscCode)) {
+        newErrors.ifscCode = 'Invalid IFSC code';
       } else if (/\s/.test(ifscCode)) {
         newErrors.ifscCode = 'IFSC Code must not contain spaces';
       }
@@ -339,6 +338,7 @@ const AgentKyc = ({navigation}) => {
                 onRefresh={getAllAgentKycInfo}
               />
             }
+            keyboardDismissMode="interactive"
             automaticallyAdjustKeyboardInsets={true}
             keyboardShouldPersistTaps="always"
             style={styles.container}>
@@ -350,14 +350,14 @@ const AgentKyc = ({navigation}) => {
                 label="Beneficiary Name"
                 value={agentKycInfo?.beneficiaryName}
                 onChangeText={text =>
-                  handleInputChange('beneficiaryName', text)
+                  handleInputChange('beneficiaryName', text?.toUpperCase())
                 }
-                onEndEditing={() =>
-                  handleInputChange(
-                    'beneficiaryName',
-                    agentKycInfo.beneficiaryName.toUpperCase(),
-                  )
-                }
+                // onEndEditing={() =>
+                //   handleInputChange(
+                //     'beneficiaryName',
+                //     agentKycInfo.beneficiaryName.toUpperCase(),
+                //   )
+                // }
                 error={errors.beneficiaryName}
                 isEditing={isEditing}
               />
@@ -392,14 +392,16 @@ const AgentKyc = ({navigation}) => {
               )}
               <DetailInput
                 label="IFSC Code"
-                onEndEditing={() =>
-                  handleInputChange(
-                    'ifscCode',
-                    agentKycInfo.ifscCode.toUpperCase(),
-                  )
-                }
+                // onEndEditing={() =>
+                //   handleInputChange(
+                //     'ifscCode',
+                //     agentKycInfo.ifscCode.toUpperCase(),
+                //   )
+                // }
                 value={agentKycInfo?.ifscCode}
-                onChangeText={text => handleInputChange('ifscCode', text)}
+                onChangeText={text =>
+                  handleInputChange('ifscCode', text?.toUpperCase())
+                }
                 error={errors.ifscCode}
                 maxLength={11}
                 isEditing={isEditing}

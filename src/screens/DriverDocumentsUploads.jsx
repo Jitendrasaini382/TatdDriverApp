@@ -103,7 +103,6 @@ const DriverDocumentsUploads = ({navigation}) => {
     }
   };
 
-
   const getDriverUploadedData = async () => {
     setLoading(true);
     try {
@@ -111,7 +110,7 @@ const DriverDocumentsUploads = ({navigation}) => {
         action: 'get_driver_upload_image',
       });
 
-      // console.log(response);
+      console.log(JSON.stringify(response), 'pouytredcv');
       if (response?.status_code == 200) {
         setAddress(response?.current_address);
         setImages({
@@ -123,9 +122,8 @@ const DriverDocumentsUploads = ({navigation}) => {
         });
       }
     } catch (error) {
-      Alert.alert("")
-      console.log(error)
-
+      // Alert.alert("")
+      console.log(error);
     } finally {
       setRefreshing(false);
       setLoading(false);
@@ -141,11 +139,11 @@ const DriverDocumentsUploads = ({navigation}) => {
         ? ImagePicker.openCamera({
             cropping: true,
             freeStyleCropEnabled: true,
-            cropperCircleOverlay: false,
+            // cropperCircleOverlay: false,
             // compressImageQuality: Platform.OS == 'ios' ? 1 : 0.5,
             compressImageQuality: 0.5,
-            width: 3000,
-            height: 3000,
+            // width: 3000,
+            // height: 3000,
             cropperToolbarTitle: 'Crop Image',
             cropperActiveWidgetColor: 'red',
 
@@ -156,10 +154,10 @@ const DriverDocumentsUploads = ({navigation}) => {
         : ImagePicker.openPicker({
             cropping: true,
             freeStyleCropEnabled: true,
-            cropperCircleOverlay: false,
+            // cropperCircleOverlay: false,
             compressImageQuality: 0.5,
-            width: 3000,
-            height: 3000,
+            // width: 3000,
+            // height: 3000,
             cropperToolbarTitle: 'Crop Image',
             cropperActiveWidgetColor: 'red',
             // freeStyleCropEnabled: true,
@@ -309,7 +307,8 @@ const DriverDocumentsUploads = ({navigation}) => {
         <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
           <ScrollView
             // automaticallyAdjustKeyboardInsets={true}
-
+            keyboardDismissMode="interactive"
+            keyboardShouldPersistTaps="handled"
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}

@@ -21,7 +21,7 @@ import {
 } from '../apis/Apis';
 import {jwtDecode} from 'jwt-decode';
 import {AppFont} from '../assets/FontsFamily';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setUserAuthStates} from '../redux/slices/userAuthSlice';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useOtpVerify} from 'react-native-otp-verify';
@@ -32,6 +32,12 @@ import {
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 import DeviceInfo from 'react-native-device-info';
+import LocationDisclosureModal from '../components/LocationDisclosureModal';
+import {setLocationFirstModal} from '../redux/slices/AlwaysPersistStore';
+import {
+  requestLocationPermission,
+  requestLocationPermission2,
+} from '../utils/permissions';
 const {width, height} = Dimensions.get('window');
 const designWidth = width;
 const designHeight = height;
@@ -65,6 +71,7 @@ const CheckDriverOtp = ({navigation, route}) => {
   const dispatch = useDispatch();
   const insets = useSafeAreaInsets();
   const appVersion = DeviceInfo.getVersion();
+  const [isShowModal, setisShowModal] = useState(false);
   const appType = Platform.OS;
 
   const {mobile, isRegistered} = route?.params;
@@ -79,15 +86,17 @@ const CheckDriverOtp = ({navigation, route}) => {
   const [showResendOtpText, setShowResendOtpText] = useState(false);
   const [loader, setLoader] = useState(false);
 
-  console.log(isRegistered,"isRegisteredisRegistered");
-  
+  console.log(isRegistered, 'isRegisteredisRegistered');
 
   const ref = useBlurOnFulfill({value: otp, cellCount: CELL_COUNT});
   const [inputProps, getCellOnLayoutHandler] = useClearByFocusCell({
     value: otp,
     setValue: setOtp,
   });
-
+  const isAlreadyAllowedForFirstLocationDisclousure = useSelector(
+    e => e?.AlwayaPersistStore?.isLocationFirstModal,
+  );
+  console.log(isAlreadyAllowedForFirstLocationDisclousure);
   const {otp: otps, hash} = useOtpVerify({numberOfDigits: 4});
   useEffect(() => {
     if (otps?.length) {
@@ -100,6 +109,18 @@ const CheckDriverOtp = ({navigation, route}) => {
       verifyOtp(otp);
     }
   }, [otp]);
+  const checkPermission = async () => {
+    const hasPermission = await requestLocationPermission2();
+    dispatch(setLocationFirstModal(true));
+
+    setisShowModal(false);
+    dispatch(
+      setUserAuthStates({
+        key: 'login',
+        value: true,
+      }),
+    );
+  };
   const resendOtp = () => {
     setShowResendOtpText(true);
     setOtp('');
@@ -182,12 +203,25 @@ const CheckDriverOtp = ({navigation, route}) => {
             }),
           );
 
-          dispatch(
-            setUserAuthStates({
-              key: 'login',
-              value: true,
-            }),
-          );
+          if (Platform.OS == 'android') {
+            if (isAlreadyAllowedForFirstLocationDisclousure) {
+              dispatch(
+                setUserAuthStates({
+                  key: 'login',
+                  value: true,
+                }),
+              );
+            } else {
+              setisShowModal(true);
+            }
+          } else {
+            dispatch(
+              setUserAuthStates({
+                key: 'login',
+                value: true,
+              }),
+            );
+          }
           dispatch(
             setUserAuthStates({
               key: 'driverNumber',
@@ -241,12 +275,35 @@ const CheckDriverOtp = ({navigation, route}) => {
             }),
           );
 
-          dispatch(
-            setUserAuthStates({
-              key: 'login',
-              value: true,
-            }),
-          );
+          // dispatch(
+          //   setUserAuthStates({
+          //     key: 'login',
+          //     value: true,
+          //   }),
+
+          // );
+
+          if (Platform.OS == 'android') {
+            if (isAlreadyAllowedForFirstLocationDisclousure) {
+              dispatch(
+                setUserAuthStates({
+                  key: 'login',
+                  value: true,
+                }),
+              );
+            } else {
+              // checkPermission();
+              setisShowModal(true);
+            }
+          } else {
+            dispatch(
+              setUserAuthStates({
+                key: 'login',
+                value: true,
+              }),
+            );
+          }
+
           Toast.show({
             type: 'success',
             text1: 'Success',
@@ -404,6 +461,23 @@ const CheckDriverOtp = ({navigation, route}) => {
         </View>
         <Toast visibilityTime={3000} />
       </ScrollView>
+      <LocationDisclosureModal
+        visible={isShowModal}
+        onCancel={() => {
+          dispatch(setLocationFirstModal(true));
+
+          setisShowModal(false);
+          dispatch(
+            setUserAuthStates({
+              key: 'login',
+              value: true,
+            }),
+          );
+        }}
+        onAllow={async () => {
+          checkPermission();
+        }}
+      />
     </View>
   );
 };

@@ -136,6 +136,7 @@ const _Fetch = (method, path, body, headers = {}) => {
       ...headers, // Custom headers override default headers if any conflict
     };
 
+    `  Api Path: ${path} API BODY: ${body }`,
     // return false
     axiosClient({
       method,
@@ -145,12 +146,14 @@ const _Fetch = (method, path, body, headers = {}) => {
       headers: finalHeaders, // Pass merged headers
     })
       .then(response => {
-        if (path !== 'driver-job/driver-interface-text-video-content.php') {
-          console.log(`Response data: ${path}  ${(response?.data)}`);
+        // if (path !== 'driver-job/driver-interface-text-video-content.php') {
+          console.log(
+            `Api Path: ${path} API BODY: ${body} API RESPONSE ${JSON.stringify(response.data)}`,
+          );
           // if(path == "trusted-driver/ondemand-bookings-view-1.php"){
           // console.log(response, path);
           // }
-        }
+        // }
         if (response.data.status_code == 200) {
           resolve(response.data);
         } else {

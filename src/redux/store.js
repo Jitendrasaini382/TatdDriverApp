@@ -7,18 +7,20 @@ import globalSlice from './slices/globalSlice';
 import {persistStore} from 'redux-persist';
 import {thunk} from 'redux-thunk';
 import persistReducer from 'redux-persist/es/persistReducer';
+import AlwayaPersistStore from './slices/AlwaysPersistStore';
 
 const rootReducer = combineReducers({
   userAuth,
   trustedDriverSlice,
   globalSlice,
+  AlwayaPersistStore,
 });
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   blacklist: ['trustedDriverSlice'],
-  whitelist: ['globalSlice', 'userAuth'],
+  whitelist: ['globalSlice', 'userAuth', 'AlwayaPersistStore'],
 };
 
 const persistedreducer = persistReducer(persistConfig, rootReducer);

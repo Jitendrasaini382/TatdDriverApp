@@ -159,6 +159,59 @@ export const requestLocationPermission = async () => {
     }
   }
 };
+
+export const requestLocationPermission2 = async () => {
+  if (Platform.OS === 'android') {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Location Permission',
+          message:
+            'This app requires location access to provide services based on your location.',
+          buttonPositive: 'OK',
+          buttonNegative: 'Cancel',
+        },
+      );
+
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      } else {
+        // Alert.alert(
+        //   'Permission Denied',
+        //   'Location permission is required. Please enable it in settings.',
+        //   [
+        //     { text: 'Cancel', style: 'cancel' },
+        //     { text: 'Go to Settings', onPress: () => openSettings() },
+        //   ],
+        // );
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  } else  {
+    try {
+      const result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+
+      if (result === RESULTS.GRANTED) {
+        return true;
+      } else {
+        Alert.alert(
+          'Permission Denied',
+          'Location permission is required. Please enable it in settings.',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Go to Settings', onPress: () => openSettings() },
+          ],
+        );
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+};
 // const openSettings = () => {
 //   Linking.openSettings();
 // };

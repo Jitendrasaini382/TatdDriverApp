@@ -22,13 +22,14 @@ const LocationDisclosureModal = ({visible, onAllow, onCancel}) => {
 
           {/* Description */}
           <Text style={styles.description}>
-            Tatd uses your location to determine your pickup address and improve
-            location accuracy while you are actively using the app.
+            Tatd uses your location to track your position and assign rides
+            accurately while you are actively using the app.
           </Text>
 
           <Text style={styles.subDescription}>
-            Your location is not accessed, stored, or tracked when the app is
-            closed or running in the background.
+            Your location is accessed only when the app is in use and is not
+            collected or tracked when the app is closed or running in the
+            background.
           </Text>
 
           {/* Buttons */}
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: AppColors.black,
     textAlign: 'center',
-    opacity:0.8,
+    opacity: 0.8,
     lineHeight: 20,
     marginBottom: 25,
   },

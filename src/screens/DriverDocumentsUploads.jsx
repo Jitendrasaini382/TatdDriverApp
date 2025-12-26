@@ -9,12 +9,15 @@ import {
   Alert,
   StyleSheet,
   ActionSheetIOS,
+  PermissionsAndroid,
   Platform,
   ActivityIndicator,
   KeyboardAvoidingView,
+  Linking,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ImagePicker from 'react-native-image-crop-picker';
+import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 import {
   DRIVER_DOCUMENT_UPLOADED_STATUS,
   DRIVER_DOCUMENTS_UPLOAD,
@@ -53,6 +56,8 @@ const DriverDocumentsUploads = ({navigation}) => {
   const [loader, setLoader] = useState(false);
 
   const openCameraOrGallery = docType => {
+    pickImage('camera', docType);
+    return false;
     if (Platform.OS === 'ios') {
       ActionSheetIOS.showActionSheetWithOptions(
         {
@@ -103,6 +108,15 @@ const DriverDocumentsUploads = ({navigation}) => {
     }
   };
 
+  const [documentAlreadyOnServer, setdocumentAlreadyOnServer] = useState({
+    driver_photo: false,
+    aadhaar_front: false,
+    aadhaar_back: false,
+    licence_front: false,
+    licence_back: false,
+    current_address: false,
+  });
+
   const getDriverUploadedData = async () => {
     setLoading(true);
     try {
@@ -112,6 +126,15 @@ const DriverDocumentsUploads = ({navigation}) => {
 
       console.log(JSON.stringify(response), 'pouytredcv');
       if (response?.status_code == 200) {
+        // setdocumentAlreadyOnServer(response);
+        setdocumentAlreadyOnServer({
+          driver_photo: !!response?.driver_photo,
+          aadhaar_front: !!response?.aadhaar_front,
+          aadhaar_back: !!response?.aadhaar_back,
+          licence_front: !!response?.licence_front,
+          licence_back: !!response?.licence_back,
+          current_address: !!response?.current_address,
+        });
         setAddress(response?.current_address);
         setImages({
           driver_photo: response?.driver_photo || null,
@@ -133,35 +156,83 @@ const DriverDocumentsUploads = ({navigation}) => {
   useEffect(() => {
     getDriverUploadedData();
   }, []);
+
+  const requestCameraPermission = async () => {
+    // console.log("p")
+    try {
+      if (Platform.OS === 'android') {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+          );
+          return granted === PermissionsAndroid.RESULTS.GRANTED;
+        } catch (err) {
+          console.warn(err);
+          return false;
+        }
+      } else {
+        // Alert.alert()
+        const result = await request(PERMISSIONS.IOS.CAMERA);
+        return result === RESULTS.GRANTED;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    // return false;
+  };
+
   const pickImage = async (source, docType) => {
     try {
-      const image = await (source === 'camera'
-        ? ImagePicker.openCamera({
-            cropping: true,
-            freeStyleCropEnabled: true,
-            // cropperCircleOverlay: false,
-            // compressImageQuality: Platform.OS == 'ios' ? 1 : 0.5,
-            compressImageQuality: 0.5,
-            // width: 3000,
-            // height: 3000,
-            cropperToolbarTitle: 'Crop Image',
-            cropperActiveWidgetColor: 'red',
+      const isCameraAllowed = await requestCameraPermission();
+      if (!isCameraAllowed) {
+        Alert.alert(
+          'Permission Denied',
+          'Camera access is required to take photos. Please enable camera permissions in your device settings.',
+          [
+            {text: 'Cancel', style: 'cancel'},
+            {
+              text: 'Open Settings',
+              onPress: () => Linking.openSettings(),
+            },
+          ],
+        );
+        return false;
+      }
 
-            // freeStyleCropEnabled: true,
+      const image = await ImagePicker.openCamera({
+        cropping: true,
+        freeStyleCropEnabled: true,
+        compressImageQuality: 0.5,
+        cropperToolbarTitle: 'Crop Image',
+        cropperActiveWidgetColor: AppColors.mainColor,
+      });
+      // const image = await (source === 'camera'
+      //   ? ImagePicker.openCamera({
+      //       cropping: true,
+      //       freeStyleCropEnabled: true,
+      //       // cropperCircleOverlay: false,
+      //       // compressImageQuality: Platform.OS == 'ios' ? 1 : 0.5,
+      //       compressImageQuality: 0.5,
+      //       // width: 3000,
+      //       // height: 3000,
+      //       cropperToolbarTitle: 'Crop Image',
+      //       cropperActiveWidgetColor: 'red',
 
-            // freeStyleCropEnabled: true,
-          })
-        : ImagePicker.openPicker({
-            cropping: true,
-            freeStyleCropEnabled: true,
-            // cropperCircleOverlay: false,
-            compressImageQuality: 0.5,
-            // width: 3000,
-            // height: 3000,
-            cropperToolbarTitle: 'Crop Image',
-            cropperActiveWidgetColor: 'red',
-            // freeStyleCropEnabled: true,
-          }));
+      //       // freeStyleCropEnabled: true,
+
+      //       // freeStyleCropEnabled: true,
+      //     })
+      //   : ImagePicker.openPicker({
+      //       cropping: true,
+      //       freeStyleCropEnabled: true,
+      //       // cropperCircleOverlay: false,
+      //       compressImageQuality: 0.5,
+      //       // width: 3000,
+      //       // height: 3000,
+      //       cropperToolbarTitle: 'Crop Image',
+      //       cropperActiveWidgetColor: 'red',
+      //       // freeStyleCropEnabled: true,
+      //     }));
 
       console.log(image);
       if (image?.path) {
@@ -240,9 +311,10 @@ const DriverDocumentsUploads = ({navigation}) => {
     }
   };
 
-  const renderImageBox = (key, label) => (
+  const renderImageBox = (key, label, isDisabled) => (
     <View style={styles.imageBoxContainer} key={key}>
       <TouchableOpacity
+        disabled={isDisabled}
         style={[styles.uploadBox, errors[key] && {borderColor: 'red'}]}
         onPress={() => openCameraOrGallery(key)}>
         {images[key] ? (
@@ -326,6 +398,8 @@ const DriverDocumentsUploads = ({navigation}) => {
               Upload Driver Photo
             </Text>
             <TouchableOpacity
+              disabled={documentAlreadyOnServer.driver_photo}
+              // disabled={true}
               onPress={() => openCameraOrGallery('driver_photo')}
               style={[
                 styles.uploadBox,
@@ -333,6 +407,7 @@ const DriverDocumentsUploads = ({navigation}) => {
                 errors.driver_photo && {borderColor: 'red'},
               ]}>
               <TouchableOpacity
+                disabled={documentAlreadyOnServer?.driver_photo}
                 onPress={() => openCameraOrGallery('driver_photo')}>
                 {images.driver_photo ? (
                   <Image
@@ -352,18 +427,35 @@ const DriverDocumentsUploads = ({navigation}) => {
 
             <Text style={styles.label}>Aadhaar Card (Front & Back)</Text>
             <View style={styles.row}>
-              {renderImageBox('aadhar_number_file_front', 'Aadhaar Card Front')}
-              {renderImageBox('aadhar_number_file_back', 'Aadhaar Card Back')}
+              {renderImageBox(
+                'aadhar_number_file_front',
+                'Aadhaar Card Front',
+                documentAlreadyOnServer?.aadhaar_front,
+              )}
+              {renderImageBox(
+                'aadhar_number_file_back',
+                'Aadhaar Card Back',
+                documentAlreadyOnServer?.aadhaar_back,
+              )}
             </View>
 
             <Text style={styles.label}>License (Front & Back)</Text>
             <View style={styles.row}>
-              {renderImageBox('licence_number_file_front', 'License Front')}
-              {renderImageBox('licence_number_file_back', 'License Back')}
+              {renderImageBox(
+                'licence_number_file_front',
+                'License Front',
+                documentAlreadyOnServer?.licence_front,
+              )}
+              {renderImageBox(
+                'licence_number_file_back',
+                'License Back',
+                !!documentAlreadyOnServer?.licence_back,
+              )}
             </View>
 
             <Text style={styles.label}>Current Address</Text>
             <TextInput
+              editable={!documentAlreadyOnServer?.current_address}
               style={[styles.input, errors.address && {borderColor: 'red'}]}
               placeholder="Enter Current Address"
               placeholderTextColor={'grey'}

@@ -125,35 +125,11 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - MapboxCommon (23.11.4)
-  - MapboxCoreMaps (10.19.2):
-    - MapboxCommon (~> 23.11)
-  - MapboxCoreNavigation (2.18.6):
-    - MapboxDirections (~> 2.14)
-    - MapboxNavigationNative (< 205.0.0, >= 204.0.1)
-  - MapboxDirections (2.14.2):
-    - Polyline (~> 5.0)
-    - Turf (~> 2.8.0)
-  - MapboxMaps (10.19.4):
-    - MapboxCommon (= 23.11.4)
-    - MapboxCoreMaps (= 10.19.2)
-    - MapboxMobileEvents (= 2.0.0)
-    - Turf (= 2.8.0)
-  - MapboxMobileEvents (2.0.0)
-  - MapboxNavigation (2.18.6):
-    - MapboxCoreNavigation (= 2.18.6)
-    - MapboxMaps (~> 10.17)
-    - MapboxSpeech (~> 2.0)
-    - Solar-dev (~> 3.0)
-  - MapboxNavigationNative (204.1.0):
-    - MapboxCommon (~> 23.9)
-  - MapboxSpeech (2.1.1)
   - nanopb (3.30910.0):
     - nanopb/decode (= 3.30910.0)
     - nanopb/encode (= 3.30910.0)
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
-  - Polyline (5.1.0)
   - PromisesObjC (2.4.0)
   - PromisesSwift (2.4.0):
     - PromisesObjC (= 2.4.0)
@@ -1133,28 +1109,6 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-mapbox-navigation (0.5.2):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - MapboxNavigation (~> 2.18.1)
-    - RCT-Folly (= 2024.01.01.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
   - react-native-netinfo (11.4.1):
     - React-Core
   - react-native-otp-verify (1.1.8):
@@ -1564,7 +1518,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNImageCropPicker (0.51.0):
+  - RNImageCropPicker (0.51.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1585,10 +1539,10 @@ PODS:
     - React-utils
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNImageCropPicker/QBImagePickerController (= 0.51.0)
-    - TOCropViewController (~> 2.7.4)
+    - RNImageCropPicker/QBImagePickerController (= 0.51.1)
+    - TOCropViewController (~> 2.8.0)
     - Yoga
-  - RNImageCropPicker/QBImagePickerController (0.51.0):
+  - RNImageCropPicker/QBImagePickerController (0.51.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1609,7 +1563,7 @@ PODS:
     - React-utils
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - TOCropViewController (~> 2.7.4)
+    - TOCropViewController (~> 2.8.0)
     - Yoga
   - RNNotifee (9.1.8):
     - React-Core
@@ -1714,9 +1668,7 @@ PODS:
     - SDWebImage/Core (= 5.21.2)
   - SDWebImage/Core (5.21.2)
   - SocketRocket (0.7.0)
-  - Solar-dev (3.0.1)
-  - TOCropViewController (2.7.4)
-  - Turf (2.8.0)
+  - TOCropViewController (2.8.0)
   - Yoga (0.0.0)
   - ZIPFoundation (0.9.19)
 
@@ -1767,7 +1719,6 @@ DEPENDENCIES:
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-gif (from `../node_modules/react-native-gif`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
-  - "react-native-mapbox-navigation (from `../node_modules/@pawan-pk/react-native-mapbox-navigation`)"
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-otp-verify (from `../node_modules/react-native-otp-verify`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
@@ -1834,25 +1785,13 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleUtilities
     - lottie-ios
-    - MapboxCommon
-    - MapboxCoreMaps
-    - MapboxCoreNavigation
-    - MapboxDirections
-    - MapboxMaps
-    - MapboxMobileEvents
-    - MapboxNavigation
-    - MapboxNavigationNative
-    - MapboxSpeech
     - nanopb
-    - Polyline
     - PromisesObjC
     - PromisesSwift
     - razorpay-pod
     - SDWebImage
     - SocketRocket
-    - Solar-dev
     - TOCropViewController
-    - Turf
     - ZIPFoundation
 
 EXTERNAL SOURCES:
@@ -1929,8 +1868,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gif"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
-  react-native-mapbox-navigation:
-    :path: "../node_modules/@pawan-pk/react-native-mapbox-navigation"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-otp-verify:
@@ -2054,17 +1991,7 @@ SPEC CHECKSUMS:
   hermes-engine: 01d3e052018c2a13937aca1860fbedbccd4a41b7
   lottie-ios: a881093fab623c467d3bce374367755c272bdd59
   lottie-react-native: 70c474bfd6fc88c7df7949688d3392484766f28c
-  MapboxCommon: cc47fafe3fe5408ca49240aa80fa64f27f275711
-  MapboxCoreMaps: 35685edba03e44468aed57c3dfd7f8795edafda8
-  MapboxCoreNavigation: 48fe94e366c3e7ea8350004f1b407c928fcbd4de
-  MapboxDirections: d4fe7d43cff82aa0c15955d1b4563a5a01e2d4de
-  MapboxMaps: f87023cf0d72b180b40ea0b6fb4b2d7db6b73b71
-  MapboxMobileEvents: d044b9edbe0ec7df60f6c2c9634fe9a7f449266b
-  MapboxNavigation: 8d9c729960a20c26181d69e4bdf3963cd904c6f0
-  MapboxNavigationNative: 2667fa3783d7e5196def8d7cf9e6fdafd87b7ef9
-  MapboxSpeech: cd25ef99c3a3d2e0da72620ff558276ea5991a77
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
-  Polyline: 2a1f29f87f8d9b7de868940f4f76deb8c678a5b1
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
   razorpay-pod: af9d52abe715ed5cc3eed9fdf6fd74340443d0b9
@@ -2096,7 +2023,6 @@ SPEC CHECKSUMS:
   react-native-geolocation: 14bc6d37fe173102d42613928c40a242dacb526f
   react-native-gif: d19271309df69c93a5589b14cdd820364444293d
   react-native-image-picker: f1006d8935a3bc0baf8157faaa7857c76a77c8bb
-  react-native-mapbox-navigation: 203ea6eea12c878d3b68a2d36eb4e10773110122
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-otp-verify: 6d153f8a8e8392c6a51f9d94c090dc16d7c756b2
   react-native-pager-view: fe22feba94a4dc72a9e5aff67c6e91ac503f8924
@@ -2137,7 +2063,7 @@ SPEC CHECKSUMS:
   RNFBMessaging: 72cf5cca8a14ef9dc66b82b75b5cca1091f169e5
   RNFS: 89de7d7f4c0f6bafa05343c578f61118c8282ed8
   RNGestureHandler: 4c50b5e4ca199cf497511d44e3fe45d54d62e279
-  RNImageCropPicker: 51090547fdb79faef4c0c6207fc645aa9915ab3c
+  RNImageCropPicker: eaf519b34d32e1278b19bc4fc2b8710fef362173
   RNNotifee: 5e3b271e8ea7456a36eec994085543c9adca9168
   RNPermissions: 60b6e84380e7c9401c8af6b5bee091294953f8b9
   RNReanimated: f1a8e928e0a5e8698c354c226d8d5f80629f8658
@@ -2148,9 +2074,7 @@ SPEC CHECKSUMS:
   RNVectorIcons: 6c795cacc9276decc31d8e1a139b9cc6fc0479ca
   SDWebImage: 9f177d83116802728e122410fb25ad88f5c7608a
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
-  Solar-dev: 4612dc9878b9fed2667d23b327f1d4e54e16e8d0
-  TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
-  Turf: aa2ede4298009639d10db36aba1a7ebaad072a5e
+  TOCropViewController: 797deaf39c90e6e9ddd848d88817f6b9a8a09888
   Yoga: ae3c32c514802d30f687a04a6a35b348506d411f
   ZIPFoundation: b8c29ea7ae353b309bc810586181fd073cb3312c
 

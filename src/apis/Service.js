@@ -148,7 +148,7 @@ const _Fetch = (method, path, body, headers = {}) => {
       .then(response => {
         // if (path !== 'driver-job/driver-interface-text-video-content.php') {
           console.log(
-            `Api Path: ${path} API BODY: ${body} API RESPONSE ${JSON.stringify(response.data)}`,
+            `Api Path: ${path} API BODY: ${JSON.stringify(body)} API RESPONSE ${JSON.stringify(response.data)}`,
           );
           // if(path == "trusted-driver/ondemand-bookings-view-1.php"){
           // console.log(response, path);

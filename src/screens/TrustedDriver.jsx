@@ -291,7 +291,9 @@ const TrustedDriver = ({navigation}) => {
   const isRfdOn = useSelector(state => state.globalSlice.loginStatus);
   const isDeviceInfo = useSelector(e => e?.userAuth?.isDeviceInfo);
   const decodedToken = useSelector(e => e?.userAuth?.userProfile?.data);
+  // console.log(decodedToken && decodedToken,"TOKEEENENENE");
   const languageSwitch = useSelector(e => e?.globalSlice?.languageSwitch);
+  // Alert.alert(languageSwitch)
   const refreshKey = useSelector(state => state?.globalSlice?.refreshKey);
   const jwt = useSelector(e => e?.userAuth?.jwt);
 
@@ -3605,7 +3607,7 @@ const TrustedDriver = ({navigation}) => {
                   borderWidth: 1,
                   backgroundColor: '#eef1ff',
                   borderRadius: 12,
-                  padding: 10,
+                  padding: 5,
                   marginBottom: 10,
                 }}>
                 <Text
@@ -3778,7 +3780,7 @@ const TrustedDriver = ({navigation}) => {
                   borderColor: AppColors.borderColor,
                   borderWidth: 1,
                   borderRadius: 12,
-                  padding: 10,
+                  padding: 5,
                   marginBottom: 10,
                 }}>
                 <Text

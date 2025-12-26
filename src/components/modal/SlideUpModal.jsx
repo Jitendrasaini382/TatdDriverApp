@@ -49,7 +49,7 @@ const SlideupModal = ({
             borderTopLeftRadius: 16,
             borderTopRightRadius: 16,
             //   padding: 24,
-            paddingHorizontal: 24,
+            paddingHorizontal: 12,
             paddingTop: 24,
             paddingBottom: Platform.OS == 'ios' ? insets.bottom : 0,
 

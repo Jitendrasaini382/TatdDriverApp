@@ -812,6 +812,9 @@ const TrustedDriver = ({navigation}) => {
         if (location?.latitude && location?.longitude) {
           updatedLoginButton.latitude = location?.latitude;
           updatedLoginButton.longitude = location?.longitude;
+
+          // updatedLoginButton.latitude ='28.6088379'
+          // updatedLoginButton.longitude = "77.0446381";
         }
       }
 

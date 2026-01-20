@@ -749,6 +749,7 @@ export const SUBMIT_ALL_TRAINING_MODULE_DATA = body => {
 };
 
 export const START_BOOKING = body => {
+console.log(body, 'service body---');
   return _Fetch('POST', 'duty-report/duty_report_booking_start.php', body, {
     'Content-Type': 'multipart/form-data',
   });

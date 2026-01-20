@@ -76,11 +76,11 @@ import DeviceInfo from 'react-native-device-info';
 import {useFocusEffect} from '@react-navigation/native';
 import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 import LanguageNewModal from '../components/modal/LanguageNewModal';
-import {setCurrentView, setLanguageSwitch} from '../redux/slices/globalSlice';
-import Routes from '../routes/Routes';
+// import {setCurrentView, setLanguageSwitch} from '../redux/slices/globalSlice';
+// import Routes from '../routes/Routes';
 
 const DutyReportUpdate = ({route, navigation}) => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const {bookingNumber, state} = route?.params;
   const isFirstTimeVisit = route?.params?.isFirstTime;
   const isType = route?.params?.isType;
@@ -597,7 +597,9 @@ const DutyReportUpdate = ({route, navigation}) => {
           current_language: languageSwitch,
           trip_status: bookingInfo?.condition?.next_booking_status_id,
           latitude: location?.latitude,
+          // latitude:"28.6078174",
           longitude: location?.longitude,
+          // longitude:"77.0380394"
         };
 
         const res = await DRIVER_BOOKING_REACH(requestData);
@@ -743,8 +745,6 @@ const DutyReportUpdate = ({route, navigation}) => {
             } else if (response.errorCode) {
               console.error('Camera Error:', response.errorMessage);
             } else if (response?.assets && response?.assets?.length > 0) {
-              // console.log(response?.assets,"response?.assetsresponse?.assets");
-              // console.log(response?.assets?.length,"--response?.assetsresponse?.assets");
               const file = response?.assets[0];
               setSelectedFile(file || {});
             }
@@ -769,6 +769,12 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
 
   const driverReached = async () => {
+    console.log({
+      uri: selectedFile.uri,
+      type: selectedFile.type || 'image/jpeg',
+      name: selectedFile.fileName || 'photo.jpg',
+    })
+    // return
     if (showImageField && !selectedFile) {
       Alert.alert(
         languageSwitch == 'english'
@@ -796,7 +802,9 @@ const DutyReportUpdate = ({route, navigation}) => {
     setLoader(true);
     Keyboard.dismiss();
 
+
     const formData = new FormData();
+    
     formData.append('action', 'duty_report_booking_start');
     formData.append('booking_id', bookingNumber);
     formData.append('current_language', languageSwitch);
@@ -812,13 +820,17 @@ const DutyReportUpdate = ({route, navigation}) => {
         name: selectedFile.fileName || 'photo.jpg',
       });
     }
-    // formData.append('start_image', {
-    //   uri: selectedFile.uri,
-    //   type: selectedFile.type || 'image/jpeg',
-    //   name: selectedFile.fileName || 'photo.jpg',
-    // });
+    console.log('IMAGE OBJECT', {
+      uri: selectedFile.uri,
+      type: selectedFile.type || 'image/jpeg',
+      name: selectedFile.fileName || 'photo.jpg',
+    });
+
+
     formData.append('otp', inputValue);
     formData.append('start_kms', inputKmsValue);
+    console.log(formData, 'formdata---');
+    // return
 
     try {
       const response = await START_BOOKING(formData);
@@ -2614,13 +2626,13 @@ const DutyReportUpdate = ({route, navigation}) => {
                 elevation: 5,
                 // minHeight: 400,
               }}>
-              {loader ? (
+              {/* {loader ? (
                 <ActivityIndicator
                   color={AppColors.mainColor}
                   style={{flex: 1}}
                   size={'small'}
                 />
-              ) : (
+              ) : ( */}
                 <ScrollView keyboardShouldPersistTaps="handled">
                   <TouchableOpacity
                     style={{
@@ -2767,7 +2779,7 @@ const DutyReportUpdate = ({route, navigation}) => {
 
                   <View style={{marginVertical: 5}}>
                     <TouchableOpacity
-                      disabled={loader}
+                      // disabled={loader}
                       style={{
                         backgroundColor: AppColors.mainColor,
                         marginTop: '10%',
@@ -2804,7 +2816,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                     </TouchableOpacity>
                   </View>
                 </ScrollView>
-              )}
+              {/* )} */}
             </View>
             <Toast visibilityTime={3000} />
           </View>

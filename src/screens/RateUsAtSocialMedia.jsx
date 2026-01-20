@@ -5,8 +5,9 @@ import {
   StyleSheet,
   Linking,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {
@@ -40,6 +41,7 @@ const RateUsAtSocialMedia = ({route, navigation}) => {
       const response = await RATE_US_SOCIAL_MEDIA_VIEW_DATA({
         booking_id: number,
         utype: 'Driver',
+        deviceType: Platform.OS,
       });
       setViewData(response);
     } catch (error) {}

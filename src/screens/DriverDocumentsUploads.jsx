@@ -202,6 +202,10 @@ const DriverDocumentsUploads = ({navigation}) => {
       const image = await ImagePicker.openCamera({
         cropping: true,
         freeStyleCropEnabled: true,
+        ...(Platform.OS == 'ios' && {
+          width: 2000,
+          height: 2000,
+        }),
         compressImageQuality: 0.5,
         cropperToolbarTitle: 'Crop Image',
         cropperActiveWidgetColor: AppColors.mainColor,

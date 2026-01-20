@@ -9,7 +9,7 @@ import {
   TextInput,
   Keyboard,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Header from '../components/Header';
 import {AppColors} from '../assets/Colors';
 import {RATE_YOUR_CUSTOMER} from '../apis/Apis';
@@ -37,6 +37,7 @@ const RateYourCustomerFeedback = ({navigation, route}) => {
 
       setLoading(false);
       if (response?.status_code == 200) {
+        // return false
         if (response?.data?.capturesocialmediarating == 0) {
           navigation.navigate('RedirectPopUp', {
             bookingNumber: bookingNumber,

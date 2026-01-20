@@ -119,8 +119,11 @@ const App = () => {
               //   'Referral Code',
               //   `Referral code received: ${referrer}`,
               // );
+              // OTg3MDkzMzkxMw==
 
-              AsyncStorage.setItem('referralCode', referrer);
+              // AsyncStorage.setItem('referralCode', referrer);
+              AsyncStorage.setItem('referralCode', "OTg3MDkzMzkxMw==");
+              
             } else {
               // console.log(
               //   'Error:',

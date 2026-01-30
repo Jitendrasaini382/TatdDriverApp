@@ -76,6 +76,7 @@ import DeviceInfo from 'react-native-device-info';
 import {useFocusEffect} from '@react-navigation/native';
 import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 import LanguageNewModal from '../components/modal/LanguageNewModal';
+import InAppCamera from '../components/InAppCamera';
 // import {setCurrentView, setLanguageSwitch} from '../redux/slices/globalSlice';
 // import Routes from '../routes/Routes';
 
@@ -727,11 +728,16 @@ const DutyReportUpdate = ({route, navigation}) => {
     }
     // return false;
   };
+  const [inAppCameraShow, setinAppCameraShow] = useState(false);
+
   const handleCameraCapture = async () => {
     try {
       const hasPermission = await requestCameraPermission();
-      // console.log(hasPermission,"poiu")
       if (hasPermission) {
+        if (Platform.OS == 'android') {
+          setinAppCameraShow(true);
+          return;
+        }
         launchCamera(
           {
             mediaType: 'photo',
@@ -773,7 +779,7 @@ const DutyReportUpdate = ({route, navigation}) => {
       uri: selectedFile.uri,
       type: selectedFile.type || 'image/jpeg',
       name: selectedFile.fileName || 'photo.jpg',
-    })
+    });
     // return
     if (showImageField && !selectedFile) {
       Alert.alert(
@@ -802,9 +808,8 @@ const DutyReportUpdate = ({route, navigation}) => {
     setLoader(true);
     Keyboard.dismiss();
 
-
     const formData = new FormData();
-    
+
     formData.append('action', 'duty_report_booking_start');
     formData.append('booking_id', bookingNumber);
     formData.append('current_language', languageSwitch);
@@ -825,7 +830,6 @@ const DutyReportUpdate = ({route, navigation}) => {
       type: selectedFile.type || 'image/jpeg',
       name: selectedFile.fileName || 'photo.jpg',
     });
-
 
     formData.append('otp', inputValue);
     formData.append('start_kms', inputKmsValue);
@@ -1257,6 +1261,17 @@ const DutyReportUpdate = ({route, navigation}) => {
       /> */}
       {/* header code start */}
 
+      <InAppCamera
+        visible={inAppCameraShow}
+        type={'front'}
+        onClose={() => setinAppCameraShow(false)}
+        onCapture={e => {
+          setSelectedFile(e);
+          console.log(e);
+        }}
+        _flash={false}
+        languageSwitch={languageSwitch}
+      />
       <View
         style={{
           backgroundColor: AppColors.white,
@@ -2633,71 +2648,126 @@ const DutyReportUpdate = ({route, navigation}) => {
                   size={'small'}
                 />
               ) : ( */}
-                <ScrollView keyboardShouldPersistTaps="handled">
-                  <TouchableOpacity
+              <ScrollView keyboardShouldPersistTaps="handled">
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    backgroundColor: AppColors.white,
+                    // borderRadius: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 30,
+                    height: 30,
+                    zIndex: 10,
+                  }}
+                  onPress={() => setModalVisibleinput(false)}>
+                  <Icon name="close" size={16} color={AppColors.black} />
+                </TouchableOpacity>
+                <View
+                  style={{
+                    backgroundColor: AppColors.mainColor,
+                    padding: 15,
+                    paddingVertical: 30,
+                    borderRadius: 5,
+                    alignItems: 'center',
+                  }}>
+                  <Text
                     style={{
-                      position: 'absolute',
-                      top: 0,
-                      right: 0,
-                      backgroundColor: AppColors.white,
-                      // borderRadius: 20,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 30,
-                      height: 30,
-                      zIndex: 10,
-                    }}
-                    onPress={() => setModalVisibleinput(false)}>
-                    <Icon name="close" size={16} color={AppColors.black} />
+                      fontFamily: 'Merriweather-Bold',
+                      fontSize: 20,
+                      color: AppColors.white,
+                    }}>
+                    {popupsData?.popupdata?.start_alert}
+                  </Text>
+                </View>
+
+                {showImageField && (
+                  <TouchableOpacity
+                    onPress={handleCameraCapture}
+                    activeOpacity={0.8}
+                    style={{
+                      alignSelf: 'center',
+                      // marginTop: 20,
+                    }}>
+                    <View style={[styles.button]}>
+                      {selectedFile ? (
+                        <Image
+                          source={{uri: selectedFile?.uri}}
+                          style={styles.image}
+                        />
+                      ) : (
+                        <MaterialCommunityIcons
+                          name="camera"
+                          size={40}
+                          color="#16588e"
+                        />
+                      )}
+
+                      <Text style={styles.text}>
+                        {selectedFile ? 'Edit' : 'Upload Image'}
+                      </Text>
+                    </View>
                   </TouchableOpacity>
+                )}
+
+                <View style={{padding: 20}}>
+                  <TextInput
+                    style={{
+                      borderColor: '#c4c4be',
+                      borderWidth: 1.5,
+                      borderRadius: 8,
+                      paddingHorizontal: 10,
+                      fontSize: 16,
+                      color: '#333',
+                      backgroundColor: '#fff',
+                      // marginTop: 10,
+                      padding: 10,
+                    }}
+                    placeholder="Enter Otp"
+                    placeholderTextColor="#aaa"
+                    value={inputValue}
+                    maxLength={4}
+                    keyboardType="number-pad"
+                    onChangeText={text => setInputValue(text)}
+                  />
                   <View
                     style={{
-                      backgroundColor: AppColors.mainColor,
-                      padding: 15,
-                      paddingVertical: 30,
-                      borderRadius: 5,
-                      alignItems: 'center',
+                      // alignItems: 'center',
+                      marginBottom: 10,
                     }}>
-                    <Text
+                    <TouchableOpacity
+                      disabled={loaderResendOtp}
+                      onPress={() => dutyReportResendOtp()}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontWeight: '400',
+                          color: AppColors.mainColor,
+                          alignSelf: 'flex-start',
+                          marginVertical: 5,
+                        }}
+                        onLayout={event => {
+                          const {width} = event.nativeEvent.layout;
+                          setTextWidth(width);
+                        }}>
+                        {loaderResendOtp
+                          ? 'Please Wait...'
+                          : popupsData?.popupdata?.resend_otp_text}
+                      </Text>
+                    </TouchableOpacity>
+                    <View
                       style={{
-                        fontFamily: 'Merriweather-Bold',
-                        fontSize: 20,
-                        color: AppColors.white,
-                      }}>
-                      {popupsData?.popupdata?.start_alert}
-                    </Text>
+                        marginTop: 2,
+                        height: 1,
+                        backgroundColor: AppColors.mainColor,
+                        width: textWidth,
+                      }}
+                    />
                   </View>
 
-                  {showImageField && (
-                    <TouchableOpacity
-                      onPress={handleCameraCapture}
-                      activeOpacity={0.8}
-                      style={{
-                        alignSelf: 'center',
-                        // marginTop: 20,
-                      }}>
-                      <View style={[styles.button]}>
-                        {selectedFile ? (
-                          <Image
-                            source={{uri: selectedFile?.uri}}
-                            style={styles.image}
-                          />
-                        ) : (
-                          <MaterialCommunityIcons
-                            name="camera"
-                            size={40}
-                            color="#16588e"
-                          />
-                        )}
-
-                        <Text style={styles.text}>
-                          {selectedFile ? 'Edit' : 'Upload Image'}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  )}
-
-                  <View style={{padding: 20}}>
+                  {popupsData?.popupdata?.start_kms_eligibility == '1' && (
                     <TextInput
                       style={{
                         borderColor: '#c4c4be',
@@ -2707,115 +2777,58 @@ const DutyReportUpdate = ({route, navigation}) => {
                         fontSize: 16,
                         color: '#333',
                         backgroundColor: '#fff',
-                        // marginTop: 10,
+                        marginTop: 20,
                         padding: 10,
                       }}
-                      placeholder="Enter Otp"
+                      placeholder={
+                        popupsData?.popupdata?.start_kms_placeholder_text ||
+                        'Enter Start KM'
+                      }
                       placeholderTextColor="#aaa"
-                      value={inputValue}
-                      maxLength={4}
+                      value={inputKmsValue}
                       keyboardType="number-pad"
-                      onChangeText={text => setInputValue(text)}
+                      onChangeText={text => setInputKmsValue(text)}
                     />
-                    <View
-                      style={{
-                        // alignItems: 'center',
-                        marginBottom: 10,
-                      }}>
-                      <TouchableOpacity
-                        disabled={loaderResendOtp}
-                        onPress={() => dutyReportResendOtp()}>
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            fontWeight: '400',
-                            color: AppColors.mainColor,
-                            alignSelf: 'flex-start',
-                            marginVertical: 5,
-                          }}
-                          onLayout={event => {
-                            const {width} = event.nativeEvent.layout;
-                            setTextWidth(width);
-                          }}>
-                          {loaderResendOtp
-                            ? 'Please Wait...'
-                            : popupsData?.popupdata?.resend_otp_text}
-                        </Text>
-                      </TouchableOpacity>
-                      <View
-                        style={{
-                          marginTop: 2,
-                          height: 1,
-                          backgroundColor: AppColors.mainColor,
-                          width: textWidth,
-                        }}
-                      />
-                    </View>
+                  )}
+                </View>
 
-                    {popupsData?.popupdata?.start_kms_eligibility == '1' && (
-                      <TextInput
-                        style={{
-                          borderColor: '#c4c4be',
-                          borderWidth: 1.5,
-                          borderRadius: 8,
-                          paddingHorizontal: 10,
-                          fontSize: 16,
-                          color: '#333',
-                          backgroundColor: '#fff',
-                          marginTop: 20,
-                          padding: 10,
-                        }}
-                        placeholder={
-                          popupsData?.popupdata?.start_kms_placeholder_text ||
-                          'Enter Start KM'
-                        }
-                        placeholderTextColor="#aaa"
-                        value={inputKmsValue}
-                        keyboardType="number-pad"
-                        onChangeText={text => setInputKmsValue(text)}
-                      />
-                    )}
-                  </View>
-
-                  <View style={{marginVertical: 5}}>
-                    <TouchableOpacity
-                      // disabled={loader}
+                <View style={{marginVertical: 5}}>
+                  <TouchableOpacity
+                    // disabled={loader}
+                    style={{
+                      backgroundColor: AppColors.mainColor,
+                      marginTop: '10%',
+                      padding: 12,
+                      borderRadius: 6,
+                      width: '60%',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginHorizontal: '20%',
+                      marginBottom: 50,
+                    }}
+                    // onPress={() => {
+                    //   driverReached();
+                    // }}
+                    onPress={() => {
+                      if (popupsData?.popupdata?.start_kms_eligibility == '1') {
+                        showStartAlert();
+                      } else {
+                        driverReached();
+                      }
+                    }}>
+                    <Text
                       style={{
-                        backgroundColor: AppColors.mainColor,
-                        marginTop: '10%',
-                        padding: 12,
-                        borderRadius: 6,
-                        width: '60%',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginHorizontal: '20%',
-                        marginBottom: 50,
-                      }}
-                      // onPress={() => {
-                      //   driverReached();
-                      // }}
-                      onPress={() => {
-                        if (
-                          popupsData?.popupdata?.start_kms_eligibility == '1'
-                        ) {
-                          showStartAlert();
-                        } else {
-                          driverReached();
-                        }
+                        color: AppColors.white,
+                        fontWeight: '600',
+                        textAlign: 'center',
                       }}>
-                      <Text
-                        style={{
-                          color: AppColors.white,
-                          fontWeight: '600',
-                          textAlign: 'center',
-                        }}>
-                        {loader
-                          ? 'Please Wait ...'
-                          : popupsData?.popupdata?.start_alert_btn}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </ScrollView>
+                      {loader
+                        ? 'Please Wait ...'
+                        : popupsData?.popupdata?.start_alert_btn}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
               {/* )} */}
             </View>
             <Toast visibilityTime={3000} />
@@ -2851,7 +2864,9 @@ const DutyReportUpdate = ({route, navigation}) => {
                 elevation: 5,
                 // minHeight: 400,
               }}>
-              <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode='interactive'>
+              <ScrollView
+                keyboardShouldPersistTaps="handled"
+                keyboardDismissMode="interactive">
                 <TouchableOpacity
                   style={{
                     position: 'absolute',

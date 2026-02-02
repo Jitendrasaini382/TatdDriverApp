@@ -348,11 +348,12 @@ const DutyReportUpdate = ({route, navigation}) => {
         booking_id: bookingNumber,
         current_language: languageSwitch,
       });
-      console.log('====================================');
-      console.log(response?.duty_report_booking_info);
-      console.log('====================================');
+      // console.log('====================================');
+      // console.log(response?.duty_report_booking_info);
+      // console.log('====================================');
+      const MB = 1024 * 1024;
       const freeStorage = await DeviceInfo.getFreeDiskStorage();
-      const isGreaterThan500MB = freeStorage > 2 * 1024 * 1024 * 1024;
+      const isGreaterThan500MB = freeStorage > MB * 100;
       if (isGreaterThan500MB) {
         // console.log(' Storage is more than 500 MB');
         setShowImageField(true);
@@ -733,6 +734,16 @@ const DutyReportUpdate = ({route, navigation}) => {
   const handleCameraCapture = async () => {
     try {
       const hasPermission = await requestCameraPermission();
+      if (!showImageField) {
+        Alert.alert(
+          '⚠️',
+          languageSwitch === 'english'
+            ? 'Your phone storage is less than 100 MB. Please free up some space (more than 100 MB) to click and upload a photo.'
+            : 'आपके मोबाइल में 100 MB से कम स्टोरेज उपलब्ध है। फोटो क्लिक करने के लिए कृपया 100 MB से अधिक स्टोरेज खाली करें।',
+        );
+        return;
+      }
+
       if (hasPermission) {
         if (Platform.OS == 'android') {
           setinAppCameraShow(true);
@@ -775,12 +786,13 @@ const DutyReportUpdate = ({route, navigation}) => {
   };
 
   const driverReached = async () => {
-    console.log({
-      uri: selectedFile.uri,
-      type: selectedFile.type || 'image/jpeg',
-      name: selectedFile.fileName || 'photo.jpg',
-    });
+    // console.log({
+    //   uri: selectedFile.uri,
+    //   type: selectedFile.type || 'image/jpeg',
+    //   name: selectedFile.fileName || 'photo.jpg',
+    // });
     // return
+    // Alert.alert("")
     if (showImageField && !selectedFile) {
       Alert.alert(
         languageSwitch == 'english'
@@ -2683,34 +2695,32 @@ const DutyReportUpdate = ({route, navigation}) => {
                   </Text>
                 </View>
 
-                {showImageField && (
-                  <TouchableOpacity
-                    onPress={handleCameraCapture}
-                    activeOpacity={0.8}
-                    style={{
-                      alignSelf: 'center',
-                      // marginTop: 20,
-                    }}>
-                    <View style={[styles.button]}>
-                      {selectedFile ? (
-                        <Image
-                          source={{uri: selectedFile?.uri}}
-                          style={styles.image}
-                        />
-                      ) : (
-                        <MaterialCommunityIcons
-                          name="camera"
-                          size={40}
-                          color="#16588e"
-                        />
-                      )}
+                <TouchableOpacity
+                  onPress={handleCameraCapture}
+                  activeOpacity={0.8}
+                  style={{
+                    alignSelf: 'center',
+                    // marginTop: 20,
+                  }}>
+                  <View style={[styles.button]}>
+                    {selectedFile ? (
+                      <Image
+                        source={{uri: selectedFile?.uri}}
+                        style={styles.image}
+                      />
+                    ) : (
+                      <MaterialCommunityIcons
+                        name="camera"
+                        size={40}
+                        color="#16588e"
+                      />
+                    )}
 
-                      <Text style={styles.text}>
-                        {selectedFile ? 'Edit' : 'Upload Image'}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
+                    <Text style={styles.text}>
+                      {selectedFile ? 'Edit' : 'Upload Image'}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
 
                 <View style={{padding: 20}}>
                   <TextInput
@@ -2813,6 +2823,7 @@ const DutyReportUpdate = ({route, navigation}) => {
                       if (popupsData?.popupdata?.start_kms_eligibility == '1') {
                         showStartAlert();
                       } else {
+                        // Alert.alert("")
                         driverReached();
                       }
                     }}>

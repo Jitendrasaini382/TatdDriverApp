@@ -17,6 +17,7 @@ const initialState = {
   loginStatus: false,
   refreshKey: 0,
   driverConsentData: null,
+  pramotnalBannersData: null,
 };
 
 const globalSlice = createSlice({

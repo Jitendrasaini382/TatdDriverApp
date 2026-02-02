@@ -1043,3 +1043,16 @@ export const FETCH_DRIVER_ELIGIBILITY_DATA = body => {
     {},
   );
 };
+
+
+
+export const PRAMOTIONAL_VIDEO_ACTIONS = (BODY) => {
+  console.log(BODY)
+  return _Fetch(
+    'POST',
+    'trusted-driver/promotional-video-view-likes-api.php',
+    BODY,
+    {},
+  );
+};
+

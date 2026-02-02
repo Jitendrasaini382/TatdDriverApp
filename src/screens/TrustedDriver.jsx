@@ -112,6 +112,7 @@ import Toast from 'react-native-toast-message';
 import {
   setCurrentView,
   setDriverConsentData,
+  setGlobalState,
   setLoginStatus,
   setRefreshKey,
 } from '../redux/slices/globalSlice';
@@ -119,6 +120,7 @@ import {check} from 'react-native-permissions';
 import axios from 'axios';
 import RfdToggleSwitch from '../components/RfdToggleSwitch';
 import SlideupModal from '../components/modal/SlideUpModal';
+import HomePramotionalBanner from '../components/HomePramotionalBanner';
 const {width, height} = Dimensions.get('window');
 
 const responsiveSize = size => {
@@ -1216,8 +1218,24 @@ const TrustedDriver = ({navigation}) => {
       const response = await GET_TRUSTED_DRIVER_AWARENESS_VIDEOS(
         languageSwitch,
       );
-      setAwarenessVideo(response?.awareness_video);
-    } catch (error) {}
+      // setAwarenessVideo(response?.awareness_video);
+      // setGlobalState({
+      //   key:
+      // })
+
+      // console.log(response, '');
+      dispatch(
+        setGlobalState({
+          key: 'pramotnalBannersData',
+          value: {
+            videos: response?.promotional_videos || [],
+            languages: response?.languages,
+          },
+        }),
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const showVideoContent = () => {
@@ -2349,14 +2367,14 @@ const TrustedDriver = ({navigation}) => {
                   {loginMessage}
                 </Text> */}
 
-                {awarenessVideo && awarenessVideo?.length > 0 && (
+                {/* {awarenessVideo && awarenessVideo?.length > 0 && (
                   <View>
-                    {/* Video FlatList */}
+
                     <FlatList
                       data={awarenessVideo}
                       keyExtractor={(item, index) => item + index}
                       horizontal
-                      pagingEnabled={false} // ❌ don't use pagingEnabled with partial width items
+                      pagingEnabled={false} 
                       snapToInterval={width * 0.8 + 15}
                       decelerationRate="fast"
                       snapToAlignment="start"
@@ -2420,7 +2438,8 @@ const TrustedDriver = ({navigation}) => {
                       />
                     </View>
                   </View>
-                )}
+                )} */}
+                <HomePramotionalBanner />
 
                 {/* Main Toggle Content */}
                 <>
